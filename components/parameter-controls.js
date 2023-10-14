@@ -15,12 +15,12 @@ const sx = {
 
 const CLIM_RANGES = {
   tavg: { max: 30, min: -20 },
-  prec: { max: 300, min: 0 },
+  prec: { max: 300, min: 0 }
 }
 
 const DEFAULT_COLORMAPS = {
   tavg: 'warm',
-  prec: 'cool',
+  prec: 'cool'
 }
 
 const ParameterControls = ({ getters, setters }) => {
