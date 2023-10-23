@@ -7,18 +7,18 @@ import RegionControls from '../components/region-controls'
 import ParameterControls from '../components/parameter-controls'
 
 const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/'
-// const bucket_ndp = 'http://localhost:8080/'
-const bucket_ndp = 'https://scrasmussen.github.io/'
+const bucket_ndp = 'http://localhost:4000/'
+// const bucket_ndp = 'http://localhost:4000/127.0.0.1'
 
 const Index = () => {
   const { theme } = useThemeUI()
   const [display, setDisplay] = useState(true)
   const [debug, setDebug] = useState(false)
   const [opacity, setOpacity] = useState(1)
-  const [clim, setClim] = useState([-20, 30])
+  const [clim, setClim] = useState([0, 60])
   const [month, setMonth] = useState(1)
   const [time, setTime] = useState(1)
-  const [band, setBand] = useState('tavg')
+  const [band, setBand] = useState('prec')
   const [colormapName, setColormapName] = useState('warm')
   const colormap = useThemedColormap(colormapName)
   const [showRegionPicker, setShowRegionPicker] = useState(false)
@@ -45,7 +45,7 @@ const Index = () => {
         }
         title={'@carbonplan/maps'}
       />
-      <Box sx={{ position: 'absolute', top: 0, bottom: 0, width: '100%' }}>
+      <Box sx={{ position: 'absolute', top: 0, bottom: 0, width: '100%', height:'100%' }}>
         <Map zoom={2} center={[0, 0]} debug={debug}>
           <Fill
             color={theme.rawColors.background}
@@ -73,7 +73,9 @@ const Index = () => {
             opacity={opacity}
             mode={'texture'}
             // source={bucket + 'v2/demo/4d/tavg-prec-month'}
-            source={bucket_ndp + 'tavg-prec-month.zarr'}
+            source={bucket_ndp + 'icar_zarr/tavg-prec-month.zarr'}
+
+            // source={bucket_ndp + 'tavg-prec-month.zarr'}
             variable={'climate'}
             selector={{ month, band }}
             regionOptions={{ setData: setRegionData }}
