@@ -14,7 +14,8 @@ const sx = {
 }
 
 const CLIM_RANGES = {
-  tavg: { max: 30, min: -20 },
+  // tavg: { max: 30, min: -20 },
+  tavg: { max: 310, min: 270 },
   prec: { max: 300, min: 0 }
 }
 
