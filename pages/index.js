@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Box, useThemeUI } from 'theme-ui'
 import { Dimmer, Meta, Column, Row } from '@carbonplan/components'
 import { Map, Raster, Fill, Line, RegionPicker } from '@carbonplan/maps'
+// import { Map, Fill, Line, RegionPicker } from '@carbonplan/maps'
+// import Raster from '../components/maps/raster'
 import { useThemedColormap } from '@carbonplan/colormaps'
 import RegionPlot from '../components/region-plot'
 import ParameterControls from '../components/parameter-controls'
@@ -15,9 +17,6 @@ const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/'
 // this should work
 const bucket_ndp = 'http://127.0.0.1:4000/downscaling/'
 // const source = bucket_ndp + 'tavg-prec-month.zarr'
-// const bucket_ndp = 'http://localhost:4000/'
-// const bucket_ndp = 'http://localhost:8080/'
-// const bucket_ndp = 'http://localhost:4000/127.0.0.1'
 // const fname = 'tavg-prec-month.zarr'
 
 const Index = () => {
@@ -40,7 +39,8 @@ const Index = () => {
   const [downscaling, setDownscaling] = useState('icar')
   const [model, setModel] = useState('noresm')
 	const [fname, setFname] = useState('tavg-prec-month.zarr')
-	const [source, setSource] = useState(bucket_ndp+'/icar/noresm/'+fname)
+	const [source, setSource] = useState(bucket_ndp+'/icar/noresm/'+fname) // WORKS
+	// const [source, setSource] = useState(bucket_ndp+'/icar/gfdl/'+fname)
 
   const getters = { display, debug, opacity, clim, month, band, colormapName,
 									downscaling, model, source, bucket_ndp}
@@ -63,7 +63,7 @@ const Index = () => {
       <Meta
         card={'https://images.carbonplan.org/social/maps-demo.png'}
         description={
-          'Demo of our library for making interactive multi-dimensional data-driven web maps.'
+          "Demo of presenting downscaling and climate model data. Based on carbonplan's library"
         }
         title={'@carbonplan/maps'}
       />
@@ -91,22 +91,20 @@ const Index = () => {
             />
           )}
           <Raster
+			      key={`${source}`}
             colormap={colormap}
             clim={clim}
             display={display}
             opacity={opacity}
             mode={'texture'}
-            // source={bucket + 'v2/demo/4d/tavg-prec-month'}
-			      // this works when hosting on github
             source={source}
             variable={'climate'}
             selector={{ month, band }}
-            // selector={{ band }}
+            // selector={{ month, band, source }}
             regionOptions={{ setData: setRegionData }}
           />
           <RegionPlot
             band={band}
-			      // this works when hosting on github
             source={source}
             regionData={regionData}
             showRegionPlot={showRegionPlot}
@@ -114,7 +112,7 @@ const Index = () => {
           />
         </Map>
         <ParameterControls getters={getters} setters={setters}
-			bucket={bucket_ndp} fname={fname} />
+   			bucket={bucket_ndp} fname={fname} />
       </Box>
   </Column>
 
@@ -129,12 +127,11 @@ const Index = () => {
 				position: 'fixed',
 				height: '20%',
 		  	width: '100%' }}>
+      {/*< Outside Source = {source}*/}
 			<LineCJS options={options}
-			data={
-					// linedata({source:source})
-					linedata_stub
-					 } />
+			data={ linedata_stub } />
     </Box>
+
   </Column>
 </Row>
     </>
