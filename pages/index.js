@@ -14,36 +14,35 @@ const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/'
 
 // this works
 // const bucket_ndp = 'https://scrasmussen.github.io/'
-// this should work
 const bucket_ndp = 'http://127.0.0.1:4000/downscaling/'
-// const source = bucket_ndp + 'tavg-prec-month.zarr'
-// const fname = 'tavg-prec-month.zarr'
 
 const Index = () => {
   const { theme } = useThemeUI()
   const [display, setDisplay] = useState(true)
   const [debug, setDebug] = useState(false)
   const [opacity, setOpacity] = useState(1)
-  // const [clim, setClim] = useState([270, 310]) // tavg
-  const [clim, setClim] = useState([0, 60]) // precip
   const [month, setMonth] = useState(1)
   const [time, setTime] = useState(1)
-  // const [band, setBand] = useState('tavg')
+  // --- precipitation defaults
   const [band, setBand] = useState('prec')
-  // const [colormapName, setColormapName] = useState('warm') // tavg
   const [colormapName, setColormapName] = useState('cool') // precip
+  const [clim, setClim] = useState([0, 60]) // precip
+  // --- average temp defaults
+  // const [band, setBand] = useState('tavg')
+  // const [clim, setClim] = useState([270, 310]) // tavg
+  // const [colormapName, setColormapName] = useState('warm') // tavg
+
   const colormap = useThemedColormap(colormapName)
   const [showRegionPlot, setShowRegionPlot] = useState(false)
   const [regionData, setRegionData] = useState({ loading: true })
 // new stuff
   const [downscaling, setDownscaling] = useState('icar')
   const [model, setModel] = useState('noresm')
-        const [fname, setFname] = useState('tavg-prec-month.zarr')
-        const [source, setSource] = useState(bucket_ndp+'/icar/noresm/'+fname) // WORKS
-        // const [source, setSource] = useState(bucket_ndp+'/icar/gfdl/'+fname)
+  const [fname, setFname] = useState('tavg-prec-month.zarr')
+  const [source, setSource] = useState(bucket_ndp+'/icar/noresm/'+fname) // WORKS
 
   const getters = { display, debug, opacity, clim, month, band, colormapName,
-                                                                        downscaling, model, source, bucket_ndp}
+                    downscaling, model, source, bucket_ndp}
   const setters = {
     setDisplay,
     setDebug,
@@ -53,9 +52,9 @@ const Index = () => {
     setTime,
     setBand,
     setColormapName,
-                setDownscaling,
-                setModel,
-                setSource
+    setDownscaling,
+    setModel,
+    setSource
   }
 
   return (
@@ -121,17 +120,16 @@ const Index = () => {
       sx={{
         color: 'blue',
         backgroundColor: 'lightgray',
-                                bottom: 0, right: 0,
+        bottom: 0, right: 0,
         padding: 2,
         fontSize: 16,
-                                position: 'fixed',
-                                height: '20%',
-                        width: '100%' }}>
-      {/*< Outside Source = {source}*/}
-                        <LineCJS options={options}
-                        data={ linedata_stub } />
+        position: 'fixed',
+        height: '20%',
+        width: '100%' }}>
+        {/*< Outside Source = {source}*/}
+        <LineCJS options={options}
+                 data={ linedata_stub } />
     </Box>
-
   </Column>
 </Row>
     </>
