@@ -25,7 +25,7 @@ const DEFAULT_COLORMAPS = {
 
 const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const { display, debug, opacity, clim, month, band, colormapName,
-					downscaling, model, source } = getters
+          downscaling, model, source } = getters
   const {
     setDisplay,
     setDebug,
@@ -34,9 +34,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setMonth,
     setBand,
     setColormapName,
-		setDownscaling,
-	  setModel,
-		setSource
+    setDownscaling,
+    setModel,
+    setSource
   } = setters
 
 
@@ -47,21 +47,21 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setColormapName(DEFAULT_COLORMAPS[band])
   })
 
-	const handleDownscalingChange = useCallback((e) => {
-		const downscaling = e.target.value
-		setDownscaling(downscaling)
-		setSource(bucket+'/'+downscaling+'/'+model+'/'+fname)
-		console.log("----ARTLESS SOURCE: ", source)
-	})
+  const handleDownscalingChange = useCallback((e) => {
+    const downscaling = e.target.value
+    setDownscaling(downscaling)
+    setSource(bucket+'/'+downscaling+'/'+model+'/'+fname)
+    console.log("----ARTLESS SOURCE: ", source)
+  })
 
-	const handleModelChange = useCallback((e) => {
-		const model = e.target.value
-		setModel(model)
-		console.log("e =", e.target.value)
-		console.log("model =", bucket+'/'+downscaling+'/'+model+'/')
-		setSource(bucket+'/'+downscaling+'/'+model+'/'+fname)
-		console.log("----ARTLESS SOURCE: ", source)
-	})
+  const handleModelChange = useCallback((e) => {
+    const model = e.target.value
+    setModel(model)
+    console.log("e =", e.target.value)
+    console.log("model =", bucket+'/'+downscaling+'/'+model+'/')
+    setSource(bucket+'/'+downscaling+'/'+model+'/'+fname)
+    console.log("----ARTLESS SOURCE: ", source)
+  })
 
 
   return (

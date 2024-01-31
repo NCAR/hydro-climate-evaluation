@@ -38,12 +38,12 @@ const Index = () => {
 // new stuff
   const [downscaling, setDownscaling] = useState('icar')
   const [model, setModel] = useState('noresm')
-	const [fname, setFname] = useState('tavg-prec-month.zarr')
-	const [source, setSource] = useState(bucket_ndp+'/icar/noresm/'+fname) // WORKS
-	// const [source, setSource] = useState(bucket_ndp+'/icar/gfdl/'+fname)
+        const [fname, setFname] = useState('tavg-prec-month.zarr')
+        const [source, setSource] = useState(bucket_ndp+'/icar/noresm/'+fname) // WORKS
+        // const [source, setSource] = useState(bucket_ndp+'/icar/gfdl/'+fname)
 
   const getters = { display, debug, opacity, clim, month, band, colormapName,
-									downscaling, model, source, bucket_ndp}
+                                                                        downscaling, model, source, bucket_ndp}
   const setters = {
     setDisplay,
     setDebug,
@@ -53,9 +53,9 @@ const Index = () => {
     setTime,
     setBand,
     setColormapName,
-		setDownscaling,
-		setModel,
-		setSource
+                setDownscaling,
+                setModel,
+                setSource
   }
 
   return (
@@ -91,7 +91,7 @@ const Index = () => {
             />
           )}
           <Raster
-			      key={`${source}`}
+                              key={`${source}`}
             colormap={colormap}
             clim={clim}
             display={display}
@@ -112,7 +112,7 @@ const Index = () => {
           />
         </Map>
         <ParameterControls getters={getters} setters={setters}
-   			bucket={bucket_ndp} fname={fname} />
+                        bucket={bucket_ndp} fname={fname} />
       </Box>
   </Column>
 
@@ -121,15 +121,15 @@ const Index = () => {
       sx={{
         color: 'blue',
         backgroundColor: 'lightgray',
-				bottom: 0, right: 0,
+                                bottom: 0, right: 0,
         padding: 2,
         fontSize: 16,
-				position: 'fixed',
-				height: '20%',
-		  	width: '100%' }}>
+                                position: 'fixed',
+                                height: '20%',
+                        width: '100%' }}>
       {/*< Outside Source = {source}*/}
-			<LineCJS options={options}
-			data={ linedata_stub } />
+                        <LineCJS options={options}
+                        data={ linedata_stub } />
     </Box>
 
   </Column>
