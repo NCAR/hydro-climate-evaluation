@@ -25,6 +25,8 @@
     "react-chartjs-2": "^5.0.0",
     "react-dom": "^18.2.0",
     "theme-ui": "^0.15.3",
-    "@carbonplan/maps": "file:./maps"
+    "@carbonplan/maps": "^3.1.0",
+    "node-fetch": "2.*",
+    "zarr": "^0.6.2"
   }
 }

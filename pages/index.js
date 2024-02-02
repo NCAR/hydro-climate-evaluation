@@ -9,12 +9,14 @@ import RegionPlot from '../components/region-plot'
 import ParameterControls from '../components/parameter-controls'
 import {options, linedata, linedata_stub} from '../components/plot-line';
 import { Line as LineCJS } from 'react-chartjs-2';
+import Charts from '../components/charts'
 
 const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/'
 
 // this works
 // const bucket_ndp = 'https://scrasmussen.github.io/'
-const bucket_ndp = 'http://127.0.0.1:4000/downscaling/'
+// const bucket_ndp = 'http://127.0.0.1:4000/downscaling/'
+const bucket_ndp = 'http://127.0.0.1:8000/downscaling/' // python host
 
 const Index = () => {
   const { theme } = useThemeUI()
@@ -40,9 +42,11 @@ const Index = () => {
   const [model, setModel] = useState('noresm')
   const [fname, setFname] = useState('tavg-prec-month.zarr')
   const [source, setSource] = useState(bucket_ndp+'/icar/noresm/'+fname) // WORKS
+  const [chartHeight, setChartHeight] = useState('0%')
+  const [chartData, setChartData] = useState(Array(12).fill(0))
 
   const getters = { display, debug, opacity, clim, month, band, colormapName,
-                    downscaling, model, source, bucket_ndp}
+                    downscaling, model, source, bucket_ndp, chartHeight}
   const setters = {
     setDisplay,
     setDebug,
@@ -54,7 +58,9 @@ const Index = () => {
     setColormapName,
     setDownscaling,
     setModel,
-    setSource
+    setSource,
+    setChartHeight,
+    setChartData
   }
 
   return (
@@ -90,7 +96,7 @@ const Index = () => {
             />
           )}
           <Raster
-                              key={`${source}`}
+            key={`${source}`}
             colormap={colormap}
             clim={clim}
             display={display}
@@ -115,7 +121,9 @@ const Index = () => {
       </Box>
   </Column>
 
-  <Column start={[1]} width={[1]}>
+        {/*< Outside Source = {source}*/}
+
+{/*  <Column start={[1]} width={[1]}>
    <Box
       sx={{
         color: 'blue',
@@ -124,13 +132,24 @@ const Index = () => {
         padding: 2,
         fontSize: 16,
         position: 'fixed',
-        height: '20%',
+        height: chartHeight,
         width: '100%' }}>
-        {/*< Outside Source = {source}*/}
+
         <LineCJS options={options}
                  data={ linedata_stub } />
     </Box>
   </Column>
+  */}
+
+  <Charts chartHeight={chartHeight}
+      source={source}
+      downscaling={downscaling}
+      model={model}
+      band={band}
+      chartData={chartData}
+      setChartData={setChartData}/>
+
+
 </Row>
     </>
   )
