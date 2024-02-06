@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { Box, Flex } from 'theme-ui'
 import { useCallback } from 'react'
-import { Slider, Badge, Toggle, Select, Link } from '@carbonplan/components'
+import { Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components'
 import { colormaps } from '@carbonplan/colormaps'
+import { getData } from './getData'
 
 const sx = {
   label: {
@@ -25,7 +27,7 @@ const DEFAULT_COLORMAPS = {
 
 const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const { display, debug, opacity, clim, month, band, colormapName,
-          downscaling, model, source } = getters
+          downscaling, model, source, chartHeight } = getters
   const {
     setDisplay,
     setDebug,
@@ -36,9 +38,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setColormapName,
     setDownscaling,
     setModel,
-    setSource
+    setSource,
+    setChartHeight,
+    setChartData
   } = setters
 
+  const [chartToggle, setChartToggle] = useState(false)
 
   const handleBandChange = useCallback((e) => {
     const band = e.target.value
@@ -63,6 +68,36 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     console.log("----ARTLESS SOURCE: ", source)
   })
 
+  const handleChartChange = useCallback((e) => {
+    const model = e.target.value
+    setChartHeight('20%')
+  })
+
+
+  const ClickRow = () => {
+    const [value, setValue] = useState(true);
+    return (
+      <Tag value={value} onClick={() => setValue((prev) => !prev)}>
+        Click me
+      </Tag>
+    );
+  };
+
+  const AveDifFilter = () => {
+  const [values, setValues] =
+        useState({'Ave.': true, 'Dif.': false})
+        // useState({One: true, Two: false, Three: false})
+  return (
+    <Filter
+      values={values}
+      setValues={setValues}
+      multiSelect={false}
+    />
+  );
+};
+
+
+  const [year, setYear] = useState(1980)
 
   return (
     <>
@@ -74,6 +109,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             gap: 4,
           }}
         >
+
+{/*
           <Box>
             <Box sx={{ ...sx.label, mt: [0] }}>Tile boundaries</Box>
             <Toggle
@@ -91,6 +128,62 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
               onClick={() => setDisplay((prev) => !prev)}
             />
           </Box>
+
+             onClick={() => {
+               setChartToggle((prev) => !prev);
+               setChartHeight((chartHeight) => (chartHeight === '0%' ? '20%' : '0%'))}
+            />
+
+
+ */}
+
+{/*
+          <Box>
+            <Box sx={{ ...sx.label, mt: [0] }}>Charts</Box>
+            <Toggle
+              sx={{ chartToggle: 'block', float: 'right', mt: [2] }}
+              value={chartToggle}
+              onClick={() => {
+               getData({source}, setChartData);
+               setChartToggle((prev) => !prev);
+               setChartHeight((prevHeight) => (prevHeight === '0%' ? '25%' : '0%'));
+               }}
+            />
+          </Box>
+ */}
+<Table
+  color={'secondary'}
+  columns={[1]}
+  start={[[1]]}
+  width={[
+    [1],
+    [1],
+    [1],
+  ]}
+  data={[
+    [
+     <Box>
+     <Box sx={{ ...sx.label, maxWidth: 50,      mx: 'auto',
+                px: 0, mt: [1] }}>Charts</Box>
+        <Toggle
+        sx={{ chartToggle: 'block', mx: 3, mt: [2] }}
+        value={chartToggle}
+        onClick={() => {
+            getData({source}, setChartData);
+            setChartToggle((prev) => !prev);
+            setChartHeight((prevHeight) => (prevHeight === '0%' ? '25%' : '0%'));
+        }}
+            />
+      </Box>
+      ],
+    [<AveDifFilter />],
+    [<ClickRow />],
+  ]}
+  borderTop={true}
+  borderBottom={false}
+  index={false}
+  sx={{ my: [3] }}
+  />
         </Flex>
       </Box>
       <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
@@ -141,15 +234,19 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         >
           {clim[1].toFixed(0)}
         </Badge>
-        <Box sx={sx.label}>Month</Box>
+
+        {/* --- Month Slider ---*/}
+        <Box sx={sx.label}>{month === 0 ? 'Full Year' : `Month: ${month}`}</Box>
         <Slider
-          min={1}
+          min={0}
           max={12}
           step={1}
           sx={{ width: '175px', display: 'inline-block' }}
           value={month}
           onChange={(e) => setMonth(parseFloat(e.target.value))}
         />
+
+        {/*
         <Badge
           sx={{
             bg: 'primary',
@@ -161,7 +258,22 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           }}
         >
           {month.toFixed(0)}
-        </Badge>
+        </Badge>  --- Month Slider ---*/}
+
+
+        {/* --- Year Slider --- */}
+        <Box sx={sx.label}>{`Year: ${year}`}</Box>
+        <Slider
+          min={1970}
+          max={2020}
+          step={1}
+          sx={{ width: '175px', display: 'inline-block' }}
+          value={year}
+          onChange={(e) => setYear(parseFloat(e.target.value))}
+        />
+
+
+
 
         <Box sx={{ ...sx.label, mt: [4] }}>Variable</Box>
         <Select
