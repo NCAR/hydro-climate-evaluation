@@ -16,7 +16,7 @@ const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/'
 // this works
 // const bucket_ndp = 'https://scrasmussen.github.io/'
 // const bucket_ndp = 'http://127.0.0.1:4000/downscaling/'
-const bucket_ndp = 'http://127.0.0.1:8000/downscaling/' // python host
+const bucket_ndp = 'http://127.0.0.1:8000/data/' // python host
 
 const Index = () => {
   const { theme } = useThemeUI()
@@ -41,12 +41,13 @@ const Index = () => {
   const [downscaling, setDownscaling] = useState('icar')
   const [model, setModel] = useState('noresm')
   const [fname, setFname] = useState('tavg-prec-month.zarr')
-  const [source, setSource] = useState(bucket_ndp+'/icar/noresm/'+fname) // WORKS
+  const [mapSource, setMapSource] = useState(bucket_ndp+'map/icar/noresm/'+fname) // WORKS
+  const [chartSource, setChartSource] = useState(bucket_ndp+'chart/icar/noresm/'+band) // WORKS
   const [chartHeight, setChartHeight] = useState('0%')
   const [chartData, setChartData] = useState(Array(12).fill(0))
 
   const getters = { display, debug, opacity, clim, month, band, colormapName,
-                    downscaling, model, source, bucket_ndp, chartHeight}
+                    downscaling, model, mapSource, chartSource, bucket_ndp, chartHeight}
   const setters = {
     setDisplay,
     setDebug,
@@ -58,7 +59,8 @@ const Index = () => {
     setColormapName,
     setDownscaling,
     setModel,
-    setSource,
+    setMapSource,
+    setChartSource,
     setChartHeight,
     setChartData
   }
@@ -72,7 +74,7 @@ const Index = () => {
         }
         title={'@carbonplan/maps'}
       />
-<Row columns={[6]}>
+<Row columns={[4]}>
   <Column start={[1]} width={[1]}>
       <Box sx={{ position: 'absolute', top: 0, bottom: 0, width: '100%', height:'100%' }}>
         <Map zoom={2} center={[0, 0]} debug={debug}>
@@ -96,13 +98,13 @@ const Index = () => {
             />
           )}
           <Raster
-            key={`${source}`}
+            key={`${mapSource}`}
             colormap={colormap}
             clim={clim}
             display={display}
             opacity={opacity}
             mode={'texture'}
-            source={source}
+            source={mapSource}
             variable={'climate'}
             selector={{ month, band }}
             // selector={{ month, band, source }}
@@ -110,7 +112,7 @@ const Index = () => {
           />
           <RegionPlot
             band={band}
-            source={source}
+            source={mapSource}
             regionData={regionData}
             showRegionPlot={showRegionPlot}
             setShowRegionPlot={setShowRegionPlot}
@@ -142,10 +144,11 @@ const Index = () => {
   */}
 
   <Charts chartHeight={chartHeight}
-      source={source}
+      source={chartSource}
       downscaling={downscaling}
       model={model}
       band={band}
+      month={month}
       chartData={chartData}
       setChartData={setChartData}/>
 

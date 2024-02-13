@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { slice, openArray, openGroup } from "zarr";
 
 export const getData = async (props, setChartData) => {
+    const chartSource = props.chartSource
     const z = await openArray({
-        store: "http://localhost:8000/",
-        // store: "http://localhost:4000/",
-        path: "bar.zarr",
+        store: chartSource,
+        // path not needed, chartSource has full path already
+        // path: "data/chart/icar/noresm/prec",
         mode: "r"
     });
+
 
     // GET PENDING
     // const zarrData = z.get([slice(null, z.meta.shape)])
@@ -16,6 +18,7 @@ export const getData = async (props, setChartData) => {
 
     z.get(arg1).then(
         function(result){
+            console.log("GET ZARR DATA RESULT", z)
             setChartData(result.data);
         });
 }

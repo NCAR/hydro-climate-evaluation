@@ -27,7 +27,7 @@ const DEFAULT_COLORMAPS = {
 
 const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const { display, debug, opacity, clim, month, band, colormapName,
-          downscaling, model, source, chartHeight } = getters
+          downscaling, model, mapSource, chartSource, chartHeight } = getters
   const {
     setDisplay,
     setDebug,
@@ -38,25 +38,35 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setColormapName,
     setDownscaling,
     setModel,
-    setSource,
+    setMapSource,
+    setChartSource,
     setChartHeight,
     setChartData
   } = setters
 
   const [chartToggle, setChartToggle] = useState(false)
 
+  // TODO: remove if not needed, fill-in to simplify path changes
+  const handleDataChange = useCallback((e) => {
+
+  })
+
   const handleBandChange = useCallback((e) => {
     const band = e.target.value
     setBand(band)
     setClim([CLIM_RANGES[band].min, CLIM_RANGES[band].max])
+    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+fname)
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
+    getData({chartSource}, setChartData)
     setColormapName(DEFAULT_COLORMAPS[band])
   })
 
   const handleDownscalingChange = useCallback((e) => {
     const downscaling = e.target.value
     setDownscaling(downscaling)
-    setSource(bucket+'/'+downscaling+'/'+model+'/'+fname)
-    console.log("----ARTLESS SOURCE: ", source)
+    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+fname)
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
+    getData({chartSource}, setChartData)
   })
 
   const handleModelChange = useCallback((e) => {
@@ -64,8 +74,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setModel(model)
     console.log("e =", e.target.value)
     console.log("model =", bucket+'/'+downscaling+'/'+model+'/')
-    setSource(bucket+'/'+downscaling+'/'+model+'/'+fname)
-    console.log("----ARTLESS SOURCE: ", source)
+    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+fname)
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
+    getData({chartSource}, setChartData)
   })
 
   const handleChartChange = useCallback((e) => {
@@ -169,7 +180,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         sx={{ chartToggle: 'block', mx: 3, mt: [2] }}
         value={chartToggle}
         onClick={() => {
-            getData({source}, setChartData);
+            getData({chartSource}, setChartData);
             setChartToggle((prev) => !prev);
             setChartHeight((prevHeight) => (prevHeight === '0%' ? '25%' : '0%'));
         }}
