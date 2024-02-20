@@ -28,7 +28,7 @@ const Index = () => {
   // --- precipitation defaults
   const [band, setBand] = useState('prec')
   const [colormapName, setColormapName] = useState('cool') // precip
-  const [clim, setClim] = useState([0, 60]) // precip
+  const [clim, setClim] = useState([0, 15]) // precip
   // --- average temp defaults
   // const [band, setBand] = useState('tavg')
   // const [clim, setClim] = useState([270, 310]) // tavg
@@ -40,14 +40,15 @@ const Index = () => {
 // new stuff
   const [downscaling, setDownscaling] = useState('icar')
   const [model, setModel] = useState('noresm')
+  const [yearRange, setYearRange] = useState('1980_2010')
   const [fname, setFname] = useState('tavg-prec-month.zarr')
-  const [mapSource, setMapSource] = useState(bucket_ndp+'map/icar/noresm/'+fname) // WORKS
+  const [mapSource, setMapSource] = useState(bucket_ndp+'map/icar/noresm/1980_2010/'+fname) // WORKS
   const [chartSource, setChartSource] = useState(bucket_ndp+'chart/icar/noresm/'+band) // WORKS
   const [chartHeight, setChartHeight] = useState('0%')
   const [chartData, setChartData] = useState(Array(12).fill(0))
 
   const getters = { display, debug, opacity, clim, month, band, colormapName,
-                    downscaling, model, mapSource, chartSource, bucket_ndp, chartHeight}
+                    downscaling, model, yearRange, mapSource, colormap, chartSource, bucket_ndp, chartHeight}
   const setters = {
     setDisplay,
     setDebug,
@@ -59,6 +60,7 @@ const Index = () => {
     setColormapName,
     setDownscaling,
     setModel,
+    setYearRange,
     setMapSource,
     setChartSource,
     setChartHeight,
@@ -143,14 +145,14 @@ const Index = () => {
   </Column>
   */}
 
-  <Charts chartHeight={chartHeight}
+{/*  <Charts chartHeight={chartHeight}
       source={chartSource}
       downscaling={downscaling}
       model={model}
       band={band}
       month={month}
       chartData={chartData}
-      setChartData={setChartData}/>
+      setChartData={setChartData}/>*/}
 
 
 </Row>

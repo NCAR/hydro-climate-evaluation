@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Box, Flex } from 'theme-ui'
 import { useCallback } from 'react'
-import { Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components'
+import { Colorbar, Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components'
 import { colormaps } from '@carbonplan/colormaps'
 import { getData } from './getData'
 
@@ -16,8 +16,8 @@ const sx = {
 }
 
 const CLIM_RANGES = {
-  tavg: { max: 310, min: 270 },
-  prec: { max: 60, min: 0 }
+  tavg: { max: 37, min: 0 },
+  prec: { max: 15, min: 0 }
 }
 
 const DEFAULT_COLORMAPS = {
@@ -27,7 +27,7 @@ const DEFAULT_COLORMAPS = {
 
 const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const { display, debug, opacity, clim, month, band, colormapName,
-          downscaling, model, mapSource, chartSource, chartHeight } = getters
+          downscaling, model, yearRange, mapSource, colormap, chartSource, chartHeight } = getters
   const {
     setDisplay,
     setDebug,
@@ -38,6 +38,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setColormapName,
     setDownscaling,
     setModel,
+    setYearRange,
     setMapSource,
     setChartSource,
     setChartHeight,
@@ -46,17 +47,32 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const [chartToggle, setChartToggle] = useState(false)
 
-  // TODO: remove if not needed, fill-in to simplify path changes
-  const handleDataChange = useCallback((e) => {
+  const [units, setUnits] = useState('mm')
 
+  const handleUnitsChange = () => {
+      if (band === 'tavg') {
+          setUnits('C°')
+      } else if (band === 'prec') {
+          setUnits('mm')
+      }
+  };
+
+
+  const handleYearChange = useCallback((e) => {
+    const yearRange = e.target.value
+    setYearRange(yearRange)
+    console.log("yearRange =", e.target.value)
+    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
   })
+
 
   const handleBandChange = useCallback((e) => {
     const band = e.target.value
     setBand(band)
     setClim([CLIM_RANGES[band].min, CLIM_RANGES[band].max])
-    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+fname)
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
+    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
     getData({chartSource}, setChartData)
     setColormapName(DEFAULT_COLORMAPS[band])
   })
@@ -64,8 +80,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const handleDownscalingChange = useCallback((e) => {
     const downscaling = e.target.value
     setDownscaling(downscaling)
-    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+fname)
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
+    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
     getData({chartSource}, setChartData)
   })
 
@@ -74,8 +90,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setModel(model)
     console.log("e =", e.target.value)
     console.log("model =", bucket+'/'+downscaling+'/'+model+'/')
-    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+fname)
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
+    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
     getData({chartSource}, setChartData)
   })
 
@@ -94,21 +110,39 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     );
   };
 
+
+  const LocalColorbar = () => {
+    handleUnitsChange()
+    return (
+      <Colorbar
+        colormap={colormap}
+        label={units}
+        clim={clim}
+        setClim={setClim}
+      />
+    );
+  };
+
+
+
+
+
   const AveDifFilter = () => {
   const [values, setValues] =
         useState({'Ave.': true, 'Dif.': false})
         // useState({One: true, Two: false, Three: false})
-  return (
-    <Filter
-      values={values}
-      setValues={setValues}
-      multiSelect={false}
-    />
-  );
-};
+    return (
+      <Filter
+        values={values}
+        setValues={setValues}
+        multiSelect={false}
+      />
+    );
+  };
 
 
-  const [year, setYear] = useState(1980)
+
+
 
   return (
     <>
@@ -188,8 +222,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       </Box>
       ],
     [<AveDifFilter />],
-    [<ClickRow />],
+    // [<ClickRow />],
+    [<LocalColorbar />],
   ]}
+
+
+
   borderTop={true}
   borderBottom={false}
   index={false}
@@ -199,7 +237,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       </Box>
       <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
 
-        <Box sx={sx.label}>Minimum</Box>
+{/*   // Old temperature range sliders
+      <Box sx={sx.label}>Minimum</Box>
         <Slider
           min={CLIM_RANGES[band].min}
           max={CLIM_RANGES[band].max}
@@ -245,11 +284,16 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         >
           {clim[1].toFixed(0)}
         </Badge>
+*/}
 
-        {/* --- Month Slider ---*/}
+
+        {/* --- Month Slider ---
+            setup to use the 0 value as averaging over the full year
+          */}
+
         <Box sx={sx.label}>{month === 0 ? 'Full Year' : `Month: ${month}`}</Box>
         <Slider
-          min={0}
+          min={1}
           max={12}
           step={1}
           sx={{ width: '175px', display: 'inline-block' }}
@@ -257,22 +301,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           onChange={(e) => setMonth(parseFloat(e.target.value))}
         />
 
-        {/*
-        <Badge
-          sx={{
-            bg: 'primary',
-            color: 'background',
-            display: 'inline-block',
-            position: 'relative',
-            left: [3],
-            top: [1],
-          }}
-        >
-          {month.toFixed(0)}
-        </Badge>  --- Month Slider ---*/}
-
-
-        {/* --- Year Slider --- */}
+        {/* --- Unused Year Slider ---
         <Box sx={sx.label}>{`Year: ${year}`}</Box>
         <Slider
           min={1970}
@@ -281,7 +310,19 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           sx={{ width: '175px', display: 'inline-block' }}
           value={year}
           onChange={(e) => setYear(parseFloat(e.target.value))}
-        />
+        /> */}
+        <Box sx={{ ...sx.label, mt: [4] }}>Year Range</Box>
+        <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={handleYearChange}
+          sx={{ mt: [1] }}
+          value={yearRange}
+        >
+          <option value='1980_2010'>1980-2010</option>
+          <option value='2070_2100'>2070-2100</option>
+        </Select>
+
 
 
 
