@@ -51,7 +51,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const handleUnitsChange = () => {
       if (band === 'tavg') {
-          setUnits('C°')
+          setUnits('°C')
       } else if (band === 'prec') {
           setUnits('mm')
       }
