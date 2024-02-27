@@ -15,19 +15,23 @@ const sx = {
   },
 }
 
-const CLIM_RANGES = {
+const Clim_Ranges = {
   tavg: { max: 37, min: 0 },
   prec: { max: 15, min: 0 }
 }
 
-const DEFAULT_COLORMAPS = {
+const Default_Colormaps = {
   tavg: 'warm',
   prec: 'cool'
 }
 
 const ParameterControls = ({ getters, setters, bucket, fname }) => {
-  const { display, debug, opacity, clim, month, band, colormapName,
-          downscaling, model, yearRange, mapSource, colormap, chartSource, chartHeight } = getters
+  const { display, debug, opacity, clim, month,
+          band, colormapName, colormap,
+          downscaling, model, yearRange, mapSource, chartSource,
+          downscalingDif, modelDif, yearRangeDif,
+          mapSourceDif, chartSourceDif,
+          chartHeight } = getters
   const {
     setDisplay,
     setDebug,
@@ -41,9 +45,16 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setYearRange,
     setMapSource,
     setChartSource,
+    setDownscalingDif,
+    setModelDif,
+    setYearRangeDif,
+    setMapSourceDif,
+    setChartSourceDif,
     setChartHeight,
     setChartData
   } = setters
+
+  const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false})
 
   const [chartToggle, setChartToggle] = useState(false)
 
@@ -57,6 +68,15 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       }
   };
 
+  const handleBandChange = useCallback((e) => {
+    const band = e.target.value
+    setBand(band)
+    setClim([Clim_Ranges[band].min, Clim_Ranges[band].max])
+    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
+    getData({chartSource}, setChartData)
+    setColormapName(Default_Colormaps[band])
+  })
 
   const handleYearChange = useCallback((e) => {
     const yearRange = e.target.value
@@ -65,16 +85,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
     setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
   })
-
-
-  const handleBandChange = useCallback((e) => {
-    const band = e.target.value
-    setBand(band)
-    setClim([CLIM_RANGES[band].min, CLIM_RANGES[band].max])
-    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
-    getData({chartSource}, setChartData)
-    setColormapName(DEFAULT_COLORMAPS[band])
+  const handleYearDifChange = useCallback((e) => {
+    const yearRangeDif = e.target.value
+    setYearRangeDif(yearRangeDif)
+    console.log("yearRange =", e.target.value)
+    setMapSourceDif(bucket+'/map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname)
+    setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band)
   })
 
   const handleDownscalingChange = useCallback((e) => {
@@ -83,6 +99,14 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
     setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
     getData({chartSource}, setChartData)
+  })
+
+  const handleDownscalingDifChange = useCallback((e) => {
+    const downscalingDif = e.target.value
+    setDownscalingDif(downscalingDif)
+    setMapSourceDif(bucket+'/map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname)
+    setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band)
+    //getData({chartSource}, setChartData)
   })
 
   const handleModelChange = useCallback((e) => {
@@ -95,11 +119,19 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     getData({chartSource}, setChartData)
   })
 
+  const handleModelDifChange = useCallback((e) => {
+    const modelDif = e.target.value
+    setModelDif(modelDif)
+    setMapSourceDif(bucket+'/map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname)
+    setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band)
+    // getData({chartSourceDif}, setChartDataDif)
+  })
+
+
   const handleChartChange = useCallback((e) => {
     const model = e.target.value
     setChartHeight('20%')
   })
-
 
   const ClickRow = () => {
     const [value, setValue] = useState(true);
@@ -114,32 +146,104 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const LocalColorbar = () => {
     handleUnitsChange()
     return (
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <Colorbar
         colormap={colormap}
         label={units}
         clim={clim}
         setClim={setClim}
       />
+      </Box>
     );
   };
 
+  const DifSourceChoices = () => {
+    return (
+    <>
+     <Box sx={{ ...sx.label, mt: [2] }}>
+            Year Range
+     </Box>
+     <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={handleYearDifChange}
+        sx={{ mt: [0] }}
+        value={yearRangeDif}
+        >
+          <option value='1980_2010'>1980-2010</option>
+          <option value='2070_2100'>2070-2100</option>
+        </Select>
 
+        <Box sx={{ ...sx.label, mt: [3] }}>
+          Downscaling
+        </Box>
+        <Box sx={{ ...sx.label, mt: [0] }}>
+          Method
+        </Box>
+        <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={handleDownscalingDifChange}
+          sx={{ mt: [1] }}
+          value={downscalingDif}
+        >
+          <option value='icar'>ICAR</option>
+          <option value='gard'>GARD</option>
+          <option value='loca'>LOCA</option>
+          <option value='bcsd'>BCSD</option>
+        </Select>
+        <Box sx={{ ...sx.label, mt: [3] }}>Climate</Box>
+        <Box sx={{ ...sx.label, mt: [0] }}>Model</Box>
+        <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={handleModelDifChange}
+          sx={{ mt: [1] }}
+          value={modelDif}
+        >
+          <option value='noresm'>NorESM</option>
+          <option value='cesm'>CESM</option>
+          <option value='gfdl'>GFDL</option>
+          <option value='miroc5'>MIROC5</option>
+        </Select>
+      </>
+    );
+  };
 
 
 
   const AveDifFilter = () => {
-  const [values, setValues] =
-        useState({'Ave.': true, 'Dif.': false})
-        // useState({One: true, Two: false, Three: false})
-    return (
-      <Filter
-        values={values}
-        setValues={setValues}
-        multiSelect={false}
-      />
-    );
-  };
 
+  const handleFilterChange = (newValues) => {
+        // Update the state only when the Filter component changes
+        setValues(newValues);
+     };
+        // useState({One: true, Two: false, Three: false})
+    if (filterValues['Ave.']) {
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Filter
+          values={filterValues}
+          setValues={setFilterValues}
+          multiSelect={false}
+        />
+        </Box>
+      );
+   } else {
+      return (
+        <>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Filter
+          values={filterValues}
+          setValues={setFilterValues}
+          multiSelect={false}
+        />
+        </Box>
+        <DifSourceChoices />
+        </>
+      );
+    }
+  };
 
 
 
@@ -206,10 +310,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     [1],
   ]}
   data={[
+    [<LocalColorbar/>],
     [
-     <Box>
-     <Box sx={{ ...sx.label, maxWidth: 50,      mx: 'auto',
-                px: 0, mt: [1] }}>Charts</Box>
+     <Box sx={{ ...sx.label, minWidth: 110, mx: 'auto',
+                px: 0, mt: [1], textAlign: 'center'}}>Charts</Box>,
+     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Toggle
         sx={{ chartToggle: 'block', mx: 3, mt: [2] }}
         value={chartToggle}
@@ -222,8 +327,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       </Box>
       ],
     [<AveDifFilter />],
+    //[<DifSourceChoices />],
+
     // [<ClickRow />],
-    [<LocalColorbar />],
   ]}
 
 
@@ -240,8 +346,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 {/*   // Old temperature range sliders
       <Box sx={sx.label}>Minimum</Box>
         <Slider
-          min={CLIM_RANGES[band].min}
-          max={CLIM_RANGES[band].max}
+          min={Clim_Ranges[band].min}
+          max={Clim_Ranges[band].max}
           step={1}
           sx={{ width: '175px', display: 'inline-block' }}
           value={clim[0]}
@@ -263,8 +369,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         </Badge>
         <Box sx={sx.label}>Maximum</Box>
         <Slider
-          min={CLIM_RANGES[band].min}
-          max={CLIM_RANGES[band].max}
+          min={Clim_Ranges[band].min}
+          max={Clim_Ranges[band].max}
           step={1}
           sx={{ width: '175px', display: 'inline-block' }}
           value={clim[1]}
@@ -323,22 +429,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           <option value='2070_2100'>2070-2100</option>
         </Select>
 
-
-
-
-
-        <Box sx={{ ...sx.label, mt: [4] }}>Variable</Box>
-        <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleBandChange}
-          sx={{ mt: [1] }}
-          value={band}
-        >
-          <option value='prec'>Precipitation</option>
-          <option value='tavg'>Temperature</option>
-        </Select>
-
         <Box sx={{ ...sx.label, mt: [4] }}>Downscaling Method</Box>
         <Select
           sxSelect={{ bg: 'transparent' }}
@@ -366,6 +456,19 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           <option value='gfdl'>GFDL</option>
           <option value='miroc5'>MIROC5</option>
         </Select>
+
+        <Box sx={{ ...sx.label, mt: [4] }}>Variable</Box>
+        <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={handleBandChange}
+          sx={{ mt: [1] }}
+          value={band}
+        >
+          <option value='prec'>Precipitation</option>
+          <option value='tavg'>Temperature</option>
+        </Select>
+
 
 
    {/*     <Box sx={{ ...sx.label, mt: [4] }}>Colormap</Box>

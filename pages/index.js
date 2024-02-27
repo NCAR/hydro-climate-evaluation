@@ -37,18 +37,32 @@ const Index = () => {
   const colormap = useThemedColormap(colormapName)
   const [showRegionPlot, setShowRegionPlot] = useState(false)
   const [regionData, setRegionData] = useState({ loading: true })
-// new stuff
+  // set variables to access datasets
   const [downscaling, setDownscaling] = useState('icar')
   const [model, setModel] = useState('noresm')
   const [yearRange, setYearRange] = useState('1980_2010')
+  // diff dataset variables for model to compare against
+  const [downscalingDif, setDownscalingDif] = useState('icar')
+  const [modelDif, setModelDif] = useState('cesm')
+  const [yearRangeDif, setYearRangeDif] = useState('1980_2010')
+
   const [fname, setFname] = useState('tavg-prec-month.zarr')
-  const [mapSource, setMapSource] = useState(bucket_ndp+'map/icar/noresm/1980_2010/'+fname) // WORKS
-  const [chartSource, setChartSource] = useState(bucket_ndp+'chart/icar/noresm/'+band) // WORKS
+  // paths to model dataset
+  const [mapSource, setMapSource] = useState(bucket_ndp+'map/icar/noresm/1980_2010/'+fname)
+  const [chartSource, setChartSource] = useState(bucket_ndp+'chart/icar/noresm/'+band)
+  // paths to model dataset used for diff
+  const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/cesm/1980_2010/'+fname)
+  const [chartSourceDif, setChartSourceDif] = useState(bucket_ndp+'chart/icar/cesm/'+band)
+  // control the height of the charts, initially hidden
   const [chartHeight, setChartHeight] = useState('0%')
   const [chartData, setChartData] = useState(Array(12).fill(0))
 
-  const getters = { display, debug, opacity, clim, month, band, colormapName,
-                    downscaling, model, yearRange, mapSource, colormap, chartSource, bucket_ndp, chartHeight}
+  const getters = { display, debug, opacity, clim,
+                    month, band, colormapName, colormap,
+                    downscaling, model, yearRange, mapSource, chartSource,
+                    downscalingDif, modelDif, yearRangeDif,
+                    mapSourceDif, chartSourceDif,
+                    bucket_ndp, chartHeight}
   const setters = {
     setDisplay,
     setDebug,
@@ -63,6 +77,11 @@ const Index = () => {
     setYearRange,
     setMapSource,
     setChartSource,
+    setDownscalingDif,
+    setModelDif,
+    setYearRangeDif,
+    setMapSourceDif,
+    setChartSourceDif,
     setChartHeight,
     setChartData
   }
