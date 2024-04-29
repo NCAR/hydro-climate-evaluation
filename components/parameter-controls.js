@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Box, Flex } from 'theme-ui'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Colorbar, Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components'
 import { colormaps } from '@carbonplan/colormaps'
 import { getData } from './getData'
@@ -73,7 +73,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setBand(band)
     setClim([Clim_Ranges[band].min, Clim_Ranges[band].max])
     setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
     getData({chartSource}, setChartData)
     setColormapName(Default_Colormaps[band])
   })
@@ -83,7 +84,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setYearRange(yearRange)
     console.log("yearRange =", e.target.value)
     setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
   })
   const handleYearDifChange = useCallback((e) => {
     const yearRangeDif = e.target.value
@@ -97,7 +99,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     const downscaling = e.target.value
     setDownscaling(downscaling)
     setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
     getData({chartSource}, setChartData)
   })
 
@@ -115,7 +118,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     console.log("e =", e.target.value)
     console.log("model =", bucket+'/'+downscaling+'/'+model+'/')
     setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
     getData({chartSource}, setChartData)
   })
 
@@ -144,7 +148,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
 
   const LocalColorbar = () => {
-    handleUnitsChange()
+    // handleUnitsChange()
+    useEffect(() => {
+      handleUnitsChange(); // This will be executed after the component is rendered
+    }, []); // Empty dependency array ensures this effect runs only once after initial render
+
+
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <Colorbar
