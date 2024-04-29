@@ -4,7 +4,7 @@ port=3000
 all: rundocker
 
 rundocker: cleandocker builddocker
-	docker run --entrypoint "/bin/sh" -it -p ${port}:${port} --name runfoobar foobar
+	docker run --entrypoint "/bin/sh" -it -p ${port}:${port} --name runicarmaps icarmaps
 
 # install nodejs dependencies and run
 run:
@@ -15,10 +15,10 @@ build:
 
 # build and clean docker images
 builddocker:
-	docker build -t foobar .
+	docker build -t icarmaps .
 
 cleandocker:
-	-docker rm runfoobar
+	-docker rm runicarmaps
 
 clean:
 	rm -f *~
@@ -27,6 +27,6 @@ cleanall: clean
 	rm -rf node_modules .next
 
 # runcached:
-# 	docker run -it -p ${port}:${port} --name runfoobar foobar
-# 	docker run -t -d -p ${port}:${port} --name runfoobar foobar
-# 	docker run -t -d --name runfoobar foobar
+# 	docker run -it -p ${port}:${port} --name runicarmaps icarmaps
+# 	docker run -t -d -p ${port}:${port} --name runicarmaps icarmaps
+# 	docker run -t -d --name runicarmaps icarmaps

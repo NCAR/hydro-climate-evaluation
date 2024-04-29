@@ -7,7 +7,6 @@ A web map of [ICAR](git@github.com:NCAR/icar.git) data.
 - Start server to host data.
   See the [ICAR Zarr Data](https://github.com/scrasmussen/icar-zarr-data) repo for instructions on locally hosting ICAR Zarr data for testing.
 
-
 ### Docker Build
 The following commands will start a Docker Image and from within the image startup and run a Node.js website.
 ```
@@ -17,8 +16,7 @@ $ make rundocker
 run website
 $ make run
 ```
-Go to
-
+Go to <localhost:3000> to see website.
 
 ### Non-Docker Build
 Install npm then run the following.
@@ -26,7 +24,6 @@ Install npm then run the following.
 $ npm install .
 $ npm run dev
 ```
-
 
 # License
 This is based on [CarbonPlan's maps](https://github.com/carbonplan/maps)
