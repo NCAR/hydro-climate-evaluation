@@ -1,5 +1,6 @@
 # ICAR Maps
-A web map of [ICAR](git@github.com:NCAR/icar.git) data.
+A web map of [ICAR](https://github.com/NCAR/icar) data based on [CarbonPlan's maps](https://github.com/carbonplan/maps).
+
 
 ## Build
 ### Prerequisites
@@ -18,6 +19,11 @@ $ make run
 ```
 Go to <localhost:3000> to see website.
 
+<img width="400" alt="image" src="https://github.com/scrasmussen/icar-maps/assets/5750642/5ab5462d-206c-4bb5-9a67-2ac45606ad22">
+
+
+
+
 ### Non-Docker Build
 Install npm then run the following.
 ```
@@ -26,7 +32,7 @@ $ npm run dev
 ```
 
 # License
-This is based on [CarbonPlan's maps](https://github.com/carbonplan/maps)
+This is based on [CarbonPlan's maps](https://github.com/carbonplan/maps).
 All the original code in this repository is MIT licensed. The library contains code from mapbox-gl-js version 1.13 (3-Clause BSD licensed). We request that you please provide attribution if reusing any of our digital content (graphics, logo, copy, etc.).
 
 
