@@ -15,8 +15,7 @@ const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/'
 
 // this works
 // const bucket_ndp = 'https://scrasmussen.github.io/'
-// const bucket_ndp = 'http://127.0.0.1:4000/downscaling/'
-const bucket_ndp = 'http://127.0.0.1:8000/data/' // python host
+const bucket_ndp = 'http://127.0.0.1:4000/data/' // python host server
 
 const Index = () => {
   const { theme } = useThemeUI()
