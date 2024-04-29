@@ -17,7 +17,7 @@ $ make rundocker
 run website
 $ make run
 ```
-Go to <localhost:3000> to see website.
+Go to [localhost:3000](http://localhost:3000) in a browser to preview website.
 
 <img width="400" alt="image" src="https://github.com/scrasmussen/icar-maps/assets/5750642/5ab5462d-206c-4bb5-9a67-2ac45606ad22">
 
