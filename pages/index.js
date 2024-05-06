@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Box, useThemeUI } from 'theme-ui'
 import { Dimmer, Meta, Column, Row } from '@carbonplan/components'
-import { Map, Raster, Fill, Line, RegionPicker } from '@carbonplan/maps'
+// import { Map, Raster, Fill, Line, RegionPicker } from '@carbonplan/maps'
+import { Map, Raster, Fill, Line, RegionPicker } from '../maps'
 // import { Map, Fill, Line, RegionPicker } from '@carbonplan/maps'
 // import Raster from '../components/maps/raster'
 import { useThemedColormap } from '@carbonplan/colormaps'
@@ -125,6 +126,7 @@ const Index = () => {
             opacity={opacity}
             mode={'texture'}
             source={mapSource}
+            sourceDif={mapSourceDif}
             variable={'climate'}
             selector={{ month, band }}
             // selector={{ month, band, source }}
