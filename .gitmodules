@@ -1,0 +1,4 @@
+[submodule "maps"]
+	path = maps
+	url = git@github.com:scrasmussen/carbonplan-maps.git
+        branch = icar-maps

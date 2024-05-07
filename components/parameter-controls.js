@@ -31,7 +31,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           downscaling, model, yearRange, mapSource, chartSource,
           downscalingDif, modelDif, yearRangeDif,
           mapSourceDif, chartSourceDif,
-          chartHeight } = getters
+          chartHeight, filterValues } = getters
   const {
     setDisplay,
     setDebug,
@@ -51,10 +51,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setMapSourceDif,
     setChartSourceDif,
     setChartHeight,
-    setChartData
+    setChartData,
+    setFilterValues
   } = setters
 
-  const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false})
+  // const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false})
 
   const [chartToggle, setChartToggle] = useState(false)
 
@@ -65,6 +66,20 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           setUnits('°C')
       } else if (band === 'prec') {
           setUnits('mm')
+      }
+  };
+
+
+  // NOTE: Chart sources have not been created with yearRange yet
+
+  const handleFilterChangeRange = (e) => {
+      const filterVals = e
+      if (filterVals['Ave.']) {
+          setClim([0,15])
+          setFilterValues({'Ave.': true, 'Dif.': false})
+      } else {
+          setClim([-1,1])
+          setFilterValues({'Ave.': false, 'Dif.': true})
       }
   };
 
@@ -227,13 +242,14 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         // Update the state only when the Filter component changes
         setValues(newValues);
      };
-        // useState({One: true, Two: false, Three: false})
+
     if (filterValues['Ave.']) {
       return (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Filter
           values={filterValues}
-          setValues={setFilterValues}
+          // setValues={setFilterValues}
+          setValues={handleFilterChangeRange}
           multiSelect={false}
         />
         </Box>
@@ -244,7 +260,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Filter
           values={filterValues}
-          setValues={setFilterValues}
+          // setValues={setFilterValues}
+          setValues={handleFilterChangeRange}
           multiSelect={false}
         />
         </Box>

@@ -9,6 +9,9 @@ rundocker: cleandocker builddocker
 # install nodejs dependencies and run
 run:
 	npm run dev
+init:
+	rm -rf node_modules
+	npm install .
 
 build:
 	npm install .
@@ -19,6 +22,8 @@ builddocker:
 
 cleandocker:
 	-docker rm runicarmaps
+cleandockerall: cleandocker
+	docker builder prune
 
 clean:
 	rm -f *~

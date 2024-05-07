@@ -53,6 +53,10 @@ const Index = () => {
   // paths to model dataset used for diff
   const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/cesm/1980_2010/'+fname)
   const [chartSourceDif, setChartSourceDif] = useState(bucket_ndp+'chart/icar/cesm/'+band)
+  // set values to decide whether to map average or difference
+  const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false})
+
+
   // control the height of the charts, initially hidden
   const [chartHeight, setChartHeight] = useState('0%')
   const [chartData, setChartData] = useState(Array(12).fill(0))
@@ -62,7 +66,7 @@ const Index = () => {
                     downscaling, model, yearRange, mapSource, chartSource,
                     downscalingDif, modelDif, yearRangeDif,
                     mapSourceDif, chartSourceDif,
-                    bucket_ndp, chartHeight}
+                    bucket_ndp, chartHeight, filterValues}
   const setters = {
     setDisplay,
     setDebug,
@@ -83,7 +87,8 @@ const Index = () => {
     setMapSourceDif,
     setChartSourceDif,
     setChartHeight,
-    setChartData
+    setChartData,
+    setFilterValues
   }
 
   return (
@@ -119,7 +124,7 @@ const Index = () => {
             />
           )}
           <Raster
-            key={`${mapSource}`}
+            key={`${mapSource}-${JSON.stringify(filterValues)}`}
             colormap={colormap}
             clim={clim}
             display={display}
@@ -129,6 +134,7 @@ const Index = () => {
             sourceDif={mapSourceDif}
             variable={'climate'}
             selector={{ month, band }}
+            filterValue={filterValues}
             // selector={{ month, band, source }}
             regionOptions={{ setData: setRegionData }}
           />

@@ -4,6 +4,7 @@ A web map of [ICAR](https://github.com/NCAR/icar) data based on [CarbonPlan's ma
 
 ## Build
 ### Prerequisites
+- Initialize Git Submodules to get `icar-maps` branch of [CarbonPlan's maps](https://github.com/scrasmussen/carbonplan-maps).
 - Start Docker Desktop or its equivalent in the background.
 - Start server to host data.
   See the [ICAR Zarr Data](https://github.com/scrasmussen/icar-zarr-data) repo for instructions on locally hosting ICAR Zarr data for testing.
@@ -14,7 +15,8 @@ The following commands will start a Docker Image and from within the image start
 startup docker
 $ make rundocker
 
-run website
+run website, on startup of Docker node_modules may need to be reinstalled
+$ make init
 $ make run
 ```
 Go to [localhost:3000](http://localhost:3000) in a browser to preview website.
