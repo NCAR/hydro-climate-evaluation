@@ -22,7 +22,8 @@ const Clim_Ranges = {
 
 const Default_Colormaps = {
   tavg: 'warm',
-  prec: 'cool'
+  prec: 'cool',
+  diff: 'redteal',
 }
 
 const ParameterControls = ({ getters, setters, bucket, fname }) => {
@@ -75,11 +76,13 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const handleFilterChangeRange = (e) => {
       const filterVals = e
       if (filterVals['Ave.']) {
-          setClim([0,15])
           setFilterValues({'Ave.': true, 'Dif.': false})
+          setClim([Clim_Ranges[band].min, Clim_Ranges[band].max])
+          setColormapName(Default_Colormaps[band])
       } else {
-          setClim([-1,1])
           setFilterValues({'Ave.': false, 'Dif.': true})
+          setClim([-1,1])
+          setColormapName(Default_Colormaps['diff'])
       }
   };
 
