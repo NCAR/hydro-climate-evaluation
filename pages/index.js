@@ -40,11 +40,13 @@ const Index = () => {
   // set variables to access datasets
   const [downscaling, setDownscaling] = useState('icar')
   const [model, setModel] = useState('noresm')
+  const [metric, setMetric] = useState('n34pr')
   const [yearRange, setYearRange] = useState('1980_2010')
   // diff dataset variables for model to compare against
   const [downscalingDif, setDownscalingDif] = useState('icar')
   const [modelDif, setModelDif] = useState('cesm')
   const [yearRangeDif, setYearRangeDif] = useState('1980_2010')
+  const [obsDif, setObsDif] = useState('conus404')
 
   const [fname, setFname] = useState('tavg-prec-month.zarr')
   // paths to model dataset
@@ -63,8 +65,8 @@ const Index = () => {
 
   const getters = { display, debug, opacity, clim,
                     month, band, colormapName, colormap,
-                    downscaling, model, yearRange, mapSource, chartSource,
-                    downscalingDif, modelDif, yearRangeDif,
+                    downscaling, model, metric, yearRange, mapSource, chartSource,
+                    downscalingDif, modelDif, yearRangeDif, obsDif,
                     mapSourceDif, chartSourceDif,
                     bucket_ndp, chartHeight, filterValues}
   const setters = {
@@ -78,12 +80,14 @@ const Index = () => {
     setColormapName,
     setDownscaling,
     setModel,
+    setMetric,
     setYearRange,
     setMapSource,
     setChartSource,
     setDownscalingDif,
     setModelDif,
     setYearRangeDif,
+    setObsDif,
     setMapSourceDif,
     setChartSourceDif,
     setChartHeight,
@@ -124,7 +128,7 @@ const Index = () => {
             />
           )}
           <Raster
-            key={`${mapSource}-${JSON.stringify(filterValues)}`}
+            key={`${mapSource}-${mapSourceDif}-${JSON.stringify(filterValues)}`}
             colormap={colormap}
             clim={clim}
             display={display}

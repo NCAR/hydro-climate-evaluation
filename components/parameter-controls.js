@@ -26,11 +26,12 @@ const Default_Colormaps = {
   diff: 'redteal',
 }
 
+
 const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const { display, debug, opacity, clim, month,
           band, colormapName, colormap,
-          downscaling, model, yearRange, mapSource, chartSource,
-          downscalingDif, modelDif, yearRangeDif,
+          downscaling, model, metric, yearRange, mapSource, chartSource,
+          downscalingDif, modelDif, yearRangeDif, obsDif,
           mapSourceDif, chartSourceDif,
           chartHeight, filterValues } = getters
   const {
@@ -39,6 +40,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setOpacity,
     setClim,
     setMonth,
+    setMetric,
     setBand,
     setColormapName,
     setDownscaling,
@@ -49,6 +51,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setDownscalingDif,
     setModelDif,
     setYearRangeDif,
+    setObsDif,
     setMapSourceDif,
     setChartSourceDif,
     setChartHeight,
@@ -69,6 +72,69 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           setUnits('mm')
       }
   };
+
+  const setMetricLabel = () => {
+    let label = 'n34pr'
+    let description  = 'further description'
+    if (metric === 'n34pr') {
+      label = 'n34pr'
+    } else if (metric === 'n34t') {
+      label = 'n34t'
+    }  else if (metric === 'ptrend') {
+      label = 'ptrend'
+    }  else if (metric === 'ttrend') {
+      label = 'ttrend'
+    }  else if (metric === 'pr90') {
+      label = 'pr90'
+    }  else if (metric === 'pr99') {
+      label = 'pr99'
+    }  else if (metric === 't90') {
+      label = 't90'
+    }  else if (metric === 't99') {
+      label = 't99'
+    }  else if (metric === 'djf_t') {
+      label = 'djf_t'
+    }  else if (metric === 'djf_p') {
+      label = 'djf_p'
+    }  else if (metric === 'mam_t') {
+      label = 'mam_t'
+    }  else if (metric === 'mam_p') {
+      label = 'mam_p'
+    }  else if (metric === 'jja_t') {
+      label = 'jja_t'
+    }  else if (metric === 'jja_p') {
+      label = 'jja_p'
+    }  else if (metric === 'son_t') {
+      label = 'son_t'
+    }  else if (metric === 'son_p') {
+      label = 'son_p'
+    } //  else {
+    //   label = 'label undefined'
+    // }
+
+    return(
+       <Box sx={{ ...sx.label, mt: [4] }}>
+          <Link href='https://google.com/'>{label}</Link>:<br />
+           {description}
+
+       </Box>
+      )
+
+   };
+
+   const MetricBox = () => {
+       const [values, setValues] =
+           useState({'90%': false, '99%': false, 'Std.': false, 'RSME': false})
+       return (
+           <Filter
+             values={values}
+             setValues={setValues}
+             showAll
+               />
+       )
+   };
+
+
 
 
   // NOTE: Chart sources have not been created with yearRange yet
@@ -141,6 +207,17 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     getData({chartSource}, setChartData)
   })
 
+  const handleMetricChange = useCallback((e) => {
+    const metric = e.target.value
+    setMetric(metric)
+    console.log("e =", e.target.value)
+    // console.log("model =", bucket+'/'+downscaling+'/'+model+'/')
+    // setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
+    // // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
+    // getData({chartSource}, setChartData)
+  })
+
   const handleModelDifChange = useCallback((e) => {
     const modelDif = e.target.value
     setModelDif(modelDif)
@@ -184,6 +261,79 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     );
   };
 
+  const DifYearChoices = () => {
+    if (yearRange === '1980_2010') {
+      setYearRangeDif('1980_2010')
+      return(
+        [<option value='1980_2010'>1980-2010</option>,
+         <option value='2070_2100'>2070-2100</option>]
+      );
+    } else {
+      setYearRangeDif('1980_2010')
+      return(
+        <option value='1980_2010'>1980-2010</option>
+      );
+    }
+   }
+
+  const DifDownscalingChoices = () => {
+    if (yearRange === '1980_2010') {
+      setDownscalingDif('icar');
+      return(
+        [ <option value='icar'>ICAR</option>,
+          <option value='gard'>GARD</option>,
+          <option value='loca'>LOCA</option>,
+          <option value='bcsd'>BCSD</option>]
+      );
+    } else {
+    if (downscaling === 'icar') {
+      setDownscalingDif('icar');
+      return(<option value='icar'>ICAR</option>);
+    }
+    else if (downscaling === 'gard') {
+      setDownscalingDif('gard');
+      return(<option value='gard'>GARD</option>);
+    }
+    else if (downscaling === 'loca') {
+      setDownscalingDif('loca');
+      return(<option value='loca'>LOCA</option>);
+    }
+    else if (downscaling === 'bcsd'){
+      setDownscalingDif('bcsd');
+      return(<option value='bcsd'>BCSD</option>);
+    }
+   }
+  }
+
+  const DifModelChoices = () => {
+    if (yearRange === '1980_2010') {
+      setModelDif('noresm')
+      return(
+        [ <option value='noresm'>NorESM</option>,
+          <option value='cesm'>CESM</option>,
+          <option value='gfdl'>GFDL</option>,
+          <option value='miroc5'>MIROC5</option>]
+      );
+    } else {
+    if (model === 'noresm') {
+      setModelDif('noresm')
+      return(<option value='noresm'>NorESM</option>);
+    }
+    else if (model === 'cesm') {
+      setModelDif('cesm')
+      return(<option value='cesm'>CESM</option>);
+    }
+    else if (model === 'gfdl') {
+      setModelDif('gfdl')
+      return(<option value='gfdl'>GFDL</option>);
+    }
+    else if (model === 'miroc5'){
+      setModelDif('miroc5')
+      return(<option value='miroc5'>MIROC5</option>);
+    }
+   }
+  }
+
   const DifSourceChoices = () => {
     return (
     <>
@@ -197,8 +347,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         sx={{ mt: [0] }}
         value={yearRangeDif}
         >
-          <option value='1980_2010'>1980-2010</option>
-          <option value='2070_2100'>2070-2100</option>
+         {/* DifYearChoices() */}
+         <option value='1980_2010'>1980-2010</option>
+         <option value='2070_2100'>2070-2100</option>
         </Select>
 
         <Box sx={{ ...sx.label, mt: [3] }}>
@@ -214,6 +365,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           sx={{ mt: [1] }}
           value={downscalingDif}
         >
+         {/* DifDownscalingChoices() */}
           <option value='icar'>ICAR</option>
           <option value='gard'>GARD</option>
           <option value='loca'>LOCA</option>
@@ -228,10 +380,35 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           sx={{ mt: [1] }}
           value={modelDif}
         >
+         {/* DifModelChoices() */}
           <option value='noresm'>NorESM</option>
           <option value='cesm'>CESM</option>
           <option value='gfdl'>GFDL</option>
           <option value='miroc5'>MIROC5</option>
+        </Select>
+      </>
+    );
+  };
+
+  const NewDifSourceChoices = () => {
+    return (
+    <>
+        <Box sx={{ ...sx.label, mt: [3] }}>Climate</Box>
+        <Box sx={{ ...sx.label, mt: [0] }}>Model</Box>
+        <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={setObsDif}
+          sx={{ mt: [1] }}
+          value={obsDif}
+        >
+         {/* DifModelChoices() */}
+          <option value='conus404'>Conus404</option>
+          <option value='livneh'>Livneh</option>
+          <option value='maurer'>Maurer</option>
+          <option value='nldas'>NLDAS</option>
+          <option value='oldlivneh'>Old Livneh</option>
+          <option value='prism'>PRISM</option>
         </Select>
       </>
     );
@@ -268,7 +445,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           multiSelect={false}
         />
         </Box>
-        <DifSourceChoices />
+        <NewDifSourceChoices />
         </>
       );
     }
@@ -426,7 +603,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             setup to use the 0 value as averaging over the full year
           */}
 
-        <Box sx={sx.label}>{month === 0 ? 'Full Year' : `Month: ${month}`}</Box>
+{/*     <Box sx={sx.label}>{month === 0 ? 'Full Year' : `Month: ${month}`}</Box>
         <Slider
           min={1}
           max={12}
@@ -434,7 +611,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           sx={{ width: '175px', display: 'inline-block' }}
           value={month}
           onChange={(e) => setMonth(parseFloat(e.target.value))}
-        />
+        />*/}
 
         {/* --- Unused Year Slider ---
         <Box sx={sx.label}>{`Year: ${year}`}</Box>
@@ -486,7 +663,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           <option value='miroc5'>MIROC5</option>
         </Select>
 
-        <Box sx={{ ...sx.label, mt: [4] }}>Variable</Box>
+{/*     <Box sx={{ ...sx.label, mt: [4] }}>Variable</Box>
         <Select
           sxSelect={{ bg: 'transparent' }}
           size='xs'
@@ -497,7 +674,62 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           <option value='prec'>Precipitation</option>
           <option value='tavg'>Temperature</option>
         </Select>
+*/}
 
+        <Box sx={{ ...sx.label, mt: [4] }}>Metrics</Box>
+        <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={handleMetricChange}
+          sx={{ mt: [1] }}
+          value={metric}
+        >
+          <option value='n34pr'>n34pr</option>
+          <option value='n34t'>n34t</option>
+          <option value='ptrend'>ptrend</option>
+          <option value='ttrend'>ttrend</option>
+          <option value='pr90'>pr90</option>
+          <option value='pr99'>pr99</option>
+          <option value='t90'>t90</option>
+          <option value='t99'>t99</option>
+          <option value='djf_t'>djf_t</option>
+          <option value='djf_p'>djf_p</option>
+          <option value='mam_t'>mam_t</option>
+          <option value='mam_p'>mam_p</option>
+          <option value='jja_t'>jja_t</option>
+          <option value='jja_p'>jja_p</option>
+          <option value='son_t'>son_t</option>
+          <option value='son_p'>son_p</option>
+        </Select>
+
+     { setMetricLabel() }
+
+
+
+ {/*       <Box sx={{ ...sx.label, mt: [4] }}>Metric</Box>  */}
+          {/* MetricBox() */}
+ {/*         <Grid gap={2} columns={[2]}>
+            { Click90() }
+            { Click99() }
+            { ClickStandardDev() }
+            { ClickRSME() }
+          </Grid>
+  */}
+
+   {/*      <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={handleMetricChange}
+          sx={{ mt: [1] }}
+          value={model}
+        >
+          <option value='none'>None</option>
+          <option value='90'>90th percentile</option>
+          <option value='99'>99th percentile</option>
+          <option value='std'>Std. Dev.</option>
+          <option value='rsme'>RSME</option>
+        </Select>
+   */}
 
 
    {/*     <Box sx={{ ...sx.label, mt: [4] }}>Colormap</Box>
@@ -513,9 +745,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           ))}
         </Select>*/}
 
-        <Box sx={{ ...sx.label, mt: [4] }}>
+     {/*   <Box sx={{ ...sx.label, mt: [4] }}>
           <Link href='https://github.com/NCAR/ICAR'>ICAR Github</Link>
-        </Box>
+        </Box> */}
 
       {/*  <Box sx={{ ...sx.label, mt: [4] }}>
           source = {source}

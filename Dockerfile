@@ -10,8 +10,9 @@ WORKDIR /usr/src/app
 COPY package.json package.json
 # COPY package-lock.json package-lock.json
 
-RUN apk update && apk add emacs-nox make
-RUN npm install
+RUN apk update && apk add emacs-nox make git
+RUN rm -rf node_modules
+RUN npm install .
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.npm to speed up subsequent builds.
 # Leverage a bind mounts to package.json and package-lock.json to avoid having to copy them into
@@ -36,5 +37,5 @@ COPY . .
 EXPOSE 3000
 
 # Run the application.
-CMD npm run dev
-CMD npm install -g npm@10.3.0
+# CMD npm run dev
+# CMD npm install -g npm@10.3.0
