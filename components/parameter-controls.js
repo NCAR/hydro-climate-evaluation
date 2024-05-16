@@ -78,36 +78,61 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     let description  = 'further description'
     if (metric === 'n34pr') {
       label = 'n34pr'
+      setBand('n34p')
+      // setClim([0, 4])
     } else if (metric === 'n34t') {
       label = 'n34t'
+      setBand('n34t')
+      // setClim([10, 30])
     }  else if (metric === 'ptrend') {
       label = 'ptrend'
+      setBand('ptre')
     }  else if (metric === 'ttrend') {
       label = 'ttrend'
+      setBand('ttre')
+      // setClim([10, 30])
     }  else if (metric === 'pr90') {
       label = 'pr90'
+      setBand('pr90')
     }  else if (metric === 'pr99') {
       label = 'pr99'
+      setBand('pr99')
     }  else if (metric === 't90') {
       label = 't90'
+      setBand('t90_')
+      // setClim([10, 30])
     }  else if (metric === 't99') {
       label = 't99'
+      setBand('t99_')
+      // setClim([10, 30])
     }  else if (metric === 'djf_t') {
       label = 'djf_t'
+      setBand('djft')
+      // setClim([10, 30])
     }  else if (metric === 'djf_p') {
       label = 'djf_p'
+      setBand('djfp')
     }  else if (metric === 'mam_t') {
       label = 'mam_t'
+      setBand('mamt')
+      // setClim([10, 30])
     }  else if (metric === 'mam_p') {
       label = 'mam_p'
+      setBand('mamp')
     }  else if (metric === 'jja_t') {
       label = 'jja_t'
+      setBand('jjat')
+      // setClim([10, 30])
     }  else if (metric === 'jja_p') {
       label = 'jja_p'
+      setBand('jjap')
     }  else if (metric === 'son_t') {
       label = 'son_t'
+      setBand('sont')
+      // setClim([10, 30])
     }  else if (metric === 'son_p') {
       label = 'son_p'
+      setBand('sonp')
     } //  else {
     //   label = 'label undefined'
     // }

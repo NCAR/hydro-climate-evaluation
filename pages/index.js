@@ -26,7 +26,8 @@ const Index = () => {
   const [month, setMonth] = useState(1)
   const [time, setTime] = useState(1)
   // --- precipitation defaults
-  const [band, setBand] = useState('prec')
+  const [band, setBand] = useState('n34p')
+  // const [band, setBand] = useState('prec')
   const [colormapName, setColormapName] = useState('cool') // precip
   const [clim, setClim] = useState([0, 15]) // precip
   // --- average temp defaults
@@ -53,7 +54,8 @@ const Index = () => {
   const [mapSource, setMapSource] = useState(bucket_ndp+'map/icar/noresm/1980_2010/'+fname)
   const [chartSource, setChartSource] = useState(bucket_ndp+'chart/icar/noresm/'+band)
   // paths to model dataset used for diff
-  const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/cesm/1980_2010/'+fname)
+  // const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/cesm/1980_2010/'+fname)
+  const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/noresm/1980_2010/'+fname)
   const [chartSourceDif, setChartSourceDif] = useState(bucket_ndp+'chart/icar/cesm/'+band)
   // set values to decide whether to map average or difference
   const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false})
@@ -137,7 +139,8 @@ const Index = () => {
             source={mapSource}
             sourceDif={mapSourceDif}
             variable={'climate'}
-            selector={{ month, band }}
+            selector={{ band }}
+            // selector={{ month, band }}
             filterValue={filterValues}
             // selector={{ month, band, source }}
             regionOptions={{ setData: setRegionData }}
