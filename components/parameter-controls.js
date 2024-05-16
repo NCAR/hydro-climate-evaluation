@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, Fragment } from 'react'
 import { Box, Flex } from 'theme-ui'
 import { useCallback, useEffect } from 'react'
 import { Colorbar, Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components'
@@ -75,64 +75,126 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const setMetricLabel = () => {
     let label = 'n34pr'
-    let description  = 'further description'
+    let description  = ['further description']
     if (metric === 'n34pr') {
       label = 'n34pr'
       setBand('n34p')
+      description =
+            ['Niño3.4 precipitation',
+             'teleconnection patterns',
+             'spatial correlation']
       // setClim([0, 4])
     } else if (metric === 'n34t') {
       label = 'n34t'
       setBand('n34t')
+      description =
+            ['Niño3.4 temperature',
+             'teleconnection patterns',
+             'spatial correlation']
       // setClim([10, 30])
     }  else if (metric === 'ptrend') {
       label = 'ptrend'
       setBand('ptre')
+      description =
+            ['Precipitation',
+             'trend']
     }  else if (metric === 'ttrend') {
       label = 'ttrend'
       setBand('ttre')
+      description =
+            ['Temperature',
+             'trend']
       // setClim([10, 30])
     }  else if (metric === 'pr90') {
       label = 'pr90'
       setBand('pr90')
+      description =
+            ['Precipitation',
+             'extremes',
+             '90th percentile']
     }  else if (metric === 'pr99') {
       label = 'pr99'
       setBand('pr99')
+      description =
+            ['Precipitation',
+             'extremes',
+             '99th percentile']
     }  else if (metric === 't90') {
       label = 't90'
       setBand('t90_')
+      description =
+            ['Temperature',
+             'extremes',
+             '90th percentile']
       // setClim([10, 30])
     }  else if (metric === 't99') {
       label = 't99'
       setBand('t99_')
+      description =
+            ['Temperature',
+             'extremes',
+             '99th percentile']
       // setClim([10, 30])
     }  else if (metric === 'djf_t') {
       label = 'djf_t'
       setBand('djft')
+      description =
+            ['Seasonal mean',
+             'temperature',
+            'Dec/Jan/Feb']
       // setClim([10, 30])
     }  else if (metric === 'djf_p') {
       label = 'djf_p'
       setBand('djfp')
+      description =
+            ['Seasonal mean',
+             'precipitation',
+            'Dec/Jan/Feb']
     }  else if (metric === 'mam_t') {
       label = 'mam_t'
       setBand('mamt')
+      description =
+            ['Seasonal mean',
+             'temperature',
+            'Mar/Apr/May']
       // setClim([10, 30])
     }  else if (metric === 'mam_p') {
       label = 'mam_p'
       setBand('mamp')
+      description =
+            ['Seasonal mean',
+             'precipitation',
+            'Mar/Apr/May']
     }  else if (metric === 'jja_t') {
       label = 'jja_t'
       setBand('jjat')
+      description =
+            ['Seasonal mean',
+             'temperature',
+            'Jun/Jul/Aug']
       // setClim([10, 30])
     }  else if (metric === 'jja_p') {
       label = 'jja_p'
       setBand('jjap')
+      description =
+            ['Seasonal mean',
+             'precipitation',
+            'Jun/Jul/Aug']
     }  else if (metric === 'son_t') {
       label = 'son_t'
       setBand('sont')
       // setClim([10, 30])
+      description =
+            ['Seasonal mean',
+             'temperature',
+            'Sep/Oct/Nov']
     }  else if (metric === 'son_p') {
       label = 'son_p'
       setBand('sonp')
+      description =
+            ['Seasonal mean',
+             'precipitation',
+            'Sep/Oct/Nov']
     } //  else {
     //   label = 'label undefined'
     // }
@@ -140,7 +202,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     return(
        <Box sx={{ ...sx.label, mt: [4] }}>
           <Link href='https://google.com/'>{label}</Link>:<br />
-           {description}
+          {description.map((line, index) => (
+              <Fragment key={index}>
+                  {line}
+                  <br />
+              </Fragment>
+          ))}
 
        </Box>
       )
