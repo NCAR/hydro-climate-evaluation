@@ -656,8 +656,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           sx={{ mt: [1] }}
           value={yearRange}
         >
-          <option value='1980_2010'>1980-2010</option>
-          <option value='2070_2100'>2070-2100</option>
+          <option value='1981_2004'>1981-2004</option>
+{/*       <option value='1980_2010'>1980-2010</option>
+          <option value='2070_2100'>2070-2100</option>*/}
         </Select>
 
         <Box sx={{ ...sx.label, mt: [4] }}>Downscaling Method</Box>

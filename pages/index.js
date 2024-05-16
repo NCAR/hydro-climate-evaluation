@@ -42,20 +42,21 @@ const Index = () => {
   const [downscaling, setDownscaling] = useState('icar')
   const [model, setModel] = useState('noresm')
   const [metric, setMetric] = useState('n34pr')
-  const [yearRange, setYearRange] = useState('1980_2010')
+  // const [yearRange, setYearRange] = useState('1980_2010')
+  const [yearRange, setYearRange] = useState('1981_2004')
   // diff dataset variables for model to compare against
   const [downscalingDif, setDownscalingDif] = useState('icar')
   const [modelDif, setModelDif] = useState('cesm')
-  const [yearRangeDif, setYearRangeDif] = useState('1980_2010')
+  const [yearRangeDif, setYearRangeDif] = useState('1981_2004')
   const [obsDif, setObsDif] = useState('conus404')
 
   const [fname, setFname] = useState('tavg-prec-month.zarr')
   // paths to model dataset
-  const [mapSource, setMapSource] = useState(bucket_ndp+'map/icar/noresm/1980_2010/'+fname)
+  const [mapSource, setMapSource] = useState(bucket_ndp+'map/icar/noresm/1981_2004/'+fname)
   const [chartSource, setChartSource] = useState(bucket_ndp+'chart/icar/noresm/'+band)
   // paths to model dataset used for diff
   // const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/cesm/1980_2010/'+fname)
-  const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/noresm/1980_2010/'+fname)
+  const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/noresm/1981_2004/'+fname)
   const [chartSourceDif, setChartSourceDif] = useState(bucket_ndp+'chart/icar/cesm/'+band)
   // set values to decide whether to map average or difference
   const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false})
