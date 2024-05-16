@@ -82,14 +82,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             ['Niño3.4 precipitation',
              'teleconnection patterns',
              'spatial correlation']
-      // setClim([0, 4])
     } else if (metric === 'n34t') {
       label = 'n34t'
       description =
             ['Niño3.4 temperature',
              'teleconnection patterns',
              'spatial correlation']
-      // setClim([10, 30])
     }  else if (metric === 'ptrend') {
       label = 'ptrend'
       description =
@@ -100,7 +98,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       description =
             ['Temperature',
              'trend']
-      // setClim([10, 30])
     }  else if (metric === 'pr90') {
       label = 'pr90'
       description =
@@ -119,21 +116,18 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             ['Temperature',
              'extremes',
              '90th percentile']
-      // setClim([10, 30])
     }  else if (metric === 't99') {
       label = 't99'
       description =
             ['Temperature',
              'extremes',
              '99th percentile']
-      // setClim([10, 30])
     }  else if (metric === 'djf_t') {
       label = 'djf_t'
       description =
             ['Seasonal mean',
              'temperature',
             'Dec/Jan/Feb']
-      // setClim([10, 30])
     }  else if (metric === 'djf_p') {
       label = 'djf_p'
       description =
@@ -146,7 +140,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             ['Seasonal mean',
              'temperature',
             'Mar/Apr/May']
-      // setClim([10, 30])
     }  else if (metric === 'mam_p') {
       label = 'mam_p'
       description =
@@ -159,7 +152,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             ['Seasonal mean',
              'temperature',
             'Jun/Jul/Aug']
-      // setClim([10, 30])
     }  else if (metric === 'jja_p') {
       label = 'jja_p'
       description =
@@ -294,16 +286,18 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     if (metric === 'n34pr') {
       setBand('n34p')
       setUnits('mm')
-      // setClim([0, 4])
+      setClim([-1, 1])
     } else if (metric === 'n34t') {
       setBand('n34t')
       setUnits('°C')
+      setClim([-1, 1])
     }  else if (metric === 'ptrend') {
       setBand('ptre')
       setUnits('mm')
     }  else if (metric === 'ttrend') {
       setBand('ttre')
       setUnits('°C')
+      setClim([0, 30])
     }  else if (metric === 'pr90') {
       setBand('pr90')
       setUnits('mm')
@@ -313,33 +307,44 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }  else if (metric === 't90') {
       setBand('t90_')
       setUnits('°C')
+      setClim([0, 30])
     }  else if (metric === 't99') {
       setBand('t99_')
       setUnits('°C')
+      setClim([0, 30])
     }  else if (metric === 'djf_t') {
       setBand('djft')
       setUnits('°C')
+      setClim([-10, 15])
     }  else if (metric === 'djf_p') {
       setBand('djfp')
       setUnits('mm')
+      setClim([0, 70])
     }  else if (metric === 'mam_t') {
       setBand('mamt')
       setUnits('°C')
+      setClim([0, 30])
     }  else if (metric === 'mam_p') {
       setBand('mamp')
       setUnits('mm')
+      setClim([0, 70])
     }  else if (metric === 'jja_t') {
       setBand('jjat')
       setUnits('°C')
+      setClim([0, 30])
     }  else if (metric === 'jja_p') {
       setBand('jjap')
       setUnits('mm')
+      setClim([0, 70])
     }  else if (metric === 'son_t') {
       setBand('sont')
       setUnits('°C')
+      setClim([0, 30])
     }  else if (metric === 'son_p') {
       setBand('sonp')
       setUnits('mm')
+      setClim([0, 70])
+
     } //  else {
 
   })
