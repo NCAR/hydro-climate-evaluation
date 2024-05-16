@@ -78,7 +78,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     let description  = ['further description']
     if (metric === 'n34pr') {
       label = 'n34pr'
-      setBand('n34p')
       description =
             ['Niño3.4 precipitation',
              'teleconnection patterns',
@@ -86,7 +85,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       // setClim([0, 4])
     } else if (metric === 'n34t') {
       label = 'n34t'
-      setBand('n34t')
       description =
             ['Niño3.4 temperature',
              'teleconnection patterns',
@@ -94,34 +92,29 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       // setClim([10, 30])
     }  else if (metric === 'ptrend') {
       label = 'ptrend'
-      setBand('ptre')
       description =
             ['Precipitation',
              'trend']
     }  else if (metric === 'ttrend') {
       label = 'ttrend'
-      setBand('ttre')
       description =
             ['Temperature',
              'trend']
       // setClim([10, 30])
     }  else if (metric === 'pr90') {
       label = 'pr90'
-      setBand('pr90')
       description =
             ['Precipitation',
              'extremes',
              '90th percentile']
     }  else if (metric === 'pr99') {
       label = 'pr99'
-      setBand('pr99')
       description =
             ['Precipitation',
              'extremes',
              '99th percentile']
     }  else if (metric === 't90') {
       label = 't90'
-      setBand('t90_')
       description =
             ['Temperature',
              'extremes',
@@ -129,7 +122,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       // setClim([10, 30])
     }  else if (metric === 't99') {
       label = 't99'
-      setBand('t99_')
       description =
             ['Temperature',
              'extremes',
@@ -137,7 +129,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       // setClim([10, 30])
     }  else if (metric === 'djf_t') {
       label = 'djf_t'
-      setBand('djft')
       description =
             ['Seasonal mean',
              'temperature',
@@ -145,14 +136,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       // setClim([10, 30])
     }  else if (metric === 'djf_p') {
       label = 'djf_p'
-      setBand('djfp')
       description =
             ['Seasonal mean',
              'precipitation',
             'Dec/Jan/Feb']
     }  else if (metric === 'mam_t') {
       label = 'mam_t'
-      setBand('mamt')
       description =
             ['Seasonal mean',
              'temperature',
@@ -160,14 +149,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       // setClim([10, 30])
     }  else if (metric === 'mam_p') {
       label = 'mam_p'
-      setBand('mamp')
       description =
             ['Seasonal mean',
              'precipitation',
             'Mar/Apr/May']
     }  else if (metric === 'jja_t') {
       label = 'jja_t'
-      setBand('jjat')
       description =
             ['Seasonal mean',
              'temperature',
@@ -175,22 +162,18 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       // setClim([10, 30])
     }  else if (metric === 'jja_p') {
       label = 'jja_p'
-      setBand('jjap')
       description =
             ['Seasonal mean',
              'precipitation',
             'Jun/Jul/Aug']
     }  else if (metric === 'son_t') {
       label = 'son_t'
-      setBand('sont')
-      // setClim([10, 30])
       description =
             ['Seasonal mean',
              'temperature',
             'Sep/Oct/Nov']
     }  else if (metric === 'son_p') {
       label = 'son_p'
-      setBand('sonp')
       description =
             ['Seasonal mean',
              'precipitation',
@@ -308,6 +291,57 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     // // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
     // getData({chartSource}, setChartData)
+    if (metric === 'n34pr') {
+      setBand('n34p')
+      setUnits('mm')
+      // setClim([0, 4])
+    } else if (metric === 'n34t') {
+      setBand('n34t')
+      setUnits('°C')
+    }  else if (metric === 'ptrend') {
+      setBand('ptre')
+      setUnits('mm')
+    }  else if (metric === 'ttrend') {
+      setBand('ttre')
+      setUnits('°C')
+    }  else if (metric === 'pr90') {
+      setBand('pr90')
+      setUnits('mm')
+    }  else if (metric === 'pr99') {
+      setBand('pr99')
+      setUnits('mm')
+    }  else if (metric === 't90') {
+      setBand('t90_')
+      setUnits('°C')
+    }  else if (metric === 't99') {
+      setBand('t99_')
+      setUnits('°C')
+    }  else if (metric === 'djf_t') {
+      setBand('djft')
+      setUnits('°C')
+    }  else if (metric === 'djf_p') {
+      setBand('djfp')
+      setUnits('mm')
+    }  else if (metric === 'mam_t') {
+      setBand('mamt')
+      setUnits('°C')
+    }  else if (metric === 'mam_p') {
+      setBand('mamp')
+      setUnits('mm')
+    }  else if (metric === 'jja_t') {
+      setBand('jjat')
+      setUnits('°C')
+    }  else if (metric === 'jja_p') {
+      setBand('jjap')
+      setUnits('mm')
+    }  else if (metric === 'son_t') {
+      setBand('sont')
+      setUnits('°C')
+    }  else if (metric === 'son_p') {
+      setBand('sonp')
+      setUnits('mm')
+    } //  else {
+
   })
 
   const handleModelDifChange = useCallback((e) => {
