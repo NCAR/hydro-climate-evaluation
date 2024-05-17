@@ -250,9 +250,23 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const handleDownscalingChange = useCallback((e) => {
     const downscaling = e.target.value
     setDownscaling(downscaling)
-    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
+    let safemodel = model
+    if (downscaling === 'maca') {
+        if (model === 'access1_3') {
+            setModel('noresm1_m')
+            safemodel = 'noresm1_m'
+        }
+    }
+    if (downscaling === 'nasa_nex') {
+        if (model === 'access1_3' || model === 'ccsm4') {
+            setModel('noresm1_m')
+            safemodel = 'noresm1_m'
+        }
+    }
+
+    setMapSource(bucket+'/map/'+downscaling+'/'+safemodel+'/'+yearRange+'/'+fname)
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
+    setChartSource(bucket+'/chart/'+downscaling+'/'+safemodel+'/'+band)
     // getData({chartSource}, setChartData)
   })
 
@@ -781,7 +795,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           <option value='gard_r2'>GARD_r2</option>
           <option value='gard_r3'>GARD_r3</option>
           <option value='loca_8th'>LOCA_8th</option>
-{/*       <option value='icar'>ICAR</option>
+          <option value='maca'>MACA</option>
+          <option value='nasa_nex'>NASA-NEX</option>
+{/*OLD    <option value='icar'>ICAR</option>
           <option value='gard'>GARD</option>
           <option value='loca'>LOCA</option>
           <option value='bcsd'>BCSD</option>*/}
@@ -795,11 +811,64 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           sx={{ mt: [1] }}
           value={model}
         >
+
+  {downscaling === 'icar' && (
+    <>
           <option value='noresm1_m'>NorESM-M</option>
           <option value='access1_3'>ACCESS1-3</option>
           <option value='canesm2'>CanESM2</option>
-          <option value='CCSM4'>CCSM4</option>
+          <option value='ccsm4'>CCSM4</option>
           <option value='miroc5'>MIROC5</option>
+    </>
+  )}
+  {downscaling === 'gard_r2' && (
+    <>
+          <option value='noresm1_m'>NorESM-M</option>
+          <option value='access1_3'>ACCESS1-3</option>
+          <option value='canesm2'>CanESM2</option>
+          <option value='ccsm4'>CCSM4</option>
+          <option value='miroc5'>MIROC5</option>
+    </>
+  )}
+  {downscaling === 'gard_r3' && (
+    <>
+          <option value='noresm1_m'>NorESM-M</option>
+          <option value='access1_3'>ACCESS1-3</option>
+          <option value='canesm2'>CanESM2</option>
+          <option value='ccsm4'>CCSM4</option>
+          <option value='miroc5'>MIROC5</option>
+    </>
+  )}
+  {downscaling === 'loca_8th' && (
+    <>
+          <option value='noresm1_m'>NorESM-M</option>
+          <option value='access1_3'>ACCESS1-3</option>
+          <option value='canesm2'>CanESM2</option>
+          <option value='ccsm4'>CCSM4</option>
+          <option value='miroc5'>MIROC5</option>
+    </>
+  )}
+  {downscaling === 'maca' && (
+    <>
+          <option value='noresm1_m'>NorESM-M</option>
+          <option value='canesm2'>CanESM2</option>
+          <option value='ccsm4'>CCSM4</option>
+          <option value='miroc5'>MIROC5</option>
+    </>
+  )}
+  {downscaling === 'nasa_nex' && (
+    <>
+          <option value='noresm1_m'>NorESM-M</option>
+          <option value='canesm2'>CanESM2</option>
+          <option value='miroc5'>MIROC5</option>
+    </>
+  )}
+
+{/*       <option value='noresm1_m'>NorESM-M</option>
+          <option value='access1_3'>ACCESS1-3</option>
+          <option value='canesm2'>CanESM2</option>
+          <option value='CCSM4'>CCSM4</option>
+          <option value='miroc5'>MIROC5</option> */}
 {/*       <option value='mri_cgcm5'>MRI-CGCM3</option> */}
 
 {/*       <option value='noresm'>NorESM</option>
