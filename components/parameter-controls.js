@@ -205,13 +205,14 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
 
   // NOTE: Chart sources have not been created with yearRange yet
-
+  // TODO: fixed Clim_Ranges[band]
   const handleFilterChangeRange = (e) => {
       const filterVals = e
       if (filterVals['Ave.']) {
           setFilterValues({'Ave.': true, 'Dif.': false})
-          setClim([Clim_Ranges[band].min, Clim_Ranges[band].max])
-          setColormapName(Default_Colormaps[band])
+          // setClim([Clim_Ranges[band].min, Clim_Ranges[band].max])
+          // setColormapName(Default_Colormaps[band])
+          setColormapName(Default_Colormaps['warm'])
       } else {
           setFilterValues({'Ave.': false, 'Dif.': true})
           setClim([-1,1])
@@ -252,7 +253,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
     setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
-    getData({chartSource}, setChartData)
+    // getData({chartSource}, setChartData)
   })
 
   const handleDownscalingDifChange = useCallback((e) => {
@@ -271,7 +272,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
     setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
-    getData({chartSource}, setChartData)
+    // getData({chartSource}, setChartData)
   })
 
   const handleMetricChange = useCallback((e) => {
@@ -294,10 +295,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }  else if (metric === 'ptrend') {
       setBand('ptre')
       setUnits('mm')
+      setClim([-3, 3])
     }  else if (metric === 'ttrend') {
       setBand('ttre')
       setUnits('°C')
-      setClim([0, 30])
+      setClim([-0.1, 0.1])
     }  else if (metric === 'pr90') {
       setBand('pr90')
       setUnits('mm')
@@ -776,9 +778,13 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           value={downscaling}
         >
           <option value='icar'>ICAR</option>
+          <option value='gard_r2'>GARD_r2</option>
+          <option value='gard_r3'>GARD_r3</option>
+          <option value='loca_8th'>LOCA_8th</option>
+{/*       <option value='icar'>ICAR</option>
           <option value='gard'>GARD</option>
           <option value='loca'>LOCA</option>
-          <option value='bcsd'>BCSD</option>
+          <option value='bcsd'>BCSD</option>*/}
         </Select>
 
         <Box sx={{ ...sx.label, mt: [4] }}>Climate Model</Box>
@@ -789,11 +795,19 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           sx={{ mt: [1] }}
           value={model}
         >
-          <option value='noresm'>NorESM</option>
+          <option value='noresm1_m'>NorESM-M</option>
+          <option value='access1_3'>ACCESS1-3</option>
+          <option value='canesm2'>CanESM2</option>
+          <option value='CCSM4'>CCSM4</option>
+          <option value='miroc5'>MIROC5</option>
+{/*       <option value='mri_cgcm5'>MRI-CGCM3</option> */}
+
+{/*       <option value='noresm'>NorESM</option>
           <option value='cesm'>CESM</option>
           <option value='gfdl'>GFDL</option>
-          <option value='miroc5'>MIROC5</option>
+          <option value='miroc5'>MIROC5</option> */}
         </Select>
+
 
 {/*     <Box sx={{ ...sx.label, mt: [4] }}>Variable</Box>
         <Select
