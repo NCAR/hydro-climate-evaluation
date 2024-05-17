@@ -317,9 +317,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }  else if (metric === 'pr90') {
       setBand('pr90')
       setUnits('mm')
+      setClim([0, 70])
     }  else if (metric === 'pr99') {
       setBand('pr99')
       setUnits('mm')
+      setClim([0, 70])
     }  else if (metric === 't90') {
       setBand('t90_')
       setUnits('°C')
