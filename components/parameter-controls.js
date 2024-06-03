@@ -16,28 +16,47 @@ const sx = {
 }
 
 const Clim_Ranges = {
-  diff: { max: 1, min: -1},
+  dift: { max: 2, min: -2},
+  difp: { max: 40, min: -40},
   // temperature variables
   tavg: { max: 37, min: 0 },
   n34t: { max: 1, min: -1 },
-  ttre: { max: 0.1, min: -0.1 },
-  t90_: { max: 30, min: 0 },
-  t99_: { max: 30, min: 0 },
-  djft: { max: 15, min: -10 },
-  mamt: { max: 30, min: 0 },
-  jjat: { max: 30, min: 0 },
-  sont: { max: 30, min: 0 },
+  ttrend: { max: 0.1, min: -0.1 },
+  t90: { max: 30, min: 0 },
+  t99: { max: 30, min: 0 },
+  djf_t: { max: 15, min: -10 },
+  mam_t: { max: 30, min: 0 },
+  jja_t: { max: 30, min: 0 },
+  son_t: { max: 30, min: 0 },
+  diff_tavg: { max: 4, min: -4 },
+  diff_n34t: { max: 1, min: -1 },
+  diff_ttrend: { max: 1.0, min: -1.0 },
+  diff_t90: { max: 4, min: -4 },
+  diff_t99: { max: 4, min: -4 },
+  diff_djf_t: { max: 4, min: -4 },
+  diff_mam_t: { max: 4, min: -4 },
+  diff_jja_t: { max: 4, min: -4 },
+  diff_son_t: { max: 4, min: -4 },
 
   // precip variables
   prec: { max: 70, min: 0 },
-  n34p: { max: 1, min: -1 },
-  ptre: { max: 3, min: -3 },
+  n34pr: { max: 1, min: -1 },
+  ptrend: { max: 3, min: -3 },
   pr90: { max: 70, min: 0 },
   pr99: { max: 70, min: 0 },
-  djfp: { max: 80, min: 0 },
-  mamp: { max: 70, min: 0 },
-  jjap: { max: 70, min: 0 },
-  sonp: { max: 70, min: 0 },
+  djf_p: { max: 80, min: 0 },
+  mam_p: { max: 70, min: 0 },
+  jja_p: { max: 70, min: 0 },
+  son_p: { max: 70, min: 0 },
+  diff_prec: { max: 50, min: -50 },
+  diff_n34pr: { max: 1, min: -1 },
+  diff_ptrend: { max: 20, min: -20 },
+  diff_pr90: { max: 10, min: -10 },
+  diff_pr99: { max: 20, min: -20 },
+  diff_djf_p: { max: 60, min: -60 },
+  diff_mam_p: { max: 50, min: -50 },
+  diff_jja_p: { max: 50, min: -50 },
+  diff_son_p: { max: 50, min: -50 },
 }
 
 const Default_Colormaps = {
@@ -260,11 +279,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       const filterVals = e
       if (filterVals['Ave.']) {
           setFilterValues({'Ave.': true, 'Dif.': false})
-          setClim([Clim_Ranges[band].min, Clim_Ranges[band].max])
+          setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max])
           setColormapName(Default_Colormaps[band])
       } else {
           setFilterValues({'Ave.': false, 'Dif.': true})
-          setClim([Clim_Ranges['diff'].min, Clim_Ranges['diff'].max])
+          setClim([Clim_Ranges['diff_'+metric].min, Clim_Ranges['diff_'+metric].max])
           setColormapName(Default_Colormaps['diff'])
       }
   };
@@ -349,72 +368,59 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     if (metric === 'n34pr') {
       setBand('n34p')
       setUnits('mm')
-      setClim([Clim_Ranges['n34p'].min, Clim_Ranges['n34p'].max])
     } else if (metric === 'n34t') {
       setBand('n34t')
       setUnits('°C')
-      setClim([Clim_Ranges['n34t'].min, Clim_Ranges['n34t'].max])
     }  else if (metric === 'ptrend') {
       setBand('ptre')
       setUnits('mm')
-      setClim([Clim_Ranges['ptre'].min, Clim_Ranges['ptre'].max])
     }  else if (metric === 'ttrend') {
       setBand('ttre')
       setUnits('°C')
-      setClim([Clim_Ranges['ttre'].min, Clim_Ranges['ttre'].max])
     }  else if (metric === 'pr90') {
       setBand('pr90')
       setUnits('mm')
-      setClim([Clim_Ranges['pr90'].min, Clim_Ranges['pr90'].max])
     }  else if (metric === 'pr99') {
       setBand('pr99')
       setUnits('mm')
-      setClim([Clim_Ranges['pr99'].min, Clim_Ranges['pr99'].max])
     }  else if (metric === 't90') {
       setBand('t90_')
       setUnits('°C')
-      setClim([Clim_Ranges['t90_'].min, Clim_Ranges['t90_'].max])
     }  else if (metric === 't99') {
       setBand('t99_')
       setUnits('°C')
-      setClim([Clim_Ranges['t99_'].min, Clim_Ranges['t99_'].max])
     }  else if (metric === 'djf_t') {
       setBand('djft')
       setUnits('°C')
-      setClim([Clim_Ranges['djft'].min, Clim_Ranges['djft'].max])
     }  else if (metric === 'djf_p') {
       setBand('djfp')
       setUnits('mm')
-      setClim([Clim_Ranges['djfp'].min, Clim_Ranges['djfp'].max])
     }  else if (metric === 'mam_t') {
       setBand('mamt')
       setUnits('°C')
-      setClim([Clim_Ranges['mamt'].min, Clim_Ranges['mamt'].max])
     }  else if (metric === 'mam_p') {
       setBand('mamp')
       setUnits('mm')
-      setClim([Clim_Ranges['mamp'].min, Clim_Ranges['mamp'].max])
     }  else if (metric === 'jja_t') {
       setBand('jjat')
       setUnits('°C')
-      setClim([Clim_Ranges['jjat'].min, Clim_Ranges['jjat'].max])
     }  else if (metric === 'jja_p') {
       setBand('jjap')
       setUnits('mm')
-      setClim([Clim_Ranges['jjap'].min, Clim_Ranges['jjap'].max])
     }  else if (metric === 'son_t') {
       setBand('sont')
       setUnits('°C')
-      setClim([Clim_Ranges['sont'].min, Clim_Ranges['sont'].max])
     }  else if (metric === 'son_p') {
       setBand('sonp')
       setUnits('mm')
-      setClim([Clim_Ranges['sonp'].min, Clim_Ranges['sonp'].max])
     } //  else {
     if (filterValues['Dif.']) {
       flipReload()
-      setClim([Clim_Ranges['diff'].min, Clim_Ranges['diff'].max])
+      setClim([Clim_Ranges['diff_'+metric].min, Clim_Ranges['diff_'+metric].max])
+    } else {
+      setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max])
     }
+
   })
 
   const handleModelDifChange = useCallback((e) => {
