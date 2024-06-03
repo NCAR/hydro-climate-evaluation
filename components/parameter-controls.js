@@ -16,14 +16,53 @@ const sx = {
 }
 
 const Clim_Ranges = {
+  // temperature variables
   tavg: { max: 37, min: 0 },
-  prec: { max: 15, min: 0 }
+  n34t: { max: 1, min: -1 },
+  ttre: { max: 0.1, min: -0.1 },
+  t90_: { max: 30, min: 0 },
+  t99_: { max: 30, min: 0 },
+  djft: { max: 15, min: -10 },
+  mamt: { max: 30, min: 0 },
+  jjat: { max: 30, min: 0 },
+  sont: { max: 30, min: 0 },
+
+  // precip variables
+  prec: { max: 70, min: 0 },
+  n34p: { max: 1, min: -1 },
+  ptre: { max: 3, min: -3 },
+  pr90: { max: 70, min: 0 },
+  pr99: { max: 70, min: 0 },
+  djfp: { max: 80, min: 0 },
+  mamp: { max: 70, min: 0 },
+  jjap: { max: 70, min: 0 },
+  sonp: { max: 70, min: 0 },
 }
 
 const Default_Colormaps = {
-  tavg: 'warm',
-  prec: 'cool',
+  // difference colormap
   diff: 'redteal',
+
+  // temperature variables
+  tavg: 'warm',
+  n34t: 'warm',
+  ttre: 'warm',
+  t90_: 'warm',
+  t99_: 'warm',
+  djft: 'warm',
+  mamt: 'warm',
+  jjat: 'warm',
+  sont: 'warm',
+
+  // precip variables
+  prec: 'cool',
+  n34p: 'cool',
+  ptre: 'cool',
+  p90_: 'cool',
+  p99_: 'cool',
+  djfp: 'cool',
+  mamp: 'cool',
+  sonp: 'cool',
 }
 
 
@@ -210,12 +249,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       const filterVals = e
       if (filterVals['Ave.']) {
           setFilterValues({'Ave.': true, 'Dif.': false})
-          // setClim([Clim_Ranges[band].min, Clim_Ranges[band].max])
-          // setColormapName(Default_Colormaps[band])
-          setColormapName(Default_Colormaps['warm'])
+          setClim([Clim_Ranges[band].min, Clim_Ranges[band].max])
+          setColormapName(Default_Colormaps[band])
       } else {
           setFilterValues({'Ave.': false, 'Dif.': true})
-          setClim([-1,1])
+          // setClim([-0.1,0.1])
+          setClim([-1.0,1.0])
           setColormapName(Default_Colormaps['diff'])
       }
   };
@@ -301,68 +340,67 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     if (metric === 'n34pr') {
       setBand('n34p')
       setUnits('mm')
-      setClim([-1, 1])
+      setClim([Clim_Ranges['n34p'].min, Clim_Ranges['n34p'].max])
     } else if (metric === 'n34t') {
       setBand('n34t')
       setUnits('°C')
-      setClim([-1, 1])
+      setClim([Clim_Ranges['n34t'].min, Clim_Ranges['n34t'].max])
     }  else if (metric === 'ptrend') {
       setBand('ptre')
       setUnits('mm')
-      setClim([-3, 3])
+      setClim([Clim_Ranges['ptre'].min, Clim_Ranges['ptre'].max])
     }  else if (metric === 'ttrend') {
       setBand('ttre')
       setUnits('°C')
-      setClim([-0.1, 0.1])
+      setClim([Clim_Ranges['ttre'].min, Clim_Ranges['ttre'].max])
     }  else if (metric === 'pr90') {
       setBand('pr90')
       setUnits('mm')
-      setClim([0, 70])
+      setClim([Clim_Ranges['pr90'].min, Clim_Ranges['pr90'].max])
     }  else if (metric === 'pr99') {
       setBand('pr99')
       setUnits('mm')
-      setClim([0, 70])
+      setClim([Clim_Ranges['pr99'].min, Clim_Ranges['pr99'].max])
     }  else if (metric === 't90') {
       setBand('t90_')
       setUnits('°C')
-      setClim([0, 30])
+      setClim([Clim_Ranges['t90_'].min, Clim_Ranges['t90_'].max])
     }  else if (metric === 't99') {
       setBand('t99_')
       setUnits('°C')
-      setClim([0, 30])
+      setClim([Clim_Ranges['t99_'].min, Clim_Ranges['t99_'].max])
     }  else if (metric === 'djf_t') {
       setBand('djft')
       setUnits('°C')
-      setClim([-10, 15])
+      setClim([Clim_Ranges['djft'].min, Clim_Ranges['djft'].max])
     }  else if (metric === 'djf_p') {
       setBand('djfp')
       setUnits('mm')
-      setClim([0, 70])
+      setClim([Clim_Ranges['djfp'].min, Clim_Ranges['djfp'].max])
     }  else if (metric === 'mam_t') {
       setBand('mamt')
       setUnits('°C')
-      setClim([0, 30])
+      setClim([Clim_Ranges['mamt'].min, Clim_Ranges['mamt'].max])
     }  else if (metric === 'mam_p') {
       setBand('mamp')
       setUnits('mm')
-      setClim([0, 70])
+      setClim([Clim_Ranges['mamp'].min, Clim_Ranges['mamp'].max])
     }  else if (metric === 'jja_t') {
       setBand('jjat')
       setUnits('°C')
-      setClim([0, 30])
+      setClim([Clim_Ranges['jjat'].min, Clim_Ranges['jjat'].max])
     }  else if (metric === 'jja_p') {
       setBand('jjap')
       setUnits('mm')
-      setClim([0, 70])
+      setClim([Clim_Ranges['jjap'].min, Clim_Ranges['jjap'].max])
     }  else if (metric === 'son_t') {
       setBand('sont')
       setUnits('°C')
-      setClim([0, 30])
+      setClim([Clim_Ranges['sont'].min, Clim_Ranges['sont'].max])
     }  else if (metric === 'son_p') {
       setBand('sonp')
       setUnits('mm')
-      setClim([0, 70])
-
+      setClim([Clim_Ranges['sonp'].min, Clim_Ranges['sonp'].max])
     } //  else {
 
   })
@@ -539,6 +577,13 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     );
   };
 
+  const handleObsChange = useCallback((e) => {
+    const obs = e.target.value
+    setObsDif(obs)
+    // console.log("obs =", obs) // works
+    setMapSourceDif(bucket+'/obs/'+obs+'/'+yearRangeDif+'/'+fname)
+  });
+
   const NewDifSourceChoices = () => {
     return (
     <>
@@ -547,7 +592,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         <Select
           sxSelect={{ bg: 'transparent' }}
           size='xs'
-          onChange={setObsDif}
+          onChange={handleObsChange}
           sx={{ mt: [1] }}
           value={obsDif}
         >
@@ -556,7 +601,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           <option value='livneh'>Livneh</option>
           <option value='maurer'>Maurer</option>
           <option value='nldas'>NLDAS</option>
-          <option value='oldlivneh'>Old Livneh</option>
+{/*       <option value='oldlivneh'>Old Livneh</option> */}
           <option value='prism'>PRISM</option>
         </Select>
       </>

@@ -57,7 +57,8 @@ const Index = () => {
   const [chartSource, setChartSource] = useState(bucket_ndp+'chart/icar/noresm1_m/'+band)
   // paths to model dataset used for diff
   // const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/cesm/1980_2010/'+fname)
-  const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname)
+  // const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname)
+  const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'obs/conus404/1981_2004/'+fname)
   const [chartSourceDif, setChartSourceDif] = useState(bucket_ndp+'chart/icar/cesm/'+band)
   // set values to decide whether to map average or difference
   const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false})
