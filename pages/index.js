@@ -21,6 +21,7 @@ const bucket_ndp = 'http://127.0.0.1:4000/data/' // python host server
 const Index = () => {
   const { theme } = useThemeUI()
   const [display, setDisplay] = useState(true)
+  const [reload, setReload] = useState(true)
   const [debug, setDebug] = useState(false)
   const [opacity, setOpacity] = useState(1)
   const [month, setMonth] = useState(1)
@@ -68,7 +69,7 @@ const Index = () => {
   const [chartHeight, setChartHeight] = useState('0%')
   const [chartData, setChartData] = useState(Array(12).fill(0))
 
-  const getters = { display, debug, opacity, clim,
+  const getters = { display, reload, debug, opacity, clim,
                     month, band, colormapName, colormap,
                     downscaling, model, metric, yearRange, mapSource, chartSource,
                     downscalingDif, modelDif, yearRangeDif, obsDif,
@@ -76,6 +77,7 @@ const Index = () => {
                     bucket_ndp, chartHeight, filterValues}
   const setters = {
     setDisplay,
+    setReload,
     setDebug,
     setOpacity,
     setClim,
@@ -133,7 +135,7 @@ const Index = () => {
             />
           )}
           <Raster
-            key={`${mapSource}-${mapSourceDif}-${JSON.stringify(filterValues)}`}
+            key={`${mapSource}-${mapSourceDif}-${reload}-${JSON.stringify(filterValues)}`}
             colormap={colormap}
             clim={clim}
             display={display}

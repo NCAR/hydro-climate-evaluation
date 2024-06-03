@@ -69,7 +69,7 @@ const Default_Colormaps = {
 
 
 const ParameterControls = ({ getters, setters, bucket, fname }) => {
-  const { display, debug, opacity, clim, month,
+  const { display, reload, debug, opacity, clim, month,
           band, colormapName, colormap,
           downscaling, model, metric, yearRange, mapSource, chartSource,
           downscalingDif, modelDif, yearRangeDif, obsDif,
@@ -77,6 +77,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           chartHeight, filterValues } = getters
   const {
     setDisplay,
+    setReload,
     setDebug,
     setOpacity,
     setClim,
@@ -111,6 +112,14 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           setUnits('°C')
       } else if (band === 'prec') {
           setUnits('mm')
+      }
+  };
+
+  const flipReload = () => {
+      if (reload) {
+          setReload(false)
+      } else {
+          setReload(true)
       }
   };
 
@@ -403,6 +412,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       setClim([Clim_Ranges['sonp'].min, Clim_Ranges['sonp'].max])
     } //  else {
     if (filterValues['Dif.']) {
+      flipReload()
       setClim([Clim_Ranges['diff'].min, Clim_Ranges['diff'].max])
     }
   })
