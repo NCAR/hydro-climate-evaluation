@@ -16,6 +16,7 @@ const sx = {
 }
 
 const Clim_Ranges = {
+  diff: { max: 1, min: -1},
   // temperature variables
   tavg: { max: 37, min: 0 },
   n34t: { max: 1, min: -1 },
@@ -62,6 +63,7 @@ const Default_Colormaps = {
   p99_: 'cool',
   djfp: 'cool',
   mamp: 'cool',
+  jjap: 'cool',
   sonp: 'cool',
 }
 
@@ -245,7 +247,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   // NOTE: Chart sources have not been created with yearRange yet
   // TODO: fixed Clim_Ranges[band]
-  const handleFilterChangeRange = (e) => {
+  const handleFilterAndSetClimColormapName = (e) => {
       const filterVals = e
       if (filterVals['Ave.']) {
           setFilterValues({'Ave.': true, 'Dif.': false})
@@ -253,8 +255,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           setColormapName(Default_Colormaps[band])
       } else {
           setFilterValues({'Ave.': false, 'Dif.': true})
-          // setClim([-0.1,0.1])
-          setClim([-1.0,1.0])
+          setClim([Clim_Ranges['diff'].min, Clim_Ranges['diff'].max])
           setColormapName(Default_Colormaps['diff'])
       }
   };
@@ -262,12 +263,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const handleBandChange = useCallback((e) => {
     const band = e.target.value
     setBand(band)
-    setClim([Clim_Ranges[band].min, Clim_Ranges[band].max])
+    handleFilterAndSetClimColormapName(filterValues)
     setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
     setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
     getData({chartSource}, setChartData)
-    setColormapName(Default_Colormaps[band])
   })
 
   const handleYearChange = useCallback((e) => {
@@ -402,7 +402,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       setUnits('mm')
       setClim([Clim_Ranges['sonp'].min, Clim_Ranges['sonp'].max])
     } //  else {
-
+    if (filterValues['Dif.']) {
+      setClim([Clim_Ranges['diff'].min, Clim_Ranges['diff'].max])
+    }
   })
 
   const handleModelDifChange = useCallback((e) => {
@@ -623,7 +625,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         <Filter
           values={filterValues}
           // setValues={setFilterValues}
-          setValues={handleFilterChangeRange}
+          setValues={handleFilterAndSetClimColormapName}
           multiSelect={false}
         />
         </Box>
@@ -635,7 +637,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         <Filter
           values={filterValues}
           // setValues={setFilterValues}
-          setValues={handleFilterChangeRange}
+          setValues={handleFilterAndSetClimColormapName}
           multiSelect={false}
         />
         </Box>
