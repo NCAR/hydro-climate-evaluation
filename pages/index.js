@@ -29,13 +29,8 @@ const Index = () => {
   const [time, setTime] = useState(1)
   // --- precipitation defaults
   const [band, setBand] = useState('djft')
-  // const [band, setBand] = useState('prec')
-  const [colormapName, setColormapName] = useState('cool') // precip
-  const [clim, setClim] = useState([-10, 15]) // precip
-  // --- average temp defaults
-  // const [band, setBand] = useState('tavg')
-  // const [clim, setClim] = useState([270, 310]) // tavg
-  // const [colormapName, setColormapName] = useState('warm') // tavg
+  const [colormapName, setColormapName] = useState('warm')
+  const [clim, setClim] = useState([-10, 15])
 
   const colormap = useThemedColormap(colormapName)
   const [showRegionPlot, setShowRegionPlot] = useState(false)

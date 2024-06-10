@@ -61,30 +61,55 @@ const Clim_Ranges = {
 }
 
 const Default_Colormaps = {
-  // difference colormap
-  diff: 'diffredblue',
-
   // temperature variables
   tavg: 'warm',
   n34t: 'warm',
-  ttre: 'warm',
-  t90_: 'warm',
-  t99_: 'warm',
-  djft: 'warm',
-  mamt: 'warm',
-  jjat: 'warm',
-  sont: 'warm',
+  ttrend: 'warm',
+  t90: 'warm',
+  t99: 'warm',
+  djf_t: 'warm',
+  mam_t: 'warm',
+  jja_t: 'warm',
+  son_t: 'warm',
 
   // precip variables
-  prec: 'cool',
-  n34p: 'cool',
-  ptre: 'cool',
-  p90_: 'cool',
-  p99_: 'cool',
-  djfp: 'cool',
-  mamp: 'cool',
-  jjap: 'cool',
-  sonp: 'cool',
+  prec: 'browngreen',
+  n34pr: 'browngreen',
+  ptrend: 'browngreen',
+  pr90: 'browngreen',
+  pr99: 'browngreen',
+  djf_p: 'browngreen',
+  mam_p: 'browngreen',
+  jja_p: 'browngreen',
+  son_p: 'browngreen',
+
+  // difference colormap
+  diff: 'diffredblue',
+  dift: 'diffbluered',
+  difp: 'diffbrowngreen',
+
+  // temperature variables
+  diff_tavg: 'diffbluered',
+  diff_n34t: 'diffbluered',
+  diff_ttrend: 'diffbluered',
+  diff_t90: 'diffbluered',
+  diff_t99: 'diffbluered',
+  diff_djf_t: 'diffbluered',
+  diff_mam_t: 'diffbluered',
+  diff_jja_t: 'diffbluered',
+  diff_son_t: 'diffbluered',
+
+  // precip variables
+  diff_prec: 'diffbrowngreen',
+  diff_n34pr: 'diffbrowngreen',
+  diff_ptrend: 'diffbrowngreen',
+  diff_p90: 'diffbrowngreen',
+  diff_p99: 'diffbrowngreen',
+  diff_djf_p: 'diffbrowngreen',
+  diff_mam_p: 'diffbrowngreen',
+  diff_jja_p: 'diffbrowngreen',
+  diff_son_p: 'diffbrowngreen',
+
 }
 
 
@@ -281,11 +306,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       if (filterVals['Ave.']) {
           setFilterValues({'Ave.': true, 'Dif.': false})
           setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max])
-          setColormapName(Default_Colormaps[band])
+          setColormapName(Default_Colormaps[metric])
       } else {
           setFilterValues({'Ave.': false, 'Dif.': true})
           setClim([Clim_Ranges['diff_'+metric].min, Clim_Ranges['diff_'+metric].max])
-          setColormapName(Default_Colormaps['diff'])
+          console.log("COLORMAP IS FROM", 'diff_'+metric)
+          setColormapName(Default_Colormaps['diff_'+metric])
       }
   };
 
@@ -418,8 +444,10 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     if (filterValues['Dif.']) {
       flipReload()
       setClim([Clim_Ranges['diff_'+metric].min, Clim_Ranges['diff_'+metric].max])
+      setColormapName(Default_Colormaps['diff_'+metric])
     } else {
       setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max])
+      setColormapName(Default_Colormaps[metric])
     }
 
   })
