@@ -2,7 +2,8 @@ import { useState, Fragment } from 'react'
 import { Box, Flex } from 'theme-ui'
 import { useCallback, useEffect } from 'react'
 import { Colorbar, Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components'
-import { colormaps } from '@carbonplan/colormaps'
+// import { colormaps } from '@carbonplan/colormaps'
+import { colormaps } from '../colormaps/src'
 import { getData } from './getData'
 
 const sx = {
@@ -61,7 +62,7 @@ const Clim_Ranges = {
 
 const Default_Colormaps = {
   // difference colormap
-  diff: 'redteal',
+  diff: 'diffredblue',
 
   // temperature variables
   tavg: 'warm',

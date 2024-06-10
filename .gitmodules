@@ -2,3 +2,6 @@
 	path = maps
 	url = git@github.com:scrasmussen/carbonplan-maps.git
         branch = icar-maps
+[submodule "colormaps"]
+	path = colormaps
+	url = git@github.com:scrasmussen/colormaps.git
