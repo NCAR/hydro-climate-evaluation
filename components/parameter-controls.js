@@ -1,7 +1,8 @@
 import { useState, Fragment } from 'react'
 import { Box, Flex } from 'theme-ui'
 import { useCallback, useEffect } from 'react'
-import { Colorbar, Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components'
+import { Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components'
+import Colorbar from './colorbar'
 // import { colormaps } from '@carbonplan/colormaps'
 import { colormaps } from '../colormaps/src'
 import { getData } from './getData'
@@ -310,7 +311,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       } else {
           setFilterValues({'Ave.': false, 'Dif.': true})
           setClim([Clim_Ranges['diff_'+metric].min, Clim_Ranges['diff_'+metric].max])
-          console.log("COLORMAP IS FROM", 'diff_'+metric)
           setColormapName(Default_Colormaps['diff_'+metric])
       }
   };
@@ -490,6 +490,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         label={units}
         clim={clim}
         setClim={setClim}
+        filterValues={filterValues}
       />
       </Box>
     );
