@@ -96,15 +96,15 @@ const Clim_Ranges = {
 
 const Default_Colormaps = {
   // temperature variables
-  tavg: 'warm',
-  n34t: 'warm',
-  ttrend: 'warm',
-  t90: 'warm',
-  t99: 'warm',
-  djf_t: 'warm',
-  mam_t: 'warm',
-  jja_t: 'warm',
-  son_t: 'warm',
+  tavg: 'BuYlRd',
+  n34t: 'BuYlRd',
+  ttrend: 'BuYlRd',
+  t90: 'BuYlRd',
+  t99: 'BuYlRd',
+  djf_t: 'BuYlRd',
+  mam_t: 'BuYlRd',
+  jja_t: 'BuYlRd',
+  son_t: 'BuYlRd',
 
   // precip variables
   prec: 'browngreen',

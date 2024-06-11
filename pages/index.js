@@ -29,7 +29,7 @@ const Index = () => {
   const [time, setTime] = useState(1)
   // --- precipitation defaults
   const [band, setBand] = useState('djft')
-  const [colormapName, setColormapName] = useState('warm')
+  const [colormapName, setColormapName] = useState('BuYlRd')
   const [clim, setClim] = useState([-10, 15])
 
   const colormap = useThemedColormap(colormapName)
