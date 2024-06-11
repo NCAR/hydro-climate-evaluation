@@ -120,6 +120,7 @@ const Colorbar = ({
   setClim,
   setClimStep = 1,
   filterValues,
+  scaleDif,
   discrete,
   units,
   width,
@@ -151,7 +152,7 @@ const Colorbar = ({
     scale = setClimStep
     fixedVal = 0
   } else { {/* Dif. */}
-    scale = 0.2
+    scale = scaleDif
     fixedVal = 1
   }
 

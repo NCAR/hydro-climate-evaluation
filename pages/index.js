@@ -42,6 +42,7 @@ const Index = () => {
   // const [yearRange, setYearRange] = useState('1980_2010')
   const [yearRange, setYearRange] = useState('1981_2004')
   // diff dataset variables for model to compare against
+  const [scaleDif, setScaleDif] = useState(1.0)
   const [downscalingDif, setDownscalingDif] = useState('icar')
   const [modelDif, setModelDif] = useState('cesm')
   const [yearRangeDif, setYearRangeDif] = useState('1981_2004')
@@ -59,7 +60,8 @@ const Index = () => {
   const [chartSourceDif, setChartSourceDif] = useState(bucket_ndp+'chart/icar/cesm/'+band)
   // set values to decide whether to map average or difference
   const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false})
-
+  // const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false,
+  //                                                  'Obs.': false})
 
   // control the height of the charts, initially hidden
   const [chartHeight, setChartHeight] = useState('0%')
@@ -69,7 +71,7 @@ const Index = () => {
                     month, band, colormapName, colormap,
                     downscaling, model, metric, yearRange, mapSource, chartSource,
                     downscalingDif, modelDif, yearRangeDif, obsDif,
-                    mapSourceDif, chartSourceDif,
+                    mapSourceDif, chartSourceDif, scaleDif,
                     bucket_ndp, chartHeight, filterValues}
   const setters = {
     setDisplay,
@@ -93,6 +95,7 @@ const Index = () => {
     setObsDif,
     setMapSourceDif,
     setChartSourceDif,
+    setScaleDif,
     setChartHeight,
     setChartData,
     setFilterValues

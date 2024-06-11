@@ -17,6 +17,39 @@ const sx = {
   },
 }
 
+const precip_dif = 1.0
+const temp_dif = 0.2
+
+const Scale_Values = {
+  // diference colormap
+  dif: 0.2,
+  dift: temp_dif,
+  difp: precip_dif,
+
+  // temperature variables
+  dif_tavg: temp_dif,
+  dif_n34t: temp_dif,
+  dif_ttrend: temp_dif,
+  dif_t90: temp_dif,
+  dif_t99: temp_dif,
+  dif_djf_t: temp_dif,
+  dif_mam_t: temp_dif,
+  dif_jja_t: temp_dif,
+  dif_son_t: temp_dif,
+
+  // precip variables
+  dif_prec: precip_dif,
+  dif_n34pr: precip_dif,
+  dif_ptrend: precip_dif,
+  dif_p90: precip_dif,
+  dif_p99: precip_dif,
+  dif_djf_p: precip_dif,
+  dif_mam_p: precip_dif,
+  dif_jja_p: precip_dif,
+  dif_son_p: precip_dif,
+}
+
+
 const Clim_Ranges = {
   dift: { max: 2, min: -2},
   difp: { max: 40, min: -40},
@@ -30,15 +63,15 @@ const Clim_Ranges = {
   mam_t: { max: 30, min: 0 },
   jja_t: { max: 30, min: 0 },
   son_t: { max: 30, min: 0 },
-  diff_tavg: { max: 4, min: -4 },
-  diff_n34t: { max: 1, min: -1 },
-  diff_ttrend: { max: 1.0, min: -1.0 },
-  diff_t90: { max: 4, min: -4 },
-  diff_t99: { max: 4, min: -4 },
-  diff_djf_t: { max: 4, min: -4 },
-  diff_mam_t: { max: 4, min: -4 },
-  diff_jja_t: { max: 4, min: -4 },
-  diff_son_t: { max: 4, min: -4 },
+  dif_tavg: { max: 4, min: -4 },
+  dif_n34t: { max: 1, min: -1 },
+  dif_ttrend: { max: 1.0, min: -1.0 },
+  dif_t90: { max: 4, min: -4 },
+  dif_t99: { max: 4, min: -4 },
+  dif_djf_t: { max: 4, min: -4 },
+  dif_mam_t: { max: 4, min: -4 },
+  dif_jja_t: { max: 4, min: -4 },
+  dif_son_t: { max: 4, min: -4 },
 
   // precip variables
   prec: { max: 70, min: 0 },
@@ -50,15 +83,15 @@ const Clim_Ranges = {
   mam_p: { max: 70, min: 0 },
   jja_p: { max: 70, min: 0 },
   son_p: { max: 70, min: 0 },
-  diff_prec: { max: 50, min: -50 },
-  diff_n34pr: { max: 1, min: -1 },
-  diff_ptrend: { max: 20, min: -20 },
-  diff_pr90: { max: 10, min: -10 },
-  diff_pr99: { max: 20, min: -20 },
-  diff_djf_p: { max: 60, min: -60 },
-  diff_mam_p: { max: 50, min: -50 },
-  diff_jja_p: { max: 50, min: -50 },
-  diff_son_p: { max: 50, min: -50 },
+  dif_prec: { max: 50, min: -50 },
+  dif_n34pr: { max: 1, min: -1 },
+  dif_ptrend: { max: 20, min: -20 },
+  dif_pr90: { max: 10, min: -10 },
+  dif_pr99: { max: 20, min: -20 },
+  dif_djf_p: { max: 60, min: -60 },
+  dif_mam_p: { max: 50, min: -50 },
+  dif_jja_p: { max: 50, min: -50 },
+  dif_son_p: { max: 50, min: -50 },
 }
 
 const Default_Colormaps = {
@@ -85,31 +118,31 @@ const Default_Colormaps = {
   son_p: 'browngreen',
 
   // difference colormap
-  diff: 'diffredblue',
-  dift: 'diffbluered',
-  difp: 'diffbrowngreen',
+  dif: 'difredblue',
+  dift: 'difbluered',
+  difp: 'difbrowngreen',
 
   // temperature variables
-  diff_tavg: 'diffbluered',
-  diff_n34t: 'diffbluered',
-  diff_ttrend: 'diffbluered',
-  diff_t90: 'diffbluered',
-  diff_t99: 'diffbluered',
-  diff_djf_t: 'diffbluered',
-  diff_mam_t: 'diffbluered',
-  diff_jja_t: 'diffbluered',
-  diff_son_t: 'diffbluered',
+  dif_tavg: 'difbluered',
+  dif_n34t: 'difbluered',
+  dif_ttrend: 'difbluered',
+  dif_t90: 'difbluered',
+  dif_t99: 'difbluered',
+  dif_djf_t: 'difbluered',
+  dif_mam_t: 'difbluered',
+  dif_jja_t: 'difbluered',
+  dif_son_t: 'difbluered',
 
   // precip variables
-  diff_prec: 'diffbrowngreen',
-  diff_n34pr: 'diffbrowngreen',
-  diff_ptrend: 'diffbrowngreen',
-  diff_p90: 'diffbrowngreen',
-  diff_p99: 'diffbrowngreen',
-  diff_djf_p: 'diffbrowngreen',
-  diff_mam_p: 'diffbrowngreen',
-  diff_jja_p: 'diffbrowngreen',
-  diff_son_p: 'diffbrowngreen',
+  dif_prec: 'difbrowngreen',
+  dif_n34pr: 'difbrowngreen',
+  dif_ptrend: 'difbrowngreen',
+  dif_p90: 'difbrowngreen',
+  dif_p99: 'difbrowngreen',
+  dif_djf_p: 'difbrowngreen',
+  dif_mam_p: 'difbrowngreen',
+  dif_jja_p: 'difbrowngreen',
+  dif_son_p: 'difbrowngreen',
 
 }
 
@@ -119,7 +152,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           band, colormapName, colormap,
           downscaling, model, metric, yearRange, mapSource, chartSource,
           downscalingDif, modelDif, yearRangeDif, obsDif,
-          mapSourceDif, chartSourceDif,
+          mapSourceDif, chartSourceDif, scaleDif,
           chartHeight, filterValues } = getters
   const {
     setDisplay,
@@ -142,6 +175,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setObsDif,
     setMapSourceDif,
     setChartSourceDif,
+    setScaleDif,
     setChartHeight,
     setChartData,
     setFilterValues
@@ -310,8 +344,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           setColormapName(Default_Colormaps[metric])
       } else {
           setFilterValues({'Ave.': false, 'Dif.': true})
-          setClim([Clim_Ranges['diff_'+metric].min, Clim_Ranges['diff_'+metric].max])
-          setColormapName(Default_Colormaps['diff_'+metric])
+          setScaleDif(Scale_Values['dif_'+metric])
+          setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max])
+          setColormapName(Default_Colormaps['dif_'+metric])
       }
   };
 
@@ -443,8 +478,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     } //  else {
     if (filterValues['Dif.']) {
       flipReload()
-      setClim([Clim_Ranges['diff_'+metric].min, Clim_Ranges['diff_'+metric].max])
-      setColormapName(Default_Colormaps['diff_'+metric])
+      setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max])
+      setColormapName(Default_Colormaps['dif_'+metric])
+      setScaleDif(Scale_Values['dif_'+metric])
     } else {
       setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max])
       setColormapName(Default_Colormaps[metric])
@@ -491,6 +527,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         clim={clim}
         setClim={setClim}
         filterValues={filterValues}
+        scaleDif={scaleDif}
       />
       </Box>
     );
@@ -637,6 +674,15 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     <>
         <Box sx={{ ...sx.label, mt: [3] }}>Climate</Box>
         <Box sx={{ ...sx.label, mt: [0] }}>Model</Box>
+        <Box sx={{ mt: [1] }}>
+          <Select
+            sxSelect={{ bg: 'transparent' }}
+            size='xs'
+           >
+           <option value='historical'>Historical</option>
+           <option value='future'>Future</option>
+           </Select>
+        </Box>
         <Select
           sxSelect={{ bg: 'transparent' }}
           size='xs'
