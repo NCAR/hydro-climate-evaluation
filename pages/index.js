@@ -106,14 +106,14 @@ const Index = () => {
       <Meta
         card={'https://images.carbonplan.org/social/maps-demo.png'}
         description={
-          "Demo of presenting downscaling and climate model data. Based on carbonplan's library"
+          "Downscaling and climate model data. Based on carbonplan's library"
         }
         title={'@carbonplan/maps'}
       />
 <Row columns={[4]}>
   <Column start={[1]} width={[1]}>
       <Box sx={{ position: 'absolute', top: 0, bottom: 0, width: '100%', height:'100%' }}>
-        <Map zoom={2} center={[0, 0]} debug={debug}>
+        <Map zoom={4} center={{lon:-95, lat:38}} debug={debug}>
           <Fill
             color={theme.rawColors.background}
             source={bucket + 'basemaps/ocean'}
