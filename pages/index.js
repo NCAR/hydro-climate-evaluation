@@ -101,6 +101,8 @@ const Index = () => {
     setFilterValues
   }
 
+  const fillValue = 3.4028234663852886e38; // black on land, red nans
+
   return (
     <>
       <Meta
@@ -112,10 +114,11 @@ const Index = () => {
       />
 <Row columns={[4]}>
   <Column start={[1]} width={[1]}>
-      <Box sx={{ position: 'absolute', top: 0, bottom: 0, width: '100%', height:'100%' }}>
+      <Box sx={{ position: 'absolute', top: 0, bottom: 0, width: '100%', height:'100%',
+                 backgroundColor: '#bbdaa4', zIndex: 0}}>
         <Map zoom={4} center={{lon:-95, lat:38}} debug={debug}>
           <Fill
-            color={theme.rawColors.background}
+            color={'#0a3c91'}
             source={bucket + 'basemaps/ocean'}
             variable={'ocean'}
           />
@@ -142,6 +145,7 @@ const Index = () => {
             mode={'texture'}
             source={mapSource}
             sourceDif={mapSourceDif}
+            fillValue={fillValue}
             variable={'climate'}
             selector={{ band }}
             // selector={{ month, band }}
