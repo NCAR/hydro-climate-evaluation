@@ -118,7 +118,7 @@ const Index = () => {
                  backgroundColor: '#bbdaa4', zIndex: 0}}>
         <Map zoom={4} center={{lon:-95, lat:38}} debug={debug}>
           <Fill
-            color={'#0a3c91'}
+            color={'#4a80f5'}
             source={bucket + 'basemaps/ocean'}
             variable={'ocean'}
           />
