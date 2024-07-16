@@ -478,25 +478,56 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
        jja_p: false,
        son_p: false,})
 
+  const countNumMetrics = (change) => {
+      let count = 0;
+      for (const key in metrics1) { metrics1[key] === true && count++; }
+      for (const key in metrics2) { metrics2[key] === true && count++; }
+      for (const key in metrics3) { metrics3[key] === true && count++; }
+      for (const key in metrics4) { metrics5[key] === true && count++; }
+      for (const key in metrics5) { metrics5[key] === true && count++; }
+      for (const key in metrics6) { metrics6[key] === true && count++; }
+      return count + change;
+  }
+
+  const diffInMetrics = (array1, array2) => {
+      for (const key in array1) {
+          if (array1[key] != array2[key]) {
+              if (array2[key] == true) {
+                  return 1
+              } else {
+                  return -1
+  }}}}
+
+
   const handleMetrics = useCallback((e) => {
       const choice = e
       const keys = JSON.stringify(Object.keys(e))
+      let change = 0
 
       if (keys === '["tavg","n34t","ttrend"]') {
-          setMetrics1(e);
+                    change = diffInMetrics(metrics1, e)
+          setMetrics1(e)
       } else if (keys === '["t90","t99","djf_t"]') {
+                    change = diffInMetrics(metrics2, e)
           setMetrics2(e);
       } else if (keys === '["mam_t","jja_t","son_t"]') {
+                    change = diffInMetrics(metrics3, e)
           setMetrics3(e);
       } else if (keys === '["prec","n34pr","ptrend"]') {
+                    change = diffInMetrics(metrics4, e)
           setMetrics4(e);
       } else if (keys === '["pr90","pr99","djf_p"]') {
+                    change = diffInMetrics(metrics5, e)
           setMetrics5(e);
       } else if (keys === '["mam_p","jja_p","son_p"]') {
+                    change = diffInMetrics(metrics6, e)
           setMetrics6(e);
       }
+      const numSelected = countNumMetrics(change)
+
 
   })
+
 
 
   const handleMetricChange = useCallback((e) => {
