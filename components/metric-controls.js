@@ -418,11 +418,31 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
     // getData({chartSource}, setChartData)
   })
 
+  const [allMetrics, setAllMetrics] =
+    useState({
+       tavg: false,
+       n34t: false,
+       ttrend: false,
+       t90: false,
+       t99: false,
+       djf_t: false,
+       mam_t: false,
+       jja_t: false,
+       son_t: false,
+       prec: false,
+       n34pr: false,
+       ptrend: false,
+       pr90: false,
+       pr99: false,
+       djf_p: false,
+       mam_p: false,
+       jja_p: false,
+       son_p: false,})
+
 
 
   const [metrics, setMetrics] =
-    useState(
-      {
+    useState({
        all: false,
        clear: false,
       })
@@ -457,6 +477,27 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
        mam_p: false,
        jja_p: false,
        son_p: false,})
+
+  const handleMetrics = useCallback((e) => {
+      const choice = e
+      const keys = JSON.stringify(Object.keys(e))
+
+      if (keys === '["tavg","n34t","ttrend"]') {
+          setMetrics1(e);
+      } else if (keys === '["t90","t99","djf_t"]') {
+          setMetrics2(e);
+      } else if (keys === '["mam_t","jja_t","son_t"]') {
+          setMetrics3(e);
+      } else if (keys === '["prec","n34pr","ptrend"]') {
+          setMetrics4(e);
+      } else if (keys === '["pr90","pr99","djf_p"]') {
+          setMetrics5(e);
+      } else if (keys === '["mam_p","jja_p","son_p"]') {
+          setMetrics6(e);
+      }
+
+  })
+
 
   const handleMetricChange = useCallback((e) => {
       const choice = e
@@ -818,32 +859,32 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
         />
         <Filter
          values={metrics1}
-         setValues={setMetrics1}
+         setValues={handleMetrics}
          multiSelect={true}
         />
         <Filter
          values={metrics2}
-         setValues={setMetrics2}
+         setValues={handleMetrics}
          multiSelect={true}
         />
         <Filter
          values={metrics3}
-         setValues={setMetrics3}
+         setValues={handleMetrics}
          multiSelect={true}
         />
         <Filter
          values={metrics4}
-         setValues={setMetrics4}
+         setValues={handleMetrics}
          multiSelect={true}
         />
         <Filter
          values={metrics5}
-         setValues={setMetrics5}
+         setValues={handleMetrics}
          multiSelect={true}
         />
         <Filter
          values={metrics6}
-         setValues={setMetrics6}
+         setValues={handleMetrics}
          multiSelect={true}
         />
 
