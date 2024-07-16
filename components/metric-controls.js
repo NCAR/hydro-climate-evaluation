@@ -418,74 +418,69 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
     // getData({chartSource}, setChartData)
   })
 
-  const handleMetricChange = useCallback((e) => {
-    const metric = e.target.value
-    setMetric(metric)
-    console.log("e =", e.target.value)
-    // console.log("model =", bucket+'/'+downscaling+'/'+model+'/')
-    // setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
-    // // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
-    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
-    // getData({chartSource}, setChartData)
-    if (metric === 'n34pr') {
-      setBand('n34p')
-      setUnits('mm')
-    } else if (metric === 'n34t') {
-      setBand('n34t')
-      setUnits('°C')
-    }  else if (metric === 'ptrend') {
-      setBand('ptre')
-      setUnits('mm')
-    }  else if (metric === 'ttrend') {
-      setBand('ttre')
-      setUnits('°C')
-    }  else if (metric === 'pr90') {
-      setBand('pr90')
-      setUnits('mm')
-    }  else if (metric === 'pr99') {
-      setBand('pr99')
-      setUnits('mm')
-    }  else if (metric === 't90') {
-      setBand('t90_')
-      setUnits('°C')
-    }  else if (metric === 't99') {
-      setBand('t99_')
-      setUnits('°C')
-    }  else if (metric === 'djf_t') {
-      setBand('djft')
-      setUnits('°C')
-    }  else if (metric === 'djf_p') {
-      setBand('djfp')
-      setUnits('mm')
-    }  else if (metric === 'mam_t') {
-      setBand('mamt')
-      setUnits('°C')
-    }  else if (metric === 'mam_p') {
-      setBand('mamp')
-      setUnits('mm')
-    }  else if (metric === 'jja_t') {
-      setBand('jjat')
-      setUnits('°C')
-    }  else if (metric === 'jja_p') {
-      setBand('jjap')
-      setUnits('mm')
-    }  else if (metric === 'son_t') {
-      setBand('sont')
-      setUnits('°C')
-    }  else if (metric === 'son_p') {
-      setBand('sonp')
-      setUnits('mm')
-    } //  else {
-    if (filterValues['Dif.']) {
-      flipReload()
-      setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max])
-      setColormapName(Default_Colormaps['dif_'+metric])
-      setScaleDif(Scale_Values['dif_'+metric])
-    } else {
-      setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max])
-      setColormapName(Default_Colormaps[metric])
-    }
 
+
+  const [metrics, setMetrics] =
+    useState(
+      {
+       all: false,
+       clear: false,
+      })
+
+  const [metrics1, setMetrics1] =
+    useState({
+       tavg: false,
+       n34t: false,
+       ttrend: false,})
+  const [metrics2, setMetrics2] =
+    useState({
+       t90: false,
+       t99: false,
+       djf_t: false,})
+  const [metrics3, setMetrics3] =
+    useState({
+       mam_t: false,
+       jja_t: false,
+       son_t: false,})
+  const [metrics4, setMetrics4] =
+    useState({
+       prec: false,
+       n34pr: false,
+       ptrend: false,})
+  const [metrics5, setMetrics5] =
+    useState({
+       pr90: false,
+       pr99: false,
+       djf_p: false,})
+  const [metrics6, setMetrics6] =
+    useState({
+       mam_p: false,
+       jja_p: false,
+       son_p: false,})
+
+  const handleMetricChange = useCallback((e) => {
+      const choice = e
+      const all = e.all
+      const clear = e.clear
+
+      if (all) {
+          setMetrics({all: true, clear: false})
+          setMetrics1({tavg: true, n34t: true, ttrend: true,})
+          setMetrics2({t90: true, t99: true, djf_t: true,})
+          setMetrics3({mam_t: true, jja_t: true, son_t: true,})
+          setMetrics4({prec: true, n34pr: true, ptrend: true,})
+          setMetrics5({pr90: true, pr99: true, djf_p: true,})
+          setMetrics6({mam_p: true, jja_p: true, son_p: true,})
+
+      } else if (clear) {
+          setMetrics({all: false, clear: false})
+          setMetrics1({tavg: false, n34t: false, ttrend: false,})
+          setMetrics2({t90: false, t99: false, djf_t: false,})
+          setMetrics3({mam_t: false, jja_t: false, son_t: false,})
+          setMetrics4({prec: false, n34pr: false, ptrend: false,})
+          setMetrics5({pr90: false, pr99: false, djf_p: false,})
+          setMetrics6({mam_p: false, jja_p: false, son_p: false,})
+      }
   })
 
   const handleModelDifChange = useCallback((e) => {
@@ -803,29 +798,7 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
     [1],
     [1],
   ]}
-  data={[
-    [<LocalColorbar/>],
-    [
-     <Box sx={{ ...sx.label, minWidth: 110, mx: 'auto',
-                px: 0, mt: [1], textAlign: 'center'}}>Charts</Box>,
-     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Toggle
-        sx={{ chartToggle: 'block', mx: 3, mt: [2] }}
-        value={chartToggle}
-        onClick={() => {
-            getData({chartSource}, setChartData);
-            setChartToggle((prev) => !prev);
-            setChartHeight((prevHeight) => (prevHeight === '0%' ? '25%' : '0%'));
-        }}
-            />
-      </Box>
-      ],
-    [<AveDifFilter />],
-    //[<DifSourceChoices />],
-
-    // [<ClickRow />],
-  ]}
-
+  data={[[<LocalColorbar/>]]}
 
 
   borderTop={true}
@@ -838,30 +811,42 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
       <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
 
         <Box sx={{ ...sx.label, mt: [4] }}>Metrics</Box>
-        <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleMetricChange}
-          sx={{ mt: [1] }}
-          value={metric}
-        >
-          <option value='n34pr'>n34pr</option>
-          <option value='n34t'>n34t</option>
-          <option value='ptrend'>ptrend</option>
-          <option value='ttrend'>ttrend</option>
-          <option value='pr90'>pr90</option>
-          <option value='pr99'>pr99</option>
-          <option value='t90'>t90</option>
-          <option value='t99'>t99</option>
-          <option value='djf_t'>djf_t</option>
-          <option value='djf_p'>djf_p</option>
-          <option value='mam_t'>mam_t</option>
-          <option value='mam_p'>mam_p</option>
-          <option value='jja_t'>jja_t</option>
-          <option value='jja_p'>jja_p</option>
-          <option value='son_t'>son_t</option>
-          <option value='son_p'>son_p</option>
-        </Select>
+        <Filter
+         values={metrics}
+         setValues={setMetrics}
+         setValues={handleMetricChange}
+        />
+        <Filter
+         values={metrics1}
+         setValues={setMetrics1}
+         multiSelect={true}
+        />
+        <Filter
+         values={metrics2}
+         setValues={setMetrics2}
+         multiSelect={true}
+        />
+        <Filter
+         values={metrics3}
+         setValues={setMetrics3}
+         multiSelect={true}
+        />
+        <Filter
+         values={metrics4}
+         setValues={setMetrics4}
+         multiSelect={true}
+        />
+        <Filter
+         values={metrics5}
+         setValues={setMetrics5}
+         multiSelect={true}
+        />
+        <Filter
+         values={metrics6}
+         setValues={setMetrics6}
+         multiSelect={true}
+        />
+
 
       </Box>
     </>
