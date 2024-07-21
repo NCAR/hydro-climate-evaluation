@@ -6,6 +6,7 @@ import Colorbar from './colorbar'
 // import { colormaps } from '@carbonplan/colormaps'
 import { colormaps } from '../colormaps/src'
 import { getData } from './getData'
+import { IconButton } from 'theme-ui'
 
 const sx = {
   label: {
@@ -147,10 +148,14 @@ const Default_Colormaps = {
 }
 
 
-const MetricControls = ({ getters, setters, bucket, fname }) => {
+const MetricControls = ({ getters, setters,
+                          showClimateChange,
+                          setShowClimateChange,
+                          bucket, fname }) => {
   const { display, reload, debug, opacity, clim, month,
           band, colormapName, colormap,
-          downscaling, model, metric, yearRange, mapSource, chartSource,
+          downscaling, model, metric,
+          yearRange, mapSource, chartSource,
           downscalingDif, modelDif, yearRangeDif, obsDif,
           mapSourceDif, chartSourceDif, scaleDif,
           chartHeight, filterValues } = getters
@@ -186,6 +191,11 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
   const [chartToggle, setChartToggle] = useState(false)
 
   const [units, setUnits] = useState('mm')
+
+  const [rcpValues, setRCPValues] = useState({'4.8': true, '8.5': false})
+
+  const [computeClimateSignal, setComputeClimateSignal] =
+        useState({'3. Compute Climate Signal': false})
 
   const handleUnitsChange = () => {
       if (band === 'tavg') {
@@ -418,6 +428,7 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
     // getData({chartSource}, setChartData)
   })
 
+  const maxNumMetrics = 18
   const [allMetrics, setAllMetrics] =
     useState({
        tavg: false,
@@ -440,6 +451,8 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
        son_p: false,})
 
 
+  const [numMetrics, setNumMetrics] = useState(0)
+  const [topCombination, setTopCombination] = useState("None")
 
   const [metrics, setMetrics] =
     useState({
@@ -498,6 +511,60 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
                   return -1
   }}}}
 
+  const combinations =
+        [
+            "ICAR with NorESM-M",
+            "ICAR with ACCESS1-3",
+            "ICAR with CanESM2",
+            "ICAR with CCSM4",
+            "ICAR with MIROC5",
+        ]
+
+  const tavg_score = [3,4,2,5,1]
+  const n34t_score = [1,3,5,2,4]
+  const ttrend_score = [2,3,1,4,5]
+
+
+  function addScores(a,b){
+        return a.map((e,i) => e + b[i]);
+  }
+
+  const computeTopCombination = () => {
+    let currentScore = [0,0,0,0,0]
+    if (metrics1['tavg']) {
+        currentScore = addScores(currentScore, tavg_score)
+    }
+    if (metrics1['n34t']) {
+        currentScore = addScores(currentScore, n34t_score)
+    }
+    if (metrics1['ttrend']) {
+        currentScore = addScores(currentScore, ttrend_score)
+    }
+
+    let i = currentScore.indexOf(Math.max(...currentScore));
+    if (numMetrics === 0) {
+        setTopCombination("None")
+    } else {
+        console.log("SCORE =", currentScore, "and i", i)
+        console.log("best combination =", combinations[i])
+        setTopCombination(combinations[i])
+    }
+
+
+  }
+
+  const handleRCPValues = useCallback((e) => {
+      const choice = e
+      console.log("RCP VALUES e =", e)
+      setRCPValues(choice)
+  });
+
+  const handleClimateSignal = useCallback((e) => {
+      const choice = e
+      setComputeClimateSignal(choice)
+  });
+
+
 
   const handleMetrics = useCallback((e) => {
       const choice = e
@@ -505,25 +572,33 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
       let change = 0
 
       if (keys === '["tavg","n34t","ttrend"]') {
-                    change = diffInMetrics(metrics1, e)
+          change = diffInMetrics(metrics1, e)
           setMetrics1(e)
       } else if (keys === '["t90","t99","djf_t"]') {
-                    change = diffInMetrics(metrics2, e)
+          change = diffInMetrics(metrics2, e)
           setMetrics2(e);
       } else if (keys === '["mam_t","jja_t","son_t"]') {
-                    change = diffInMetrics(metrics3, e)
+          change = diffInMetrics(metrics3, e)
           setMetrics3(e);
       } else if (keys === '["prec","n34pr","ptrend"]') {
-                    change = diffInMetrics(metrics4, e)
+          change = diffInMetrics(metrics4, e)
           setMetrics4(e);
       } else if (keys === '["pr90","pr99","djf_p"]') {
-                    change = diffInMetrics(metrics5, e)
+          change = diffInMetrics(metrics5, e)
           setMetrics5(e);
       } else if (keys === '["mam_p","jja_p","son_p"]') {
-                    change = diffInMetrics(metrics6, e)
+          change = diffInMetrics(metrics6, e)
           setMetrics6(e);
       }
       const numSelected = countNumMetrics(change)
+      console.log("change", change, "numsel", numSelected)
+      setNumMetrics(numSelected)
+
+      computeTopCombination()
+      // if (numSelected === 0) {
+      //     metricSelected
+      // }
+
 
 
   })
@@ -536,6 +611,7 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
       const clear = e.clear
 
       if (all) {
+          setNumMetrics(maxNumMetrics)
           setMetrics({all: true, clear: false})
           setMetrics1({tavg: true, n34t: true, ttrend: true,})
           setMetrics2({t90: true, t99: true, djf_t: true,})
@@ -543,8 +619,11 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
           setMetrics4({prec: true, n34pr: true, ptrend: true,})
           setMetrics5({pr90: true, pr99: true, djf_p: true,})
           setMetrics6({mam_p: true, jja_p: true, son_p: true,})
+          computeTopCombination()
 
       } else if (clear) {
+          setTopCombination("None")
+          setNumMetrics(0)
           setMetrics({all: false, clear: false})
           setMetrics1({tavg: false, n34t: false, ttrend: false,})
           setMetrics2({t90: false, t99: false, djf_t: false,})
@@ -882,7 +961,7 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
       </Box>
       <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
 
-        <Box sx={{ ...sx.label, mt: [4] }}>Metrics</Box>
+        <Box sx={{ ...sx.label, mt: [4] }}>1. Select Metrics</Box>
         <Filter
          values={metrics}
          setValues={setMetrics}
@@ -919,8 +998,29 @@ const MetricControls = ({ getters, setters, bucket, fname }) => {
          multiSelect={true}
         />
 
+      {/*(numMetrics > 0) && */}
+      <Box>Number of selected metrics = {numMetrics} </Box>
+      <Box sx={{mb:4}}>
+           Best Performing: {topCombination}         </Box>
+
+
+
+      <Box>2. Select future RCP scenario</Box>
+      <Filter
+       values={rcpValues}
+       setValues={handleRCPValues}
+       multiSelect={false}
+       sx={{mb:4}}
+      />
+
+      <Filter
+       values={computeClimateSignal}
+       setValues={handleClimateSignal}
+       multiSelect={false}
+      />
 
       </Box>
+
     </>
   )
 }

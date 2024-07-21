@@ -9,9 +9,11 @@ import { Map, Raster, Fill, Line, RegionPicker } from '../maps'
 import { useThemedColormap } from '../colormaps/src'
 import RegionPlot from '../components/region-plot'
 import ParameterControls from '../components/parameter-controls'
+import MetricControls from '../components/metric-controls'
 import {options, linedata, linedata_stub} from '../components/plot-line';
 import { Line as LineCJS } from 'react-chartjs-2';
 import Charts from '../components/charts'
+import { NetCDFReader } from "netcdfjs";
 
 const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/'
 
@@ -33,12 +35,16 @@ const Index = () => {
   const [clim, setClim] = useState([-10, 15])
 
   const colormap = useThemedColormap(colormapName)
+  const [showClimateChange, setShowClimateChange] = useState(false)
   const [showRegionPlot, setShowRegionPlot] = useState(false)
   const [regionData, setRegionData] = useState({ loading: true })
   // set variables to access datasets
   const [downscaling, setDownscaling] = useState('icar')
   const [model, setModel] = useState('noresm1_m')
   const [metric, setMetric] = useState('djf_t')
+  const [rcp, setRCP] = useState('4.5')
+
+
   // const [yearRange, setYearRange] = useState('1980_2010')
   const [yearRange, setYearRange] = useState('1981_2004')
   // diff dataset variables for model to compare against
@@ -151,7 +157,7 @@ const Index = () => {
             // selector={{ month, band }}
             filterValue={filterValues}
             // selector={{ month, band, source }}
-            regionOptions={{ setData: setRegionData }}
+             regionOptions={{ setData: setRegionData }}
           />
           <RegionPlot
             band={band}
@@ -161,8 +167,17 @@ const Index = () => {
             setShowRegionPlot={setShowRegionPlot}
           />
         </Map>
+        {!showRegionPlot && (
         <ParameterControls getters={getters} setters={setters}
-                        bucket={bucket_ndp} fname={fname} />
+                        bucket={bucket_ndp} fname={fname} />)}
+        {showRegionPlot && (
+        <MetricControls getters={getters} setters={setters}
+                        showClimateChange={showClimateChange}
+                        setShowClimateChange={setShowClimateChange}
+                        bucket={bucket_ndp} fname={fname} />)}
+
+
+
       </Box>
   </Column>
 

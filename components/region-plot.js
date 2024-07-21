@@ -9,6 +9,10 @@ const PlotData = ({ band, data: { value } }) => {
     return 'loading...'
   }
 
+  // Questions
+  // 1. how does .filter work? how does it get the region
+  // 2. when to read in/calculate order from metrics
+
   let result
   const filteredData = value.climate.filter((d) => d !== 9.969209968386869e36)
   if (filteredData.length === 0) {
@@ -23,7 +27,7 @@ const PlotData = ({ band, data: { value } }) => {
     // } else {
     //   result = `Average: ${average.toFixed(2)}ºC`
     // }
-		result = "Plotting Data"
+		result = "Selecting Metrics"
   }
 
   return (
@@ -43,7 +47,7 @@ const PlotData = ({ band, data: { value } }) => {
 
 const RegionPlot = ({
   band,
-	source,
+  source,
   month,
   regionData,
   showRegionPlot,
