@@ -659,6 +659,13 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       const url = bucket+'/climateSignal/'+downscaling+'/'+model+'/'+rcp+'/'+fname
       setMapSource(url)
       setShowRegionPlot(false)
+
+      const local_filterValue = {'Ave.': false, 'Dif.': true}
+      handleFilterAndSetClimColormapName(local_filterValue)
+      // does the following in previous func
+      // setScaleDif(Scale_Values['dif_'+metric])
+      // setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max])
+
       // setChartSource(bucket+'/climateSignal/'+downscaling+'/'+model+'/'+rcp)
 
   });
@@ -704,7 +711,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
 
 
-  const handleMetricChange = useCallback((e) => {
+  const handleClimateMetricsChange = useCallback((e) => {
       const choice = e
       const all = e.all
       const clear = e.clear
@@ -1087,7 +1094,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         <Select
           sxSelect={{ bg: 'transparent' }}
           size='xs'
-          onChange={handleMetricChange}
+          onChange={handleMetricsChange}
           sx={{ mt: [1] }}
           value={metric}
         >
@@ -1122,7 +1129,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         <Filter
          values={metrics}
          setValues={setMetrics}
-         setValues={handleMetricsChange}
+         setValues={handleClimateMetricsChange}
         />
         <Filter
          values={metrics1}
@@ -1248,7 +1255,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   ]}
   data={[
     [<LocalColorbar/>],
-    [showRegionPlot &&
+    [ //showRegionPlot &&
      <Box sx={{ ...sx.label, minWidth: 110, mx: 'auto',
                 px: 0, mt: [1], textAlign: 'center'}}>Charts</Box>,
      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -1263,7 +1270,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             />
       </Box>
       ],
-     [showRegionPlot && <AveDifFilter/>],
+     [ //showRegionPlot &&
+      <AveDifFilter/>],
     //[<DifSourceChoices />],
 
     // [<ClickRow />],
