@@ -648,27 +648,24 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       setRCPValues(choice)
   });
 
+  const [shouldUpdateMapSource, setShouldUpdateMapSource] = useState(false);
+
   const handleClimateSignal = useCallback((e) => {
       setComputeClimateSignal({'3. Compute Climate Signal': false})
-      const downscaling_choice = 'icar'
-      setDownscaling(downscaling_choice)
-      const model_choice = 'ccsm4'
-      setModel(model_choice)
-      let rcp = getRCPKey(rcpValues)
-
-      const url = bucket+'/climateSignal/'+downscaling+'/'+model+'/'+rcp+'/'+fname
-      setMapSource(url)
       setShowRegionPlot(false)
+      setShouldUpdateMapSource(true);
+  });
 
+  useEffect(() => {
+    if (!showRegionPlot && shouldUpdateMapSource) {
+      let rcp = getRCPKey(rcpValues)
+      const url = bucket+'/climateSignal/'+downscaling+'/'+model+'/'+rcp+'/'+fname
+      setMapSource(url);
+      setShouldUpdateMapSource(false); // Reset the flag
       const local_filterValue = {'Ave.': false, 'Dif.': true}
       handleFilterAndSetClimColormapName(local_filterValue)
-      // does the following in previous func
-      // setScaleDif(Scale_Values['dif_'+metric])
-      // setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max])
-
-      // setChartSource(bucket+'/climateSignal/'+downscaling+'/'+model+'/'+rcp)
-
-  });
+    }
+  }, [showRegionPlot, shouldUpdateMapSource]);
 
 
 
