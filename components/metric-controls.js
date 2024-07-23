@@ -6,7 +6,6 @@ import Colorbar from './colorbar'
 // import { colormaps } from '@carbonplan/colormaps'
 import { colormaps } from '../colormaps/src'
 import { getData } from './getData'
-import { IconButton } from 'theme-ui'
 
 const sx = {
   label: {
@@ -151,6 +150,8 @@ const Default_Colormaps = {
 const MetricControls = ({ getters, setters,
                           showClimateChange,
                           setShowClimateChange,
+                          showRegionPlot,
+                          setShowRegionPlot,
                           bucket, fname }) => {
   const { display, reload, debug, opacity, clim, month,
           band, colormapName, colormap,
@@ -192,7 +193,25 @@ const MetricControls = ({ getters, setters,
 
   const [units, setUnits] = useState('mm')
 
-  const [rcpValues, setRCPValues] = useState({'4.8': true, '8.5': false})
+  const getRCPString = (value) => {
+      if (value === "8.5") {
+          return "rcp85"
+      } else if (value === "4.5") {
+          return "rcp45"
+      }
+      return null
+  }
+
+  const getRCPKey = (obj) => {
+    for (const [key, value] of Object.entries(obj)) {
+      if (value === true) {
+        return getRCPString(key);
+      }
+    }
+    return null;
+  };
+
+  const [rcpValues, setRCPValues] = useState({'4.5': true, '8.5': false})
 
   const [computeClimateSignal, setComputeClimateSignal] =
         useState({'3. Compute Climate Signal': false})
@@ -560,8 +579,18 @@ const MetricControls = ({ getters, setters,
   });
 
   const handleClimateSignal = useCallback((e) => {
-      const choice = e
-      setComputeClimateSignal(choice)
+      setComputeClimateSignal({'3. Compute Climate Signal': false})
+      const downscaling_choice = 'icar'
+      setDownscaling(downscaling_choice)
+      const model_choice = 'ccsm4'
+      setModel(model_choice)
+      let rcp = getRCPKey(rcpValues)
+
+      const url = bucket+'/climateSignal/'+downscaling+'/'+model+'/'+rcp+'/'+fname
+      setMapSource(url)
+      setShowRegionPlot(false)
+      // setChartSource(bucket+'/climateSignal/'+downscaling+'/'+model+'/'+rcp)
+
   });
 
 
@@ -605,7 +634,7 @@ const MetricControls = ({ getters, setters,
 
 
 
-  const handleMetricChange = useCallback((e) => {
+  const handleMetricsChange = useCallback((e) => {
       const choice = e
       const all = e.all
       const clear = e.clear
@@ -965,7 +994,7 @@ const MetricControls = ({ getters, setters,
         <Filter
          values={metrics}
          setValues={setMetrics}
-         setValues={handleMetricChange}
+         setValues={handleMetricsChange}
         />
         <Filter
          values={metrics1}

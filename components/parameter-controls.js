@@ -153,7 +153,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           downscaling, model, metric, yearRange, mapSource, chartSource,
           downscalingDif, modelDif, yearRangeDif, obsDif,
           mapSourceDif, chartSourceDif, scaleDif,
-          chartHeight, filterValues } = getters
+          chartHeight, filterValues,
+          showClimateChange, showRegionPlot
+        } = getters
   const {
     setDisplay,
     setReload,
@@ -178,7 +180,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setScaleDif,
     setChartHeight,
     setChartData,
-    setFilterValues
+    setFilterValues,
+    setShowClimateChange,
+    setShowRegionPlot
   } = setters
 
   // const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false})
@@ -186,6 +190,30 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const [chartToggle, setChartToggle] = useState(false)
 
   const [units, setUnits] = useState('mm')
+
+
+  const getRCPString = (value) => {
+      if (value === "8.5") {
+          return "rcp85"
+      } else if (value === "4.5") {
+          return "rcp45"
+      }
+      return null
+  }
+
+  const getRCPKey = (obj) => {
+    for (const [key, value] of Object.entries(obj)) {
+      if (value === true) {
+        return getRCPString(key);
+      }
+    }
+    return null;
+  };
+
+  const [rcpValues, setRCPValues] = useState({'4.5': true, '8.5': false})
+
+  const [computeClimateSignal, setComputeClimateSignal] =
+        useState({'3. Compute Climate Signal': false})
 
   const handleUnitsChange = () => {
       if (band === 'tavg') {
@@ -418,7 +446,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     // getData({chartSource}, setChartData)
   })
 
-  const handleMetricChange = useCallback((e) => {
+  const handleMetricsChange = useCallback((e) => {
     const metric = e.target.value
     setMetric(metric)
     console.log("e =", e.target.value)
@@ -487,6 +515,227 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
 
   })
+
+
+  const maxNumMetrics = 18
+  const [allMetrics, setAllMetrics] =
+    useState({
+       tavg: false,
+       n34t: false,
+       ttrend: false,
+       t90: false,
+       t99: false,
+       djf_t: false,
+       mam_t: false,
+       jja_t: false,
+       son_t: false,
+       prec: false,
+       n34pr: false,
+       ptrend: false,
+       pr90: false,
+       pr99: false,
+       djf_p: false,
+       mam_p: false,
+       jja_p: false,
+       son_p: false,})
+
+
+  const [numMetrics, setNumMetrics] = useState(0)
+  const [topCombination, setTopCombination] = useState("None")
+
+  const [metrics, setMetrics] =
+    useState({
+       all: false,
+       clear: false,
+      })
+
+  const [metrics1, setMetrics1] =
+    useState({
+       tavg: false,
+       n34t: false,
+       ttrend: false,})
+  const [metrics2, setMetrics2] =
+    useState({
+       t90: false,
+       t99: false,
+       djf_t: false,})
+  const [metrics3, setMetrics3] =
+    useState({
+       mam_t: false,
+       jja_t: false,
+       son_t: false,})
+  const [metrics4, setMetrics4] =
+    useState({
+       prec: false,
+       n34pr: false,
+       ptrend: false,})
+  const [metrics5, setMetrics5] =
+    useState({
+       pr90: false,
+       pr99: false,
+       djf_p: false,})
+  const [metrics6, setMetrics6] =
+    useState({
+       mam_p: false,
+       jja_p: false,
+       son_p: false,})
+
+  const countNumMetrics = (change) => {
+      let count = 0;
+      for (const key in metrics1) { metrics1[key] === true && count++; }
+      for (const key in metrics2) { metrics2[key] === true && count++; }
+      for (const key in metrics3) { metrics3[key] === true && count++; }
+      for (const key in metrics4) { metrics5[key] === true && count++; }
+      for (const key in metrics5) { metrics5[key] === true && count++; }
+      for (const key in metrics6) { metrics6[key] === true && count++; }
+      return count + change;
+  }
+
+  const diffInMetrics = (array1, array2) => {
+      for (const key in array1) {
+          if (array1[key] != array2[key]) {
+              if (array2[key] == true) {
+                  return 1
+              } else {
+                  return -1
+  }}}}
+
+  const combinations =
+        [
+            "ICAR with NorESM-M",
+            "ICAR with ACCESS1-3",
+            "ICAR with CanESM2",
+            "ICAR with CCSM4",
+            "ICAR with MIROC5",
+        ]
+
+  const tavg_score = [3,4,2,5,1]
+  const n34t_score = [1,3,5,2,4]
+  const ttrend_score = [2,3,1,4,5]
+
+
+  function addScores(a,b){
+        return a.map((e,i) => e + b[i]);
+  }
+
+  const computeTopCombination = () => {
+    let currentScore = [0,0,0,0,0]
+    if (metrics1['tavg']) {
+        currentScore = addScores(currentScore, tavg_score)
+    }
+    if (metrics1['n34t']) {
+        currentScore = addScores(currentScore, n34t_score)
+    }
+    if (metrics1['ttrend']) {
+        currentScore = addScores(currentScore, ttrend_score)
+    }
+
+    let i = currentScore.indexOf(Math.max(...currentScore));
+    if (numMetrics === 0) {
+        setTopCombination("None")
+    } else {
+        console.log("SCORE =", currentScore, "and i", i)
+        console.log("best combination =", combinations[i])
+        setTopCombination(combinations[i])
+    }
+
+
+  }
+
+  const handleRCPValues = useCallback((e) => {
+      const choice = e
+      console.log("RCP VALUES e =", e)
+      setRCPValues(choice)
+  });
+
+  const handleClimateSignal = useCallback((e) => {
+      setComputeClimateSignal({'3. Compute Climate Signal': false})
+      const downscaling_choice = 'icar'
+      setDownscaling(downscaling_choice)
+      const model_choice = 'ccsm4'
+      setModel(model_choice)
+      let rcp = getRCPKey(rcpValues)
+
+      const url = bucket+'/climateSignal/'+downscaling+'/'+model+'/'+rcp+'/'+fname
+      setMapSource(url)
+      setShowRegionPlot(false)
+      // setChartSource(bucket+'/climateSignal/'+downscaling+'/'+model+'/'+rcp)
+
+  });
+
+
+
+  const handleMetrics = useCallback((e) => {
+      const choice = e
+      const keys = JSON.stringify(Object.keys(e))
+      let change = 0
+
+      if (keys === '["tavg","n34t","ttrend"]') {
+          change = diffInMetrics(metrics1, e)
+          setMetrics1(e)
+      } else if (keys === '["t90","t99","djf_t"]') {
+          change = diffInMetrics(metrics2, e)
+          setMetrics2(e);
+      } else if (keys === '["mam_t","jja_t","son_t"]') {
+          change = diffInMetrics(metrics3, e)
+          setMetrics3(e);
+      } else if (keys === '["prec","n34pr","ptrend"]') {
+          change = diffInMetrics(metrics4, e)
+          setMetrics4(e);
+      } else if (keys === '["pr90","pr99","djf_p"]') {
+          change = diffInMetrics(metrics5, e)
+          setMetrics5(e);
+      } else if (keys === '["mam_p","jja_p","son_p"]') {
+          change = diffInMetrics(metrics6, e)
+          setMetrics6(e);
+      }
+      const numSelected = countNumMetrics(change)
+      console.log("change", change, "numsel", numSelected)
+      setNumMetrics(numSelected)
+
+      computeTopCombination()
+      // if (numSelected === 0) {
+      //     metricSelected
+      // }
+
+
+
+  })
+
+
+
+  const handleMetricChange = useCallback((e) => {
+      const choice = e
+      const all = e.all
+      const clear = e.clear
+
+      if (all) {
+          setNumMetrics(maxNumMetrics)
+          setMetrics({all: true, clear: false})
+          setMetrics1({tavg: true, n34t: true, ttrend: true,})
+          setMetrics2({t90: true, t99: true, djf_t: true,})
+          setMetrics3({mam_t: true, jja_t: true, son_t: true,})
+          setMetrics4({prec: true, n34pr: true, ptrend: true,})
+          setMetrics5({pr90: true, pr99: true, djf_p: true,})
+          setMetrics6({mam_p: true, jja_p: true, son_p: true,})
+          computeTopCombination()
+
+      } else if (clear) {
+          setTopCombination("None")
+          setNumMetrics(0)
+          setMetrics({all: false, clear: false})
+          setMetrics1({tavg: false, n34t: false, ttrend: false,})
+          setMetrics2({t90: false, t99: false, djf_t: false,})
+          setMetrics3({mam_t: false, jja_t: false, son_t: false,})
+          setMetrics4({prec: false, n34pr: false, ptrend: false,})
+          setMetrics5({pr90: false, pr99: false, djf_p: false,})
+          setMetrics6({mam_p: false, jja_p: false, son_p: false,})
+      }
+  })
+
+
+
+
 
   const handleModelDifChange = useCallback((e) => {
     const modelDif = e.target.value
@@ -740,6 +989,200 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   };
 
 
+ const MapChoicesBox = () => { return(
+           <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
+
+        <Box sx={{ ...sx.label, mt: [4] }}>Year Range</Box>
+        <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={handleYearChange}
+          sx={{ mt: [1] }}
+          value={yearRange}
+        >
+          <option value='1981_2004'>1981-2004</option>
+{/*       <option value='1980_2010'>1980-2010</option>
+          <option value='2070_2100'>2070-2100</option>*/}
+        </Select>
+
+        <Box sx={{ ...sx.label, mt: [4] }}>Downscaling Method</Box>
+        <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={handleDownscalingChange}
+          sx={{ mt: [1] }}
+          value={downscaling}
+        >
+          <option value='icar'>ICAR</option>
+          <option value='gard_r2'>GARD_r2</option>
+          <option value='gard_r3'>GARD_r3</option>
+          <option value='loca_8th'>LOCA_8th</option>
+          <option value='maca'>MACA</option>
+          <option value='nasa_nex'>NASA-NEX</option>
+        </Select>
+
+        <Box sx={{ ...sx.label, mt: [4] }}>Climate Model</Box>
+        <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={handleModelChange}
+          sx={{ mt: [1] }}
+          value={model}
+        >
+
+  {downscaling === 'icar' && (
+    <>
+          <option value='noresm1_m'>NorESM-M</option>
+          <option value='access1_3'>ACCESS1-3</option>
+          <option value='canesm2'>CanESM2</option>
+          <option value='ccsm4'>CCSM4</option>
+          <option value='miroc5'>MIROC5</option>
+    </>
+  )}
+  {downscaling === 'gard_r2' && (
+    <>
+          <option value='noresm1_m'>NorESM-M</option>
+          <option value='access1_3'>ACCESS1-3</option>
+          <option value='canesm2'>CanESM2</option>
+          <option value='ccsm4'>CCSM4</option>
+          <option value='miroc5'>MIROC5</option>
+    </>
+  )}
+  {downscaling === 'gard_r3' && (
+    <>
+          <option value='noresm1_m'>NorESM-M</option>
+          <option value='access1_3'>ACCESS1-3</option>
+          <option value='canesm2'>CanESM2</option>
+          <option value='ccsm4'>CCSM4</option>
+          <option value='miroc5'>MIROC5</option>
+    </>
+  )}
+  {downscaling === 'loca_8th' && (
+    <>
+          <option value='noresm1_m'>NorESM-M</option>
+          <option value='access1_3'>ACCESS1-3</option>
+          <option value='canesm2'>CanESM2</option>
+          <option value='ccsm4'>CCSM4</option>
+          <option value='miroc5'>MIROC5</option>
+    </>
+  )}
+  {downscaling === 'maca' && (
+    <>
+          <option value='noresm1_m'>NorESM-M</option>
+          <option value='canesm2'>CanESM2</option>
+          <option value='ccsm4'>CCSM4</option>
+          <option value='miroc5'>MIROC5</option>
+    </>
+  )}
+  {downscaling === 'nasa_nex' && (
+    <>
+          <option value='noresm1_m'>NorESM-M</option>
+          <option value='canesm2'>CanESM2</option>
+          <option value='miroc5'>MIROC5</option>
+    </>
+  )}
+        </Select>
+
+        <Box sx={{ ...sx.label, mt: [4] }}>Metrics</Box>
+        <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={handleMetricChange}
+          sx={{ mt: [1] }}
+          value={metric}
+        >
+          <option value='n34pr'>n34pr</option>
+          <option value='n34t'>n34t</option>
+          <option value='ptrend'>ptrend</option>
+          <option value='ttrend'>ttrend</option>
+          <option value='pr90'>pr90</option>
+          <option value='pr99'>pr99</option>
+          <option value='t90'>t90</option>
+          <option value='t99'>t99</option>
+          <option value='djf_t'>djf_t</option>
+          <option value='djf_p'>djf_p</option>
+          <option value='mam_t'>mam_t</option>
+          <option value='mam_p'>mam_p</option>
+          <option value='jja_t'>jja_t</option>
+          <option value='jja_p'>jja_p</option>
+          <option value='son_t'>son_t</option>
+          <option value='son_p'>son_p</option>
+        </Select>
+
+     { setMetricLabel() }
+      </Box>
+   ); // end of MapChoicesBox return statement
+ }
+
+ const ClimateSignalBox = () => { return(
+    <>
+      <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
+
+        <Box sx={{ ...sx.label, mt: [4] }}>1. Select Metrics</Box>
+        <Filter
+         values={metrics}
+         setValues={setMetrics}
+         setValues={handleMetricsChange}
+        />
+        <Filter
+         values={metrics1}
+         setValues={handleMetrics}
+         multiSelect={true}
+        />
+        <Filter
+         values={metrics2}
+         setValues={handleMetrics}
+         multiSelect={true}
+        />
+        <Filter
+         values={metrics3}
+         setValues={handleMetrics}
+         multiSelect={true}
+        />
+        <Filter
+         values={metrics4}
+         setValues={handleMetrics}
+         multiSelect={true}
+        />
+        <Filter
+         values={metrics5}
+         setValues={handleMetrics}
+         multiSelect={true}
+        />
+        <Filter
+         values={metrics6}
+         setValues={handleMetrics}
+         multiSelect={true}
+        />
+
+      {/*(numMetrics > 0) && */}
+      <Box>Number of selected metrics = {numMetrics} </Box>
+      <Box sx={{mb:4}}>
+           Best Performing: {topCombination}         </Box>
+
+
+
+      <Box>2. Select future RCP scenario</Box>
+      <Filter
+       values={rcpValues}
+       setValues={handleRCPValues}
+       multiSelect={false}
+       sx={{mb:4}}
+      />
+
+      <Filter
+       values={computeClimateSignal}
+       setValues={handleClimateSignal}
+       multiSelect={false}
+      />
+
+      </Box>
+
+    </>
+ );}  // end of ClimateSignalBox
+
+
+
 
 
   return (
@@ -805,7 +1248,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   ]}
   data={[
     [<LocalColorbar/>],
-    [
+    [showRegionPlot &&
      <Box sx={{ ...sx.label, minWidth: 110, mx: 'auto',
                 px: 0, mt: [1], textAlign: 'center'}}>Charts</Box>,
      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -820,7 +1263,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             />
       </Box>
       ],
-    [<AveDifFilter />],
+     [showRegionPlot && <AveDifFilter/>],
     //[<DifSourceChoices />],
 
     // [<ClickRow />],
@@ -833,284 +1276,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   index={false}
   sx={{ my: [3] }}
   />
-        </Flex>
-      </Box>
-      <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
+   </Flex>
+   </Box>
 
-{/*   // Old temperature range sliders
-      <Box sx={sx.label}>Minimum</Box>
-        <Slider
-          min={Clim_Ranges[band].min}
-          max={Clim_Ranges[band].max}
-          step={1}
-          sx={{ width: '175px', display: 'inline-block' }}
-          value={clim[0]}
-          onChange={(e) =>
-            setClim((prev) => [parseFloat(e.target.value), prev[1]])
-          }
-        />
-        <Badge
-          sx={{
-            bg: 'primary',
-            color: 'background',
-            display: 'inline-block',
-            position: 'relative',
-            left: [3],
-            top: [1],
-          }}
-        >
-          {clim[0].toFixed(0)}
-        </Badge>
-        <Box sx={sx.label}>Maximum</Box>
-        <Slider
-          min={Clim_Ranges[band].min}
-          max={Clim_Ranges[band].max}
-          step={1}
-          sx={{ width: '175px', display: 'inline-block' }}
-          value={clim[1]}
-          onChange={(e) =>
-            setClim((prev) => [prev[0], parseFloat(e.target.value)])
-          }
-        />
-        <Badge
-          sx={{
-            bg: 'primary',
-            color: 'background',
-            display: 'inline-block',
-            position: 'relative',
-            left: [3],
-            top: [1],
-          }}
-        >
-          {clim[1].toFixed(0)}
-        </Badge>
-*/}
+   {!showRegionPlot && <MapChoicesBox />}
+   {showRegionPlot && <ClimateSignalBox />}
 
-
-        {/* --- Month Slider ---
-            setup to use the 0 value as averaging over the full year
-          */}
-
-{/*     <Box sx={sx.label}>{month === 0 ? 'Full Year' : `Month: ${month}`}</Box>
-        <Slider
-          min={1}
-          max={12}
-          step={1}
-          sx={{ width: '175px', display: 'inline-block' }}
-          value={month}
-          onChange={(e) => setMonth(parseFloat(e.target.value))}
-        />*/}
-
-        {/* --- Unused Year Slider ---
-        <Box sx={sx.label}>{`Year: ${year}`}</Box>
-        <Slider
-          min={1970}
-          max={2020}
-          step={1}
-          sx={{ width: '175px', display: 'inline-block' }}
-          value={year}
-          onChange={(e) => setYear(parseFloat(e.target.value))}
-        /> */}
-        <Box sx={{ ...sx.label, mt: [4] }}>Year Range</Box>
-        <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleYearChange}
-          sx={{ mt: [1] }}
-          value={yearRange}
-        >
-          <option value='1981_2004'>1981-2004</option>
-{/*       <option value='1980_2010'>1980-2010</option>
-          <option value='2070_2100'>2070-2100</option>*/}
-        </Select>
-
-        <Box sx={{ ...sx.label, mt: [4] }}>Downscaling Method</Box>
-        <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleDownscalingChange}
-          sx={{ mt: [1] }}
-          value={downscaling}
-        >
-          <option value='icar'>ICAR</option>
-          <option value='gard_r2'>GARD_r2</option>
-          <option value='gard_r3'>GARD_r3</option>
-          <option value='loca_8th'>LOCA_8th</option>
-          <option value='maca'>MACA</option>
-          <option value='nasa_nex'>NASA-NEX</option>
-{/*OLD    <option value='icar'>ICAR</option>
-          <option value='gard'>GARD</option>
-          <option value='loca'>LOCA</option>
-          <option value='bcsd'>BCSD</option>*/}
-        </Select>
-
-        <Box sx={{ ...sx.label, mt: [4] }}>Climate Model</Box>
-        <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleModelChange}
-          sx={{ mt: [1] }}
-          value={model}
-        >
-
-  {downscaling === 'icar' && (
-    <>
-          <option value='noresm1_m'>NorESM-M</option>
-          <option value='access1_3'>ACCESS1-3</option>
-          <option value='canesm2'>CanESM2</option>
-          <option value='ccsm4'>CCSM4</option>
-          <option value='miroc5'>MIROC5</option>
-    </>
-  )}
-  {downscaling === 'gard_r2' && (
-    <>
-          <option value='noresm1_m'>NorESM-M</option>
-          <option value='access1_3'>ACCESS1-3</option>
-          <option value='canesm2'>CanESM2</option>
-          <option value='ccsm4'>CCSM4</option>
-          <option value='miroc5'>MIROC5</option>
-    </>
-  )}
-  {downscaling === 'gard_r3' && (
-    <>
-          <option value='noresm1_m'>NorESM-M</option>
-          <option value='access1_3'>ACCESS1-3</option>
-          <option value='canesm2'>CanESM2</option>
-          <option value='ccsm4'>CCSM4</option>
-          <option value='miroc5'>MIROC5</option>
-    </>
-  )}
-  {downscaling === 'loca_8th' && (
-    <>
-          <option value='noresm1_m'>NorESM-M</option>
-          <option value='access1_3'>ACCESS1-3</option>
-          <option value='canesm2'>CanESM2</option>
-          <option value='ccsm4'>CCSM4</option>
-          <option value='miroc5'>MIROC5</option>
-    </>
-  )}
-  {downscaling === 'maca' && (
-    <>
-          <option value='noresm1_m'>NorESM-M</option>
-          <option value='canesm2'>CanESM2</option>
-          <option value='ccsm4'>CCSM4</option>
-          <option value='miroc5'>MIROC5</option>
-    </>
-  )}
-  {downscaling === 'nasa_nex' && (
-    <>
-          <option value='noresm1_m'>NorESM-M</option>
-          <option value='canesm2'>CanESM2</option>
-          <option value='miroc5'>MIROC5</option>
-    </>
-  )}
-
-{/*       <option value='noresm1_m'>NorESM-M</option>
-          <option value='access1_3'>ACCESS1-3</option>
-          <option value='canesm2'>CanESM2</option>
-          <option value='CCSM4'>CCSM4</option>
-          <option value='miroc5'>MIROC5</option> */}
-{/*       <option value='mri_cgcm5'>MRI-CGCM3</option> */}
-
-{/*       <option value='noresm'>NorESM</option>
-          <option value='cesm'>CESM</option>
-          <option value='gfdl'>GFDL</option>
-          <option value='miroc5'>MIROC5</option> */}
-        </Select>
-
-
-{/*     <Box sx={{ ...sx.label, mt: [4] }}>Variable</Box>
-        <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleBandChange}
-          sx={{ mt: [1] }}
-          value={band}
-        >
-          <option value='prec'>Precipitation</option>
-          <option value='tavg'>Temperature</option>
-        </Select>
-*/}
-
-        <Box sx={{ ...sx.label, mt: [4] }}>Metrics</Box>
-        <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleMetricChange}
-          sx={{ mt: [1] }}
-          value={metric}
-        >
-          <option value='n34pr'>n34pr</option>
-          <option value='n34t'>n34t</option>
-          <option value='ptrend'>ptrend</option>
-          <option value='ttrend'>ttrend</option>
-          <option value='pr90'>pr90</option>
-          <option value='pr99'>pr99</option>
-          <option value='t90'>t90</option>
-          <option value='t99'>t99</option>
-          <option value='djf_t'>djf_t</option>
-          <option value='djf_p'>djf_p</option>
-          <option value='mam_t'>mam_t</option>
-          <option value='mam_p'>mam_p</option>
-          <option value='jja_t'>jja_t</option>
-          <option value='jja_p'>jja_p</option>
-          <option value='son_t'>son_t</option>
-          <option value='son_p'>son_p</option>
-        </Select>
-
-     { setMetricLabel() }
-
-
-
- {/*       <Box sx={{ ...sx.label, mt: [4] }}>Metric</Box>  */}
-          {/* MetricBox() */}
- {/*         <Grid gap={2} columns={[2]}>
-            { Click90() }
-            { Click99() }
-            { ClickStandardDev() }
-            { ClickRSME() }
-          </Grid>
-  */}
-
-   {/*      <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleMetricChange}
-          sx={{ mt: [1] }}
-          value={model}
-        >
-          <option value='none'>None</option>
-          <option value='90'>90th percentile</option>
-          <option value='99'>99th percentile</option>
-          <option value='std'>Std. Dev.</option>
-          <option value='rsme'>RSME</option>
-        </Select>
-   */}
-
-
-   {/*     <Box sx={{ ...sx.label, mt: [4] }}>Colormap</Box>
-        <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={(e) => setColormapName(e.target.value)}
-          sx={{ mt: [1] }}
-          value={colormapName}
-        >
-          {colormaps.map((d) => (
-            <option key={d.name}>{d.name}</option>
-          ))}
-        </Select>*/}
-
-     {/*   <Box sx={{ ...sx.label, mt: [4] }}>
-          <Link href='https://github.com/NCAR/ICAR'>ICAR Github</Link>
-        </Box> */}
-
-      {/*  <Box sx={{ ...sx.label, mt: [4] }}>
-          source = {source}
-        </Box>*/}
-
-
-      </Box>
     </>
   )
 }

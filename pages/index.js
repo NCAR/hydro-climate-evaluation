@@ -9,7 +9,7 @@ import { Map, Raster, Fill, Line, RegionPicker } from '../maps'
 import { useThemedColormap } from '../colormaps/src'
 import RegionPlot from '../components/region-plot'
 import ParameterControls from '../components/parameter-controls'
-import MetricControls from '../components/metric-controls'
+// import MetricControls from '../components/metric-controls'
 import {options, linedata, linedata_stub} from '../components/plot-line';
 import { Line as LineCJS } from 'react-chartjs-2';
 import Charts from '../components/charts'
@@ -78,7 +78,8 @@ const Index = () => {
                     downscaling, model, metric, yearRange, mapSource, chartSource,
                     downscalingDif, modelDif, yearRangeDif, obsDif,
                     mapSourceDif, chartSourceDif, scaleDif,
-                    bucket_ndp, chartHeight, filterValues}
+                    bucket_ndp, chartHeight, filterValues,
+                    showClimateChange, showRegionPlot}
   const setters = {
     setDisplay,
     setReload,
@@ -104,7 +105,9 @@ const Index = () => {
     setScaleDif,
     setChartHeight,
     setChartData,
-    setFilterValues
+    setFilterValues,
+    setShowClimateChange,
+    setShowRegionPlot
   }
 
   const fillValue = 3.4028234663852886e38; // black on land, red nans
@@ -167,14 +170,10 @@ const Index = () => {
             setShowRegionPlot={setShowRegionPlot}
           />
         </Map>
-        {!showRegionPlot && (
+
         <ParameterControls getters={getters} setters={setters}
-                        bucket={bucket_ndp} fname={fname} />)}
-        {showRegionPlot && (
-        <MetricControls getters={getters} setters={setters}
-                        showClimateChange={showClimateChange}
-                        setShowClimateChange={setShowClimateChange}
-                        bucket={bucket_ndp} fname={fname} />)}
+                        bucket={bucket_ndp} fname={fname} />
+
 
 
 
