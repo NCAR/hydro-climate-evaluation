@@ -213,7 +213,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const [rcpValues, setRCPValues] = useState({'4.5': true, '8.5': false})
 
   const [computeClimateSignal, setComputeClimateSignal] =
-        useState({'3. Compute Climate Signal': false})
+        useState({'COMPUTE BUTTON': false})
+
+  const [numClimateSignalSets, setNumClimateSignalSets] = useState('1')
 
   const handleUnitsChange = () => {
       if (band === 'tavg') {
@@ -543,6 +545,13 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const [numMetrics, setNumMetrics] = useState(0)
   const [topCombination, setTopCombination] = useState("None")
+  const [topDownscaling, setTopDownscaling] = useState("None")
+  const [topModel, setTopModel] = useState("None")
+  const [topCombination2, setTopCombination2] = useState("None")
+  const [topDownscaling2, setTopDownscaling2] = useState("None")
+  const [topModel2, setTopModel2] = useState("None")
+
+
 
   const [metrics, setMetrics] =
     useState({
@@ -601,6 +610,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
                   return -1
   }}}}
 
+  // 13 = combinations
   const combinations =
         [
             "ICAR with NorESM-M",
@@ -608,11 +618,71 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             "ICAR with CanESM2",
             "ICAR with CCSM4",
             "ICAR with MIROC5",
+            "LOCA_8th with NorESM-M",
+            "LOCA_8th with ACCESS1-3",
+            "LOCA_8th with CanESM2",
+            "LOCA_8th with CCSM4",
+            "LOCA_8th with MIROC5",
+            "NASA-NEX with NorESM-M",
+            "NASA-NEX with CanESM2",
+            "NASA-NEX with MIROC5",
+        ]
+  const combinations_downscaling =
+        [
+            "icar",
+            "icar",
+            "icar",
+            "icar",
+            "icar",
+            "loca_8th",
+            "loca_8th",
+            "loca_8th",
+            "loca_8th",
+            "loca_8th",
+            "nasa_nex",
+            "nasa_nex",
+            "nasa_nex",
+        ]
+  const combinations_model =
+        [
+            "noresm_m",
+            "access1_3",
+            "canesm2",
+            "ccsm4",
+            "miroc5",
+            "noresm_m",
+            "access1_3",
+            "canesm2",
+            "ccsm4",
+            "miroc5",
+            "noresm_m",
+            "canesm2",
+            "miroc5",
         ]
 
-  const tavg_score = [3,4,2,5,1]
-  const n34t_score = [1,3,5,2,4]
-  const ttrend_score = [2,3,1,4,5]
+
+
+  const tavg_score = [4, 6, 13, 5, 1, 7, 3, 9, 10, 11, 2, 12, 8]
+  const n34t_score = [10, 12, 4, 6, 1, 7, 13, 3, 2, 5, 8, 11, 9]
+  const ttrend_score = [7, 5, 4, 10, 8, 3, 9, 11, 2, 6, 1, 12, 13]
+  const t90_score = [9, 7, 2, 12, 4, 5, 13, 8, 3, 1, 6, 11, 10]
+  const t99_score = [4, 8, 6, 11, 2, 1, 13, 5, 12, 7, 10, 3, 9]
+  const djf_t_score = [4, 10, 6, 2, 3, 5, 1, 12, 13, 7, 8, 11, 9]
+  const mam_t_score = [12, 3, 13, 1, 7, 2, 10, 4, 11, 9, 8, 5, 6]
+  const jja_t_score =  [9, 6, 5, 4, 10, 2, 3, 13, 1, 7, 11, 12, 8]
+  const son_t_score = [2, 7, 10, 13, 11, 1, 12, 8, 4, 6, 5, 9, 3]
+  const prec_score = [9, 7, 5, 11, 8, 13, 1, 2, 4, 6, 10, 3, 12]
+  const n34pr_score = [12, 10, 6, 13, 2, 8, 11, 4, 9, 1, 3, 7, 5]
+  const ptrend_score = [4, 8, 6, 3, 7, 9, 10, 12, 2, 1, 13, 11, 5]
+  const pr90_score = [2, 13, 10, 9, 3, 11, 1, 4, 5, 6, 8, 12, 7]
+  const pr99_score = [9, 3, 2, 1, 12, 5, 4, 13, 8, 11, 10, 7, 6]
+  const djf_p_score = [6, 11, 4, 10, 5, 1, 3, 13, 12, 9, 8, 2, 7]
+  const mam_p_score = [5, 6, 8, 1, 9, 11, 13, 7, 3, 10, 2, 4, 12]
+  const jja_p_score = [5, 3, 6, 1, 9, 13, 4, 2, 8, 7, 11, 10, 12]
+  const son_p_score = [2, 10, 5, 3, 11, 13, 4, 12, 9, 8, 6, 7, 1]
+
+
+
 
 
   function addScores(a,b){
@@ -620,7 +690,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   }
 
   useEffect(() => {
-    let currentScore = [0,0,0,0,0]
+    let currentScore = [0,0,0,0,0,0,0,0,0,0,0,0,0]
     if (metrics1['tavg']) {
         currentScore = addScores(currentScore, tavg_score)
     }
@@ -630,18 +700,77 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     if (metrics1['ttrend']) {
         currentScore = addScores(currentScore, ttrend_score)
     }
+    if (metrics2['t90']) {
+        currentScore = addScores(currentScore, t90_score)
+    }
+    if (metrics2['t99']) {
+        currentScore = addScores(currentScore, t99_score)
+    }
+    if (metrics2['djf_t']) {
+        currentScore = addScores(currentScore, djf_t_score)
+    }
+    if (metrics3['mam_t']) {
+        currentScore = addScores(currentScore, mam_t_score)
+    }
+    if (metrics3['jja_t']) {
+        currentScore = addScores(currentScore, jja_t_score)
+    }
+    if (metrics3['son_t']) {
+        currentScore = addScores(currentScore, son_t_score)
+    }
+    if (metrics4['prec']) {
+        currentScore = addScores(currentScore, prec_score)
+    }
+    if (metrics4['n34pr']) {
+        currentScore = addScores(currentScore, n34pr_score)
+    }
+    if (metrics4['ptrend']) {
+        currentScore = addScores(currentScore, ptrend_score)
+    }
+    if (metrics5['pr90']) {
+        currentScore = addScores(currentScore, pr90_score)
+    }
+    if (metrics5['pr99']) {
+        currentScore = addScores(currentScore, pr99_score)
+    }
+    if (metrics5['djf_p']) {
+        currentScore = addScores(currentScore, djf_p_score)
+    }
+    if (metrics6['mam_p']) {
+        currentScore = addScores(currentScore, mam_p_score)
+    }
+    if (metrics6['jja_p']) {
+        currentScore = addScores(currentScore, jja_p_score)
+    }
+    if (metrics6['son_p']) {
+        currentScore = addScores(currentScore, son_p_score)
+    }
 
-    let i = currentScore.indexOf(Math.max(...currentScore));
-    let topCombinationLabel
+
     if (numMetrics === 0) {
-        topCombinationLabel
         setTopCombination("None")
+        setTopDownscaling("None")
+        setTopModel("None")
+        setTopCombination2("None")
+        setTopDownscaling2("None")
+        setTopModel2("None")
     } else {
+        let i = currentScore.indexOf(Math.max(...currentScore));
         console.log("SCORE =", currentScore, "and i", i)
         console.log("best combination =", combinations[i])
         setTopCombination(combinations[i])
+        setTopDownscaling(combinations_downscaling[i])
+        setTopModel(combinations_model[i])
+        // set top score to -1 and find new max to find the second largest
+        currentScore[i] = -1;
+        let j = currentScore.indexOf(Math.max(...currentScore));
+        setTopCombination2(combinations[j])
+        setTopDownscaling2(combinations_downscaling[j])
+        setTopModel2(combinations_model[j])
     }
-  }, [numMetrics]);
+  }, [numMetrics,
+      setMetrics1, setMetrics2, setMetrics3,
+      setMetrics4, setMetrics5, setMetrics6]);
 
   const handleRCPValues = useCallback((e) => {
       const choice = e
@@ -651,17 +780,28 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const [shouldUpdateMapSource, setShouldUpdateMapSource] = useState(false);
 
+  const handleNumClimateSignalSets = useCallback((e) => {
+      const numSets = e.target.value
+      setNumClimateSignalSets(numSets)
+
+  });
+
   const handleClimateSignal = useCallback((e) => {
-      setComputeClimateSignal({'3. Compute Climate Signal': false})
+      setComputeClimateSignal({'COMPUTE BOTTON': false})
       setShowRegionPlot(false)
       setShouldUpdateMapSource(true);
   });
 
   useEffect(() => {
     if (!showRegionPlot && shouldUpdateMapSource) {
+      console.log("ARTLESS top combination =", topCombination)
+      const downscaling_l = topDownscaling
+      const model_l = topModel
       let rcp = getRCPKey(rcpValues)
-      const url = bucket+'/climateSignal/'+downscaling+'/'+model+'/'+rcp+'/'+fname
+      const url = bucket+'/climateSignal/'+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname
       setMapSource(url);
+      setDownscaling(downscaling_l)
+      setModel(model_l)
       setShouldUpdateMapSource(false); // Reset the flag
       const local_filterValue = {'Ave.': false, 'Dif.': true}
       handleFilterAndSetClimColormapName(local_filterValue)
@@ -975,6 +1115,48 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
   };
 
+
+
+  const ClimateSignalChoices = () => {
+    if (yearRange === '1980_2010') {
+      setYearRangeDif('1980_2010')
+      return(
+        [<option value='1980_2010'>1980-2010</option>,
+         <option value='2070_2100'>2070-2100</option>]
+      );
+    } else {
+      setYearRangeDif('1980_2010')
+      return(
+        <option value='1980_2010'>1980-2010</option>
+      );
+    }
+   }
+
+  const ClimateSignalComputeBox = () => {
+      return(
+      <>
+      <Box>3. COMPUTE CLIMATE SIGNAL</Box>
+      <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={handleNumClimateSignalSets}
+        sx={{ mt: [2] }}
+        value={numClimateSignalSets}
+        >
+         <option value='1'>use best performing</option>
+         <option value='2'>use top two</option>
+      </Select>
+
+      <Filter
+       values={computeClimateSignal}
+       setValues={handleClimateSignal}
+       multiSelect={false}
+      />
+
+      </>
+  )};
+
+
   const BestPerformingBox = ({topCombination}) => {
       return (<Box sx={{mb:4}}> Best Performing: {topCombination} </Box>)
   };
@@ -1148,7 +1330,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       {/*(numMetrics > 0) && */}
       <BestPerformingBox topCombination={topCombination}/>
 
-      <Box>2. Select future RCP scenario</Box>
+      <Box>2. SELECT FUTURE RCP SCENARIO</Box>
       <Filter
        values={rcpValues}
        setValues={handleRCPValues}
@@ -1156,12 +1338,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
        sx={{mb:4}}
       />
 
-      <Filter
-       values={computeClimateSignal}
-       setValues={handleClimateSignal}
-       multiSelect={false}
-      />
-
+      <ClimateSignalComputeBox />
       </Box>
 
     </>
