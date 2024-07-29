@@ -396,6 +396,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
     setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
   })
+
   const handleYearDifChange = useCallback((e) => {
     const yearRangeDif = e.target.value
     setYearRangeDif(yearRangeDif)
@@ -618,7 +619,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         return a.map((e,i) => e + b[i]);
   }
 
-  const computeTopCombination = () => {
+  useEffect(() => {
     let currentScore = [0,0,0,0,0]
     if (metrics1['tavg']) {
         currentScore = addScores(currentScore, tavg_score)
@@ -631,16 +632,16 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
 
     let i = currentScore.indexOf(Math.max(...currentScore));
+    let topCombinationLabel
     if (numMetrics === 0) {
+        topCombinationLabel
         setTopCombination("None")
     } else {
         console.log("SCORE =", currentScore, "and i", i)
         console.log("best combination =", combinations[i])
         setTopCombination(combinations[i])
     }
-
-
-  }
+  }, [numMetrics]);
 
   const handleRCPValues = useCallback((e) => {
       const choice = e
@@ -706,8 +707,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           setMetrics4({prec: true, n34pr: true, ptrend: true,})
           setMetrics5({pr90: true, pr99: true, djf_p: true,})
           setMetrics6({mam_p: true, jja_p: true, son_p: true,})
-          computeTopCombination()
-
       } else if (clear) {
           setTopCombination("None")
           setNumMetrics(0)
@@ -976,10 +975,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
   };
 
-  const NumMetricsBox = ({numMetrics}) => {
-      console.log("IN NUM METRICS BOX", numMetrics)
-      return (<Box>Number of selected metrics = {numMetrics} </Box>);
-  }
+  const BestPerformingBox = ({topCombination}) => {
+      return (<Box sx={{mb:4}}> Best Performing: {topCombination} </Box>)
+  };
 
   const MapChoicesBox = () => { return(
            <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
@@ -1148,9 +1146,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         />
 
       {/*(numMetrics > 0) && */}
-      <NumMetricsBox numMetrics={numMetrics}/>
-      <Box sx={{mb:4}}>
-           Best Performing: {topCombination}         </Box>
+      <BestPerformingBox topCombination={topCombination}/>
 
       <Box>2. Select future RCP scenario</Box>
       <Filter
