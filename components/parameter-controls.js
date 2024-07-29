@@ -580,15 +580,15 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
        jja_p: false,
        son_p: false,})
 
-  const countNumMetrics = (change) => {
+  const countNumMetrics = () => {
       let count = 0;
       for (const key in metrics1) { metrics1[key] === true && count++; }
       for (const key in metrics2) { metrics2[key] === true && count++; }
       for (const key in metrics3) { metrics3[key] === true && count++; }
-      for (const key in metrics4) { metrics5[key] === true && count++; }
+      for (const key in metrics4) { metrics4[key] === true && count++; }
       for (const key in metrics5) { metrics5[key] === true && count++; }
       for (const key in metrics6) { metrics6[key] === true && count++; }
-      return count + change;
+      return count;
   }
 
   const diffInMetrics = (array1, array2) => {
@@ -667,43 +667,27 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
   }, [showRegionPlot, shouldUpdateMapSource]);
 
-
+  useEffect(() => {
+      const numSelected = countNumMetrics()
+      setNumMetrics(numSelected)
+  }, [metrics1, metrics2, metrics3, metrics4, metrics5, metrics6]);
 
   const handleMetrics = useCallback((e) => {
       const choice = e
       const keys = JSON.stringify(Object.keys(e))
-      let change = 0
-
       if (keys === '["tavg","n34t","ttrend"]') {
-          change = diffInMetrics(metrics1, e)
           setMetrics1(e)
       } else if (keys === '["t90","t99","djf_t"]') {
-          change = diffInMetrics(metrics2, e)
           setMetrics2(e);
       } else if (keys === '["mam_t","jja_t","son_t"]') {
-          change = diffInMetrics(metrics3, e)
           setMetrics3(e);
       } else if (keys === '["prec","n34pr","ptrend"]') {
-          change = diffInMetrics(metrics4, e)
           setMetrics4(e);
       } else if (keys === '["pr90","pr99","djf_p"]') {
-          change = diffInMetrics(metrics5, e)
           setMetrics5(e);
       } else if (keys === '["mam_p","jja_p","son_p"]') {
-          change = diffInMetrics(metrics6, e)
           setMetrics6(e);
       }
-      const numSelected = countNumMetrics(change)
-      console.log("change", change, "numsel", numSelected)
-      setNumMetrics(numSelected)
-
-      computeTopCombination()
-      // if (numSelected === 0) {
-      //     metricSelected
-      // }
-
-
-
   })
 
 
@@ -992,8 +976,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
   };
 
+  const NumMetricsBox = ({numMetrics}) => {
+      console.log("IN NUM METRICS BOX", numMetrics)
+      return (<Box>Number of selected metrics = {numMetrics} </Box>);
+  }
 
- const MapChoicesBox = () => { return(
+  const MapChoicesBox = () => { return(
            <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
 
         <Box sx={{ ...sx.label, mt: [4] }}>Year Range</Box>
@@ -1118,7 +1106,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
    ); // end of MapChoicesBox return statement
  }
 
- const ClimateSignalBox = () => { return(
+ const ClimateSignalBox = ({numMetrics}) => { return(
     <>
       <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
 
@@ -1160,11 +1148,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         />
 
       {/*(numMetrics > 0) && */}
-      <Box>Number of selected metrics = {numMetrics} </Box>
+      <NumMetricsBox numMetrics={numMetrics}/>
       <Box sx={{mb:4}}>
            Best Performing: {topCombination}         </Box>
-
-
 
       <Box>2. Select future RCP scenario</Box>
       <Filter
@@ -1285,7 +1271,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
    </Box>
 
    {!showRegionPlot && <MapChoicesBox />}
-   {showRegionPlot && <ClimateSignalBox />}
+   {showRegionPlot && <ClimateSignalBox numMetrics={numMetrics} />}
 
     </>
   )
