@@ -384,7 +384,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     const band = e.target.value
     setBand(band)
     handleFilterAndSetClimColormapName(filterValues)
-    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
+    setMapSource([bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname])
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
     setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
     getData({chartSource}, setChartData)
@@ -394,7 +394,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     const yearRange = e.target.value
     setYearRange(yearRange)
     console.log("yearRange =", e.target.value)
-    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
+    setMapSource([bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname])
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
     setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
   })
@@ -403,7 +403,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     const yearRangeDif = e.target.value
     setYearRangeDif(yearRangeDif)
     console.log("yearRange =", e.target.value)
-    setMapSourceDif(bucket+'/map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname)
+    setMapSourceDif([bucket+'/map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname])
     setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band)
   })
 
@@ -424,7 +424,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         }
     }
 
-    setMapSource(bucket+'/map/'+downscaling+'/'+safemodel+'/'+yearRange+'/'+fname)
+    setMapSource([bucket+'/map/'+downscaling+'/'+safemodel+'/'+yearRange+'/'+fname])
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
     setChartSource(bucket+'/chart/'+downscaling+'/'+safemodel+'/'+band)
     // getData({chartSource}, setChartData)
@@ -443,7 +443,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setModel(model)
     console.log("e =", e.target.value)
     console.log("model =", bucket+'/'+downscaling+'/'+model+'/')
-    setMapSource(bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
+    setMapSource([bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname])
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
     setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
     // getData({chartSource}, setChartData)
@@ -798,13 +798,22 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       const downscaling_l = topDownscaling
       const model_l = topModel
       let rcp = getRCPKey(rcpValues)
-      const url = bucket+'/climateSignal/'+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname
+      const url = [bucket+'/climateSignal/'+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname]
+      const numClimateSignalSets_i = parseInt(numClimateSignalSets, 10)
+
       setMapSource(url);
       setDownscaling(downscaling_l)
       setModel(model_l)
       setShouldUpdateMapSource(false); // Reset the flag
       const local_filterValue = {'Ave.': false, 'Dif.': true}
       handleFilterAndSetClimColormapName(local_filterValue)
+
+      if (numClimateSignalSets_i > 1) {
+          const downscaling2_l = topDownscaling2
+          const model2_l = topModel2
+          const url2 = bucket+'/climateSignal/'+downscaling2_l+'/'+model2_l+'/'+rcp+'/'+fname
+          setMapSource((prevSources) => [...prevSources, url2]);
+      }
     }
   }, [showRegionPlot, shouldUpdateMapSource]);
 
@@ -867,7 +876,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const handleModelDifChange = useCallback((e) => {
     const modelDif = e.target.value
     setModelDif(modelDif)
-    setMapSourceDif(bucket+'/map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname)
+    setMapSourceDif([bucket+'/map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname])
     setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band)
     // getData({chartSourceDif}, setChartDataDif)
   })
