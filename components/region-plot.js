@@ -97,6 +97,7 @@ const RegionPlot = ({
           <XCircle sx={{ strokeWidth: 1.75, width: 24, height: 24 }} />
         )}
       </IconButton>
+      {!showRegionPlot && (<Box>Climate Signal Options</Box>)}
 
       {showRegionPlot && (
         <IconButton

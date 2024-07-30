@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRef, useEffect } from 'react';
 import { Box, useThemeUI } from 'theme-ui'
 import { Dimmer, Meta, Column, Row } from '@carbonplan/components'
 // import { Map, Raster, Fill, Line, RegionPicker } from '@carbonplan/maps'
@@ -57,7 +58,7 @@ const Index = () => {
   // const [fname, setFname] = useState('tavg-prec-month.zarr')
   const [fname, setFname] = useState('data.zarr')
   // paths to model dataset
-  const [mapSource, setMapSource] = useState(bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname)
+  const [mapSource, setMapSource] = useState([bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname])
   const [chartSource, setChartSource] = useState(bucket_ndp+'chart/icar/noresm1_m/'+band)
   // paths to model dataset used for diff
   // const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/cesm/1980_2010/'+fname)
@@ -111,6 +112,23 @@ const Index = () => {
   }
 
   const fillValue = 3.4028234663852886e38; // black on land, red nans
+
+
+// const Foo = (props) => {
+//   const rasterRef = useRef(null);
+
+//   useEffect(() => {
+//     if (rasterRef.current) {
+//       // Assuming Raster has a method to update its data
+//       rasterRef.current.updateData({ /* new data */ });
+//     }
+//   }, []);
+
+//   // return <Raster ref={rasterRef} />;
+//   return <Raster {...props} />;
+// };
+
+
 
   return (
     <>
