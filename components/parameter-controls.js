@@ -191,6 +191,15 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const [units, setUnits] = useState('mm')
 
+  const [computeChoice, setComputeChoice] = useState({
+      'Ave.': true,
+      'Dif.': false,
+      'Climate Signal': false,
+  })
+
+  const handleComputeChoice = (e) => {
+    setComputeChoice(e)
+  }
 
   const getRCPString = (value) => {
       if (value === "8.5") {
@@ -1124,6 +1133,59 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
   };
 
+  const ComputeChoiceFilter = () => {
+
+  const handleComputeChoiceChange = (newValues) => {
+        setComputeChoice(newValues);
+     };
+
+  if (computeChoice['Ave.']) {
+    return (
+        <>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Filter
+          values={computeChoice}
+          setValues={handleComputeChoiceChange}
+          multiSelect={false}
+        />
+        </Box>
+        <MapChoicesBox/>
+        </>
+      );
+   }
+  else if (computeChoice['Dif.']) {
+    return (
+        <>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Filter
+          values={computeChoice}
+          setValues={handleComputeChoiceChange}
+          multiSelect={false}
+        />
+        </Box>
+        <NewDifSourceChoices />
+        </>
+      );
+   }
+  else if (computeChoice['Climate Signal']) {
+    return (
+        <>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Filter
+          values={computeChoice}
+          setValues={handleComputeChoiceChange}
+          multiSelect={false}
+        />
+        </Box>
+        <ClimateSignalBox numMetrics={numMetrics} />
+        </>
+      );
+   }
+
+  };
+
+
+
 
 
   const ClimateSignalChoices = () => {
@@ -1165,15 +1227,47 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       </>
   )};
 
+  const VariableChoiceBox = ({showPlotLabel=false}) => { return(
+      <>
+      { showPlotLabel && <Box sx={{ ...sx.label, mt: [4] }}>Plot</Box> }
+      { !showPlotLabel && <Box sx={{ ...sx.label, mt: [4] }}></Box> }
+      <Box sx={{ ...sx.label, mt: [0] }}>Metrics</Box>
+      <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={handleMetricsChange}
+        sx={{ mt: [1] }}
+        value={metric}
+      >
+          <option value='n34pr'>n34pr</option>
+          <option value='n34t'>n34t</option>
+          <option value='ptrend'>ptrend</option>
+          <option value='ttrend'>ttrend</option>
+          <option value='pr90'>pr90</option>
+          <option value='pr99'>pr99</option>
+          <option value='t90'>t90</option>
+          <option value='t99'>t99</option>
+          <option value='djf_t'>djf_t</option>
+          <option value='djf_p'>djf_p</option>
+          <option value='mam_t'>mam_t</option>
+          <option value='mam_p'>mam_p</option>
+          <option value='jja_t'>jja_t</option>
+          <option value='jja_p'>jja_p</option>
+          <option value='son_t'>son_t</option>
+          <option value='son_p'>son_p</option>
+        </Select>
+      </>
+  )};
+
 
   const BestPerformingBox = ({topCombination}) => {
       return (<Box sx={{mb:4}}> Best Performing: {topCombination} </Box>)
   };
 
   const MapChoicesBox = () => { return(
-           <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
-
-        <Box sx={{ ...sx.label, mt: [4] }}>Year Range</Box>
+        <>
+        {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
+        <Box sx={{ ...sx.label, mt: [3] }}>Year Range</Box>
         <Select
           sxSelect={{ bg: 'transparent' }}
           size='xs'
@@ -1264,40 +1358,16 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   )}
         </Select>
 
-        <Box sx={{ ...sx.label, mt: [4] }}>Metrics</Box>
-        <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleMetricsChange}
-          sx={{ mt: [1] }}
-          value={metric}
-        >
-          <option value='n34pr'>n34pr</option>
-          <option value='n34t'>n34t</option>
-          <option value='ptrend'>ptrend</option>
-          <option value='ttrend'>ttrend</option>
-          <option value='pr90'>pr90</option>
-          <option value='pr99'>pr99</option>
-          <option value='t90'>t90</option>
-          <option value='t99'>t99</option>
-          <option value='djf_t'>djf_t</option>
-          <option value='djf_p'>djf_p</option>
-          <option value='mam_t'>mam_t</option>
-          <option value='mam_p'>mam_p</option>
-          <option value='jja_t'>jja_t</option>
-          <option value='jja_p'>jja_p</option>
-          <option value='son_t'>son_t</option>
-          <option value='son_p'>son_p</option>
-        </Select>
-
+     <VariableChoiceBox/>
      { setMetricLabel() }
-      </Box>
+      {/* </Box> */}
+     </>
    ); // end of MapChoicesBox return statement
  }
 
  const ClimateSignalBox = ({numMetrics}) => { return(
     <>
-      <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
+      <Box sx={{ position: 'absolute', top: 20, left: 0 }}>
 
         <Box sx={{ ...sx.label, mt: [4] }}>1. Select Metrics</Box>
         <Filter
@@ -1348,10 +1418,13 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       />
 
       <ClimateSignalComputeBox />
-      </Box>
+      <VariableChoiceBox showPlotLabel={true} />
 
+      </Box>
     </>
- );}  // end of ClimateSignalBox
+ );
+};
+{/* end of ClimateSignalBox */}
 
 
 
@@ -1420,29 +1493,22 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   ]}
   data={[
     [<LocalColorbar/>],
-    [ //showRegionPlot &&
-     <Box sx={{ ...sx.label, minWidth: 110, mx: 'auto',
-                px: 0, mt: [1], textAlign: 'center'}}>Charts</Box>,
-     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Toggle
-        sx={{ chartToggle: 'block', mx: 3, mt: [2] }}
-        value={chartToggle}
-        onClick={() => {
-            getData({chartSource}, setChartData);
-            setChartToggle((prev) => !prev);
-            setChartHeight((prevHeight) => (prevHeight === '0%' ? '25%' : '0%'));
-        }}
-            />
-      </Box>
-      ],
-     [ //showRegionPlot &&
-      <AveDifFilter/>],
+    // [ //showRegionPlot &&
+    //  <Box sx={{ ...sx.label, minWidth: 110, mx: 'auto',
+    //             px: 0, mt: [1], textAlign: 'center'}}>Charts</Box>,
+    //  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+    //     <Toggle
+    //     sx={{ chartToggle: 'block', mx: 3, mt: [2] }}
+    //     value={chartToggle}
+    //     onClick={() => {
+    //         getData({chartSource}, setChartData);
+    //         setChartToggle((prev) => !prev);
+    //         setChartHeight((prevHeight) => (prevHeight === '0%' ? '25%' : '0%')); }}
+    //         />
+    //   </Box>],
     //[<DifSourceChoices />],
-
     // [<ClickRow />],
   ]}
-
-
 
   borderTop={true}
   borderBottom={false}
@@ -1452,8 +1518,14 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
    </Flex>
    </Box>
 
-   {!showRegionPlot && <MapChoicesBox />}
-   {showRegionPlot && <ClimateSignalBox numMetrics={numMetrics} />}
+   <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
+   <ComputeChoiceFilter/>
+
+   {/* [ //showRegionPlot &&   //  <AveDifFilter/>], */}
+   {/* <AveDifFilter/>*/}
+   {/* !showRegionPlot && <MapChoicesBox /> */}
+   {/* showRegionPlot && <ClimateSignalBox numMetrics={numMetrics} /> */}
+   </Box>
 
     </>
   )
