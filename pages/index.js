@@ -180,13 +180,13 @@ const Index = () => {
             // selector={{ month, band, source }}
              regionOptions={{ setData: setRegionData }}
           />
-          <RegionPlot
+{/*          <RegionPlot
             band={band}
             source={mapSource}
             regionData={regionData}
             showRegionPlot={showRegionPlot}
             setShowRegionPlot={setShowRegionPlot}
-          />
+          />*/}
         </Map>
 
         <ParameterControls getters={getters} setters={setters}

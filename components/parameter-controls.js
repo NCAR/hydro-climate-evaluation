@@ -224,7 +224,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const [computeClimateSignal, setComputeClimateSignal] =
         useState({'COMPUTE BUTTON': false})
 
-  const [numClimateSignalSets, setNumClimateSignalSets] = useState('1')
+  const [numClimateSignalSets, setNumClimateSignalSets] = useState(1)
 
   const handleUnitsChange = () => {
       if (band === 'tavg') {
@@ -553,7 +553,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
 
   const [numMetrics, setNumMetrics] = useState(0)
-  const [topCombination, setTopCombination] = useState("None")
+  const [topCombination, setTopCombination] = useState("Select Metrics")
   const [topDownscaling, setTopDownscaling] = useState("None")
   const [topModel, setTopModel] = useState("None")
   const [topCombination2, setTopCombination2] = useState("None")
@@ -757,7 +757,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
 
     if (numMetrics === 0) {
-        setTopCombination("None")
+        setTopCombination("Select Metrics")
         setTopDownscaling("None")
         setTopModel("None")
         setTopCombination2("None")
@@ -790,13 +790,16 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const [shouldUpdateMapSource, setShouldUpdateMapSource] = useState(false);
 
   const handleNumClimateSignalSets = useCallback((e) => {
-      const numSets = e.target.value
+      const numSets = parseInt(e.target.value)
       setNumClimateSignalSets(numSets)
 
   });
 
   const handleClimateSignal = useCallback((e) => {
-      setComputeClimateSignal({'COMPUTE BOTTON': false})
+      if (numMetrics === 0) {
+          return
+      }
+      setComputeClimateSignal({'COMPUTE BOTTON': true})
       setShowRegionPlot(false)
       setShouldUpdateMapSource(true);
   });
@@ -866,7 +869,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           setMetrics5({pr90: true, pr99: true, djf_p: true,})
           setMetrics6({mam_p: true, jja_p: true, son_p: true,})
       } else if (clear) {
-          setTopCombination("None")
+          setTopCombination("Select Metrics")
           setNumMetrics(0)
           setMetrics({all: false, clear: false})
           setMetrics1({tavg: false, n34t: false, ttrend: false,})
@@ -1203,27 +1206,32 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
    }
 
-  const ClimateSignalComputeBox = () => {
+  const ClimateSignalComputeButton = () => {
       return(
       <>
-      <Box>3. COMPUTE CLIMATE SIGNAL</Box>
-      <Select
-        sxSelect={{ bg: 'transparent' }}
-        size='xs'
-        onChange={handleNumClimateSignalSets}
-        sx={{ mt: [2] }}
+      <Box>3. NUMBER OF DATASETS</Box>
+      <Box sx={{ml:3}}>Average over {numClimateSignalSets}</Box>
+      <Slider
         value={numClimateSignalSets}
-        >
-         <option value='1'>use best performing</option>
-         <option value='2'>use top two</option>
-      </Select>
+        min={1}
+        max={4}
+        step={1}
+        onChange={handleNumClimateSignalSets}
+        sx={{mb:4}}
+      />
+      </>
+  )};
 
+  const NumClimateSignalDatasetsButton = () => {
+      return(
+      <>
+      <Box>4. COMPUTE CLIMATE SIGNAL</Box>
+      <BestPerformingBox topCombination={topCombination}/>
       <Filter
        values={computeClimateSignal}
        setValues={handleClimateSignal}
        multiSelect={false}
       />
-
       </>
   )};
 
@@ -1261,7 +1269,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
 
   const BestPerformingBox = ({topCombination}) => {
-      return (<Box sx={{mb:4}}> Best Performing: {topCombination} </Box>)
+      return (<Box> {topCombination} </Box>)
   };
 
   const MapChoicesBox = () => { return(
@@ -1407,17 +1415,18 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         />
 
       {/*(numMetrics > 0) && */}
-      <BestPerformingBox topCombination={topCombination}/>
 
-      <Box>2. SELECT FUTURE RCP SCENARIO</Box>
+      <Box sx={{mt:4}}>2. SELECT FUTURE</Box>
+      <Box sx={{ml:3}}>RCP SCENARIO</Box>
       <Filter
        values={rcpValues}
        setValues={handleRCPValues}
        multiSelect={false}
-       sx={{mb:4}}
+       sx={{mb:4, ml:3}}
       />
 
-      <ClimateSignalComputeBox />
+      <ClimateSignalComputeButton />
+      <NumClimateSignalDatasetsButton />
       <VariableChoiceBox showPlotLabel={true} />
 
       </Box>
