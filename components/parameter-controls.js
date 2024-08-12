@@ -654,17 +654,17 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         ]
   const combinations_model =
         [
-            "noresm_m",
+            "noresm1_m",
             "access1_3",
             "canesm2",
             "ccsm4",
             "miroc5",
-            "noresm_m",
+            "noresm1_m",
             "access1_3",
             "canesm2",
             "ccsm4",
             "miroc5",
-            "noresm_m",
+            "noresm1_m",
             "canesm2",
             "miroc5",
         ]
@@ -689,8 +689,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const mam_p_score = [5, 6, 8, 1, 9, 11, 13, 7, 3, 10, 2, 4, 12]
   const jja_p_score = [5, 3, 6, 1, 9, 13, 4, 2, 8, 7, 11, 10, 12]
   const son_p_score = [2, 10, 5, 3, 11, 13, 4, 12, 9, 8, 6, 7, 1]
-
-
 
 
 
@@ -764,22 +762,39 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         setTopDownscaling2("None")
         setTopModel2("None")
     } else {
-        let i = currentScore.indexOf(Math.max(...currentScore));
-        console.log("SCORE =", currentScore, "and i", i)
-        console.log("best combination =", combinations[i])
-        setTopCombination(combinations[i])
-        setTopDownscaling(combinations_downscaling[i])
-        setTopModel(combinations_model[i])
-        // set top score to -1 and find new max to find the second largest
-        currentScore[i] = -1;
-        let j = currentScore.indexOf(Math.max(...currentScore));
-        setTopCombination2(combinations[j])
-        setTopDownscaling2(combinations_downscaling[j])
-        setTopModel2(combinations_model[j])
+        let combo = []
+        let downscaling = []
+        let model = []
+        for (let n = 0; n < numClimateSignalSets; n++) {
+            let i = currentScore.indexOf(Math.max(...currentScore));
+            console.log(n, "SCORE =", currentScore, "and i", i)
+            console.log(n, "best combination =", combinations[i])
+            combo.push(combinations[i])
+            downscaling.push(combinations_downscaling[i])
+            model.push(combinations_model[i])
+            currentScore[i] = -1;
+        }
+        setTopCombination(combo)
+        setTopDownscaling(downscaling)
+        setTopModel(model)
+
+        // let i = currentScore.indexOf(Math.max(...currentScore));
+        // console.log("SCORE =", currentScore, "and i", i)
+        // console.log("best combination =", combinations[i])
+        // setTopCombination(combinations[i])
+        // setTopDownscaling(combinations_downscaling[i])
+        // setTopModel(combinations_model[i])
+        // // set top score to -1 and find new max to find the second largest
+        // currentScore[i] = -1;
+        // let j = currentScore.indexOf(Math.max(...currentScore));
+        // setTopCombination2(combinations[j])
+        // setTopDownscaling2(combinations_downscaling[j])
+        // setTopModel2(combinations_model[j])
     }
   }, [numMetrics,
       setMetrics1, setMetrics2, setMetrics3,
-      setMetrics4, setMetrics5, setMetrics6]);
+      setMetrics4, setMetrics5, setMetrics6,
+      numClimateSignalSets]);
 
   const handleRCPValues = useCallback((e) => {
       const choice = e
@@ -807,8 +822,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   useEffect(() => {
     if (!showRegionPlot && shouldUpdateMapSource) {
       console.log("ARTLESS top combination =", topCombination)
-      const downscaling_l = topDownscaling
-      const model_l = topModel
+      const downscaling_l = topDownscaling[0]
+      const model_l = topModel[0]
       let rcp = getRCPKey(rcpValues)
       const url = [bucket+'/climateSignal/'+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname]
       const numClimateSignalSets_i = parseInt(numClimateSignalSets, 10)
@@ -1206,7 +1221,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
    }
 
-  const ClimateSignalComputeButton = () => {
+  const NumClimateSignalDatasetsButton = () => {
       return(
       <>
       <Box>3. NUMBER OF DATASETS</Box>
@@ -1222,7 +1237,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       </>
   )};
 
-  const NumClimateSignalDatasetsButton = () => {
+  const ClimateSignalComputeButton = () => {
       return(
       <>
       <Box>4. COMPUTE CLIMATE SIGNAL</Box>
@@ -1269,7 +1284,13 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
 
   const BestPerformingBox = ({topCombination}) => {
-      return (<Box> {topCombination} </Box>)
+    let combinationBox
+    if (topCombination === "Select Metrics") {
+        combinationBox = <Box> {topCombination} </Box>
+    } else {
+        combinationBox = topCombination.map((item) => (<Box> {item} </Box>))
+    }
+    return (combinationBox)
   };
 
   const MapChoicesBox = () => { return(
@@ -1425,8 +1446,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
        sx={{mb:4, ml:3}}
       />
 
-      <ClimateSignalComputeButton />
       <NumClimateSignalDatasetsButton />
+      <ClimateSignalComputeButton />
       <VariableChoiceBox showPlotLabel={true} />
 
       </Box>
