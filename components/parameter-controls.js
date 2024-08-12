@@ -381,7 +381,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           setFilterValues({'Ave.': true, 'Dif.': false})
           setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max])
           setColormapName(Default_Colormaps[metric])
-      } else {
+      } else if (filterVals['Dif.']) {
           setFilterValues({'Ave.': false, 'Dif.': true})
           setScaleDif(Scale_Values['dif_'+metric])
           setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max])
@@ -1155,6 +1155,10 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const handleComputeChoiceChange = (newValues) => {
         setComputeChoice(newValues);
+        if (!newValues['Climate Signal']) {
+          handleFilterAndSetClimColormapName(newValues)
+          setMapSource([bucket+'/map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname])
+        }
      };
 
   if (computeChoice['Ave.']) {
