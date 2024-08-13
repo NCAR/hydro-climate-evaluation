@@ -1232,7 +1232,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       <Slider
         value={numClimateSignalSets}
         min={1}
-        max={4}
+        max={4} // or combinations.length later
         step={1}
         onChange={handleNumClimateSignalSets}
         sx={{mb:4}}
