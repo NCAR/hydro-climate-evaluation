@@ -170,7 +170,7 @@ const Index = () => {
             display={display}
             opacity={opacity}
             mode={'texture'}
-            source={mapSource}
+            sources={mapSource}
             sourceDif={mapSourceDif}
             fillValue={fillValue}
             variable={'climate'}
