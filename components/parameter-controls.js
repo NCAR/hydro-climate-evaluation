@@ -224,7 +224,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const [computeClimateSignal, setComputeClimateSignal] =
         useState({'COMPUTE BUTTON': false})
 
-  const [numClimateSignalSets, setNumClimateSignalSets] = useState(1)
+  const [numClimateSignalSets, setNumClimateSignalSets] = useState(2)
 
   const handleUnitsChange = () => {
       if (band === 'tavg') {
@@ -822,10 +822,10 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   useEffect(() => {
     if (!showRegionPlot && shouldUpdateMapSource) {
       console.log("ARTLESS top combination =", topCombination)
-      const downscaling_l = topDownscaling[0]
-      const model_l = topModel[0]
-      let rcp = getRCPKey(rcpValues)
-      const url = [bucket+'/climateSignal/'+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname]
+      let downscaling_l = topDownscaling[0]
+      let model_l = topModel[0]
+      const rcp = getRCPKey(rcpValues)
+      let url = [bucket+'/climateSignal/'+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname]
       const numClimateSignalSets_i = parseInt(numClimateSignalSets, 10)
 
       setMapSource(url);
@@ -835,11 +835,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       const local_filterValue = {'Ave.': false, 'Dif.': true}
       handleFilterAndSetClimColormapName(local_filterValue)
 
-      if (numClimateSignalSets_i > 1) {
-          const downscaling2_l = topDownscaling2
-          const model2_l = topModel2
-          const url2 = bucket+'/climateSignal/'+downscaling2_l+'/'+model2_l+'/'+rcp+'/'+fname
-          setMapSource((prevSources) => [...prevSources, url2]);
+      for (let i=1; i<numClimateSignalSets_i; i++) {
+          downscaling_l = topDownscaling[i]
+          model_l = topModel[i]
+          url = bucket+'/climateSignal/'+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname
+          setMapSource((prevSources) => [...prevSources, url]);
       }
     }
   }, [showRegionPlot, shouldUpdateMapSource]);
@@ -1084,17 +1084,15 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const NewDifSourceChoices = () => {
     return (
     <>
-        <Box sx={{ ...sx.label, mt: [3] }}>Climate</Box>
-        <Box sx={{ ...sx.label, mt: [0] }}>Model</Box>
-        <Box sx={{ mt: [1] }}>
+        <Box sx={{ ...sx.label, mt: [3] }}>Dif. Obs. Data</Box>
+{/*     <Box sx={{ mt: [1] }}>
           <Select
             sxSelect={{ bg: 'transparent' }}
             size='xs'
            >
            <option value='historical'>Historical</option>
-           <option value='future'>Future</option>
            </Select>
-        </Box>
+        </Box>*/}
         <Select
           sxSelect={{ bg: 'transparent' }}
           size='xs'
@@ -1186,6 +1184,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         />
         </Box>
         <NewDifSourceChoices />
+        <MapChoicesBox/>
         </>
       );
    }
@@ -1297,11 +1296,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     return (combinationBox)
   };
 
-  const MapChoicesBox = () => { return(
-        <>
-        {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
-        <Box sx={{ ...sx.label, mt: [3] }}>Year Range</Box>
-        <Select
+
+  const YearRangeBox = () => { return(
+      <>
+      <Box sx={{ ...sx.label, mt: [3] }}>Year Range</Box>
+      <Select
           sxSelect={{ bg: 'transparent' }}
           size='xs'
           onChange={handleYearChange}
@@ -1311,7 +1310,16 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           <option value='1981_2004'>1981-2004</option>
 {/*       <option value='1980_2010'>1980-2010</option>
           <option value='2070_2100'>2070-2100</option>*/}
-        </Select>
+     </Select>
+     </>
+  )};
+
+
+  const MapChoicesBox = () => { return(
+        <>
+        {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
+
+        {computeChoice['Ave.'] && <YearRangeBox/>}
 
         <Box sx={{ ...sx.label, mt: [4] }}>Downscaling Method</Box>
         <Select
