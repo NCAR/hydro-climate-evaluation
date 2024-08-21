@@ -1,7 +1,8 @@
 import { useState, Fragment } from 'react'
 import { Box, Flex } from 'theme-ui'
 import { useCallback, useEffect } from 'react'
-import { Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components'
+import { Button, Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components'
+import { ArrowThin, RotatingArrow } from '@carbonplan/icons'
 import Colorbar from './colorbar'
 // import { colormaps } from '@carbonplan/colormaps'
 import { colormaps } from '../colormaps/src'
@@ -1567,6 +1568,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
    {/* <AveDifFilter/>*/}
    {/* !showRegionPlot && <MapChoicesBox /> */}
    {/* showRegionPlot && <ClimateSignalBox numMetrics={numMetrics} /> */}
+   </Box>
+
+   <Box sx={{ position: 'absolute', bottom: 20, left: 20 }}>
+     <Button href='https://github.com/scrasmussen/icar-maps/blob/main/README.md' prefix={<RotatingArrow />}>
+     README
+     </Button>
    </Box>
 
     </>
