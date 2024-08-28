@@ -14,13 +14,15 @@ import ParameterControls from '../components/parameter-controls'
 import {options, linedata, linedata_stub} from '../components/plot-line';
 import { Line as LineCJS } from 'react-chartjs-2';
 import Charts from '../components/charts'
-import { NetCDFReader } from "netcdfjs";
+// import { NetCDFReader } from "netcdfjs";
 
 const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/'
 
-// this works
+// option to use external zarr files only
+const TESTING = false
 // const bucket_ndp = 'https://scrasmussen.github.io/'
 const bucket_ndp = 'http://127.0.0.1:4000/data/' // python host server
+// const bucket_ndp = './data/' // python host server
 
 const Index = () => {
   const { theme } = useThemeUI()
@@ -163,6 +165,7 @@ const Index = () => {
               maxRadius={200}
             />
           )}
+          {!TESTING &&
           <Raster
             key={`${mapSource}-${mapSourceDif}-${reload}-${JSON.stringify(filterValues)}`}
             colormap={colormap}
@@ -179,7 +182,7 @@ const Index = () => {
             filterValue={filterValues}
             // selector={{ month, band, source }}
              regionOptions={{ setData: setRegionData }}
-          />
+          />}
 {/*          <RegionPlot
             band={band}
             source={mapSource}
@@ -188,9 +191,9 @@ const Index = () => {
             setShowRegionPlot={setShowRegionPlot}
           />*/}
         </Map>
-
+        {!TESTING &&
         <ParameterControls getters={getters} setters={setters}
-                        bucket={bucket_ndp} fname={fname} />
+                        bucket={bucket_ndp} fname={fname} />}
 
 
 
