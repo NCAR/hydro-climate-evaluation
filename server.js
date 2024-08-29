@@ -13,10 +13,10 @@ app.prepare().then(() => {
 
     server.use(cors());
     // server.use('/hydro-climate-eval/data', express.static(path.join(__dirname, 'data')));
-    // server.use('/data2', express.static('data2'));
-    server.use('/hydro-climate-eval/data2',
-	       express.static(path.join(__dirname, 'data2'), { dotfiles: 'allow' }),
-	       serveIndex(path.join(__dirname, 'data2'), {'icons': false, 'hidden': true }));
+    // server.use('/data', express.static('data'));
+    server.use('/hydro-climate-eval/data',
+	       express.static(path.join(__dirname, 'data'), { dotfiles: 'allow' }),
+	       serveIndex(path.join(__dirname, 'data'), {'icons': false, 'hidden': true }));
     
     server.all('*', (req, res) => {
 	return handle(req, res);
