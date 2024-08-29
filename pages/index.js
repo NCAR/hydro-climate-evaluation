@@ -22,8 +22,9 @@ const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/'
 const TESTING = false
 // const bucket_ndp = 'https://scrasmussen.github.io/
 // const bucket_ndp = 'http://127.0.0.1:4000/data/' // python host server
-// const bucket_ndp = 'http://localhost:8080/data2/' // python host server
-const bucket_ndp = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data2/'
+// const bucket_ndp = 'http://localhost:8080/data/' // python host server
+const bucket_ndp = 'http://localhost:8080/hydro-climate-eval/data/' // python host server
+// const bucket_ndp = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/'
 // const bucket_ndp = './data/' // python host server
 
 const Index = () => {

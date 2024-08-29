@@ -10,10 +10,22 @@ const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
     const server = express();
+    // server.use(cors({
+    // 	origin: '*',  // Allow all origins, you can restrict this as needed
+    // 	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    // 	preflightContinue: false,
+    // 	optionsSuccessStatus: 204
+    // }));
+    // Set up CORS to allow requests from your domain
+    	// origin: 'https://hydro.rap.ucar.edu',  // Allow only the specific domain
+	// methods: ['GET', 'OPTIONS'],
 
-    server.use(cors());
-    // server.use('/hydro-climate-eval/data', express.static(path.join(__dirname, 'data')));
-    // server.use('/data', express.static('data'));
+    server.use(cors({
+	origin: '*',  // Allow all origins, you can restrict this as needed
+	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+	allowedHeaders: ['Content-Type', 'Authorization']
+    }));
+    
     server.use('/hydro-climate-eval/data',
 	       express.static(path.join(__dirname, 'data'), { dotfiles: 'allow' }),
 	       serveIndex(path.join(__dirname, 'data'), {'icons': false, 'hidden': true }));
