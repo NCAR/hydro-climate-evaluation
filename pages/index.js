@@ -20,8 +20,10 @@ const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/'
 
 // option to use external zarr files only
 const TESTING = false
-// const bucket_ndp = 'https://scrasmussen.github.io/'
-const bucket_ndp = 'http://127.0.0.1:4000/data/' // python host server
+// const bucket_ndp = 'https://scrasmussen.github.io/
+// const bucket_ndp = 'http://127.0.0.1:4000/data/' // python host server
+// const bucket_ndp = 'http://localhost:8080/data2/' // python host server
+const bucket_ndp = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data2/'
 // const bucket_ndp = './data/' // python host server
 
 const Index = () => {
@@ -60,7 +62,8 @@ const Index = () => {
   // const [fname, setFname] = useState('tavg-prec-month.zarr')
   const [fname, setFname] = useState('data.zarr')
   // paths to model dataset
-  const [mapSource, setMapSource] = useState([bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname])
+  // const [mapSource, setMapSource] = useState([bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname])
+  const [mapSource, setMapSource] = useState([bucket_ndp+'map/icar/access1_3/1981_2004/'+fname])
   const [chartSource, setChartSource] = useState(bucket_ndp+'chart/icar/noresm1_m/'+band)
   // paths to model dataset used for diff
   // const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/cesm/1980_2010/'+fname)
@@ -173,8 +176,9 @@ const Index = () => {
             display={display}
             opacity={opacity}
             mode={'texture'}
-            sources={mapSource}
-            sourceDif={mapSourceDif}
+           sources={mapSource}
+	   sourceDif={mapSource}
+            //sourceDif={mapSourceDif}
             fillValue={fillValue}
             variable={'climate'}
             selector={{ band }}

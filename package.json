@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "NODE_ENV=development next -p 3000",
     "build": "next build",
-    "start": "next start",
+    "old-start": "next start -p 8080",
+    "start": "node server.js",
     "format": "prettier --write {pages,components}/**/*.js'"
   },
   "author": "",
@@ -21,12 +22,15 @@
     "@emotion/styled": "^11.6.0",
     "@faker-js/faker": "^8.0.0",
     "@mdx-js/react": "^2.1.5",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
     "next": "^12.0.7",
+    "node-fetch": "2.*",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.0.0",
     "react-dom": "^18.2.0",
+    "serve-index": "^1.9.1",
     "theme-ui": "^0.15.3",
-    "node-fetch": "2.*",
     "zarr": "^0.6.2"
   }
 }
