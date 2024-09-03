@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { useRef, useEffect } from 'react';
 import { Box, useThemeUI } from 'theme-ui'
-import { Dimmer, Meta, Column, Row } from '@carbonplan/components'
+import { Dimmer, Column, Row } from '@carbonplan/components'
 // import { Map, Raster, Fill, Line, RegionPicker } from '@carbonplan/maps'
 import { Map, Raster, Fill, Line, RegionPicker } from '../maps'
 // import { Map, Fill, Line, RegionPicker } from '@carbonplan/maps'
 // import Raster from '../components/maps/raster'
 // import { useThemedColormap } from '@carbonplan/colormaps'
+import Meta from '../components/meta'
 import { useThemedColormap } from '../colormaps/src'
 import RegionPlot from '../components/region-plot'
 import ParameterControls from '../components/parameter-controls'
@@ -23,8 +24,8 @@ const TESTING = false
 // const bucket_ndp = 'https://scrasmussen.github.io/
 // const bucket_ndp = 'http://127.0.0.1:4000/data/' // python host server
 // const bucket_ndp = 'http://localhost:8080/data/' // python host server
-const bucket_ndp = 'http://localhost:8080/hydro-climate-eval/data/' // python host server
-// const bucket_ndp = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/'
+// const bucket_ndp = 'http://localhost:8080/hydro-climate-eval/data/' // python host server
+const bucket_ndp = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/'
 // const bucket_ndp = './data/' // python host server
 
 const Index = () => {
@@ -46,10 +47,9 @@ const Index = () => {
   const [regionData, setRegionData] = useState({ loading: true })
   // set variables to access datasets
   const [downscaling, setDownscaling] = useState('icar')
-  const [model, setModel] = useState('noresm1_m')
+  const [model, setModel] = useState('access1_3')
   const [metric, setMetric] = useState('djf_t')
   const [rcp, setRCP] = useState('4.5')
-
 
   // const [yearRange, setYearRange] = useState('1980_2010')
   const [yearRange, setYearRange] = useState('1981_2004')
@@ -139,11 +139,11 @@ const Index = () => {
   return (
     <>
       <Meta
-        card={'https://images.carbonplan.org/social/maps-demo.png'}
+        card={'https://ncar.ucar.edu/profiles/custom/ncar_ucar_umbrella/themes/custom/koru/libraries/koru-base/img/app-favicons/ncar/favicon.ico'}
         description={
-          "Downscaling and climate model data. Based on carbonplan's library"
-        }
-        title={'@carbonplan/maps'}
+          "Climate Evaluation of Downscaling and Climate Model data. Based on Carbonplan's Maps"
+          }
+        title={'Hydro-Climate Evaluation'}
       />
 <Row columns={[4]}>
   <Column start={[1]} width={[1]}>
@@ -169,7 +169,7 @@ const Index = () => {
               maxRadius={200}
             />
           )}
-          {!TESTING &&
+          {
           <Raster
             key={`${mapSource}-${mapSourceDif}-${reload}-${JSON.stringify(filterValues)}`}
             colormap={colormap}
@@ -196,7 +196,7 @@ const Index = () => {
             setShowRegionPlot={setShowRegionPlot}
           />*/}
         </Map>
-        {!TESTING &&
+        {
         <ParameterControls getters={getters} setters={setters}
                         bucket={bucket_ndp} fname={fname} />}
 

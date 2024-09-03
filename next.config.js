@@ -1,6 +1,7 @@
 const path = require('path')
 
 module.exports = {
+  basePath: '/hydro-climate-eval',
   webpack: (config, options) => {
     if (options.isServer) {
       config.externals = ['react', 'theme-ui', ...config.externals]

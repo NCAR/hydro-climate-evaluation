@@ -1,7 +1,7 @@
 const express = require('express');
 const next = require('next');
 const path = require('path');
-const serveIndex = require('serve-index'); // Import serve-index
+const serveIndex = require('serve-index'); 
 const cors = require('cors'); 
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -10,15 +10,6 @@ const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
     const server = express();
-    // server.use(cors({
-    // 	origin: '*',  // Allow all origins, you can restrict this as needed
-    // 	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    // 	preflightContinue: false,
-    // 	optionsSuccessStatus: 204
-    // }));
-    // Set up CORS to allow requests from your domain
-    	// origin: 'https://hydro.rap.ucar.edu',  // Allow only the specific domain
-	// methods: ['GET', 'OPTIONS'],
 
     server.use(cors({
 	origin: '*',  // Allow all origins, you can restrict this as needed
