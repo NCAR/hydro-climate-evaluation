@@ -149,7 +149,8 @@ const Index = () => {
   <Column start={[1]} width={[1]}>
       <Box sx={{ position: 'absolute', top: 0, bottom: 0, width: '100%', height:'100%',
                  backgroundColor: '#bbdaa4', zIndex: 0}}>
-        <Map zoom={4} center={{lon:-95, lat:38}} debug={debug}>
+	  {/* zoom to this location when page first loads */}
+          <Map zoom={4} center={{lon:-95, lat:38}} debug={debug}>
           <Fill
             color={'#4a80f5'}
             source={bucket + 'basemaps/ocean'}
@@ -177,9 +178,8 @@ const Index = () => {
             display={display}
             opacity={opacity}
             mode={'texture'}
-           sources={mapSource}
-	   sourceDif={mapSource}
-            //sourceDif={mapSourceDif}
+            sources={mapSource}
+            sourceDif={mapSourceDif}
             fillValue={fillValue}
             variable={'climate'}
             selector={{ band }}
