@@ -1222,39 +1222,41 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         sx={{ mt: [1] }}
         value={metric}
       >
-          <option value='n34pr'>n34pr</option>
-          <option value='n34t'>n34t</option>
-          <option value='ptrend'>ptrend</option>
-          <option value='ttrend'>ttrend</option>
-          <option value='pr90'>pr90</option>
-          <option value='pr99'>pr99</option>
-          <option value='t90'>t90</option>
-          <option value='t99'>t99</option>
-          <option value='djf_t'>djf_t</option>
-          <option value='djf_p'>djf_p</option>
-          <option value='mam_t'>mam_t</option>
-          <option value='mam_p'>mam_p</option>
-          <option value='jja_t'>jja_t</option>
-          <option value='jja_p'>jja_p</option>
-          <option value='son_t'>son_t</option>
-          <option value='son_p'>son_p</option>
-        </Select>
-      </>
-  )};
+        <option value='n34pr'>n34pr</option>
+        <option value='n34t'>n34t</option>
+        <option value='ptrend'>ptrend</option>
+        <option value='ttrend'>ttrend</option>
+        <option value='pr90'>pr90</option>
+        <option value='pr99'>pr99</option>
+        <option value='t90'>t90</option>
+        <option value='t99'>t99</option>
+        <option value='djf_t'>djf_t</option>
+        <option value='djf_p'>djf_p</option>
+        <option value='mam_t'>mam_t</option>
+        <option value='mam_p'>mam_p</option>
+        <option value='jja_t'>jja_t</option>
+        <option value='jja_p'>jja_p</option>
+        <option value='son_t'>son_t</option>
+        <option value='son_p'>son_p</option>
+      </Select>
+    </>
+    );
+  };
 
 
   const BestPerformingBox = ({topCombination}) => {
-    let combinationBox
+    let combinationBox;
     if (topCombination === "Select Metrics") {
         combinationBox = <Box> {topCombination} </Box>
     } else {
         combinationBox = topCombination.map((item) => (<Box> {item} </Box>))
     }
-    return (combinationBox)
+    return (combinationBox);
   };
 
 
-  const YearRangeBox = () => { return(
+  const YearRangeBox = () => {
+    return(
       <>
       <Box sx={{ ...sx.label, mt: [3] }}>Year Range</Box>
       <Select
@@ -1269,174 +1271,145 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           <option value='2070_2100'>2070-2100</option>*/}
      </Select>
      </>
-  )};
+    );
+  };
 
 
-  const MapChoicesBox = () => { return(
+  const MapChoicesBox = () => {
+    return(
+      <>
+      {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
+
+      {computeChoice['Ave.'] && <YearRangeBox/>}
+
+      <Box sx={{ ...sx.label, mt: [4] }}>Downscaling Method</Box>
+      <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={handleDownscalingChange}
+        sx={{ mt: [1] }}
+        value={downscaling}
+      >
+        <option value='icar'>ICAR</option>
+        <option value='gard_r2'>GARD_r2</option>
+        <option value='gard_r3'>GARD_r3</option>
+        <option value='loca_8th'>LOCA_8th</option>
+        <option value='maca'>MACA</option>
+        <option value='nasa_nex'>NASA-NEX</option>
+      </Select>
+
+      <Box sx={{ ...sx.label, mt: [4] }}>Climate Model</Box>
+      <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={handleModelChange}
+        sx={{ mt: [1] }}
+        value={model}
+      >
+
+       {downscaling === 'icar' && (
+         <>
+         <option value='noresm1_m'>NorESM-M</option>
+         <option value='access1_3'>ACCESS1-3</option>
+         <option value='canesm2'>CanESM2</option>
+         <option value='ccsm4'>CCSM4</option>
+         <option value='miroc5'>MIROC5</option>
+         </>
+       )}
+       {downscaling === 'gard_r2' && (
+         <>
+         <option value='noresm1_m'>NorESM-M</option>
+         <option value='access1_3'>ACCESS1-3</option>
+         <option value='canesm2'>CanESM2</option>
+         <option value='ccsm4'>CCSM4</option>
+         <option value='miroc5'>MIROC5</option>
+         </>
+       )}
+       {downscaling === 'gard_r3' && (
+         <>
+         <option value='noresm1_m'>NorESM-M</option>
+         <option value='access1_3'>ACCESS1-3</option>
+         <option value='canesm2'>CanESM2</option>
+         <option value='ccsm4'>CCSM4</option>
+         <option value='miroc5'>MIROC5</option>
+         </>
+       )}
+       {downscaling === 'loca_8th' && (
+         <>
+         <option value='noresm1_m'>NorESM-M</option>
+         <option value='access1_3'>ACCESS1-3</option>
+         <option value='canesm2'>CanESM2</option>
+         <option value='ccsm4'>CCSM4</option>
+         <option value='miroc5'>MIROC5</option>
+         </>
+       )}
+      {downscaling === 'maca' && (
         <>
-        {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
+        <option value='noresm1_m'>NorESM-M</option>
+        <option value='canesm2'>CanESM2</option>
+        <option value='ccsm4'>CCSM4</option>
+        <option value='miroc5'>MIROC5</option>
+        </>
+      )}
+      {downscaling === 'nasa_nex' && (
+        <>
+        <option value='noresm1_m'>NorESM-M</option>
+        <option value='canesm2'>CanESM2</option>
+        <option value='miroc5'>MIROC5</option>
+        </>
+      )}
+      </Select>
 
-        {computeChoice['Ave.'] && <YearRangeBox/>}
-
-        <Box sx={{ ...sx.label, mt: [4] }}>Downscaling Method</Box>
-        <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleDownscalingChange}
-          sx={{ mt: [1] }}
-          value={downscaling}
-        >
-          <option value='icar'>ICAR</option>
-          <option value='gard_r2'>GARD_r2</option>
-          <option value='gard_r3'>GARD_r3</option>
-          <option value='loca_8th'>LOCA_8th</option>
-          <option value='maca'>MACA</option>
-          <option value='nasa_nex'>NASA-NEX</option>
-        </Select>
-
-        <Box sx={{ ...sx.label, mt: [4] }}>Climate Model</Box>
-        <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleModelChange}
-          sx={{ mt: [1] }}
-          value={model}
-        >
-
-  {downscaling === 'icar' && (
-    <>
-          <option value='noresm1_m'>NorESM-M</option>
-          <option value='access1_3'>ACCESS1-3</option>
-          <option value='canesm2'>CanESM2</option>
-          <option value='ccsm4'>CCSM4</option>
-          <option value='miroc5'>MIROC5</option>
-    </>
-  )}
-  {downscaling === 'gard_r2' && (
-    <>
-          <option value='noresm1_m'>NorESM-M</option>
-          <option value='access1_3'>ACCESS1-3</option>
-          <option value='canesm2'>CanESM2</option>
-          <option value='ccsm4'>CCSM4</option>
-          <option value='miroc5'>MIROC5</option>
-    </>
-  )}
-  {downscaling === 'gard_r3' && (
-    <>
-          <option value='noresm1_m'>NorESM-M</option>
-          <option value='access1_3'>ACCESS1-3</option>
-          <option value='canesm2'>CanESM2</option>
-          <option value='ccsm4'>CCSM4</option>
-          <option value='miroc5'>MIROC5</option>
-    </>
-  )}
-  {downscaling === 'loca_8th' && (
-    <>
-          <option value='noresm1_m'>NorESM-M</option>
-          <option value='access1_3'>ACCESS1-3</option>
-          <option value='canesm2'>CanESM2</option>
-          <option value='ccsm4'>CCSM4</option>
-          <option value='miroc5'>MIROC5</option>
-    </>
-  )}
-  {downscaling === 'maca' && (
-    <>
-          <option value='noresm1_m'>NorESM-M</option>
-          <option value='canesm2'>CanESM2</option>
-          <option value='ccsm4'>CCSM4</option>
-          <option value='miroc5'>MIROC5</option>
-    </>
-  )}
-  {downscaling === 'nasa_nex' && (
-    <>
-          <option value='noresm1_m'>NorESM-M</option>
-          <option value='canesm2'>CanESM2</option>
-          <option value='miroc5'>MIROC5</option>
-    </>
-  )}
-        </Select>
-
-     <VariableChoiceBox/>
-     { setMetricLabel() }
+    <VariableChoiceBox/>
+      { setMetricLabel() }
       {/* </Box> */}
-     </>
-   ); // end of MapChoicesBox return statement
- }
+    </>
+  ); // end of MapChoicesBox return statement
+  };
 
- const ClimateSignalBox = ({numMetrics}) => { return(
-    <>
-
-        <Box sx={{ ...sx.label, mt: [4] }}>1. Select Metrics</Box>
-        <Filter
-         values={metrics}
-         setValues={setMetrics}
-         setValues={handleClimateMetricsChange}
-        />
-        <Filter
-         values={metrics1}
-         setValues={handleMetrics}
-         multiSelect={true}
-        />
-        <Filter
-         values={metrics2}
-         setValues={handleMetrics}
-         multiSelect={true}
-        />
-        <Filter
-         values={metrics3}
-         setValues={handleMetrics}
-         multiSelect={true}
-        />
-        <Filter
-         values={metrics4}
-         setValues={handleMetrics}
-         multiSelect={true}
-        />
-        <Filter
-         values={metrics5}
-         setValues={handleMetrics}
-         multiSelect={true}
-        />
-        <Filter
-         values={metrics6}
-         setValues={handleMetrics}
-         multiSelect={true}
-        />
-
-      {/*(numMetrics > 0) && */}
+  const ClimateSignalBox = ({numMetrics}) => {
+    return(
+      <>
+      <Box sx={{ ...sx.label, mt: [4] }}>1. Select Metrics</Box>
+      <Filter
+        values={metrics}
+        setValues={setMetrics}
+        setValues={handleClimateMetricsChange}
+      />
+      <Filter values={metrics1} setValues={handleMetrics} multiSelect={true} />
+      <Filter values={metrics2} setValues={handleMetrics} multiSelect={true} />
+      <Filter values={metrics3} setValues={handleMetrics} multiSelect={true} />
+      <Filter values={metrics4} setValues={handleMetrics} multiSelect={true} />
+      <Filter values={metrics5} setValues={handleMetrics} multiSelect={true} />
+      <Filter values={metrics6} setValues={handleMetrics} multiSelect={true} />
 
       <Box sx={{mt:4}}>2. SELECT FUTURE</Box>
       <Box sx={{ml:3}}>RCP SCENARIO</Box>
       <Filter
-       values={rcpValues}
-       setValues={handleRCPValues}
-       multiSelect={false}
-       sx={{mb:4, ml:3}}
+        values={rcpValues}
+        setValues={handleRCPValues}
+        multiSelect={false}
+        sx={{mb:4, ml:3}}
       />
 
       <NumClimateSignalDatasetsButton />
       <ClimateSignalComputeButton />
       <VariableChoiceBox showPlotLabel={true} />
-
-    </>
- );
-};
-{/* end of ClimateSignalBox */}
-
-
-
+      </>
+    );
+  }; {/* end of ClimateSignalBox */}
 
 
   return (
     <>
-      <Box sx={{ position: 'absolute', top: 20, right: 20 }}>
-        <Flex
-          sx={{
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-            gap: 4,
-          }}
-        >
+    <Box sx={{ position: 'absolute', top: 20, right: 20 }}>
+      <Flex
+        sx={{
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          gap: 4,
+        }}
+      >
 
 {/*
           <Box>
@@ -1447,7 +1420,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
               onClick={() => setDebug((prev) => !prev)}
             />
           </Box>
-
           <Box>
             <Box sx={{ ...sx.label, mt: [0] }}>Display</Box>
             <Toggle
@@ -1456,16 +1428,10 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
               onClick={() => setDisplay((prev) => !prev)}
             />
           </Box>
-
              onClick={() => {
                setChartToggle((prev) => !prev);
                setChartHeight((chartHeight) => (chartHeight === '0%' ? '20%' : '0%'))}
             />
-
-
- */}
-
-{/*
           <Box>
             <Box sx={{ ...sx.label, mt: [0] }}>Charts</Box>
             <Toggle
@@ -1479,60 +1445,40 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             />
           </Box>
  */}
-<Table
-  color={'secondary'}
-  columns={[1]}
-  start={[[1]]}
-  width={[
-    [1],
-    [1],
-    [1],
-  ]}
-  data={[
-    [<LocalColorbar/>],
-    // [ //showRegionPlot &&
-    //  <Box sx={{ ...sx.label, minWidth: 110, mx: 'auto',
-    //             px: 0, mt: [1], textAlign: 'center'}}>Charts</Box>,
-    //  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-    //     <Toggle
-    //     sx={{ chartToggle: 'block', mx: 3, mt: [2] }}
-    //     value={chartToggle}
-    //     onClick={() => {
-    //         getData({chartSource}, setChartData);
-    //         setChartToggle((prev) => !prev);
-    //         setChartHeight((prevHeight) => (prevHeight === '0%' ? '25%' : '0%')); }}
-    //         />
-    //   </Box>],
-    //[<DifSourceChoices />],
-  ]}
 
-  borderTop={true}
-  borderBottom={false}
-  index={false}
-  sx={{ my: [3] }}
+  <Table
+    color={'secondary'}
+    columns={[1]}
+    start={[[1]]}
+    width={[[1], [1], [1]]}
+    data={[[<LocalColorbar/>]]}
+    borderTop={true}
+    borderBottom={false}
+    index={false}
+    sx={{ my: [3] }}
   />
-   </Flex>
-   </Box>
+  </Flex>
+  </Box>
 
-   <Box sx={{ position: 'absolute', top: 20, left: 20,
-	      backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '10px', borderRadius: '5px'
-	    }}>
-   <ComputeChoiceFilter/>
-   </Box>
-   {/* [ //showRegionPlot &&   //  <AveDifFilter/>], */}
-   {/* <AveDifFilter/>*/}
-   {/* !showRegionPlot && <MapChoicesBox /> */}
-   {/* showRegionPlot && <ClimateSignalBox numMetrics={numMetrics} /> */}
+  <Box
+    sx={{ position: 'absolute', top: 20, left: 20,
+          backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '10px',
+          borderRadius: '5px'}}
+  >
+    <ComputeChoiceFilter/>
+  </Box>
+  {/* [ //showRegionPlot &&   //  <AveDifFilter/>], */}
+  {/* <AveDifFilter/>*/}
+  {/* !showRegionPlot && <MapChoicesBox /> */}
+  {/* showRegionPlot && <ClimateSignalBox numMetrics={numMetrics} /> */}
 
+  <Box sx={{ position: 'absolute', bottom: 20, left: 20 }}>
+    <Button href='https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#icar-maps' prefix={<RotatingArrow />}>
+      README
+    </Button>
+  </Box>
 
-   <Box sx={{ position: 'absolute', bottom: 20, left: 20 }}>
-     <Button href='https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#icar-maps' prefix={<RotatingArrow />}>
-     README
-     </Button>
-   </Box>
-
-    </>
-  )
-}
+  </>
+);};
 
 export default ParameterControls
