@@ -133,7 +133,7 @@ const Index = () => {
     <Box sx={{ position: 'absolute', top: 0, bottom: 0, width: '100%', height:'100%',
                backgroundColor: '#bbdaa4', zIndex: 0}}>
     {/* zoom to this location when page first loads */}
-    <Map zoom={4} center={{lon:-95, lat:38}} debug={debug}>
+    <Map zoom={4} center={{lon:-97, lat:38}} debug={debug}>
     <Fill
       color={'#4a80f5'}
       source={bucket + 'basemaps/ocean'}
