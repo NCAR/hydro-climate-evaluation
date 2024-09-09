@@ -18,6 +18,8 @@ const sx = {
   },
 };
 
+const readme =
+        'https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#icar-maps';
 const precip_dif = 1.0;
 const temp_dif = 0.2;
 
@@ -1402,83 +1404,37 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   return (
     <>
-    <Box sx={{ position: 'absolute', top: 20, right: 20 }}>
-      <Flex
-        sx={{
-          flexDirection: 'column',
-          alignItems: 'flex-end',
-          gap: 4,
-        }}
+    <Box
+      sx={{ position: 'absolute', top: 20, right: 20,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '10px',
+            borderRadius: '5px'}}
+    >
+      <LocalColorbar />
+    </Box>;
+
+
+    <Box
+      sx={{ position: 'absolute', top: 20, left: 20,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '10px',
+            borderRadius: '5px'}}
+    >
+      <ComputeChoiceFilter/>
+    </Box>;
+    {/* [ //showRegionPlot &&   //  <AveDifFilter/>], */}
+    {/* <AveDifFilter/>*/}
+    {/* !showRegionPlot && <MapChoicesBox /> */}
+    {/* showRegionPlot && <ClimateSignalBox numMetrics={numMetrics} /> */}
+
+    <Box sx={{ position: 'absolute', bottom: 20, left: 20 }}>
+      <Button
+        href={readme}
+        prefix={<RotatingArrow />}
       >
-
-{/*
-          <Box>
-            <Box sx={{ ...sx.label, mt: [0] }}>Tile boundaries</Box>
-            <Toggle
-              sx={{ float: 'right', mt: [2] }}
-              value={debug}
-              onClick={() => setDebug((prev) => !prev)}
-            />
-          </Box>
-          <Box>
-            <Box sx={{ ...sx.label, mt: [0] }}>Display</Box>
-            <Toggle
-              sx={{ display: 'block', float: 'right', mt: [2] }}
-              value={display}
-              onClick={() => setDisplay((prev) => !prev)}
-            />
-          </Box>
-             onClick={() => {
-               setChartToggle((prev) => !prev);
-               setChartHeight((chartHeight) => (chartHeight === '0%' ? '20%' : '0%'))}
-            />
-          <Box>
-            <Box sx={{ ...sx.label, mt: [0] }}>Charts</Box>
-            <Toggle
-              sx={{ chartToggle: 'block', float: 'right', mt: [2] }}
-              value={chartToggle}
-              onClick={() => {
-               getData({source}, setChartData);
-               setChartToggle((prev) => !prev);
-               setChartHeight((prevHeight) => (prevHeight === '0%' ? '25%' : '0%'));
-               }}
-            />
-          </Box>
- */}
-
-  <Table
-    color={'secondary'}
-    columns={[1]}
-    start={[[1]]}
-    width={[[1], [1], [1]]}
-    data={[[<LocalColorbar/>]]}
-    borderTop={true}
-    borderBottom={false}
-    index={false}
-    sx={{ my: [3] }}
-  />
-  </Flex>
-  </Box>
-
-  <Box
-    sx={{ position: 'absolute', top: 20, left: 20,
-          backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '10px',
-          borderRadius: '5px'}}
-  >
-    <ComputeChoiceFilter/>
-  </Box>
-  {/* [ //showRegionPlot &&   //  <AveDifFilter/>], */}
-  {/* <AveDifFilter/>*/}
-  {/* !showRegionPlot && <MapChoicesBox /> */}
-  {/* showRegionPlot && <ClimateSignalBox numMetrics={numMetrics} /> */}
-
-  <Box sx={{ position: 'absolute', bottom: 20, left: 20 }}>
-    <Button href='https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#icar-maps' prefix={<RotatingArrow />}>
-      README
-    </Button>
-  </Box>
-
-  </>
-);};
+        README
+      </Button>
+    </Box>
+    </>
+  );
+};
 
 export default ParameterControls
