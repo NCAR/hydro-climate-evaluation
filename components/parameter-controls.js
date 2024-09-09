@@ -18,7 +18,7 @@ const sx = {
   },
 };
 
-const readme =
+const readmeUrl =
         'https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#icar-maps';
 const precip_dif = 1.0;
 const temp_dif = 0.2;
@@ -1427,7 +1427,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
     <Box sx={{ position: 'absolute', bottom: 20, left: 20 }}>
       <Button
-        href={readme}
+        href={readmeUrl}
+        target="_blank"
+        rel="noopener noreferrer"
         prefix={<RotatingArrow />}
       >
         README
