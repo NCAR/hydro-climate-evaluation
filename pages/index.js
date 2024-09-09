@@ -2,19 +2,15 @@ import { useState } from 'react';
 import { useRef, useEffect } from 'react';
 import { Box, useThemeUI } from 'theme-ui';
 import { Dimmer, Column, Row } from '@carbonplan/components';
-// import { Map, Raster, Fill, Line, RegionPicker } from '@carbonplan/maps'
 import { Map, Raster, Fill, Line, RegionPicker } from '../maps';
-// import { Map, Fill, Line, RegionPicker } from '@carbonplan/maps'
-// import Raster from '../components/maps/raster'
-// import { useThemedColormap } from '@carbonplan/colormaps'
 import Meta from '../components/meta';
 import { useThemedColormap } from '../colormaps/src';
 import RegionPlot from '../components/region-plot';
 import ParameterControls from '../components/parameter-controls';
-// import MetricControls from '../components/metric-controls'
 import {options, linedata, linedata_stub} from '../components/plot-line';
 import { Line as LineCJS } from 'react-chartjs-2';
 import Charts from '../components/charts';
+// import MetricControls from '../components/metric-controls'
 // import { NetCDFReader } from "netcdfjs";
 
 // option to use external zarr files only
@@ -58,18 +54,27 @@ const Index = () => {
 
   const [fname, setFname] = useState('data.zarr');
   // paths to model dataset
-  // const [mapSource, setMapSource] = useState([bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname])
-  const [mapSource, setMapSource] = useState([bucket_ndp+'map/icar/access1_3/1981_2004/'+fname]);
-  const [chartSource, setChartSource] = useState(bucket_ndp+'chart/icar/noresm1_m/'+band);
+  // const [mapSource, setMapSource] =
+  //         useState([bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname])
+  const [mapSource, setMapSource] =
+          useState([bucket_ndp+'map/icar/access1_3/1981_2004/'+fname]);
+  const [chartSource, setChartSource] =
+          useState(bucket_ndp+'chart/icar/noresm1_m/'+band);
   // paths to model dataset used for diff
-  // const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/cesm/1980_2010/'+fname);
-  // const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname);
-  const [mapSourceDif, setMapSourceDif] = useState(bucket_ndp+'obs/conus404/1981_2004/'+fname);
-  const [chartSourceDif, setChartSourceDif] = useState(bucket_ndp+'chart/icar/cesm/'+band);
+  // const [mapSourceDif, setMapSourceDif] =
+  //         useState(bucket_ndp+'map/icar/cesm/1980_2010/'+fname);
+  // const [mapSourceDif, setMapSourceDif] =
+  //         useState(bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname);
+  const [mapSourceDif, setMapSourceDif] =
+          useState(bucket_ndp+'obs/conus404/1981_2004/'+fname);
+  const [chartSourceDif, setChartSourceDif] =
+          useState(bucket_ndp+'chart/icar/cesm/'+band);
   // set values to decide whether to map average or difference
-  const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false});
-  // const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false,
-  //                                                  'Obs.': false});
+  const [filterValues, setFilterValues] = useState({'Ave.': true,
+                                                    'Dif.': false});
+  // const [filterValues, setFilterValues] = useState({'Ave.': true,
+  //                                                   'Dif.': false,
+  //                                                   'Obs.': false});
 
   // control the height of the charts, initially hidden
   const [chartHeight, setChartHeight] = useState('0%');
@@ -77,7 +82,8 @@ const Index = () => {
 
   const getters = { display, reload, debug, opacity, clim,
                     month, band, colormapName, colormap,
-                    downscaling, model, metric, yearRange, mapSource, chartSource,
+                    downscaling, model, metric,
+                    yearRange, mapSource, chartSource,
                     downscalingDif, modelDif, yearRangeDif, obsDif,
                     mapSourceDif, chartSourceDif, scaleDif,
                     bucket_ndp, chartHeight, filterValues,

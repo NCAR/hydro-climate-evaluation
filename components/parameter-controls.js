@@ -1,12 +1,12 @@
-import { useState, Fragment } from 'react'
-import { Box, Flex } from 'theme-ui'
-import { useCallback, useEffect } from 'react'
-import { Button, Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components'
-import { ArrowThin, RotatingArrow } from '@carbonplan/icons'
-import Colorbar from './colorbar'
-// import { colormaps } from '@carbonplan/colormaps'
-import { colormaps } from '../colormaps/src'
-import { getData } from './getData'
+import { useState, Fragment } from 'react';
+import { Box, Flex } from 'theme-ui';
+import { useCallback, useEffect } from 'react';
+import { Button, Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components';
+import { ArrowThin, RotatingArrow } from '@carbonplan/icons';
+import Colorbar from './colorbar';
+// import { colormaps } from '@carbonplan/colormaps';
+import { colormaps } from '../colormaps/src';
+import { getData } from './getData';
 
 const sx = {
   label: {
@@ -16,10 +16,10 @@ const sx = {
     fontSize: [1, 1, 1, 2],
     mt: [3],
   },
-}
+};
 
-const precip_dif = 1.0
-const temp_dif = 0.2
+const precip_dif = 1.0;
+const temp_dif = 0.2;
 
 const Scale_Values = {
   // diference colormap
@@ -48,7 +48,7 @@ const Scale_Values = {
   dif_mam_p: precip_dif,
   dif_jja_p: precip_dif,
   dif_son_p: precip_dif,
-}
+};
 
 
 const Clim_Ranges = {
@@ -93,7 +93,7 @@ const Clim_Ranges = {
   dif_mam_p: { max: 50, min: -50 },
   dif_jja_p: { max: 50, min: -50 },
   dif_son_p: { max: 50, min: -50 },
-}
+};
 
 const Default_Colormaps = {
   // temperature variables
@@ -144,8 +144,7 @@ const Default_Colormaps = {
   dif_mam_p: 'difbrowngreen',
   dif_jja_p: 'difbrowngreen',
   dif_son_p: 'difbrowngreen',
-
-}
+};
 
 
 const ParameterControls = ({ getters, setters, bucket, fname }) => {
@@ -156,7 +155,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           mapSourceDif, chartSourceDif, scaleDif,
           chartHeight, filterValues,
           showClimateChange, showRegionPlot
-        } = getters
+        } = getters;
   const {
     setDisplay,
     setReload,
@@ -184,32 +183,30 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setFilterValues,
     setShowClimateChange,
     setShowRegionPlot
-  } = setters
+  } = setters;
 
-  // const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false})
+  // const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false});
 
-  const [chartToggle, setChartToggle] = useState(false)
+  const [chartToggle, setChartToggle] = useState(false);
 
-  const [units, setUnits] = useState('mm')
+  const [units, setUnits] = useState('mm');
 
   const [computeChoice, setComputeChoice] = useState({
       'Ave.': true,
       'Dif.': false,
       'Climate Signal': false,
-  })
+  });
 
-  const handleComputeChoice = (e) => {
-    setComputeChoice(e)
-  }
+  const handleComputeChoice = (e) => { setComputeChoice(e) };
 
   const getRCPString = (value) => {
       if (value === "8.5") {
-          return "rcp85"
+        return "rcp85";
       } else if (value === "4.5") {
-          return "rcp45"
+        return "rcp45";
       }
-      return null
-  }
+    return null;
+  };
 
   const getRCPKey = (obj) => {
     for (const [key, value] of Object.entries(obj)) {
@@ -220,385 +217,359 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     return null;
   };
 
-  const [rcpValues, setRCPValues] = useState({'4.5': true, '8.5': false})
+  const [rcpValues, setRCPValues] = useState({'4.5': true, '8.5': false});
 
   const [computeClimateSignal, setComputeClimateSignal] =
-        useState({'COMPUTE BUTTON': false})
+          useState({'COMPUTE BUTTON': false});
 
-  const [numClimateSignalSets, setNumClimateSignalSets] = useState(2)
+  const [numClimateSignalSets, setNumClimateSignalSets] = useState(2);
 
   const handleUnitsChange = () => {
       if (band === 'tavg') {
-          setUnits('°C')
+          setUnits('°C');
       } else if (band === 'prec') {
-          setUnits('mm')
+        setUnits('mm');
       }
   };
 
   const flipReload = () => {
       if (reload) {
-          setReload(false)
+        setReload(false);
       } else {
-          setReload(true)
+        setReload(true);
       }
   };
 
   const setMetricLabel = () => {
-    let label = 'n34pr'
-    let description  = ['further description']
+    let label = 'n34pr';
+    let description  = ['further description'];
     if (metric === 'n34pr') {
-      label = 'n34pr'
+      label = 'n34pr';
       description =
             ['Niño3.4 precipitation',
              'teleconnection patterns',
-             'spatial correlation']
+             'spatial correlation'];
     } else if (metric === 'n34t') {
-      label = 'n34t'
+      label = 'n34t';
       description =
             ['Niño3.4 temperature',
              'teleconnection patterns',
-             'spatial correlation']
+             'spatial correlation'];
     }  else if (metric === 'ptrend') {
-      label = 'ptrend'
+      label = 'ptrend';
       description =
             ['Precipitation',
-             'trend']
+             'trend'];
     }  else if (metric === 'ttrend') {
-      label = 'ttrend'
+      label = 'ttrend';
       description =
             ['Temperature',
-             'trend']
+             'trend'];
     }  else if (metric === 'pr90') {
-      label = 'pr90'
+      label = 'pr90';
       description =
             ['Precipitation',
              'extremes',
-             '90th percentile']
+             '90th percentile'];
     }  else if (metric === 'pr99') {
-      label = 'pr99'
+      label = 'pr99';
       description =
             ['Precipitation',
              'extremes',
-             '99th percentile']
+             '99th percentile'];
     }  else if (metric === 't90') {
-      label = 't90'
+      label = 't90';
       description =
             ['Temperature',
              'extremes',
-             '90th percentile']
+             '90th percentile'];
     }  else if (metric === 't99') {
-      label = 't99'
+      label = 't99';
       description =
             ['Temperature',
              'extremes',
-             '99th percentile']
+             '99th percentile'];
     }  else if (metric === 'djf_t') {
-      label = 'djf_t'
+      label = 'djf_t';
       description =
             ['Seasonal mean',
              'temperature',
-            'Dec/Jan/Feb']
+             'Dec/Jan/Feb'];
     }  else if (metric === 'djf_p') {
-      label = 'djf_p'
+      label = 'djf_p';
       description =
             ['Seasonal mean',
              'precipitation',
-            'Dec/Jan/Feb']
+             'Dec/Jan/Feb'];
     }  else if (metric === 'mam_t') {
-      label = 'mam_t'
+      label = 'mam_t';
       description =
             ['Seasonal mean',
              'temperature',
-            'Mar/Apr/May']
+             'Mar/Apr/May'];
     }  else if (metric === 'mam_p') {
-      label = 'mam_p'
+      label = 'mam_p';
       description =
             ['Seasonal mean',
              'precipitation',
-            'Mar/Apr/May']
+             'Mar/Apr/May'];
     }  else if (metric === 'jja_t') {
-      label = 'jja_t'
+      label = 'jja_t';
       description =
             ['Seasonal mean',
              'temperature',
-            'Jun/Jul/Aug']
+             'Jun/Jul/Aug'];
     }  else if (metric === 'jja_p') {
-      label = 'jja_p'
+      label = 'jja_p';
       description =
             ['Seasonal mean',
              'precipitation',
-            'Jun/Jul/Aug']
+             'Jun/Jul/Aug'];
     }  else if (metric === 'son_t') {
-      label = 'son_t'
+      label = 'son_t';
       description =
             ['Seasonal mean',
              'temperature',
-            'Sep/Oct/Nov']
+             'Sep/Oct/Nov'];
     }  else if (metric === 'son_p') {
-      label = 'son_p'
+      label = 'son_p';
       description =
             ['Seasonal mean',
              'precipitation',
-            'Sep/Oct/Nov']
+             'Sep/Oct/Nov'];
     } //  else {
-    //   label = 'label undefined'
+    //   label = 'label undefined';
     // }
 
     return(
-       <Box sx={{ ...sx.label, mt: [4] }}>
-          <Link href='https://google.com/'>{label}</Link>:<br />
-          {description.map((line, index) => (
-              <Fragment key={index}>
-                  {line}
-                  <br />
-              </Fragment>
-          ))}
+      <Box sx={{ ...sx.label, mt: [4] }}>
+      <Link href='https://google.com/'>{label}</Link>:<br />
+        {description.map((line, index) => (
+           <Fragment key={index}> {line} <br /> </Fragment>))
+        }
+      </Box>
+    );
+  };
 
-       </Box>
-      )
 
+  const MetricBox = () => {
+    const [values, setValues] = useState({'90%': false,
+                                          '99%': false,
+                                          'Std.': false,
+                                          'RSME': false});
+    return (
+      <Filter values={values} setValues={setValues} showAll />
+      );
    };
-
-   const MetricBox = () => {
-       const [values, setValues] =
-           useState({'90%': false, '99%': false, 'Std.': false, 'RSME': false})
-       return (
-           <Filter
-             values={values}
-             setValues={setValues}
-             showAll
-               />
-       )
-   };
-
-
 
 
   // NOTE: Chart sources have not been created with yearRange yet
   // TODO: fixed Clim_Ranges[band]
   const handleFilterAndSetClimColormapName = (e) => {
-      const filterVals = e
-      if (filterVals['Ave.']) {
-          setFilterValues({'Ave.': true, 'Dif.': false})
-          setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max])
-          setColormapName(Default_Colormaps[metric])
-      } else if (filterVals['Dif.']) {
-          setFilterValues({'Ave.': false, 'Dif.': true})
-          setScaleDif(Scale_Values['dif_'+metric])
-          setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max])
-          setColormapName(Default_Colormaps['dif_'+metric])
-      }
+    const filterVals = e;
+    if (filterVals['Ave.']) {
+      setFilterValues({'Ave.': true, 'Dif.': false});
+      setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
+      setColormapName(Default_Colormaps[metric]);
+    } else if (filterVals['Dif.']) {
+      setFilterValues({'Ave.': false, 'Dif.': true});
+      setScaleDif(Scale_Values['dif_'+metric]);
+      setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
+      setColormapName(Default_Colormaps['dif_'+metric]);
+    }
   };
 
   const handleBandChange = useCallback((e) => {
-    const band = e.target.value
-    setBand(band)
-    handleFilterAndSetClimColormapName(filterValues)
-    setMapSource([bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname])
-    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
-    getData({chartSource}, setChartData)
-  })
+    const band = e.target.value;
+    setBand(band);
+    handleFilterAndSetClimColormapName(filterValues);
+    setMapSource([bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
+    getData({chartSource}, setChartData);
+  });
 
   const handleYearChange = useCallback((e) => {
-    const yearRange = e.target.value
-    setYearRange(yearRange)
-    console.log("yearRange =", e.target.value)
-    setMapSource([bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname])
-    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
-  })
+    const yearRange = e.target.value;
+    setYearRange(yearRange);
+    console.log("yearRange =", e.target.value);
+    setMapSource([bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
+  });
 
   const handleYearDifChange = useCallback((e) => {
-    const yearRangeDif = e.target.value
-    setYearRangeDif(yearRangeDif)
-    console.log("yearRange =", e.target.value)
-    setMapSourceDif([bucket+'map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname])
-    setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band)
-  })
+    const yearRangeDif = e.target.value;
+    setYearRangeDif(yearRangeDif);
+    console.log("yearRange =", e.target.value);
+    setMapSourceDif([bucket+'map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname]);
+    setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band);
+  });
 
   const handleDownscalingChange = useCallback((e) => {
-    const downscaling = e.target.value
-    setDownscaling(downscaling)
-    let safemodel = model
+    const downscaling = e.target.value;
+    setDownscaling(downscaling);
+    let safemodel = model;
     if (downscaling === 'maca') {
-        if (model === 'access1_3') {
-            setModel('noresm1_m')
-            safemodel = 'noresm1_m'
-        }
+      if (model === 'access1_3') {
+        setModel('noresm1_m');
+        safemodel = 'noresm1_m';
+      }
     }
     if (downscaling === 'nasa_nex') {
-        if (model === 'access1_3' || model === 'ccsm4') {
-            setModel('noresm1_m')
-            safemodel = 'noresm1_m'
-        }
+      if (model === 'access1_3' || model === 'ccsm4') {
+        setModel('noresm1_m');
+        safemodel = 'noresm1_m';
+      }
     }
 
-    setMapSource([bucket+'map/'+downscaling+'/'+safemodel+'/'+yearRange+'/'+fname])
-    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
-    setChartSource(bucket+'/chart/'+downscaling+'/'+safemodel+'/'+band)
-    // getData({chartSource}, setChartData)
-  })
+    setMapSource([bucket+'map/'+downscaling+'/'+safemodel+'/'+yearRange+'/'+fname]);
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
+    setChartSource(bucket+'/chart/'+downscaling+'/'+safemodel+'/'+band);
+    // getData({chartSource}, setChartData);
+  });
 
   const handleDownscalingDifChange = useCallback((e) => {
-    const downscalingDif = e.target.value
-    setDownscalingDif(downscalingDif)
-    setMapSourceDif(bucket+'map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname)
-    setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band)
-    //getData({chartSource}, setChartData)
-  })
+    const downscalingDif = e.target.value;
+    setDownscalingDif(downscalingDif);
+    setMapSourceDif(bucket+'map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname);
+    setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band);
+    //getData({chartSource}, setChartData);
+  });
 
   const handleModelChange = useCallback((e) => {
-    const model = e.target.value
-    setModel(model)
-    console.log("e =", e.target.value)
-    console.log("model =", bucket+'/'+downscaling+'/'+model+'/')
-    setMapSource([bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname])
-    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
-    // getData({chartSource}, setChartData)
-  })
+    const model = e.target.value;
+    setModel(model);
+    console.log("e =", e.target.value);
+    console.log("model =", bucket+'/'+downscaling+'/'+model+'/');
+    setMapSource([bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
+    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
+    // getData({chartSource}, setChartData);
+  });
 
   const handleMetricsChange = useCallback((e) => {
-    const metric = e.target.value
-    setMetric(metric)
-    console.log("e =", e.target.value)
-    // console.log("model =", bucket+'/'+downscaling+'/'+model+'/')
-    // setMapSource(bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname)
-    // // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band)
-    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band)
-    // getData({chartSource}, setChartData)
+    const metric = e.target.value;
+    setMetric(metric);
+    console.log("e =", e.target.value);
+    // console.log("model =", bucket+'/'+downscaling+'/'+model+'/');
+    // setMapSource(bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname);
+    // // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
+    // getData({chartSource}, setChartData);
     if (metric === 'n34pr') {
-      setBand('n34p')
-      setUnits('mm')
+      setBand('n34p');
+      setUnits('mm');
     } else if (metric === 'n34t') {
-      setBand('n34t')
-      setUnits('°C')
+      setBand('n34t');
+      setUnits('°C');
     }  else if (metric === 'ptrend') {
-      setBand('ptre')
-      setUnits('mm')
+      setBand('ptre');
+      setUnits('mm');
     }  else if (metric === 'ttrend') {
-      setBand('ttre')
-      setUnits('°C')
+      setBand('ttre');
+      setUnits('°C');
     }  else if (metric === 'pr90') {
-      setBand('pr90')
-      setUnits('mm')
+      setBand('pr90');
+      setUnits('mm');
     }  else if (metric === 'pr99') {
-      setBand('pr99')
-      setUnits('mm')
+      setBand('pr99');
+      setUnits('mm');
     }  else if (metric === 't90') {
-      setBand('t90_')
-      setUnits('°C')
+      setBand('t90_');
+      setUnits('°C');
     }  else if (metric === 't99') {
-      setBand('t99_')
-      setUnits('°C')
+      setBand('t99_');
+      setUnits('°C');
     }  else if (metric === 'djf_t') {
-      setBand('djft')
-      setUnits('°C')
+      setBand('djft');
+      setUnits('°C');
     }  else if (metric === 'djf_p') {
-      setBand('djfp')
-      setUnits('mm')
+      setBand('djfp');
+      setUnits('mm');
     }  else if (metric === 'mam_t') {
-      setBand('mamt')
-      setUnits('°C')
+      setBand('mamt');
+      setUnits('°C');
     }  else if (metric === 'mam_p') {
-      setBand('mamp')
-      setUnits('mm')
+      setBand('mamp');
+      setUnits('mm');
     }  else if (metric === 'jja_t') {
-      setBand('jjat')
-      setUnits('°C')
+      setBand('jjat');
+      setUnits('°C');
     }  else if (metric === 'jja_p') {
-      setBand('jjap')
-      setUnits('mm')
+      setBand('jjap');
+      setUnits('mm');
     }  else if (metric === 'son_t') {
-      setBand('sont')
-      setUnits('°C')
+      setBand('sont');
+      setUnits('°C');
     }  else if (metric === 'son_p') {
-      setBand('sonp')
-      setUnits('mm')
+      setBand('sonp');
+      setUnits('mm');
     } //  else {
     if (filterValues['Dif.']) {
-      flipReload()
-      setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max])
-      setColormapName(Default_Colormaps['dif_'+metric])
-      setScaleDif(Scale_Values['dif_'+metric])
+      flipReload();
+      setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
+      setColormapName(Default_Colormaps['dif_'+metric]);
+      setScaleDif(Scale_Values['dif_'+metric]);
     } else {
-      setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max])
-      setColormapName(Default_Colormaps[metric])
+      setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
+      setColormapName(Default_Colormaps[metric]);
     }
+  });
 
-  })
 
-
-  const maxNumMetrics = 18
+  const maxNumMetrics = 18;
   const [allMetrics, setAllMetrics] =
     useState({
-       tavg: false,
-       n34t: false,
-       ttrend: false,
-       t90: false,
-       t99: false,
-       djf_t: false,
-       mam_t: false,
-       jja_t: false,
-       son_t: false,
-       prec: false,
-       n34pr: false,
-       ptrend: false,
-       pr90: false,
-       pr99: false,
-       djf_p: false,
-       mam_p: false,
-       jja_p: false,
-       son_p: false,})
+      tavg: false,
+      n34t: false,
+      ttrend: false,
+      t90: false,
+      t99: false,
+      djf_t: false,
+      mam_t: false,
+      jja_t: false,
+      son_t: false,
+      prec: false,
+      n34pr: false,
+      ptrend: false,
+      pr90: false,
+      pr99: false,
+      djf_p: false,
+      mam_p: false,
+      jja_p: false,
+      son_p: false,});
 
 
-  const [numMetrics, setNumMetrics] = useState(0)
-  const [topCombination, setTopCombination] = useState("Select Metrics")
-  const [topDownscaling, setTopDownscaling] = useState("None")
-  const [topModel, setTopModel] = useState("None")
-  const [topCombination2, setTopCombination2] = useState("None")
-  const [topDownscaling2, setTopDownscaling2] = useState("None")
-  const [topModel2, setTopModel2] = useState("None")
+  const [numMetrics, setNumMetrics] = useState(0);
+  const [topCombination, setTopCombination] = useState("Select Metrics");
+  const [topDownscaling, setTopDownscaling] = useState("None");
+  const [topModel, setTopModel] = useState("None");
+  const [topCombination2, setTopCombination2] = useState("None");
+  const [topDownscaling2, setTopDownscaling2] = useState("None");
+  const [topModel2, setTopModel2] = useState("None");
 
 
+  const [metrics, setMetrics] = useState({ all: false, clear: false, });
 
-  const [metrics, setMetrics] =
-    useState({
-       all: false,
-       clear: false,
-      })
-
-  const [metrics1, setMetrics1] =
-    useState({
-       tavg: false,
-       n34t: false,
-       ttrend: false,})
-  const [metrics2, setMetrics2] =
-    useState({
-       t90: false,
-       t99: false,
-       djf_t: false,})
-  const [metrics3, setMetrics3] =
-    useState({
-       mam_t: false,
-       jja_t: false,
-       son_t: false,})
-  const [metrics4, setMetrics4] =
-    useState({
-       prec: false,
-       n34pr: false,
-       ptrend: false,})
-  const [metrics5, setMetrics5] =
-    useState({
-       pr90: false,
-       pr99: false,
-       djf_p: false,})
-  const [metrics6, setMetrics6] =
-    useState({
-       mam_p: false,
-       jja_p: false,
-       son_p: false,})
+  const [metrics1, setMetrics1] = useState({ tavg: false,
+                                             n34t: false,
+                                             ttrend: false,});
+  const [metrics2, setMetrics2] = useState({ t90: false,
+                                             t99: false,
+                                             djf_t: false,});
+  const [metrics3, setMetrics3] = useState({ mam_t: false,
+                                             jja_t: false,
+                                             son_t: false,});
+  const [metrics4, setMetrics4] = useState({ prec: false,
+                                             n34pr: false,
+                                             ptrend: false,});
+  const [metrics5, setMetrics5] = useState({ pr90: false,
+                                             pr99: false,
+                                             djf_p: false,});
+  const [metrics6, setMetrics6] = useState({ mam_p: false,
+                                             jja_p: false,
+                                             son_p: false,});
 
   const countNumMetrics = () => {
       let count = 0;
@@ -609,16 +580,19 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       for (const key in metrics5) { metrics5[key] === true && count++; }
       for (const key in metrics6) { metrics6[key] === true && count++; }
       return count;
-  }
+  };
 
   const diffInMetrics = (array1, array2) => {
-      for (const key in array1) {
-          if (array1[key] != array2[key]) {
-              if (array2[key] == true) {
-                  return 1
-              } else {
-                  return -1
-  }}}}
+    for (const key in array1) {
+      if (array1[key] != array2[key]) {
+        if (array2[key] == true) {
+          return 1;
+        } else {
+          return -1;
+        }
+      }
+    }
+  };
 
   // 13 = combinations
   const combinations =
@@ -636,7 +610,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             "NASA-NEX with NorESM-M",
             "NASA-NEX with CanESM2",
             "NASA-NEX with MIROC5",
-        ]
+        ];
   const combinations_downscaling =
         [
             "icar",
@@ -652,7 +626,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             "nasa_nex",
             "nasa_nex",
             "nasa_nex",
-        ]
+        ];
   const combinations_model =
         [
             "noresm1_m",
@@ -668,129 +642,127 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             "noresm1_m",
             "canesm2",
             "miroc5",
-        ]
+        ];
 
 
-
-  const tavg_score = [4, 6, 13, 5, 1, 7, 3, 9, 10, 11, 2, 12, 8]
-  const n34t_score = [10, 12, 4, 6, 1, 7, 13, 3, 2, 5, 8, 11, 9]
-  const ttrend_score = [7, 5, 4, 10, 8, 3, 9, 11, 2, 6, 1, 12, 13]
-  const t90_score = [9, 7, 2, 12, 4, 5, 13, 8, 3, 1, 6, 11, 10]
-  const t99_score = [4, 8, 6, 11, 2, 1, 13, 5, 12, 7, 10, 3, 9]
-  const djf_t_score = [4, 10, 6, 2, 3, 5, 1, 12, 13, 7, 8, 11, 9]
-  const mam_t_score = [12, 3, 13, 1, 7, 2, 10, 4, 11, 9, 8, 5, 6]
-  const jja_t_score =  [9, 6, 5, 4, 10, 2, 3, 13, 1, 7, 11, 12, 8]
-  const son_t_score = [2, 7, 10, 13, 11, 1, 12, 8, 4, 6, 5, 9, 3]
-  const prec_score = [9, 7, 5, 11, 8, 13, 1, 2, 4, 6, 10, 3, 12]
-  const n34pr_score = [12, 10, 6, 13, 2, 8, 11, 4, 9, 1, 3, 7, 5]
-  const ptrend_score = [4, 8, 6, 3, 7, 9, 10, 12, 2, 1, 13, 11, 5]
-  const pr90_score = [2, 13, 10, 9, 3, 11, 1, 4, 5, 6, 8, 12, 7]
-  const pr99_score = [9, 3, 2, 1, 12, 5, 4, 13, 8, 11, 10, 7, 6]
-  const djf_p_score = [6, 11, 4, 10, 5, 1, 3, 13, 12, 9, 8, 2, 7]
-  const mam_p_score = [5, 6, 8, 1, 9, 11, 13, 7, 3, 10, 2, 4, 12]
-  const jja_p_score = [5, 3, 6, 1, 9, 13, 4, 2, 8, 7, 11, 10, 12]
-  const son_p_score = [2, 10, 5, 3, 11, 13, 4, 12, 9, 8, 6, 7, 1]
-
+  const tavg_score = [4, 6, 13, 5, 1, 7, 3, 9, 10, 11, 2, 12, 8];
+  const n34t_score = [10, 12, 4, 6, 1, 7, 13, 3, 2, 5, 8, 11, 9];
+  const ttrend_score = [7, 5, 4, 10, 8, 3, 9, 11, 2, 6, 1, 12, 13];
+  const t90_score = [9, 7, 2, 12, 4, 5, 13, 8, 3, 1, 6, 11, 10];
+  const t99_score = [4, 8, 6, 11, 2, 1, 13, 5, 12, 7, 10, 3, 9];
+  const djf_t_score = [4, 10, 6, 2, 3, 5, 1, 12, 13, 7, 8, 11, 9];
+  const mam_t_score = [12, 3, 13, 1, 7, 2, 10, 4, 11, 9, 8, 5, 6];
+  const jja_t_score =  [9, 6, 5, 4, 10, 2, 3, 13, 1, 7, 11, 12, 8];
+  const son_t_score = [2, 7, 10, 13, 11, 1, 12, 8, 4, 6, 5, 9, 3];
+  const prec_score = [9, 7, 5, 11, 8, 13, 1, 2, 4, 6, 10, 3, 12];
+  const n34pr_score = [12, 10, 6, 13, 2, 8, 11, 4, 9, 1, 3, 7, 5];
+  const ptrend_score = [4, 8, 6, 3, 7, 9, 10, 12, 2, 1, 13, 11, 5];
+  const pr90_score = [2, 13, 10, 9, 3, 11, 1, 4, 5, 6, 8, 12, 7];
+  const pr99_score = [9, 3, 2, 1, 12, 5, 4, 13, 8, 11, 10, 7, 6];
+  const djf_p_score = [6, 11, 4, 10, 5, 1, 3, 13, 12, 9, 8, 2, 7];
+  const mam_p_score = [5, 6, 8, 1, 9, 11, 13, 7, 3, 10, 2, 4, 12];
+  const jja_p_score = [5, 3, 6, 1, 9, 13, 4, 2, 8, 7, 11, 10, 12];
+  const son_p_score = [2, 10, 5, 3, 11, 13, 4, 12, 9, 8, 6, 7, 1];
 
 
   function addScores(a,b){
         return a.map((e,i) => e + b[i]);
-  }
+  };
 
   useEffect(() => {
-    let currentScore = [0,0,0,0,0,0,0,0,0,0,0,0,0]
+    let currentScore = [0,0,0,0,0,0,0,0,0,0,0,0,0];
     if (metrics1['tavg']) {
-        currentScore = addScores(currentScore, tavg_score)
+      currentScore = addScores(currentScore, tavg_score);
     }
     if (metrics1['n34t']) {
-        currentScore = addScores(currentScore, n34t_score)
+      currentScore = addScores(currentScore, n34t_score);
     }
     if (metrics1['ttrend']) {
-        currentScore = addScores(currentScore, ttrend_score)
+      currentScore = addScores(currentScore, ttrend_score);
     }
     if (metrics2['t90']) {
-        currentScore = addScores(currentScore, t90_score)
+      currentScore = addScores(currentScore, t90_score);
     }
     if (metrics2['t99']) {
-        currentScore = addScores(currentScore, t99_score)
+      currentScore = addScores(currentScore, t99_score);
     }
     if (metrics2['djf_t']) {
-        currentScore = addScores(currentScore, djf_t_score)
+      currentScore = addScores(currentScore, djf_t_score);
     }
     if (metrics3['mam_t']) {
-        currentScore = addScores(currentScore, mam_t_score)
+      currentScore = addScores(currentScore, mam_t_score);
     }
     if (metrics3['jja_t']) {
-        currentScore = addScores(currentScore, jja_t_score)
+      currentScore = addScores(currentScore, jja_t_score);
     }
     if (metrics3['son_t']) {
-        currentScore = addScores(currentScore, son_t_score)
+      currentScore = addScores(currentScore, son_t_score);
     }
     if (metrics4['prec']) {
-        currentScore = addScores(currentScore, prec_score)
+      currentScore = addScores(currentScore, prec_score);
     }
     if (metrics4['n34pr']) {
-        currentScore = addScores(currentScore, n34pr_score)
+      currentScore = addScores(currentScore, n34pr_score);
     }
     if (metrics4['ptrend']) {
-        currentScore = addScores(currentScore, ptrend_score)
+      currentScore = addScores(currentScore, ptrend_score);
     }
     if (metrics5['pr90']) {
-        currentScore = addScores(currentScore, pr90_score)
+      currentScore = addScores(currentScore, pr90_score);
     }
     if (metrics5['pr99']) {
-        currentScore = addScores(currentScore, pr99_score)
+      currentScore = addScores(currentScore, pr99_score);
     }
     if (metrics5['djf_p']) {
-        currentScore = addScores(currentScore, djf_p_score)
+      currentScore = addScores(currentScore, djf_p_score);
     }
     if (metrics6['mam_p']) {
-        currentScore = addScores(currentScore, mam_p_score)
+      currentScore = addScores(currentScore, mam_p_score);
     }
     if (metrics6['jja_p']) {
-        currentScore = addScores(currentScore, jja_p_score)
+      currentScore = addScores(currentScore, jja_p_score);
     }
     if (metrics6['son_p']) {
-        currentScore = addScores(currentScore, son_p_score)
+      currentScore = addScores(currentScore, son_p_score);
     }
 
 
     if (numMetrics === 0) {
-        setTopCombination("Select Metrics")
-        setTopDownscaling("None")
-        setTopModel("None")
-        setTopCombination2("None")
-        setTopDownscaling2("None")
-        setTopModel2("None")
+      setTopCombination("Select Metrics");
+      setTopDownscaling("None");
+      setTopModel("None");
+      setTopCombination2("None");
+      setTopDownscaling2("None");
+      setTopModel2("None");
     } else {
-        let combo = []
-        let downscaling = []
-        let model = []
-        for (let n = 0; n < numClimateSignalSets; n++) {
-            let i = currentScore.indexOf(Math.max(...currentScore));
-            console.log(n, "SCORE =", currentScore, "and i", i)
-            console.log(n, "best combination =", combinations[i])
-            combo.push(combinations[i])
-            downscaling.push(combinations_downscaling[i])
-            model.push(combinations_model[i])
-            currentScore[i] = -1;
-        }
-        setTopCombination(combo)
-        setTopDownscaling(downscaling)
-        setTopModel(model)
+      let combo = [];
+      let downscaling = [];
+      let model = [];
+      for (let n = 0; n < numClimateSignalSets; n++) {
+        let i = currentScore.indexOf(Math.max(...currentScore));
+        console.log(n, "SCORE =", currentScore, "and i", i);
+        console.log(n, "best combination =", combinations[i]);
+        combo.push(combinations[i]);
+        downscaling.push(combinations_downscaling[i]);
+        model.push(combinations_model[i]);
+        currentScore[i] = -1;
+      }
+      setTopCombination(combo);
+      setTopDownscaling(downscaling);
+      setTopModel(model);
 
-        // let i = currentScore.indexOf(Math.max(...currentScore));
-        // console.log("SCORE =", currentScore, "and i", i)
-        // console.log("best combination =", combinations[i])
-        // setTopCombination(combinations[i])
-        // setTopDownscaling(combinations_downscaling[i])
-        // setTopModel(combinations_model[i])
-        // // set top score to -1 and find new max to find the second largest
-        // currentScore[i] = -1;
-        // let j = currentScore.indexOf(Math.max(...currentScore));
-        // setTopCombination2(combinations[j])
-        // setTopDownscaling2(combinations_downscaling[j])
-        // setTopModel2(combinations_model[j])
+      // let i = currentScore.indexOf(Math.max(...currentScore));
+      // console.log("SCORE =", currentScore, "and i", i)
+      // console.log("best combination =", combinations[i])
+      // setTopCombination(combinations[i])
+      // setTopDownscaling(combinations_downscaling[i])
+      // setTopModel(combinations_model[i])
+      // // set top score to -1 and find new max to find the second largest
+      // currentScore[i] = -1;
+      // let j = currentScore.indexOf(Math.max(...currentScore));
+      // setTopCombination2(combinations[j])
+      // setTopDownscaling2(combinations_downscaling[j])
+      // setTopModel2(combinations_model[j])
     }
   }, [numMetrics,
       setMetrics1, setMetrics2, setMetrics3,
@@ -798,131 +770,117 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       numClimateSignalSets]);
 
   const handleRCPValues = useCallback((e) => {
-      const choice = e
-      console.log("RCP VALUES e =", e)
-      setRCPValues(choice)
+    const choice = e;
+    console.log("RCP VALUES e =", e);
+    setRCPValues(choice);
   });
 
   const [shouldUpdateMapSource, setShouldUpdateMapSource] = useState(false);
 
   const handleNumClimateSignalSets = useCallback((e) => {
-      const numSets = parseInt(e.target.value)
-      setNumClimateSignalSets(numSets)
-
+    const numSets = parseInt(e.target.value);
+    setNumClimateSignalSets(numSets);
   });
 
   const handleClimateSignal = useCallback((e) => {
-      if (numMetrics === 0) {
-          return
-      }
-      setComputeClimateSignal({'COMPUTE BOTTON': true})
-      setShowRegionPlot(false)
-      setShouldUpdateMapSource(true);
+    if (numMetrics === 0) {
+      return;
+    }
+    setComputeClimateSignal({'COMPUTE BOTTON': true});
+    setShowRegionPlot(false);
+    setShouldUpdateMapSource(true);;
   });
 
   useEffect(() => {
     if (!showRegionPlot && shouldUpdateMapSource) {
-      console.log("ARTLESS top combination =", topCombination)
-      let downscaling_l = topDownscaling[0]
-      let model_l = topModel[0]
-      const rcp = getRCPKey(rcpValues)
-      let url = [bucket+'/climateSignal/'+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname]
-      const numClimateSignalSets_i = parseInt(numClimateSignalSets, 10)
+      console.log("ARTLESS top combination =", topCombination);
+      let downscaling_l = topDownscaling[0];
+      let model_l = topModel[0];
+      const rcp = getRCPKey(rcpValues);
+      let url = [bucket+'/climateSignal/'+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname];
+      const numClimateSignalSets_i = parseInt(numClimateSignalSets, 10);
 
       setMapSource(url);
-      setDownscaling(downscaling_l)
-      setModel(model_l)
+      setDownscaling(downscaling_l);
+      setModel(model_l);
       setShouldUpdateMapSource(false); // Reset the flag
-      const local_filterValue = {'Ave.': false, 'Dif.': true}
-      handleFilterAndSetClimColormapName(local_filterValue)
+      const local_filterValue = {'Ave.': false, 'Dif.': true};
+      handleFilterAndSetClimColormapName(local_filterValue);
 
       for (let i=1; i<numClimateSignalSets_i; i++) {
-          downscaling_l = topDownscaling[i]
-          model_l = topModel[i]
-          url = bucket+'/climateSignal/'+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname
-          setMapSource((prevSources) => [...prevSources, url]);
+        downscaling_l = topDownscaling[i];
+        model_l = topModel[i];
+        url = bucket+'/climateSignal/'+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname;
+        setMapSource((prevSources) => [...prevSources, url]);;
       }
     }
   }, [showRegionPlot, shouldUpdateMapSource]);
 
   useEffect(() => {
-      const numSelected = countNumMetrics()
-      setNumMetrics(numSelected)
+    const numSelected = countNumMetrics();
+    setNumMetrics(numSelected);
   }, [metrics1, metrics2, metrics3, metrics4, metrics5, metrics6]);
 
   const handleMetrics = useCallback((e) => {
-      const choice = e
-      const keys = JSON.stringify(Object.keys(e))
-      if (keys === '["tavg","n34t","ttrend"]') {
-          setMetrics1(e)
-      } else if (keys === '["t90","t99","djf_t"]') {
-          setMetrics2(e);
-      } else if (keys === '["mam_t","jja_t","son_t"]') {
-          setMetrics3(e);
-      } else if (keys === '["prec","n34pr","ptrend"]') {
-          setMetrics4(e);
-      } else if (keys === '["pr90","pr99","djf_p"]') {
-          setMetrics5(e);
-      } else if (keys === '["mam_p","jja_p","son_p"]') {
-          setMetrics6(e);
-      }
-  })
-
+    const choice = e;
+    const keys = JSON.stringify(Object.keys(e));
+    if (keys === '["tavg","n34t","ttrend"]') {
+      setMetrics1(e);
+    } else if (keys === '["t90","t99","djf_t"]') {
+      setMetrics2(e);
+    } else if (keys === '["mam_t","jja_t","son_t"]') {
+      setMetrics3(e);
+    } else if (keys === '["prec","n34pr","ptrend"]') {
+      setMetrics4(e);
+    } else if (keys === '["pr90","pr99","djf_p"]') {
+      setMetrics5(e);
+    } else if (keys === '["mam_p","jja_p","son_p"]') {
+      setMetrics6(e);
+    }
+  });
 
 
   const handleClimateMetricsChange = useCallback((e) => {
-      const choice = e
-      const all = e.all
-      const clear = e.clear
+    const choice = e;
+    const all = e.all;
+    const clear = e.clear;
 
-      if (all) {
-          setNumMetrics(maxNumMetrics)
-          setMetrics({all: true, clear: false})
-          setMetrics1({tavg: true, n34t: true, ttrend: true,})
-          setMetrics2({t90: true, t99: true, djf_t: true,})
-          setMetrics3({mam_t: true, jja_t: true, son_t: true,})
-          setMetrics4({prec: true, n34pr: true, ptrend: true,})
-          setMetrics5({pr90: true, pr99: true, djf_p: true,})
-          setMetrics6({mam_p: true, jja_p: true, son_p: true,})
-      } else if (clear) {
-          setTopCombination("Select Metrics")
-          setNumMetrics(0)
-          setMetrics({all: false, clear: false})
-          setMetrics1({tavg: false, n34t: false, ttrend: false,})
-          setMetrics2({t90: false, t99: false, djf_t: false,})
-          setMetrics3({mam_t: false, jja_t: false, son_t: false,})
-          setMetrics4({prec: false, n34pr: false, ptrend: false,})
-          setMetrics5({pr90: false, pr99: false, djf_p: false,})
-          setMetrics6({mam_p: false, jja_p: false, son_p: false,})
-      }
-  })
-
-
-
+    if (all) {
+      setNumMetrics(maxNumMetrics);
+      setMetrics({all: true, clear: false});
+      setMetrics1({tavg: true, n34t: true, ttrend: true,});
+      setMetrics2({t90: true, t99: true, djf_t: true,});
+      setMetrics3({mam_t: true, jja_t: true, son_t: true,});
+      setMetrics4({prec: true, n34pr: true, ptrend: true,});
+      setMetrics5({pr90: true, pr99: true, djf_p: true,});
+      setMetrics6({mam_p: true, jja_p: true, son_p: true,});
+    } else if (clear) {
+      setTopCombination("Select Metrics");
+      setNumMetrics(0);
+      setMetrics({all: false, clear: false});
+      setMetrics1({tavg: false, n34t: false, ttrend: false,});
+      setMetrics2({t90: false, t99: false, djf_t: false,});
+      setMetrics3({mam_t: false, jja_t: false, son_t: false,});
+      setMetrics4({prec: false, n34pr: false, ptrend: false,});
+      setMetrics5({pr90: false, pr99: false, djf_p: false,});
+      setMetrics6({mam_p: false, jja_p: false, son_p: false,});
+    }
+  });
 
 
   const handleModelDifChange = useCallback((e) => {
-    const modelDif = e.target.value
-    setModelDif(modelDif)
-    setMapSourceDif([bucket+'map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname])
-    setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band)
-    // getData({chartSourceDif}, setChartDataDif)
-  })
+    const modelDif = e.target.value;
+    setModelDif(modelDif);
+    setMapSourceDif([bucket+'map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname]);
+    setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band);
+    // getData({chartSourceDif}, setChartDataDif);
+  });
 
 
   const handleChartChange = useCallback((e) => {
-    const model = e.target.value
-    setChartHeight('20%')
-  })
-
-  const ClickRow = () => {
-    const [value, setValue] = useState(true);
-    return (
-      <Tag value={value} onClick={() => setValue((prev) => !prev)}>
-        Click me
-      </Tag>
-    );
-  };
+    const model = e.target.value;
+    setChartHeight('20%');
+  });
 
 
   const LocalColorbar = () => {
@@ -932,34 +890,34 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }, []); // Empty dependency array ensures this effect runs only once after initial render
 
 
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-      <Colorbar
-        colormap={colormap}
-        label={units}
-        clim={clim}
-        setClim={setClim}
-        filterValues={filterValues}
-        scaleDif={scaleDif}
-      />
-      </Box>
-    );
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+    <Colorbar
+      colormap={colormap}
+      label={units}
+      clim={clim}
+      setClim={setClim}
+      filterValues={filterValues}
+      scaleDif={scaleDif}
+    />
+    </Box>
+  );
   };
 
   const DifYearChoices = () => {
     if (yearRange === '1980_2010') {
-      setYearRangeDif('1980_2010')
+      setYearRangeDif('1980_2010');
       return(
         [<option value='1980_2010'>1980-2010</option>,
          <option value='2070_2100'>2070-2100</option>]
       );
     } else {
-      setYearRangeDif('1980_2010')
+      setYearRangeDif('1980_2010');
       return(
         <option value='1980_2010'>1980-2010</option>
       );
     }
-   }
+  };
 
   const DifDownscalingChoices = () => {
     if (yearRange === '1980_2010') {
@@ -988,7 +946,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       return(<option value='bcsd'>BCSD</option>);
     }
    }
-  }
+  };
 
   const DifModelChoices = () => {
     if (yearRange === '1980_2010') {
@@ -1017,216 +975,211 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       return(<option value='miroc5'>MIROC5</option>);
     }
    }
-  }
+  };
 
   const DifSourceChoices = () => {
     return (
     <>
-     <Box sx={{ ...sx.label, mt: [2] }}>
-            Year Range
-     </Box>
-     <Select
-        sxSelect={{ bg: 'transparent' }}
-        size='xs'
-        onChange={handleYearDifChange}
-        sx={{ mt: [0] }}
-        value={yearRangeDif}
-        >
-         {/* DifYearChoices() */}
-         <option value='1980_2010'>1980-2010</option>
-         <option value='2070_2100'>2070-2100</option>
-        </Select>
+    <Box sx={{ ...sx.label, mt: [2] }}>
+      Year Range
+    </Box>
+    <Select
+      sxSelect={{ bg: 'transparent' }}
+      size='xs'
+      onChange={handleYearDifChange}
+      sx={{ mt: [0] }}
+      value={yearRangeDif}
+    >
+      {/* DifYearChoices() */}
+      <option value='1980_2010'>1980-2010</option>
+      <option value='2070_2100'>2070-2100</option>
+    </Select>
 
-        <Box sx={{ ...sx.label, mt: [3] }}>
-          Downscaling
-        </Box>
-        <Box sx={{ ...sx.label, mt: [0] }}>
-          Method
-        </Box>
-        <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleDownscalingDifChange}
-          sx={{ mt: [1] }}
-          value={downscalingDif}
-        >
-         {/* DifDownscalingChoices() */}
-          <option value='icar'>ICAR</option>
-          <option value='gard'>GARD</option>
-          <option value='loca'>LOCA</option>
-          <option value='bcsd'>BCSD</option>
-        </Select>
-        <Box sx={{ ...sx.label, mt: [3] }}>Climate</Box>
-        <Box sx={{ ...sx.label, mt: [0] }}>Model</Box>
-        <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleModelDifChange}
-          sx={{ mt: [1] }}
-          value={modelDif}
-        >
-         {/* DifModelChoices() */}
-          <option value='noresm'>NorESM</option>
-          <option value='cesm'>CESM</option>
-          <option value='gfdl'>GFDL</option>
-          <option value='miroc5'>MIROC5</option>
-        </Select>
-      </>
+    <Box sx={{ ...sx.label, mt: [3] }}>
+      Downscaling
+    </Box>
+    <Box sx={{ ...sx.label, mt: [0] }}>
+      Method
+    </Box>
+    <Select
+      sxSelect={{ bg: 'transparent' }}
+      size='xs'
+      onChange={handleDownscalingDifChange}
+      sx={{ mt: [1] }}
+      value={downscalingDif}
+    >
+      {/* DifDownscalingChoices() */}
+      <option value='icar'>ICAR</option>
+      <option value='gard'>GARD</option>
+      <option value='loca'>LOCA</option>
+      <option value='bcsd'>BCSD</option>
+    </Select>
+    <Box sx={{ ...sx.label, mt: [3] }}>Climate</Box>
+    <Box sx={{ ...sx.label, mt: [0] }}>Model</Box>
+      <Select
+      sxSelect={{ bg: 'transparent' }}
+      size='xs'
+      onChange={handleModelDifChange}
+      sx={{ mt: [1] }}
+      value={modelDif}
+      >
+      {/* DifModelChoices() */}
+        <option value='noresm'>NorESM</option>
+        <option value='cesm'>CESM</option>
+        <option value='gfdl'>GFDL</option>
+        <option value='miroc5'>MIROC5</option>
+      </Select>
+    </>
     );
   };
 
   const handleObsChange = useCallback((e) => {
-    const obs = e.target.value
-    setObsDif(obs)
-    // console.log("obs =", obs) // works
-    setMapSourceDif(bucket+'/obs/'+obs+'/'+yearRangeDif+'/'+fname)
+    const obs = e.target.value;
+    setObsDif(obs);
+    // console.log("obs =", obs); // works
+    setMapSourceDif(bucket+'/obs/'+obs+'/'+yearRangeDif+'/'+fname);
   });
 
   const NewDifSourceChoices = () => {
     return (
-    <>
-        <Box sx={{ ...sx.label, mt: [3] }}>Dif. Obs. Data</Box>
-{/*     <Box sx={{ mt: [1] }}>
-          <Select
-            sxSelect={{ bg: 'transparent' }}
-            size='xs'
-           >
-           <option value='historical'>Historical</option>
-           </Select>
-        </Box>*/}
+      <>
+      <Box sx={{ ...sx.label, mt: [3] }}>Dif. Obs. Data</Box>
+      {/*
+      <Box sx={{ mt: [1] }}>
         <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleObsChange}
-          sx={{ mt: [1] }}
-          value={obsDif}
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
         >
-         {/* DifModelChoices() */}
-          <option value='conus404'>Conus404</option>
-          <option value='livneh'>Livneh</option>
-          <option value='maurer'>Maurer</option>
-          <option value='nldas'>NLDAS</option>
-{/*       <option value='oldlivneh'>Old Livneh</option> */}
-          <option value='prism'>PRISM</option>
+        <option value='historical'>Historical</option>
         </Select>
+      </Box>
+      */}
+      <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={handleObsChange}
+        sx={{ mt: [1] }}
+        value={obsDif}
+      >
+      {/* DifModelChoices() */}
+        <option value='conus404'>Conus404</option>
+        <option value='livneh'>Livneh</option>
+        <option value='maurer'>Maurer</option>
+        <option value='nldas'>NLDAS</option>
+        {/* <option value='oldlivneh'>Old Livneh</option> */}
+        <option value='prism'>PRISM</option>
+      </Select>
       </>
     );
   };
 
 
-
   const AveDifFilter = () => {
-
   const handleFilterChange = (newValues) => {
-        // Update the state only when the Filter component changes
-        setValues(newValues);
-     };
+    // Update the state only when the Filter component changes
+    setValues(newValues);
+  };
 
-    if (filterValues['Ave.']) {
-      return (
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Filter
-          values={filterValues}
-          // setValues={setFilterValues}
-          setValues={handleFilterAndSetClimColormapName}
-          multiSelect={false}
-        />
-        </Box>
-      );
-   } else {
-      return (
-        <>
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Filter
-          values={filterValues}
-          // setValues={setFilterValues}
-          setValues={handleFilterAndSetClimColormapName}
-          multiSelect={false}
-        />
-        </Box>
-        <NewDifSourceChoices />
-        </>
-      );
-    }
+  if (filterValues['Ave.']) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Filter
+        values={filterValues}
+        // setValues={setFilterValues}
+        setValues={handleFilterAndSetClimColormapName}
+        multiSelect={false}
+      />
+      </Box>
+    );
+  } else {
+    return (
+      <>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Filter
+        values={filterValues}
+        // setValues={setFilterValues}
+        setValues={handleFilterAndSetClimColormapName}
+        multiSelect={false}
+      />
+      </Box>
+      <NewDifSourceChoices />
+      </>
+    );
+   }
   };
 
   const ComputeChoiceFilter = () => {
-
   const handleComputeChoiceChange = (newValues) => {
-        setComputeChoice(newValues);
-        if (!newValues['Climate Signal']) {
-          handleFilterAndSetClimColormapName(newValues)
-          setMapSource([bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname])
-        }
-     };
+    setComputeChoice(newValues);
+    if (!newValues['Climate Signal']) {
+      handleFilterAndSetClimColormapName(newValues);
+      setMapSource([bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
+    }
+  };
 
   if (computeChoice['Ave.']) {
     return (
-        <>
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Filter
-          values={computeChoice}
-          setValues={handleComputeChoiceChange}
-          multiSelect={false}
-        />
-        </Box>
-        <MapChoicesBox/>
-        </>
-      );
-   }
+      <>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Filter
+        values={computeChoice}
+        setValues={handleComputeChoiceChange}
+        multiSelect={false}
+      />
+      </Box>
+      <MapChoicesBox/>
+      </>
+    );
+  }
   else if (computeChoice['Dif.']) {
     return (
-        <>
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Filter
-          values={computeChoice}
-          setValues={handleComputeChoiceChange}
-          multiSelect={false}
-        />
-        </Box>
-        <NewDifSourceChoices />
-        <MapChoicesBox/>
-        </>
-      );
-   }
+      <>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Filter
+        values={computeChoice}
+        setValues={handleComputeChoiceChange}
+        multiSelect={false}
+      />
+      </Box>
+      <NewDifSourceChoices />
+      <MapChoicesBox/>
+      </>
+    );
+  }
   else if (computeChoice['Climate Signal']) {
     return (
-        <>
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Filter
-          values={computeChoice}
-          setValues={handleComputeChoiceChange}
-          multiSelect={false}
-        />
-        </Box>
-        <ClimateSignalBox numMetrics={numMetrics} />
-        </>
-      );
-   }
-
-  };
-
-
-
+      <>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Filter
+        values={computeChoice}
+        setValues={handleComputeChoiceChange}
+        multiSelect={false}
+      />
+      </Box>
+      <ClimateSignalBox numMetrics={numMetrics} />
+      </>
+    );
+  }
+  }; // end AveDifFilter
 
 
   const ClimateSignalChoices = () => {
     if (yearRange === '1980_2010') {
-      setYearRangeDif('1980_2010')
+      setYearRangeDif('1980_2010');
       return(
         [<option value='1980_2010'>1980-2010</option>,
          <option value='2070_2100'>2070-2100</option>]
       );
     } else {
-      setYearRangeDif('1980_2010')
+      setYearRangeDif('1980_2010');
       return(
         <option value='1980_2010'>1980-2010</option>
       );
     }
-   }
+  };
 
   const NumClimateSignalDatasetsButton = () => {
-      return(
+    return(
       <>
       <Box>3. NUMBER OF DATASETS</Box>
       <Box sx={{ml:3}}>Average over {numClimateSignalSets}</Box>
@@ -1239,10 +1192,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         sx={{mb:4}}
       />
       </>
-  )};
+    );
+  };
 
   const ClimateSignalComputeButton = () => {
-      return(
+    return(
       <>
       <Box>4. COMPUTE CLIMATE SIGNAL</Box>
       <BestPerformingBox topCombination={topCombination}/>
@@ -1252,9 +1206,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
        multiSelect={false}
       />
       </>
-  )};
+    );
+  };
 
-  const VariableChoiceBox = ({showPlotLabel=false}) => { return(
+  const VariableChoiceBox = ({showPlotLabel=false}) => {
+    return(
       <>
       { showPlotLabel && <Box sx={{ ...sx.label, mt: [4] }}>Plot</Box> }
       { !showPlotLabel && <Box sx={{ ...sx.label, mt: [4] }}></Box> }
@@ -1409,7 +1365,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
  const ClimateSignalBox = ({numMetrics}) => { return(
     <>
-      <Box sx={{ position: 'absolute', top: 20, left: 0 }}>
 
         <Box sx={{ ...sx.label, mt: [4] }}>1. Select Metrics</Box>
         <Filter
@@ -1463,7 +1418,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       <ClimateSignalComputeButton />
       <VariableChoiceBox showPlotLabel={true} />
 
-      </Box>
     </>
  );
 };
@@ -1550,7 +1504,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     //         />
     //   </Box>],
     //[<DifSourceChoices />],
-    // [<ClickRow />],
   ]}
 
   borderTop={true}
@@ -1561,17 +1514,19 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
    </Flex>
    </Box>
 
-   <Box sx={{ position: 'absolute', top: 20, left: 20 }}>
+   <Box sx={{ position: 'absolute', top: 20, left: 20,
+	      backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '10px', borderRadius: '5px'
+	    }}>
    <ComputeChoiceFilter/>
-
+   </Box>
    {/* [ //showRegionPlot &&   //  <AveDifFilter/>], */}
    {/* <AveDifFilter/>*/}
    {/* !showRegionPlot && <MapChoicesBox /> */}
    {/* showRegionPlot && <ClimateSignalBox numMetrics={numMetrics} /> */}
-   </Box>
+
 
    <Box sx={{ position: 'absolute', bottom: 20, left: 20 }}>
-     <Button href='https://github.com/scrasmussen/icar-maps/blob/main/README.md' prefix={<RotatingArrow />}>
+     <Button href='https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#icar-maps' prefix={<RotatingArrow />}>
      README
      </Button>
    </Box>
