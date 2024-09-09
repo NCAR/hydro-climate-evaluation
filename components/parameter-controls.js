@@ -20,36 +20,36 @@ const sx = {
 
 const readmeUrl =
         'https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#icar-maps';
-const precip_dif = 1.0;
-const temp_dif = 0.2;
+const precipDif = 1.0;
+const tempDif = 0.2;
 
 const Scale_Values = {
   // diference colormap
   dif: 0.2,
-  dift: temp_dif,
-  difp: precip_dif,
+  dift: tempDif,
+  difp: precipDif,
 
   // temperature variables
-  dif_tavg: temp_dif,
-  dif_n34t: temp_dif,
-  dif_ttrend: temp_dif,
-  dif_t90: temp_dif,
-  dif_t99: temp_dif,
-  dif_djf_t: temp_dif,
-  dif_mam_t: temp_dif,
-  dif_jja_t: temp_dif,
-  dif_son_t: temp_dif,
+  dif_tavg: tempDif,
+  dif_n34t: tempDif,
+  dif_ttrend: tempDif,
+  dif_t90: tempDif,
+  dif_t99: tempDif,
+  dif_djf_t: tempDif,
+  dif_mam_t: tempDif,
+  dif_jja_t: tempDif,
+  dif_son_t: tempDif,
 
   // precip variables
-  dif_prec: precip_dif,
-  dif_n34pr: precip_dif,
-  dif_ptrend: precip_dif,
-  dif_p90: precip_dif,
-  dif_p99: precip_dif,
-  dif_djf_p: precip_dif,
-  dif_mam_p: precip_dif,
-  dif_jja_p: precip_dif,
-  dif_son_p: precip_dif,
+  dif_prec: precipDif,
+  dif_n34pr: precipDif,
+  dif_ptrend: precipDif,
+  dif_p90: precipDif,
+  dif_p99: precipDif,
+  dif_djf_p: precipDif,
+  dif_mam_p: precipDif,
+  dif_jja_p: precipDif,
+  dif_son_p: precipDif,
 };
 
 
