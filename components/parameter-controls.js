@@ -32,7 +32,7 @@ const Scale_Values = {
   // temperature variables
   dif_tavg: tempDif,
   dif_n34t: tempDif,
-  dif_ttrend: tempDif,
+  dif_ttrend: 0.1,
   dif_t90: tempDif,
   dif_t99: tempDif,
   dif_djf_t: tempDif,
@@ -43,7 +43,7 @@ const Scale_Values = {
   // precip variables
   dif_prec: precipDif,
   dif_n34pr: precipDif,
-  dif_ptrend: precipDif,
+  dif_ptrend: 0.1,
   dif_p90: precipDif,
   dif_p99: precipDif,
   dif_djf_p: precipDif,
@@ -225,14 +225,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           useState({'COMPUTE BUTTON': false});
 
   const [numClimateSignalSets, setNumClimateSignalSets] = useState(2);
-
-  const handleUnitsChange = () => {
-      if (band === 'tavg') {
-          setUnits('°C');
-      } else if (band === 'prec') {
-        setUnits('mm');
-      }
-  };
 
   const flipReload = () => {
       if (reload) {
@@ -461,10 +453,10 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     // getData({chartSource}, setChartData);
     if (metric === 'n34pr') {
       setBand('n34p');
-      setUnits('mm');
+      setUnits('correlation');
     } else if (metric === 'n34t') {
       setBand('n34t');
-      setUnits('°C');
+      setUnits('correlation');
     }  else if (metric === 'ptrend') {
       setBand('ptre');
       setUnits('mm per year');
@@ -650,7 +642,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             "miroc5",
         ];
 
-
+  // metric scores: future, read in from dataset
   const tavg_score = [4, 6, 13, 5, 1, 7, 3, 9, 10, 11, 2, 12, 8];
   const n34t_score = [10, 12, 4, 6, 1, 7, 13, 3, 2, 5, 8, 11, 9];
   const ttrend_score = [7, 5, 4, 10, 8, 3, 9, 11, 2, 6, 1, 12, 13];
@@ -899,12 +891,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
 
   const LocalColorbar = () => {
-    // handleUnitsChange()
-    useEffect(() => {
-      handleUnitsChange(); // This will be executed after the component is rendered
-    }, []); // Empty dependency array ensures this effect runs only once after initial render
-
-
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
     <Colorbar
