@@ -50,7 +50,7 @@ const Index = () => {
   const [downscalingDif, setDownscalingDif] = useState('icar');
   const [modelDif, setModelDif] = useState('cesm');
   const [yearRangeDif, setYearRangeDif] = useState('1981_2004');
-  const [obsDif, setObsDif] = useState('conus404');
+  const [obsDif, setObsDif] = useState('livneh');
 
   const [fname, setFname] = useState('data.zarr');
   // paths to model dataset
@@ -66,7 +66,7 @@ const Index = () => {
   // const [mapSourceDif, setMapSourceDif] =
   //         useState(bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname);
   const [mapSourceDif, setMapSourceDif] =
-          useState(bucket_ndp+'obs/conus404/1981_2004/'+fname);
+          useState(bucket_ndp+'obs/'+obsDif+'/1981_2004/'+fname);
   const [chartSourceDif, setChartSourceDif] =
           useState(bucket_ndp+'chart/icar/cesm/'+band);
   // set values to decide whether to map average or difference
