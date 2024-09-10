@@ -467,10 +467,10 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       setUnits('°C');
     }  else if (metric === 'ptrend') {
       setBand('ptre');
-      setUnits('mm');
+      setUnits('mm per year');
     }  else if (metric === 'ttrend') {
       setBand('ttre');
-      setUnits('°C');
+      setUnits('°C per year');
     }  else if (metric === 'pr90') {
       setBand('pr90');
       setUnits('mm');
@@ -551,6 +551,10 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const [topDownscaling2, setTopDownscaling2] = useState("None");
   const [topModel2, setTopModel2] = useState("None");
 
+  const [metricPerformance, setMetricPerformance] = //useState(true);
+          useState({ "Metric Performance": true });
+  const [methodAndModel, setMethodAndModel] = //useState(false);
+          useState({ "Method & Model": false });
 
   const [metrics, setMetrics] = useState({ all: false, clear: false, });
 
@@ -779,6 +783,15 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const [shouldUpdateMapSource, setShouldUpdateMapSource] = useState(false);
 
+  const handleSignalChoice = useCallback((e) => {
+    console.log("metric per", metricPerformance);
+    console.log("method and model", methodAndModel);
+    setMetricPerformance(prev =>
+                         ({"Metric Performance": !prev["Metric Performance"]}));
+    setMethodAndModel(prev =>
+                      ({"Method & Model": !prev["Method & Model"]}));
+  });
+
   const handleNumClimateSignalSets = useCallback((e) => {
     const numSets = parseInt(e.target.value);
     setNumClimateSignalSets(numSets);
@@ -788,7 +801,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     if (numMetrics === 0) {
       return;
     }
-    setComputeClimateSignal({'COMPUTE BOTTON': true});
+    setComputeClimateSignal({'COMPUTE': true});
     setShowRegionPlot(false);
     setShouldUpdateMapSource(true);;
   });
@@ -1214,9 +1227,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const VariableChoiceBox = ({showPlotLabel=false}) => {
     return(
       <>
-      { showPlotLabel && <Box sx={{ ...sx.label, mt: [4] }}>Plot</Box> }
-      { !showPlotLabel && <Box sx={{ ...sx.label, mt: [4] }}></Box> }
-      <Box sx={{ ...sx.label, mt: [0] }}>Metrics</Box>
+      { showPlotLabel && <Box sx={{ ...sx.label, mt: [4] }}>Plot Metric</Box> }
+      { !showPlotLabel && <Box sx={{ ...sx.label, mt: [4] }}>Metrics</Box> }
+
       <Select
         sxSelect={{ bg: 'transparent' }}
         size='xs'
@@ -1369,9 +1382,44 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   ); // end of MapChoicesBox return statement
   };
 
+
+
+  const ClimateSignalChoiceBox = () => {
+    return (
+      <>
+      <Box sx={{ ...sx.label, mt: [4] }}>0. Compare By</Box>
+      <Filter
+        values={metricPerformance}
+        setValues={handleSignalChoice}
+      />
+      <Filter
+        values={methodAndModel}
+        setValues={handleSignalChoice}
+        sx={{mb:4}}
+      />
+      </>
+    );
+  };
+
   const ClimateSignalBox = ({numMetrics}) => {
+    if (metricPerformance["Metric Performance"]) {
+      return(
+        <>
+          <ClimateSignalChoiceBox />
+          <ClimateSignalBox2 />
+        </>
+      );
+    } else {
+      return(
+        <ClimateSignalChoiceBox />
+      );
+    }
+  };
+
+  const ClimateSignalBox2 = ({numMetrics}) => {
     return(
       <>
+
       <Box sx={{ ...sx.label, mt: [4] }}>1. Select Metrics</Box>
       <Filter
         values={metrics}
@@ -1398,6 +1446,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       <ClimateSignalComputeButton />
       <VariableChoiceBox showPlotLabel={true} />
       </>
+
     );
   }; {/* end of ClimateSignalBox */}
 
