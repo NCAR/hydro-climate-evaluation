@@ -70,8 +70,15 @@ const Index = () => {
   const [chartSourceDif, setChartSourceDif] =
           useState(bucket_ndp+'chart/icar/cesm/'+band);
   // set values to decide whether to map average or difference
-  const [filterValues, setFilterValues] = useState({'Ave.': true,
-                                                    'Dif.': false});
+  // const [filterValues, setFilterValues] = useState({'Ave.': true,
+  //                                                   'Dif.': false});
+  const [computeChoice, setComputeChoice] = useState({
+    'Ave.': true,
+    'Dif.': false,
+    'Climate Signal': false,
+  });
+
+
   // const [filterValues, setFilterValues] = useState({'Ave.': true,
   //                                                   'Dif.': false,
   //                                                   'Obs.': false});
@@ -86,7 +93,7 @@ const Index = () => {
                     yearRange, mapSource, chartSource,
                     downscalingDif, modelDif, yearRangeDif, obsDif,
                     mapSourceDif, chartSourceDif, scaleDif,
-                    bucket_ndp, chartHeight, filterValues,
+                    bucket_ndp, chartHeight, computeChoice,
                     showClimateChange, showRegionPlot};
   const setters = {
     setDisplay,
@@ -113,7 +120,7 @@ const Index = () => {
     setScaleDif,
     setChartHeight,
     setChartData,
-    setFilterValues,
+    setComputeChoice,
     setShowClimateChange,
     setShowRegionPlot
   };
@@ -154,7 +161,7 @@ const Index = () => {
      />)}
 
     <Raster
-      key={`${mapSource}-${mapSourceDif}-${reload}-${JSON.stringify(filterValues)}`}
+      key={`${mapSource}-${mapSourceDif}-${reload}-${JSON.stringify(computeChoice)}`}
       colormap={colormap}
       clim={clim}
       display={display}
@@ -166,7 +173,7 @@ const Index = () => {
       variable={'climate'}
       selector={{ band }}
       // selector={{ month, band }}
-      filterValue={filterValues}
+      filterValue={computeChoice}
       // selector={{ month, band, source }}
       regionOptions={{ setData: setRegionData }}
     />;

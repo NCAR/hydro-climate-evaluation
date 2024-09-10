@@ -155,7 +155,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           downscaling, model, metric, yearRange, mapSource, chartSource,
           downscalingDif, modelDif, yearRangeDif, obsDif,
           mapSourceDif, chartSourceDif, scaleDif,
-          chartHeight, filterValues,
+          chartHeight, computeChoice,
           showClimateChange, showRegionPlot
         } = getters;
   const {
@@ -182,7 +182,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setScaleDif,
     setChartHeight,
     setChartData,
-    setFilterValues,
+    setComputeChoice,
     setShowClimateChange,
     setShowRegionPlot
   } = setters;
@@ -193,13 +193,23 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const [units, setUnits] = useState('mm');
 
-  const [computeChoice, setComputeChoice] = useState({
-      'Ave.': true,
-      'Dif.': false,
-      'Climate Signal': false,
-  });
+  const [baseDir, setBaseDir] = useState('map/');
 
-  const handleComputeChoice = (e) => { setComputeChoice(e) };
+  // const [computeChoice, setComputeChoice] = useState({
+  //     'Ave.': true,
+  //     'Dif.': false,
+  //     'Climate Signal': false,
+  // });
+
+  // const handleComputeChoice = (e) => {
+  //   setComputeChoice(e);
+  //   console.log("HANDLE COMPUTE CHOICE e =",e);
+  //   if (['Climate Signal']) {
+  //     setBaseDir('climateSignal/');
+  //   } else {
+  //     setBaseDir('map/');
+  //   }
+  // };
 
   const getRCPString = (value) => {
       if (value === "8.5") {
@@ -219,19 +229,21 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     return null;
   };
 
-  const [rcpValues, setRCPValues] = useState({'4.5': true, '8.5': false});
+  const [rcpValues, setRCPValues] = useState({'4.5': true,
+                                              '8.5': false
+                                             });
 
   const [computeClimateSignal, setComputeClimateSignal] =
-          useState({'COMPUTE BUTTON': false});
+          useState({'COMPUTE': false});
 
   const [numClimateSignalSets, setNumClimateSignalSets] = useState(2);
 
   const flipReload = () => {
-      if (reload) {
-        setReload(false);
-      } else {
-        setReload(true);
-      }
+    if (reload) {
+      setReload(false);
+    } else {
+      setReload(true);
+    }
   };
 
   const setMetricLabel = () => {
@@ -359,45 +371,45 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   // NOTE: Chart sources have not been created with yearRange yet
   // TODO: fixed Clim_Ranges[band]
-  const handleFilterAndSetClimColormapName = (e) => {
-    const filterVals = e;
-    if (filterVals['Ave.']) {
-      setFilterValues({'Ave.': true, 'Dif.': false});
-      setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
-      setColormapName(Default_Colormaps[metric]);
-    } else if (filterVals['Dif.']) {
-      setFilterValues({'Ave.': false, 'Dif.': true});
-      setScaleDif(Scale_Values['dif_'+metric]);
-      setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
-      setColormapName(Default_Colormaps['dif_'+metric]);
-    }
-  };
+  // const handleFilterAndSetClimColormapName = (e) => {
+  //   const filterVals = e;
+  //   if (filterVals['Ave.']) {
+  //     setComputeChoice({'Ave.': true, 'Dif.': false});
+  //     setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
+  //     setColormapName(Default_Colormaps[metric]);
+  //   } else if (filterVals['Dif.']) {
+  //     setFilterValues({'Ave.': false, 'Dif.': true});
+  //     setScaleDif(Scale_Values['dif_'+metric]);
+  //     setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
+  //     setColormapName(Default_Colormaps['dif_'+metric]);
+  //   }
+  // };
 
   const handleBandChange = useCallback((e) => {
     const band = e.target.value;
     setBand(band);
-    handleFilterAndSetClimColormapName(filterValues);
-    setMapSource([bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
-    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
-    getData({chartSource}, setChartData);
+    // handleFilterAndSetClimColormapName(filterValues);
+    // setMapSource([bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
+    // // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
+    // getData({chartSource}, setChartData);
   });
 
   const handleYearChange = useCallback((e) => {
     const yearRange = e.target.value;
     setYearRange(yearRange);
     console.log("yearRange =", e.target.value);
-    setMapSource([bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
+    setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
   });
 
   const handleYearDifChange = useCallback((e) => {
     const yearRangeDif = e.target.value;
     setYearRangeDif(yearRangeDif);
     console.log("yearRange =", e.target.value);
-    setMapSourceDif([bucket+'map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname]);
-    setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band);
+    setMapSourceDif([bucket+baseDir+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname]);
+    // setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band);
   });
 
   const handleDownscalingChange = useCallback((e) => {
@@ -417,35 +429,46 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       }
     }
 
-    setMapSource([bucket+'map/'+downscaling+'/'+safemodel+'/'+yearRange+'/'+fname]);
+    let timeRange = yearRange
+    if (computeChoice['Climate Signal']) {
+      timeRange = getRCPKey(rcpValues)
+    }
+
+    setMapSource([bucket+baseDir+downscaling+'/'+safemodel+'/'+timeRange+'/'+fname]);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
-    setChartSource(bucket+'/chart/'+downscaling+'/'+safemodel+'/'+band);
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+safemodel+'/'+band);
     // getData({chartSource}, setChartData);
   });
 
   const handleDownscalingDifChange = useCallback((e) => {
     const downscalingDif = e.target.value;
     setDownscalingDif(downscalingDif);
-    setMapSourceDif(bucket+'map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname);
-    setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band);
+    setMapSourceDif(bucket+baseDir+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname);
+    // setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band);
     //getData({chartSource}, setChartData);
   });
 
   const handleModelChange = useCallback((e) => {
     const model = e.target.value;
     setModel(model);
-    console.log("e =", e.target.value);
-    console.log("model =", bucket+'/'+downscaling+'/'+model+'/');
-    setMapSource([bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
+    console.log("model e =", e.target.value);
+    console.log("model =", bucket+baseDir+'/'+downscaling+'/'+model+'/');
+
+    let timeRange = yearRange
+    if (computeChoice['Climate Signal']) {
+      timeRange = getRCPKey(rcpValues)
+    }
+
+    setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+timeRange+'/'+fname]);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
-    setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
     // getData({chartSource}, setChartData);
   });
 
   const handleMetricsChange = useCallback((e) => {
     const metric = e.target.value;
     setMetric(metric);
-    console.log("e =", e.target.value);
+    console.log("metric e =", e.target.value);
     // console.log("model =", bucket+'/'+downscaling+'/'+model+'/');
     // setMapSource(bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname);
     // // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
@@ -500,12 +523,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       setBand('sonp');
       setUnits('mm');
     } //  else {
-    if (filterValues['Dif.']) {
+    if (computeChoice['Dif.']) {
       flipReload();
       setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
       setColormapName(Default_Colormaps['dif_'+metric]);
       setScaleDif(Scale_Values['dif_'+metric]);
-    } else {
+    } else if (computeChoice['Ave.']) {
       setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
       setColormapName(Default_Colormaps[metric]);
     }
@@ -544,9 +567,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const [topModel2, setTopModel2] = useState("None");
 
   const [metricPerformance, setMetricPerformance] = //useState(true);
-          useState({ "Metric Performance": true });
+          useState({ "Metric Performance": false });
   const [methodAndModel, setMethodAndModel] = //useState(false);
-          useState({ "Method & Model": false });
+          useState({ "Method & Model": true });
 
   const [metrics, setMetrics] = useState({ all: false, clear: false, });
 
@@ -771,6 +794,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     const choice = e;
     console.log("RCP VALUES e =", e);
     setRCPValues(choice);
+    if (methodAndModel["Method & Model"]) {
+      const rcp = getRCPKey(choice)
+      let url = [bucket+baseDir+downscaling+'/'+model+'/'+rcp+'/'+fname];
+      setMapSource(url);
+      console.log("RCP RESET URL =", url)
+    }
   });
 
   const [shouldUpdateMapSource, setShouldUpdateMapSource] = useState(false);
@@ -795,7 +824,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
     setComputeClimateSignal({'COMPUTE': true});
     setShowRegionPlot(false);
-    setShouldUpdateMapSource(true);;
+    setShouldUpdateMapSource(true);
   });
 
   useEffect(() => {
@@ -804,20 +833,21 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       let downscaling_l = topDownscaling[0];
       let model_l = topModel[0];
       const rcp = getRCPKey(rcpValues);
-      let url = [bucket+'/climateSignal/'+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname];
+      let url = [bucket+baseDir+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname];
       const numClimateSignalSets_i = parseInt(numClimateSignalSets, 10);
 
       setMapSource(url);
       setDownscaling(downscaling_l);
       setModel(model_l);
       setShouldUpdateMapSource(false); // Reset the flag
-      const local_filterValue = {'Ave.': false, 'Dif.': true};
-      handleFilterAndSetClimColormapName(local_filterValue);
+      // const local_filterValue = {'Ave.': false, 'Dif.': true,
+      //                            'Climate Signal': false};
+      // handleFilterAndSetClimColormapName(local_filterValue);
 
       for (let i=1; i<numClimateSignalSets_i; i++) {
         downscaling_l = topDownscaling[i];
         model_l = topModel[i];
-        url = bucket+'/climateSignal/'+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname;
+        url = bucket+baseDir+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname;
         setMapSource((prevSources) => [...prevSources, url]);;
       }
     }
@@ -878,8 +908,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const handleModelDifChange = useCallback((e) => {
     const modelDif = e.target.value;
     setModelDif(modelDif);
-    setMapSourceDif([bucket+'map/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname]);
-    setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band);
+    setMapSourceDif([bucket+baseDir+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname]);
+    // setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band);
     // getData({chartSourceDif}, setChartDataDif);
   });
 
@@ -891,18 +921,18 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
 
   const LocalColorbar = () => {
-  return (
-    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-    <Colorbar
-      colormap={colormap}
-      label={units}
-      clim={clim}
-      setClim={setClim}
-      filterValues={filterValues}
-      scaleDif={scaleDif}
-    />
-    </Box>
-  );
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Colorbar
+        colormap={colormap}
+        label={units}
+        clim={clim}
+        setClim={setClim}
+        filterValues={computeChoice}
+        scaleDif={scaleDif}
+      />
+      </Box>
+    );
   };
 
   const DifYearChoices = () => {
@@ -1075,93 +1105,92 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   };
 
 
-  const AveDifFilter = () => {
-  const handleFilterChange = (newValues) => {
-    // Update the state only when the Filter component changes
-    setValues(newValues);
-  };
-
-  if (filterValues['Ave.']) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-      <Filter
-        values={filterValues}
-        // setValues={setFilterValues}
-        setValues={handleFilterAndSetClimColormapName}
-        multiSelect={false}
-      />
-      </Box>
-    );
-  } else {
-    return (
-      <>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-      <Filter
-        values={filterValues}
-        // setValues={setFilterValues}
-        setValues={handleFilterAndSetClimColormapName}
-        multiSelect={false}
-      />
-      </Box>
-      <NewDifSourceChoices />
-      </>
-    );
-   }
-  };
-
   const ComputeChoiceFilter = () => {
-  const handleComputeChoiceChange = (newValues) => {
-    setComputeChoice(newValues);
-    if (!newValues['Climate Signal']) {
-      handleFilterAndSetClimColormapName(newValues);
-      setMapSource([bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
-    }
-  };
+    const handleComputeChoiceChange = (newValues) => {
+      setComputeChoice(newValues);
+      // handle baseDir
+      let baseDir_l;
+      if (newValues['Climate Signal']) {
+        baseDir_l = 'climateSignal/';
+      } else {
+        baseDir_l = 'map/';
+      }
+      setBaseDir(baseDir_l);
 
-  if (computeChoice['Ave.']) {
-    return (
-      <>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-      <Filter
-        values={computeChoice}
-        setValues={handleComputeChoiceChange}
-        multiSelect={false}
-      />
-      </Box>
-      <MapChoicesBox/>
-      </>
-    );
-  }
-  else if (computeChoice['Dif.']) {
-    return (
-      <>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-      <Filter
-        values={computeChoice}
-        setValues={handleComputeChoiceChange}
-        multiSelect={false}
-      />
-      </Box>
-      <NewDifSourceChoices />
-      <MapChoicesBox/>
-      </>
-    );
-  }
-  else if (computeChoice['Climate Signal']) {
-    return (
-      <>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-      <Filter
-        values={computeChoice}
-        setValues={handleComputeChoiceChange}
-        multiSelect={false}
-      />
-      </Box>
-      <ClimateSignalBox numMetrics={numMetrics} />
-      </>
-    );
-  }
-  }; // end AveDifFilter
+      if (!newValues['Climate Signal']) {
+        // handleFilterAndSetClimColormapName(newValues);
+        // above func handled below
+        if (newValues['Ave.']) {
+          setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
+          setColormapName(Default_Colormaps[metric]);
+        }
+        if (newValues['Dif.']) {
+          setScaleDif(Scale_Values['dif_'+metric]);
+          setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
+          setColormapName(Default_Colormaps['dif_'+metric]);
+        }
+        setMapSource([bucket+baseDir_l+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
+      }
+      if (newValues['Climate Signal']) {
+        console.log("CLIMATE SIGNAL SELECTED")
+        const rcp = getRCPKey(rcpValues);
+        let url = [bucket+baseDir_l+downscaling+'/'+model+'/'+rcp+'/'+fname];
+        console.log("SIGNAL URL =", url)
+        setMapSource(url);
+        // TODO this fix scaling but turn on dif in maps
+        // setFilterValues({'Ave.': false, 'Dif.': true});
+        setScaleDif(Scale_Values['dif_'+metric]);
+        setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
+        setColormapName(Default_Colormaps['dif_'+metric]);
+        // setShouldUpdateMapSource(true);
+        // setComputeClimateSignal({'COMPUTE': true});
+      }
+    };
+
+    if (computeChoice['Ave.']) {
+      return (
+        <>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Filter
+          values={computeChoice}
+          setValues={handleComputeChoiceChange}
+          multiSelect={false}
+        />
+        </Box>
+        <MapChoicesBox/>
+        </>
+      );
+    }
+    else if (computeChoice['Dif.']) {
+      return (
+        <>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Filter
+          values={computeChoice}
+          setValues={handleComputeChoiceChange}
+          multiSelect={false}
+        />
+        </Box>
+        <NewDifSourceChoices />
+        <MapChoicesBox/>
+        </>
+      );
+    }
+    else if (computeChoice['Climate Signal']) {
+      return (
+        <>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Filter
+          values={computeChoice}
+          setValues={handleComputeChoiceChange}
+          multiSelect={false}
+        />
+        </Box>
+        <ClimateSignalBox numMetrics={numMetrics} />
+        </>
+      );
+    };
+  }; // end ComputeChoiceFilter
 
 
   const ClimateSignalChoices = () => {
@@ -1281,7 +1310,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       <>
       {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
 
-      {computeChoice['Ave.'] && <YearRangeBox/>}
+      {computeChoice['Ave.'] && <YearRangeBox />}
 
       <Box sx={{ ...sx.label, mt: [4] }}>Downscaling Method</Box>
       <Select
@@ -1361,8 +1390,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       )}
       </Select>
 
-    <VariableChoiceBox/>
-      { setMetricLabel() }
+      <VariableChoiceBox/>
+      {!computeChoice['Climate Signal'] && setMetricLabel()}
       {/* </Box> */}
     </>
   ); // end of MapChoicesBox return statement
@@ -1373,15 +1402,17 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const ClimateSignalChoiceBox = () => {
     return (
       <>
-      <Box sx={{ ...sx.label, mt: [4] }}>0. Compare By</Box>
-      <Filter
-        values={metricPerformance}
-        setValues={handleSignalChoice}
-      />
+      {/*
+      <Box sx={{ ...sx.label, mt: [3] }}>0. Compare By</Box>
+      */}
       <Filter
         values={methodAndModel}
         setValues={handleSignalChoice}
-        sx={{mb:4}}
+        sx={{mt:3}}
+      />
+      <Filter
+        values={metricPerformance}
+        setValues={handleSignalChoice}
       />
       </>
     );
@@ -1392,17 +1423,26 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       return(
         <>
           <ClimateSignalChoiceBox />
-          <ClimateSignalBox2 />
+          <ClimateSignalBoxMetrics />
         </>
       );
-    } else {
+    } else { // method and model
       return(
-        <ClimateSignalChoiceBox />
+        <>
+          <ClimateSignalChoiceBox />
+          <MapChoicesBox />
+          <Box sx={{mt:4}}>RCP SCENARIO</Box>
+          <Filter
+           values={rcpValues}
+           setValues={handleRCPValues}
+           multiSelect={false}
+          />
+        </>
       );
     }
   };
 
-  const ClimateSignalBox2 = ({numMetrics}) => {
+  const ClimateSignalBoxMetrics = ({numMetrics}) => {
     return(
       <>
 
@@ -1455,8 +1495,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     >
       <ComputeChoiceFilter/>
     </Box>;
-    {/* [ //showRegionPlot &&   //  <AveDifFilter/>], */}
-    {/* <AveDifFilter/>*/}
     {/* !showRegionPlot && <MapChoicesBox /> */}
     {/* showRegionPlot && <ClimateSignalBox numMetrics={numMetrics} /> */}
 
