@@ -522,9 +522,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }  else if (metric === 'son_p') {
       setBand('sonp');
       setUnits('mm');
-    } //  else {
-    if (computeChoice['Dif.']) {
-      flipReload();
+    }
+
+    if (computeChoice['Dif.'] || computeChoice['Climate Signal']) {
       setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
       setColormapName(Default_Colormaps['dif_'+metric]);
       setScaleDif(Scale_Values['dif_'+metric]);
