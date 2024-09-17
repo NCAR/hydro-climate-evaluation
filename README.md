@@ -1,30 +1,14 @@
 # Hydro Climate Evaluation Map
 An interactive web map of hydro-climate data based on [CarbonPlan's maps](https://github.com/carbonplan/maps).
 
-## Viewing Options
-### Ave.
-Map of metrics averages over the time period.
+## Map Viewing Tab Options
 
-| [Year Range ](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range)        |
-| [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range) |
-| [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range)      |
-| [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range)            |
-
-### Dif.
-Map of the difference of the climate data against an observational dataset.
-
-| [Dif. Obs. Data](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range)              |
-| [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#downscaling-methods) |
-| [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#climate-models)           |
-| [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#metrics)                        |
-
-### Climate Signal
-#### Method & Model
-
-| [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#downscaling-methods)                         |
-| [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#climate-models)                                   |
-| [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#metrics)                                                |
-| [RCP Scenario](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#representative-concentration-pathway-rcp-scenario) |
+| **Viewing Option** | **Descriptin**                                | **Variable** |
+|--------------------|-----------------------------------------------|--------------|
+| Ave.               | Map of metrics averages over the time period |  [Year Range ](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range), [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range), [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range), [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range) |
+| Dif.               | Map of the difference of the climate data against an observational dataset | [Dif. Obs. Data](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range), [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#downscaling-methods), [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#climate-models), [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#metrics) |
+| Climate Signal: Method & Model | View climate signal based on specific method and model | [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#downscaling-methods), [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#climate-models), [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#metrics), [RCP Scenario](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#representative-concentration-pathway-rcp-scenario) |
+| Climate Signal: Metric Performance | View climate signal averaging over best performing datasets | |
 
 
 ## Variable Details
