@@ -19,13 +19,13 @@ An interactive web map of hydro-climate data based on [CarbonPlan's maps](https:
 
 ### Downscaling Methods
 
-| **Name**     | **URL**                                                                                             |
-|--------------|-----------------------------------------------------------------------------------------------------|
-| ICAR         | [Intermediate Complexity Atmospheric Research Model](https://github.com/NCAR/icar)                  |
-| GARD_{R2,R3} | [Ensemble Generalized Analog Regression Downscaling](https://github.com/NCAR/GARD)                  |
-| LOCA_8th     | [LOcalized Constructed Analog(LOCA)](https://github.com/NCAR/LOCA_Downscaling_Analysis)             |
-| MACA         | [Multivariate Adaptive Constructed Analogs](https://climate.northwestknowledge.net/MACA/index.php)  |
-| NASA-NEX     | [NCCS NASA](https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6) |
+| **Name**      | **URL**                                                                                             |
+|---------------|-----------------------------------------------------------------------------------------------------|
+| ICAR          | [Intermediate Complexity Atmospheric Research Model](https://github.com/NCAR/icar)                  |
+| GARD_{R2, R3} | [Ensemble Generalized Analog Regression Downscaling](https://github.com/NCAR/GARD)                  |
+| LOCA_8th      | [LOcalized Constructed Analog (LOCA)](https://github.com/NCAR/LOCA_Downscaling_Analysis)            |
+| MACA          | [Multivariate Adaptive Constructed Analogs](https://climate.northwestknowledge.net/MACA/index.php)  |
+| NASA-NEX      | [NCCS NASA](https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6) |
 
 ### Climate Models
 
@@ -45,10 +45,10 @@ An interactive web map of hydro-climate data based on [CarbonPlan's maps](https:
 | TTREND, PTREND | Temp/precip trends                                               |
 | T90, T99       | Temperature extremes in the 90th/99th percentile                 |
 | PR90, PR99     | Precipitation extremes in the 90th/99th percentile               |
-| DJF_{T,P}      | Seasonal mean temp/precip over Dec/Jan/Feb                       |
-| MAM_{T,P}      | Seasonal mean temp/precip over Mar/Apr/May                       |
-| JJA_{T,P}      | Seasonal mean temp/precip over Jun/Jul/Aug                       |
-| SON_{T,P}      | Seasonal mean temp/precip over Sep/Oct/Nov                       |
+| DJF_{T,P}      | Seasonal mean of temp/precip over Dec/Jan/Feb                    |
+| MAM_{T,P}      | Seasonal mean of temp/precip over Mar/Apr/May                    |
+| JJA_{T,P}      | Seasonal mean of temp/precip over Jun/Jul/Aug                    |
+| SON_{T,P}      | Seasonal mean of temp/precip over Sep/Oct/Nov                    |
 
 ### Dif. Obs. Data
 Observational dataset used to compute the difference against.
@@ -80,41 +80,34 @@ Observational dataset used to compute the difference against.
 
 
 
-## Build
+# Build
 ### Prerequisites
-- Initialize Git Submodules to get `icar-maps` branch of [CarbonPlan's maps](https://github.com/scrasmussen/carbonplan-maps).
-- Start Docker Desktop or its equivalent in the background.
-- Start server to host data.
-  See the [ICAR Zarr Data](https://github.com/scrasmussen/icar-zarr-data) repo for instructions on locally hosting ICAR Zarr data for testing.
+- NodeJS to host site
+- [Zarr datasets](https://github.com/scrasmussen/icar-zarr-data) to map
 
-### Docker Build
-The following commands will start a Docker Image and from within the image startup and run a Node.js website.
+### Local Build
 ```
-startup docker
-$ make rundocker
+$ npm install .
+$ npm local
+$ npm run
+```
 
-run website, on startup of Docker node_modules may need to be reinstalled
-$ make init
-$ make run
+### Production Build
+For hosting at <https://hydro.rap.ucar.edu/hydro-climate-eval>
 ```
+$ npm install .
+$ npm run dev
+$ npm start
+```
+
+### View Local Map
 Go to [localhost:3000](http://localhost:3000) in a browser to preview website.
 
 <img width="400" alt="image" src="https://github.com/scrasmussen/icar-maps/assets/5750642/5ab5462d-206c-4bb5-9a67-2ac45606ad22">
 
 
 
-
-### Non-Docker Build
-Install npm then run the following.
-```
-$ npm install .
-$ npm run dev
-```
-
 # License
 This is based on [CarbonPlan's maps](https://github.com/carbonplan/maps).
-All the original code in this repository is MIT licensed. The library contains code from mapbox-gl-js version 1.13 (3-Clause BSD licensed). We request that you please provide attribution if reusing any of our digital content (graphics, logo, copy, etc.).
-
-
-# TODO
-- [ ] update node_modules/@carbonplan/maps/dst/index.esm.js:import { scaleOrdinal } from 'd3-scale'
+All the original code in this repository is MIT licensed. The library contains code from mapbox-gl-js version 1.13 (3-Clause BSD licensed).
+Please provide attribution if reusing any of our digital content (graphics, logo, copy, etc.).
