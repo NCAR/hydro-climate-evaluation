@@ -1,15 +1,14 @@
 # Hydro Climate Evaluation Map
 An interactive web map of hydro-climate data based on [CarbonPlan's maps](https://github.com/carbonplan/maps).
 
-## Map Viewing Tab Options
+## Map Viewing Options
 
-| **Viewing Option** | **Descriptin**                                | **Variable** |
+| **Viewing Option** | **Descriptin**                                | **Variables** |
 |--------------------|-----------------------------------------------|--------------|
 | Ave.               | Map of metrics averages over the time period |  [Year Range ](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range), [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range), [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range), [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range) |
 | Dif.               | Map of the difference of the climate data against an observational dataset | [Dif. Obs. Data](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range), [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#downscaling-methods), [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#climate-models), [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#metrics) |
 | Climate Signal: Method & Model | View climate signal based on specific method and model | [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#downscaling-methods), [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#climate-models), [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#metrics), [RCP Scenario](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#representative-concentration-pathway-rcp-scenario) |
-| Climate Signal: Metric Performance | View climate signal averaging over best performing datasets | |
-
+| Climate Signal: Metric Performance | View climate signal averaging over best performing datasets | [Selecting Performance Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#selecting-performance-metrics) |
 
 ## Variable Details
 ### Year Range
@@ -17,6 +16,7 @@ An interactive web map of hydro-climate data based on [CarbonPlan's maps](https:
 | **Name**  | **Description**                           |
 |-----------|-------------------------------------------|
 | 1981-2004 | Time range data yearly data averaged over |
+
 ### Downscaling Methods
 
 | **Name**     | **URL**                                                                                             |
@@ -26,6 +26,7 @@ An interactive web map of hydro-climate data based on [CarbonPlan's maps](https:
 | LOCA_8th     | [LOcalized Constructed Analog(LOCA)](https://github.com/NCAR/LOCA_Downscaling_Analysis)             |
 | MACA         | [Multivariate Adaptive Constructed Analogs](https://climate.northwestknowledge.net/MACA/index.php)  |
 | NASA-NEX     | [NCCS NASA](https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6) |
+
 ### Climate Models
 
 | **Name**  | **URL**                                                                                                                                 |
@@ -35,6 +36,7 @@ An interactive web map of hydro-climate data based on [CarbonPlan's maps](https:
 | CanESM2   | [Canadian Earth System Model](https://climate-scenarios.canada.ca/?page=pred-canesm2)                                                   |
 | CCSM4     | [Community Climate System Model](https://www2.cesm.ucar.edu/models/ccsm4.0/)                                                            |
 | MIROC5    | [Model for Interdisciplinary Research on Climate](https://www.icesfoundation.org/Pages/ScienceItemDetails.aspx?siid=181)                |
+
 ### Metrics
 
 | **Name**       | **Description**                                                  |
@@ -53,17 +55,28 @@ Observational dataset used to compute the difference against.
 
 | **Name** | **Description** |
 |----------|-----------------|
-| CONUS404 | [Four-kilometer long-term regional hydroclimate reanalysis ](https://www.usgs.gov/data/conus404-four-kilometer-long-term-regional-hydroclimate-reanalysis-over-conterminous-united)                |
-| Livneh   | [Livneh hydrometeorological dataset](https://climatedataguide.ucar.edu/climate-data/livneh-gridded-precipitation-and-other-meteorological-variables-continental-us-mexico)                |
-| Maurer   | [Maurer hydrometeorological dataset](https://www.engr.scu.edu/~emaurer/gridded_obs/index_gridded_obs.html)                |
-| NLDAS    | [North American Land Data Assimilation System](https://ldas.gsfc.nasa.gov/nldas)                |
-| PRISM    | [PRISM Climate Group](https://prism.oregonstate.edu/) |
+| CONUS404 | [Four-kilometer long-term regional hydroclimate reanalysis ](https://www.usgs.gov/data/conus404-four-kilometer-long-term-regional-hydroclimate-reanalysis-over-conterminous-united) |
+| Livneh   | [Livneh hydrometeorological dataset](https://climatedataguide.ucar.edu/climate-data/livneh-gridded-precipitation-and-other-meteorological-variables-continental-us-mexico) |
+| Maurer   | [Maurer hydrometeorological dataset](https://www.engr.scu.edu/~emaurer/gridded_obs/index_gridded_obs.html) |
+| NLDAS    | [North American Land Data Assimilation System](https://ldas.gsfc.nasa.gov/nldas)                           |
+| PRISM    | [PRISM Climate Group](https://prism.oregonstate.edu/)                                                      |
+
 ### Representative Concentration Pathway (RCP) Scenario
 
 | **Name** | **Description**                                                          |
 |----------|--------------------------------------------------------------------------|
 | 4.5      | Radiative forcing levels of 4.5 W/m² above pre-industrial levels by 2100 |
 | 8.5      | Radiative forcing levels of 8.5 W/m² above pre-industrial levels by 2100 |
+
+### Selecting Performance Metrics
+
+| **Steps**                     | **Description**                                                             |
+|-------------------------------|-----------------------------------------------------------------------------|
+| 1. Select Metrics             | Select metrics to use as the criteria for choicing the best performing maps |
+| 2. Select Future RCP Scenario | RCP scenario to map                                                         |
+| 3. Number of Datasets         | Number of climate signal datasets to average over                           |
+| 4. Compute Climate Signal     | Compute climate signal map after completing previous steps                  |
+| Plot Metric                   | Plot selected [metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#metrics) |
 
 
 
