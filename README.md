@@ -111,6 +111,8 @@ Go to [localhost:3000](http://localhost:3000) in a browser to preview website.
 
 
 # License
-This is based on [CarbonPlan's maps](https://github.com/carbonplan/maps).
-All the original code in this repository is MIT licensed. The library contains code from mapbox-gl-js version 1.13 (3-Clause BSD licensed).
+[License](https://github.com/scrasmussen/icar-maps/blob/main/LICENSE.md)
+is based on [CarbonPlan's maps](https://github.com/carbonplan/maps).
+All the original code in this repository is MIT licensed.
+The library contains code from mapbox-gl-js version 1.13 (3-Clause BSD licensed).
 Please provide attribution if reusing any of our digital content (graphics, logo, copy, etc.).
