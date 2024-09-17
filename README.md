@@ -1,5 +1,8 @@
 # Hydro Climate Evaluation Map
-An interactive web map of hydro-climate data based on [CarbonPlan's maps](https://github.com/carbonplan/maps).
+The site [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydro-climate-eval) is an interactive web map of hydro-climate data based on [CarbonPlan's maps](https://github.com/carbonplan/maps).
+- [Map Viewing Options](https://github.com/scrasmussen/icar-maps?readme-ov-file#map-viewing-options)
+- [Map Variable Details](https://github.com/scrasmussen/icar-maps?readme-ov-file#variable-details)
+- [Build](https://github.com/scrasmussen/icar-maps?readme-ov-file#build)
 
 ## Map Viewing Options
 
