@@ -158,7 +158,8 @@ const Colorbar = ({
     fixedVal = 1
   }
 
-  if (band === 'ptre' || band === 'ttre') {
+  if (band === 'ptre' || band === 'ttre' ||
+      band === 'n34p' || band === 'n34t' ) {
     scale = 0.2;
     fixedVal = 1;
   }
@@ -169,7 +170,8 @@ const Colorbar = ({
     dx = e.pageX - x
     dy = e.pageY - y
 
-    if (band === 'ptre' || band === 'ttre') {
+    if (band === 'ptre' || band === 'ttre' ||
+        band === 'n34p' || band === 'n34t' ) {
       if (id === 'min')
         setClim((prev) => [Math.min(init[0] - dy * scale, 0), Math.max(init[1] + dy * scale, 0)])
       if (id === 'max')

@@ -19,6 +19,8 @@ const TESTING = false;
 // base urls to zarr data
 const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/';
 const bucket_ndp = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/';
+// local data address for testing
+// const bucket_ndp = 'http://127.0.0.1:4000/data/';
 
 const Index = () => {
   const { theme } = useThemeUI();

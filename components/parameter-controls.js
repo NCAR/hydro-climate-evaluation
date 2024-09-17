@@ -19,7 +19,7 @@ const sx = {
 };
 
 const readmeUrl =
-        'https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#icar-maps';
+  'https://github.com/scrasmussen/icar-maps?readme-ov-file#hydro-climate-evaluation-map';
 const precipDif = 1.0;
 const tempDif = 0.2;
 
@@ -247,6 +247,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   };
 
   const setMetricLabel = () => {
+    let link = 'https://github.com/scrasmussen/icar-maps?readme-ov-file#metrics';
     let label = 'n34pr';
     let description  = ['further description'];
     if (metric === 'n34pr') {
@@ -349,7 +350,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
     return(
       <Box sx={{ ...sx.label, mt: [4] }}>
-      <Link href='https://google.com/'>{label}</Link>:<br />
+        <Link href={link}
+         target="_blank"
+         rel="noopener noreferrer">
+          {label}
+        </Link>:<br />
         {description.map((line, index) => (
            <Fragment key={index}> {line} <br /> </Fragment>))
         }
@@ -929,6 +934,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         clim={clim}
         setClim={setClim}
         filterValues={computeChoice}
+        band={band}
         scaleDif={scaleDif}
       />
       </Box>
