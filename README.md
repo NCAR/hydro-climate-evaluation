@@ -96,7 +96,7 @@ $ npm run
 ```
 
 ### Production Build
-For hosting at <https://hydro.rap.ucar.edu/hydro-climate-eval>
+For hosting at [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydro-climate-eval)
 ```
 $ npm install .
 $ npm run dev
