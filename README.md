@@ -5,31 +5,26 @@ An interactive web map of hydro-climate data based on [CarbonPlan's maps](https:
 ### Ave.
 Map of metrics averages over the time period.
 
-| **Option**         |
-|--------------------|
-| Year Range         |
-| Downscaling Method |
-| Climate Model      |
-| Metrics            |
+| [Year Range ](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range)        |
+| [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range) |
+| [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range)      |
+| [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range)            |
 
 ### Dif.
+Map of the difference of the climate data against an observational dataset.
 
-| **Option**         |
-|--------------------|
-| Dif. Obs. Data     |
-| Downscaling Method |
-| Climate Model      |
-| Metrics            |
+| [Dif. Obs. Data](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range)              |
+| [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#downscaling-methods) |
+| [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#climate-models)           |
+| [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#metrics)                        |
 
 ### Climate Signal
 #### Method & Model
 
-| **Option**         |
-|--------------------|
-| Downscaling Method |
-| Climate Model      |
-| Metrics            |
-| RCP Scenario       |
+| [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#downscaling-methods)                         |
+| [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#climate-models)                                   |
+| [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#metrics)                                                |
+| [RCP Scenario](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#representative-concentration-pathway-rcp-scenario) |
 
 
 ## Variable Details
