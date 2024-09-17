@@ -120,6 +120,7 @@ const Colorbar = ({
   setClim,
   setClimStep = 1,
   filterValues,
+  band,
   scaleDif,
   discrete,
   units,
@@ -148,6 +149,7 @@ const Colorbar = ({
   let init = [0, 0]
   let scale
   let fixedVal
+
   if (filterValues['Ave.']) {
     scale = setClimStep
     fixedVal = 0
@@ -156,13 +158,24 @@ const Colorbar = ({
     fixedVal = 1
   }
 
-
+  if (band === 'ptre' || band === 'ttre') {
+    scale = 0.2;
+    fixedVal = 1;
+  }
 
   const draggingFunction = (e) => {
     if (id === 'min' && !climMinDragging) setClimMinDragging(true)
     if (id === 'max' && !climMaxDragging) setClimMaxDragging(true)
     dx = e.pageX - x
     dy = e.pageY - y
+
+    if (band === 'ptre' || band === 'ttre') {
+      if (id === 'min')
+        setClim((prev) => [Math.min(init[0] - dy * scale, 0), Math.max(init[1] + dy * scale, 0)])
+      if (id === 'max')
+        setClim((prev) => [Math.min(init[0] + dy * scale, 0), Math.max(init[1] - dy * scale, 0)])
+      return;
+    }
     if (filterValues['Ave.']) {
       if (horizontal) {
         if (id === 'min')
