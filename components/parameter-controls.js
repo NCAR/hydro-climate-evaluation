@@ -571,6 +571,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const [topDownscaling2, setTopDownscaling2] = useState("None");
   const [topModel2, setTopModel2] = useState("None");
 
+  const [aveChoice, setAveChoice] = useState({ 'Modeling': true, 'Observation': false, });
+
   const [metricPerformance, setMetricPerformance] = //useState(true);
           useState({ "Metric Performance": false });
   const [methodAndModel, setMethodAndModel] = //useState(false);
@@ -808,6 +810,22 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   });
 
   const [shouldUpdateMapSource, setShouldUpdateMapSource] = useState(false);
+
+  const handleAveChange = useCallback((e) => {
+    const choice =e
+    console.log("AVECHOIE =", choice);
+    if (choice['Modeling']) {
+      // setAveChoice({ 'Modeling': true, 'Observation': false, });
+      setAveChoice(choice);
+      setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
+    } else if (choice['Observation']) {
+      setAveChoice(choice);
+      // setAveChoice({ 'Modeling': false, 'Observation': true, }); //
+      const obs = obsDif
+      setMapSource([bucket+'/obs/'+obs+'/'+yearRangeDif+'/'+fname]);
+    }
+  });
+
 
   const handleSignalChoice = useCallback((e) => {
     console.log("metric per", metricPerformance);
@@ -1087,6 +1105,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const handleObsChange = useCallback((e) => {
     const obs = e.target.value;
     setObsDif(obs);
+    setMapSource([bucket+'/obs/'+obs+'/'+yearRangeDif+'/'+fname]);
+  });
+
+  const handleObsDifChange = useCallback((e) => {
+    const obs = e.target.value;
+    setObsDif(obs);
     // console.log("obs =", obs); // works
     setMapSourceDif(bucket+'/obs/'+obs+'/'+yearRangeDif+'/'+fname);
   });
@@ -1108,7 +1132,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       <Select
         sxSelect={{ bg: 'transparent' }}
         size='xs'
-        onChange={handleObsChange}
+        onChange={handleObsDifChange}
         sx={{ mt: [1] }}
         value={obsDif}
       >
@@ -1177,7 +1201,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           multiSelect={false}
         />
         </Box>
-        <MapChoicesBox/>
+        <AveChoiceBox />
         </>
       );
     }
@@ -1192,7 +1216,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         />
         </Box>
         <NewDifSourceChoices />
-        <MapChoicesBox/>
+        <MapChoicesBox />
         </>
       );
     }
@@ -1410,14 +1434,55 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       )}
       </Select>
 
-      <VariableChoiceBox/>
+      <VariableChoiceBox />
       {!computeChoice['Climate Signal'] && setMetricLabel()}
       {/* </Box> */}
     </>
   ); // end of MapChoicesBox return statement
   };
 
-
+  const AveChoiceBox = () => {
+    if (aveChoice['Modeling']) {
+      // setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
+      return (
+        <>
+        <Filter
+          values={aveChoice}
+          setValues={handleAveChange}
+          sx={{mt:3}}
+        />
+        <MapChoicesBox />
+        </>
+      );
+    } else if (aveChoice['Observation']) {
+      // setMapSource([bucket+'/obs/'+obs+'/'+yearRangeDif+'/'+fname]);
+      return (
+        <>
+        <Filter
+          values={aveChoice}
+          setValues={handleAveChange}
+          sx={{mt:3}}
+        />
+        <Box sx={{ ...sx.label, mt: [3] }}>Dataset</Box>
+        <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={handleObsChange}
+          sx={{ mt: [1] }}
+          value={obsDif}
+        >
+          <option value='conus404'>Conus404</option>
+          <option value='livneh'>Livneh</option>
+          <option value='maurer'>Maurer</option>
+          <option value='nldas'>NLDAS</option>
+          <option value='prism'>PRISM</option>
+        </Select>
+        <VariableChoiceBox />
+        {setMetricLabel()}
+        </>
+      );
+    }
+  };
 
   const ClimateSignalChoiceBox = () => {
     return (
