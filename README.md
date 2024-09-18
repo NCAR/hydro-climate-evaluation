@@ -1,17 +1,17 @@
 # Hydro Climate Evaluation Map
 The site [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydro-climate-eval) is an interactive web map of hydro-climate data based on [CarbonPlan's maps](https://github.com/carbonplan/maps).
-- [Map Viewing Options](https://github.com/scrasmussen/icar-maps?readme-ov-file#map-viewing-options)
-- [Map Variable Details](https://github.com/scrasmussen/icar-maps?readme-ov-file#variable-details)
-- [Build](https://github.com/scrasmussen/icar-maps?readme-ov-file#build)
+- [Map Viewing Options](https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#map-viewing-options)
+- [Map Variable Details](https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#variable-details)
+- [Build](https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#build)
 
 ## Map Viewing Options
 
 | **Viewing Option** | **Descriptin**                                | **Variables** |
 |--------------------|-----------------------------------------------|--------------|
-| Ave.               | Map of metrics averages over the time period |  [Year Range ](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range), [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range), [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range), [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range) |
-| Dif.               | Map of the difference of the climate data against an observational dataset | [Dif. Obs. Data](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#year-range), [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#downscaling-methods), [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#climate-models), [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#metrics) |
-| Climate Signal: Method & Model | View climate signal based on specific method and model | [Downscaling Method](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#downscaling-methods), [Climate Model](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#climate-models), [Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#metrics), [RCP Scenario](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#representative-concentration-pathway-rcp-scenario) |
-| Climate Signal: Metric Performance | View climate signal averaging over best performing datasets | [Selecting Performance Metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#selecting-performance-metrics) |
+| Ave.               | Map of metrics averages over the time period |  [Year Range ](https://github.com/NCAR/hydro-climate-evaluation?tab=readme-ov-file#year-range), [Downscaling Method](https://github.com/NCAR/hydro-climate-evaluation?tab=readme-ov-file#year-range), [Climate Model](https://github.com/NCAR/hydro-climate-evaluation?tab=readme-ov-file#year-range), [Metrics](https://github.com/NCAR/hydro-climate-evaluation?tab=readme-ov-file#year-range) |
+| Dif.               | Map of the difference of the climate data against an observational dataset | [Dif. Obs. Data](https://github.com/NCAR/hydro-climate-evaluation?tab=readme-ov-file#year-range), [Downscaling Method](https://github.com/NCAR/hydro-climate-evaluation?tab=readme-ov-file#downscaling-methods), [Climate Model](https://github.com/NCAR/hydro-climate-evaluation?tab=readme-ov-file#climate-models), [Metrics](https://github.com/NCAR/hydro-climate-evaluation?tab=readme-ov-file#metrics) |
+| Climate Signal: Method & Model | View climate signal based on specific method and model | [Downscaling Method](https://github.com/NCAR/hydro-climate-evaluation?tab=readme-ov-file#downscaling-methods), [Climate Model](https://github.com/NCAR/hydro-climate-evaluation?tab=readme-ov-file#climate-models), [Metrics](https://github.com/NCAR/hydro-climate-evaluation?tab=readme-ov-file#metrics), [RCP Scenario](https://github.com/NCAR/hydro-climate-evaluation?tab=readme-ov-file#representative-concentration-pathway-rcp-scenario) |
+| Climate Signal: Metric Performance | View climate signal averaging over best performing datasets | [Selecting Performance Metrics](https://github.com/NCAR/hydro-climate-evaluation?tab=readme-ov-file#selecting-performance-metrics) |
 
 ## Variable Details
 ### Year Range
@@ -87,7 +87,7 @@ Observational dataset used to compute the difference against.
 | 2. Select Future RCP Scenario | RCP scenario to map                                                         |
 | 3. Number of Datasets         | Number of climate signal datasets to average over                           |
 | 4. Compute Climate Signal     | Compute climate signal map after completing previous steps                  |
-| Plot Metric                   | Plot selected [metrics](https://github.com/scrasmussen/icar-maps?tab=readme-ov-file#metrics) |
+| Plot Metric                   | Plot selected [metrics](https://github.com/NCAR/hydro-climate-evaluation?tab=readme-ov-file#metrics) |
 
 
 
@@ -114,12 +114,12 @@ $ npm start
 ### View Local Map
 Go to [localhost:3000](http://localhost:3000) in a browser to preview website.
 
-<img width="400" alt="image" src="https://github.com/scrasmussen/icar-maps/assets/5750642/5ab5462d-206c-4bb5-9a67-2ac45606ad22">
+<img width="400" alt="image" src="https://github.com/NCAR/hydro-climate-evaluation/assets/5750642/5ab5462d-206c-4bb5-9a67-2ac45606ad22">
 
 
 
 # License
-[License](https://github.com/scrasmussen/icar-maps/blob/main/LICENSE.md)
+[License](https://github.com/NCAR/hydro-climate-evaluation/blob/main/LICENSE.md)
 is based on [CarbonPlan's maps](https://github.com/carbonplan/maps).
 All the original code in this repository is MIT licensed.
 The library contains code from mapbox-gl-js version 1.13 (3-Clause BSD licensed).
