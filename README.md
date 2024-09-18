@@ -43,23 +43,24 @@ The site [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydr
 
 ### Metrics
 
-| **Name**    | **Description**                                                  |
-|-------------|------------------------------------------------------------------|
-| N34T, N34PR | Nino 3.4 temp/precip teleconnection pattern spactial correlation |
-| TTREND      | Temperature trends                                               |
-| PTREND      | Precipitation trends                                             |
-| T90         | Temperature extremes in the 90th percentile                      |
-| T99         | Temperature extremes in the 99th percentile                      |
-| PR90        | Precipitation extremes in the 90th percentile                    |
-| PR99        | Precipitation extremes in the 99th percentile                    |
-| DJF_T       | Dec/Jan/Feb seasonal mean of temperature                         |
-| DJF_P       | Dec/Jan/Feb seasonal mean of precipitation                       |
-| MAM_T       | Mar/Apr/May seasonal mean of temperature                         |
-| MAM_P       | Mar/Apr/May seasonal mean of precipitation                       |
-| JJA_T       | Jun/Jul/Aug seasonal mean of temperature                         |
-| JJA_P       | Jun/Jul/Aug seasonal mean of precipitation                       |
-| SON_T       | Sep/Oct/Nov seasonal mean of temperature                         |
-| SON_P       | Sep/Oct/Nov seasonal mean of precipitation                       |
+| **Name** | **Description**                                                    |
+|----------|--------------------------------------------------------------------|
+| N34T     | Nino 3.4 temperature teleconnection pattern spactial correlation   |
+| N34PR    | Nino 3.4 precipitation teleconnection pattern spactial correlation |
+| TTREND   | Temperature trends                                                 |
+| PTREND   | Precipitation trends                                               |
+| T90      | Temperature extremes in the 90th percentile                        |
+| T99      | Temperature extremes in the 99th percentile                        |
+| PR90     | Precipitation extremes in the 90th percentile                      |
+| PR99     | Precipitation extremes in the 99th percentile                      |
+| DJF_T    | Dec/Jan/Feb seasonal mean of temperature                           |
+| DJF_P    | Dec/Jan/Feb seasonal mean of precipitation                         |
+| MAM_T    | Mar/Apr/May seasonal mean of temperature                           |
+| MAM_P    | Mar/Apr/May seasonal mean of precipitation                         |
+| JJA_T    | Jun/Jul/Aug seasonal mean of temperature                           |
+| JJA_P    | Jun/Jul/Aug seasonal mean of precipitation                         |
+| SON_T    | Sep/Oct/Nov seasonal mean of temperature                           |
+| SON_P    | Sep/Oct/Nov seasonal mean of precipitation                         |
 
 ### Dif. Obs. Data
 Observational dataset used to compute the difference against.
