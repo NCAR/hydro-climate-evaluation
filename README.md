@@ -1,5 +1,6 @@
 # Hydro Climate Evaluation Map
 The site [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydro-climate-eval) is an interactive web map of hydro-climate data based on [CarbonPlan's maps](https://github.com/carbonplan/maps).
+
 - [Map Viewing Options](https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#map-viewing-options)
 - [Map Variable Details](https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#variable-details)
 - [Build](https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#build)
@@ -21,6 +22,8 @@ The site [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydr
 | 1981-2004 | Time range data yearly data averaged over |
 
 ### Downscaling Methods
+See this detailed [downscaling method document](https://docs.google.com/spreadsheets/d/e/2PACX-1vTYqCetwsunFVtImQ04HcmqH8uTrh62IGkkohCrAUD4oguSMfb9naUxsbYUCthsOw/pubhtml)
+for more information on some of the dataset mapped.
 
 | **Name** | **URL**                                                                                             |
 |----------|-----------------------------------------------------------------------------------------------------|
