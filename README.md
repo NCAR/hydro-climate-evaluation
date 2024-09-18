@@ -25,14 +25,14 @@ The site [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydr
 See this detailed [downscaling method document](https://docs.google.com/spreadsheets/d/e/2PACX-1vTYqCetwsunFVtImQ04HcmqH8uTrh62IGkkohCrAUD4oguSMfb9naUxsbYUCthsOw/pubhtml)
 for more information on some of the dataset mapped.
 
-| **Name** | **URL**                                                                                             |
-|----------|-----------------------------------------------------------------------------------------------------|
-| ICAR     | [Intermediate Complexity Atmospheric Research Model](https://github.com/NCAR/icar)                  |
-| GARD_R2  | [Ensemble Generalized Analog Regression Downscaling](https://github.com/NCAR/GARD)                  |
-| GARD_R3  | [Ensemble Generalized Analog Regression Downscaling](https://github.com/NCAR/GARD)                  |
-| LOCA_8th | [LOcalized Constructed Analog (LOCA)](https://github.com/NCAR/LOCA_Downscaling_Analysis)            |
-| MACA     | [Multivariate Adaptive Constructed Analogs](https://climate.northwestknowledge.net/MACA/index.php)  |
-| NASA-NEX | [NCCS NASA](https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6) |
+| **Name** | **URL**                                                                                               |
+|----------|-------------------------------------------------------------------------------------------------------|
+| ICAR     | [Intermediate Complexity Atmospheric Research Model](https://github.com/NCAR/icar)                    |
+| GARD_R2  | [GARD](https://github.com/NCAR/GARD) analog regression on precipitation and 500mb horizontal wind     |
+| GARD_R3  | [GARD](https://github.com/NCAR/GARD) analog regression on 500mb water vapor and 500mb horizontal wind |
+| LOCA_8th | [LOcalized Constructed Analog (LOCA)](https://github.com/NCAR/LOCA_Downscaling_Analysis)              |
+| MACA     | [Multivariate Adaptive Constructed Analogs](https://climate.northwestknowledge.net/MACA/index.php)    |
+| NASA-NEX | [NCCS NASA](https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6)   |
 
 ### Climate Models
 
