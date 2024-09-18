@@ -924,6 +924,20 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setChartHeight('20%');
   });
 
+  const README = () => {
+    return (
+      <>
+      <Button
+        href={readmeUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        prefix={<RotatingArrow />}
+      >
+        README
+      </Button>
+      </>
+    );
+  };
 
   const LocalColorbar = () => {
     return (
@@ -1504,15 +1518,16 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     {/* !showRegionPlot && <MapChoicesBox /> */}
     {/* showRegionPlot && <ClimateSignalBox numMetrics={numMetrics} /> */}
 
-    <Box sx={{ position: 'absolute', bottom: 20, left: 20 }}>
-      <Button
-        href={readmeUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        prefix={<RotatingArrow />}
-      >
-        README
-      </Button>
+    <Box sx={{ position: 'absolute',
+               bottom: 20,
+               left: 20,
+               '@media screen and (max-height: 850px)': {
+                 left: 'auto',
+                 right: 20, // Move to the right if the window is too small
+               },
+            }}
+    >
+      <README />
     </Box>
     </>
   );
