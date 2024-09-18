@@ -38,32 +38,32 @@ for more information on some of the dataset mapped.
 
 | **Name**  | **URL**                                                                                                                                 |
 |-----------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| NorESM-M  | [Norwegian Earth System Model](https://github.com/NorESMhub/NorESM)                                                                     |
 | ACCESS1-3 | [Australian Community Climate and Earth System Simulator](https://www.csiro.au/en/research/environmental-impacts/climate-change/access) |
 | CanESM2   | [Canadian Earth System Model](https://climate-scenarios.canada.ca/?page=pred-canesm2)                                                   |
 | CCSM4     | [Community Climate System Model](https://www2.cesm.ucar.edu/models/ccsm4.0/)                                                            |
 | MIROC5    | [Model for Interdisciplinary Research on Climate](https://www.icesfoundation.org/Pages/ScienceItemDetails.aspx?siid=181)                |
+| NorESM-M  | [Norwegian Earth System Model](https://github.com/NorESMhub/NorESM)                                                                     |
 
 ### Metrics
 
 | **Name** | **Description**                                                    |
 |----------|--------------------------------------------------------------------|
-| N34T     | Nino 3.4 temperature teleconnection pattern spactial correlation   |
+| DJF_P    | Dec/Jan/Feb seasonal mean of precipitation                         |
+| DJF_T    | Dec/Jan/Feb seasonal mean of temperature                           |
+| JJA_P    | Jun/Jul/Aug seasonal mean of precipitation                         |
+| JJA_T    | Jun/Jul/Aug seasonal mean of temperature                           |
+| MAM_P    | Mar/Apr/May seasonal mean of precipitation                         |
+| MAM_T    | Mar/Apr/May seasonal mean of temperature                           |
 | N34PR    | Nino 3.4 precipitation teleconnection pattern spactial correlation |
-| TTREND   | Temperature trends                                                 |
-| PTREND   | Precipitation trends                                               |
-| T90      | Temperature extremes in the 90th percentile                        |
-| T99      | Temperature extremes in the 99th percentile                        |
+| N34T     | Nino 3.4 temperature teleconnection pattern spactial correlation   |
 | PR90     | Precipitation extremes in the 90th percentile                      |
 | PR99     | Precipitation extremes in the 99th percentile                      |
-| DJF_T    | Dec/Jan/Feb seasonal mean of temperature                           |
-| DJF_P    | Dec/Jan/Feb seasonal mean of precipitation                         |
-| MAM_T    | Mar/Apr/May seasonal mean of temperature                           |
-| MAM_P    | Mar/Apr/May seasonal mean of precipitation                         |
-| JJA_T    | Jun/Jul/Aug seasonal mean of temperature                           |
-| JJA_P    | Jun/Jul/Aug seasonal mean of precipitation                         |
-| SON_T    | Sep/Oct/Nov seasonal mean of temperature                           |
+| PTREND   | Precipitation trends                                               |
 | SON_P    | Sep/Oct/Nov seasonal mean of precipitation                         |
+| SON_T    | Sep/Oct/Nov seasonal mean of temperature                           |
+| T90      | Temperature extremes in the 90th percentile                        |
+| T99      | Temperature extremes in the 99th percentile                        |
+| TTREND   | Temperature trends                                                 |
 
 ### Dif. Obs. Data
 Observational dataset used to compute the difference against.
