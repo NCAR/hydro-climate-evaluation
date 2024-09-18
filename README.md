@@ -22,13 +22,14 @@ The site [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydr
 
 ### Downscaling Methods
 
-| **Name**      | **URL**                                                                                             |
-|---------------|-----------------------------------------------------------------------------------------------------|
-| ICAR          | [Intermediate Complexity Atmospheric Research Model](https://github.com/NCAR/icar)                  |
-| GARD_{R2, R3} | [Ensemble Generalized Analog Regression Downscaling](https://github.com/NCAR/GARD)                  |
-| LOCA_8th      | [LOcalized Constructed Analog (LOCA)](https://github.com/NCAR/LOCA_Downscaling_Analysis)            |
-| MACA          | [Multivariate Adaptive Constructed Analogs](https://climate.northwestknowledge.net/MACA/index.php)  |
-| NASA-NEX      | [NCCS NASA](https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6) |
+| **Name** | **URL**                                                                                             |
+|----------|-----------------------------------------------------------------------------------------------------|
+| ICAR     | [Intermediate Complexity Atmospheric Research Model](https://github.com/NCAR/icar)                  |
+| GARD_R2  | [Ensemble Generalized Analog Regression Downscaling](https://github.com/NCAR/GARD)                  |
+| GARD_R3  | [Ensemble Generalized Analog Regression Downscaling](https://github.com/NCAR/GARD)                  |
+| LOCA_8th | [LOcalized Constructed Analog (LOCA)](https://github.com/NCAR/LOCA_Downscaling_Analysis)            |
+| MACA     | [Multivariate Adaptive Constructed Analogs](https://climate.northwestknowledge.net/MACA/index.php)  |
+| NASA-NEX | [NCCS NASA](https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6) |
 
 ### Climate Models
 
@@ -42,16 +43,23 @@ The site [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydr
 
 ### Metrics
 
-| **Name**       | **Description**                                                  |
-|----------------|------------------------------------------------------------------|
-| N34T, N34PR    | Nino 3.4 temp/precip teleconnection pattern spactial correlation |
-| TTREND, PTREND | Temp/precip trends                                               |
-| T90, T99       | Temperature extremes in the 90th/99th percentile                 |
-| PR90, PR99     | Precipitation extremes in the 90th/99th percentile               |
-| DJF_{T,P}      | Seasonal mean of temp/precip over Dec/Jan/Feb                    |
-| MAM_{T,P}      | Seasonal mean of temp/precip over Mar/Apr/May                    |
-| JJA_{T,P}      | Seasonal mean of temp/precip over Jun/Jul/Aug                    |
-| SON_{T,P}      | Seasonal mean of temp/precip over Sep/Oct/Nov                    |
+| **Name**    | **Description**                                                  |
+|-------------|------------------------------------------------------------------|
+| N34T, N34PR | Nino 3.4 temp/precip teleconnection pattern spactial correlation |
+| TTREND      | Temperature trends                                               |
+| PTREND      | Precipitation trends                                             |
+| T90         | Temperature extremes in the 90th percentile                      |
+| T99         | Temperature extremes in the 99th percentile                      |
+| PR90        | Precipitation extremes in the 90th percentile                    |
+| PR99        | Precipitation extremes in the 99th percentile                    |
+| DJF_T       | Dec/Jan/Feb seasonal mean of temperature                         |
+| DJF_P       | Dec/Jan/Feb seasonal mean of precipitation                       |
+| MAM_T       | Mar/Apr/May seasonal mean of temperature                         |
+| MAM_P       | Mar/Apr/May seasonal mean of precipitation                       |
+| JJA_T       | Jun/Jul/Aug seasonal mean of temperature                         |
+| JJA_P       | Jun/Jul/Aug seasonal mean of precipitation                       |
+| SON_T       | Sep/Oct/Nov seasonal mean of temperature                         |
+| SON_P       | Sep/Oct/Nov seasonal mean of precipitation                       |
 
 ### Dif. Obs. Data
 Observational dataset used to compute the difference against.
