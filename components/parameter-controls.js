@@ -401,9 +401,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   });
 
   const handleYearChange = useCallback((e) => {
-    const yearRange = e.target.value;
+    let yearRange = e.target.value;
     setYearRange(yearRange);
-    console.log("yearRange =", e.target.value);
+    if (yearRange === '2070_2100') {
+      yearRange = getRCPKey(rcpValues);
+    }
+
     setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
@@ -436,7 +439,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
     let timeRange = yearRange
     if (computeChoice['Climate Signal']) {
-      timeRange = getRCPKey(rcpValues)
+      timeRange = getRCPKey(rcpValues);
     }
 
     setMapSource([bucket+baseDir+downscaling+'/'+safemodel+'/'+timeRange+'/'+fname]);
@@ -1164,16 +1167,19 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       if (!newValues['Climate Signal']) {
         // handleFilterAndSetClimColormapName(newValues);
         // above func handled below
+        let yearRange_l = yearRange;
         if (newValues['Ave.']) {
           setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
           setColormapName(Default_Colormaps[metric]);
         }
         if (newValues['Dif.']) {
+          yearRange_l = '1981_2004';
+          setYearRange(yearRange_l);
           setScaleDif(Scale_Values['dif_'+metric]);
           setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
           setColormapName(Default_Colormaps['dif_'+metric]);
         }
-        setMapSource([bucket+baseDir_l+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
+        setMapSource([bucket+baseDir_l+downscaling+'/'+model+'/'+yearRange_l+'/'+fname]);
       }
       if (newValues['Climate Signal']) {
         console.log("CLIMATE SIGNAL SELECTED")
@@ -1216,6 +1222,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         />
         </Box>
         <NewDifSourceChoices />
+        <DifYearRangeBox />
         <MapChoicesBox />
         </>
       );
@@ -1328,6 +1335,21 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     return (combinationBox);
   };
 
+  const DifYearRangeBox = () => {
+    return(
+      <>
+      <Box sx={{ ...sx.label, mt: [3] }}>Year Range</Box>
+      <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          sx={{ mt: [1] }}
+          value={'1981_2004'}
+       >
+          <option value='1981_2004'>1981-2004</option>
+     </Select>
+     </>
+    );
+  };
 
   const YearRangeBox = () => {
     return(
@@ -1341,6 +1363,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           value={yearRange}
         >
           <option value='1981_2004'>1981-2004</option>
+          {(downscaling != 'gard_r2' &&
+            downscaling != 'gard_r3') && (
+            <>
+            <option value='2070_2100'>2070-2100</option>
+            </>
+          )}
 {/*       <option value='1980_2010'>1980-2010</option>
           <option value='2070_2100'>2070-2100</option>*/}
      </Select>
@@ -1365,8 +1393,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         value={downscaling}
       >
         <option value='icar'>ICAR</option>
+        {yearRange === '1981_2004' && (
+        <>
         <option value='gard_r2'>GARD_r2</option>
         <option value='gard_r3'>GARD_r3</option>
+        </>
+        )}
         <option value='loca_8th'>LOCA_8th</option>
         <option value='maca'>MACA</option>
         <option value='nasa_nex'>NASA-NEX</option>

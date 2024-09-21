@@ -46,7 +46,7 @@ const Index = () => {
   const [rcp, setRCP] = useState('4.5');
 
   // const [yearRange, setYearRange] = useState('1980_2010')
-  const [yearRange, setYearRange] = useState('1981_2004');
+  const [yearRange, setYearRange] = useState('1981_2004', '2070_2100');
   // diff dataset variables for model to compare against
   const [scaleDif, setScaleDif] = useState(1.0);
   const [downscalingDif, setDownscalingDif] = useState('icar');
