@@ -1467,7 +1467,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       </Select>
 
       <VariableChoiceBox />
-      {!computeChoice['Climate Signal'] && setMetricLabel()}
+      {(!computeChoice['Climate Signal'] &&
+        yearRange === '1981_2004')
+       && setMetricLabel()}
       {/* </Box> */}
     </>
   ); // end of MapChoicesBox return statement
@@ -1484,6 +1486,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           sx={{mt:3}}
         />
         <MapChoicesBox />
+        <RcpBox />
         </>
       );
     } else if (aveChoice['Observation']) {
@@ -1533,6 +1536,25 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       />
       </>
     );
+  };
+
+  const RcpBox = () => {
+    if (yearRange === '2070_2100') {
+      return(
+      <>
+      <Box sx={{mt:4}}>RCP SCENARIO</Box>
+      <Filter
+        values={rcpValues}
+        setValues={handleRCPValues}
+        multiSelect={false}
+      />
+      </>
+      );
+    } else {
+      return(
+       <> </>
+      );
+    }
   };
 
   const ClimateSignalBox = ({numMetrics}) => {
