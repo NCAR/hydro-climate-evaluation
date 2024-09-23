@@ -820,7 +820,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     if (choice['Modeling']) {
       // setAveChoice({ 'Modeling': true, 'Observation': false, });
       setAveChoice(choice);
-      setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
+      let yearRange_l = yearRange;
+      if (yearRange === '2070_2100') {
+        yearRange_l = getRCPKey(rcpValues);
+      }
+      setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+yearRange_l+'/'+fname]);
     } else if (choice['Observation']) {
       setAveChoice(choice);
       // setAveChoice({ 'Modeling': false, 'Observation': true, }); //
