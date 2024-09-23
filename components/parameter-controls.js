@@ -195,6 +195,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const [baseDir, setBaseDir] = useState('map/');
 
+  const [metricMethod, setMetricMethod] = useState({'Std. Dev.': true,
+                                                    'Correlation': false});
+
   // const [computeChoice, setComputeChoice] = useState({
   //     'Ave.': true,
   //     'Dif.': false,
@@ -364,13 +367,35 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
 
   const MetricBox = () => {
-    const [values, setValues] = useState({'90%': false,
-                                          '99%': false,
-                                          'Std.': false,
-                                          'RSME': false});
-    return (
-      <Filter values={values} setValues={setValues} showAll />
+    if (metricMethod['Std. Dev.']) {
+      return(
+      <>
+      <Box sx={{ ...sx.label, mt: [4] }}>2. Select Metrics</Box>
+      <Filter
+        values={stdDevMetrics}
+        setValues={handleStdDevMetricsChange}
+      />
+      <Filter values={stdDevMetrics1} setValues={setStdDevMetrics1} multiSelect={true} />
+      <Filter values={stdDevMetrics2} setValues={setStdDevMetrics2} multiSelect={true} />
+      </>
       );
+      }
+      else if (metricMethod['Correlation']) {
+      return(
+      <>
+      <Box sx={{ ...sx.label, mt: [4] }}>2. Select Metrics</Box>
+      <Filter
+        values={metrics}
+        setValues={setMetrics}
+        setValues={handleClimateMetricsChange}
+      />
+      <Filter values={metrics1} setValues={setMetrics1} multiSelect={true} />
+      <Filter values={metrics2} setValues={setMetrics2} multiSelect={true} />
+      <Filter values={metrics3} setValues={setMetrics3} multiSelect={true} />
+      <Filter values={metrics4} setValues={setMetrics4} multiSelect={true} />
+      </>
+      );
+    }
    };
 
 
@@ -542,8 +567,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
   });
 
-
-  const maxNumMetrics = 18;
+  const maxStdDevNumMetrics = 8;
+  const maxNumMetrics = 16;
   const [allMetrics, setAllMetrics] =
     useState({
       tavg: false,
@@ -583,34 +608,45 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const [metrics, setMetrics] = useState({ all: false, clear: false, });
 
-  const [metrics1, setMetrics1] = useState({ tavg: false,
-                                             n34t: false,
-                                             ttrend: false,});
+  const [metrics1, setMetrics1] = useState({ n34t: false,
+                                             n34pr: false,
+                                             ttrend: false,
+                                             ptrend: false,});
   const [metrics2, setMetrics2] = useState({ t90: false,
                                              t99: false,
-                                             djf_t: false,});
-  const [metrics3, setMetrics3] = useState({ mam_t: false,
+                                             pr90: false,
+                                             pr99: false,});
+  const [metrics3, setMetrics3] = useState({ djf_t: false,
+                                             mam_t: false,
                                              jja_t: false,
                                              son_t: false,});
-  const [metrics4, setMetrics4] = useState({ prec: false,
-                                             n34pr: false,
-                                             ptrend: false,});
-  const [metrics5, setMetrics5] = useState({ pr90: false,
-                                             pr99: false,
-                                             djf_p: false,});
-  const [metrics6, setMetrics6] = useState({ mam_p: false,
+  const [metrics4, setMetrics4] = useState({ djf_p: false,
+                                             mam_p: false,
                                              jja_p: false,
                                              son_p: false,});
 
+  const [stdDevMetrics, setStdDevMetrics] = useState({ all: false, clear: false, });
+  const [stdDevMetrics1, setStdDevMetrics1] = useState({ djf_t: false,
+                                                         mam_t: false,
+                                                         jja_t: false,
+                                                         son_t: false,});
+  const [stdDevMetrics2, setStdDevMetrics2] = useState({ djf_p: false,
+                                                         mam_p: false,
+                                                         jja_p: false,
+                                                         son_p: false,});
+
   const countNumMetrics = () => {
-      let count = 0;
+    let count = 0;
+    if (metricMethod['Std. Dev.']) {
+      for (const key in stdDevMetrics1) { stdDevMetrics1[key] === true && count++; }
+      for (const key in stdDevMetrics2) { stdDevMetrics2[key] === true && count++; }
+    } else if (metricMethod['Correlation']) {
       for (const key in metrics1) { metrics1[key] === true && count++; }
       for (const key in metrics2) { metrics2[key] === true && count++; }
       for (const key in metrics3) { metrics3[key] === true && count++; }
       for (const key in metrics4) { metrics4[key] === true && count++; }
-      for (const key in metrics5) { metrics5[key] === true && count++; }
-      for (const key in metrics6) { metrics6[key] === true && count++; }
-      return count;
+    }
+    return count;
   };
 
   const diffInMetrics = (array1, array2) => {
@@ -628,135 +664,233 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   // 13 = combinations
   const combinations =
         [
-            "ICAR with NorESM-M",
-            "ICAR with ACCESS1-3",
-            "ICAR with CanESM2",
-            "ICAR with CCSM4",
-            "ICAR with MIROC5",
-            "LOCA_8th with NorESM-M",
-            "LOCA_8th with ACCESS1-3",
-            "LOCA_8th with CanESM2",
-            "LOCA_8th with CCSM4",
-            "LOCA_8th with MIROC5",
-            "NASA-NEX with NorESM-M",
-            "NASA-NEX with CanESM2",
-            "NASA-NEX with MIROC5",
+          "ICAR with ACCESS1-3",
+          "ICAR with CanESM2",
+          "ICAR with CCSM4",
+          "ICAR with MIROC5",
+          "ICAR with NorESM1-M",
+          "GARD_r2 with ACCESS1-3",
+          "GARD_r2 with CanESM2",
+          "GARD_r2 with CCSM4",
+          "GARD_r2 with MIROC5",
+          "GARD_r2 with NorESM1-M",
+          "GARD_r3 with ACCESS1-3",
+          "GARD_r3 with CanESM2",
+          "GARD_r3 with CCSM4",
+          "GARD_r3 with MIROC5",
+          "GARD_r3 with NorESM1-M",
+          "LOCA_8th with ACCESS1-3",
+          "LOCA_8th with CanESM2",
+          "LOCA_8th with CCSM4",
+          "LOCA_8th with MIROC5",
+          "LOCA_8th with NorESM1-M",
+          "MACA with CanESM2",
+          "MACA with CCSM4",
+          "MACA with MIROC5",
+          "MACA with NorESM1-M",
+          "NASA-NEX with CanESM2",
+          "NASA-NEX with MIROC5",
+          "NASA-NEX with NorESM1-M",
         ];
+
   const combinations_downscaling =
         [
-            "icar",
-            "icar",
-            "icar",
-            "icar",
-            "icar",
-            "loca_8th",
-            "loca_8th",
-            "loca_8th",
-            "loca_8th",
-            "loca_8th",
-            "nasa_nex",
-            "nasa_nex",
-            "nasa_nex",
+          "icar",
+          "icar",
+          "icar",
+          "icar",
+          "icar",
+          "gard_r2",
+          "gard_r2",
+          "gard_r2",
+          "gard_r2",
+          "gard_r2",
+          "gard_r3",
+          "gard_r3",
+          "gard_r3",
+          "gard_r3",
+          "gard_r3",
+          "loca_8th",
+          "loca_8th",
+          "loca_8th",
+          "loca_8th",
+          "loca_8th",
+          "maca",
+          "maca",
+          "maca",
+          "maca",
+          "nasa_nex",
+          "nasa_nex",
+          "nasa_nex",
         ];
+
   const combinations_model =
         [
-            "noresm1_m",
-            "access1_3",
-            "canesm2",
-            "ccsm4",
-            "miroc5",
-            "noresm1_m",
-            "access1_3",
-            "canesm2",
-            "ccsm4",
-            "miroc5",
-            "noresm1_m",
-            "canesm2",
-            "miroc5",
+          "access1_3",
+          "canesm2",
+          "ccsm4",
+          "miroc5",
+          "noresm1_m",
+          "access1_3",
+          "canesm2",
+          "ccsm4",
+          "miroc5",
+          "noresm1_m",
+          "access1_3",
+          "canesm2",
+          "ccsm4",
+          "miroc5",
+          "noresm1_m",
+          "access1_3",
+          "canesm2",
+          "ccsm4",
+          "miroc5",
+          "noresm1_m",
+          "canesm2",
+          "ccsm4",
+          "miroc5",
+          "noresm1_m",
+          "canesm2",
+          "miroc5",
+          "noresm1_m",
         ];
-
   // metric scores: future, read in from dataset
-  const tavg_score = [4, 6, 13, 5, 1, 7, 3, 9, 10, 11, 2, 12, 8];
-  const n34t_score = [10, 12, 4, 6, 1, 7, 13, 3, 2, 5, 8, 11, 9];
-  const ttrend_score = [7, 5, 4, 10, 8, 3, 9, 11, 2, 6, 1, 12, 13];
-  const t90_score = [9, 7, 2, 12, 4, 5, 13, 8, 3, 1, 6, 11, 10];
-  const t99_score = [4, 8, 6, 11, 2, 1, 13, 5, 12, 7, 10, 3, 9];
-  const djf_t_score = [4, 10, 6, 2, 3, 5, 1, 12, 13, 7, 8, 11, 9];
-  const mam_t_score = [12, 3, 13, 1, 7, 2, 10, 4, 11, 9, 8, 5, 6];
-  const jja_t_score =  [9, 6, 5, 4, 10, 2, 3, 13, 1, 7, 11, 12, 8];
-  const son_t_score = [2, 7, 10, 13, 11, 1, 12, 8, 4, 6, 5, 9, 3];
-  const prec_score = [9, 7, 5, 11, 8, 13, 1, 2, 4, 6, 10, 3, 12];
-  const n34pr_score = [12, 10, 6, 13, 2, 8, 11, 4, 9, 1, 3, 7, 5];
-  const ptrend_score = [4, 8, 6, 3, 7, 9, 10, 12, 2, 1, 13, 11, 5];
-  const pr90_score = [2, 13, 10, 9, 3, 11, 1, 4, 5, 6, 8, 12, 7];
-  const pr99_score = [9, 3, 2, 1, 12, 5, 4, 13, 8, 11, 10, 7, 6];
-  const djf_p_score = [6, 11, 4, 10, 5, 1, 3, 13, 12, 9, 8, 2, 7];
-  const mam_p_score = [5, 6, 8, 1, 9, 11, 13, 7, 3, 10, 2, 4, 12];
-  const jja_p_score = [5, 3, 6, 1, 9, 13, 4, 2, 8, 7, 11, 10, 12];
-  const son_p_score = [2, 10, 5, 3, 11, 13, 4, 12, 9, 8, 6, 7, 1];
+  // const jja_t_std_score = [13, 2, 1, 22, 5, 14, 9, 4, 25, 11, 15, 8, 3, 24,
+  //                          10, 23, 18, 16, 26, 20, 19, 17, 27, 21, 6, 12, 7];
+  // const jja_t_r_score = [16, 12, 13, 21, 19, 11, 24, 22, 17, 18, 10, 23,
+  //                        20, 15, 14, 9, 5, 4, 8, 6, 1, 2, 7, 3, 26, 25, 27];
+  const djf_t_std_score = [8, 9, 1, 15, 14, 7, 5, 3, 11, 13, 6, 4, 2, 10, 12,
+                           18, 23, 16, 26, 24, 22, 17, 27, 25, 19, 21, 20];
+  const mam_t_std_score = [7, 4, 1, 27, 17, 9, 6, 3, 16, 19, 8, 5, 2, 15, 18,
+                           20, 24, 12, 21, 26, 23, 14, 22, 25, 11, 10, 13];
+  const jja_t_std_score = [13, 2, 1, 22, 5, 14, 9, 4, 25, 11, 15, 8, 3, 24, 10,
+                           23, 18, 16, 26, 20, 19, 17, 27, 21, 6, 12 , 7];
+  const son_t_std_score = [5, 3, 1, 17, 2, 21, 12, 8, 26, 10, 23, 18, 9, 27, 14,
+                           19, 22, 13, 25, 16, 20, 15, 24, 11, 6, 7 , 4];
+  const djf_p_std_score = [2, 1, 3, 7, 4, 15, 9, 11, 13, 10, 21, 12, 18, 16,
+                            14, 23, 27, 25, 26, 19, 24, 20, 22, 17, 8,  6, 5];
+  const mam_p_std_score = [23, 24, 26, 25, 27, 1, 7, 14, 3, 15, 9, 17, 19, 5,
+                            22, 13, 21, 8, 11, 18, 20, 10, 6, 16, 12,  2, 4];
+  const jja_p_std_score = [25, 24, 26, 23, 27, 4, 2, 8, 1, 17, 20, 14, 21, 18,
+                            22, 3, 7, 5, 6, 11, 12, 10, 9, 13, 16, 15, 19];
+  const son_p_std_score = [1, 3, 2, 4, 8, 7, 16, 9, 15, 12, 6, 17, 11, 18, 13,
+                            19, 23, 27, 25, 22, 20, 26, 24, 21, 5, 14, 10];
 
+  const n34t_r_score = [1, 5, 8, 6, 7, 4, 16, 21, 23, 24, 3, 13, 20, 22, 25,
+                        2, 12, 15, 27, 19, 10, 17, 14, 9, 11, 26, 18];
+  const ttrend_r_score = [27, 8, 10, 19, 5, 15, 14, 2, 18, 1, 16, 12, 4, 21, 3,
+                          26, 25, 6, 23, 13, 20, 9, 24, 7, 17, 22, 11];
+  const t90_r_score = [19, 13, 12, 24, 15, 11, 23, 21, 16, 18, 10, 22, 20, 14,
+                       17, 9, 6, 4, 8, 5, 2, 3, 7, 1, 26, 25, 27];
+  const t99_r_score = [22, 19, 12, 24, 23, 11, 21, 18, 15, 16, 10, 20, 17, 13,
+                       14, 7, 9, 8, 3, 4, 5, 6, 2, 1, 26, 25, 27];
+  const djf_t_r_score = [16, 20, 24, 17, 23, 11, 15, 22, 13, 19, 10, 14, 21, 12,
+                         18, 1, 9, 4, 7, 5, 8, 3, 6, 2, 25, 26, 27];
+  const mam_t_r_score = [24, 21, 16, 22, 23, 20, 14, 11, 15, 18, 19, 12, 10, 13,
+                         17, 8, 4, 3, 6, 9, 2, 1, 5, 7, 25, 26, 27];
+  const jja_t_r_score = [16, 12, 13, 21, 19, 11, 24, 22, 17, 18, 10, 23, 20, 15,
+                         14, 9, 5, 4, 8, 6, 1, 2, 7, 3, 26, 25, 27];
+  const son_t_r_score = [10, 15, 16, 18, 23, 12, 17, 21, 14, 24, 11, 19, 20, 13,
+                         22, 8, 5, 6, 9, 4, 2, 3, 7, 1, 26, 25, 27];
+  const n34pr_r_score = [14, 21, 15, 16, 6, 19, 23, 18, 20, 17, 25, 27, 26, 24,
+                         22, 12, 13, 8, 3, 5, 9, 11, 2, 1, 10, 4, 7];
+  const ptrend_r_score = [10, 9, 14, 25, 7, 20, 17, 13, 23, 11, 18, 16, 8, 22,
+                          19, 21, 6, 4, 24, 5, 15, 3, 27, 1, 12, 26, 2];
+  const pr90_r_score = [13, 10, 12, 14, 11, 21, 15, 20, 22, 17, 24, 16, 19, 23,
+                        18,  3, 4, 5, 2, 1, 6, 7, 9, 8, 25, 27, 26];
+  const pr99_r_score = [21, 10, 17, 24, 13, 19, 14, 15, 23, 11, 20, 18, 12, 22,
+                        16,  5, 3, 2, 4, 1, 8, 6, 9, 7, 27, 25, 26];
+  const djf_p_r_score = [25, 21, 26, 24, 27, 15, 16, 18, 17, 19, 12, 10, 11,
+                          13, 14, 5, 2, 1, 4, 3, 6, 7, 8, 9, 20, 22, 23];
+  const mam_p_r_score = [26, 22, 21, 25, 27, 20, 14, 10, 15, 13, 18, 12, 11,
+                          17, 16, 5, 4, 2, 3, 1, 8, 7, 9, 6, 23, 24, 19];
+  const jja_p_r_score = [24, 26, 25, 27, 23, 18, 22, 20, 19, 21, 13, 17, 15,
+                          16, 14, 2, 6, 4, 3, 1, 9, 7, 8, 5, 11, 12, 10];
+  const son_p_r_score = [24, 25, 26, 23, 27, 17, 21, 18, 15, 12, 16, 14, 10,
+                          13, 11, 4, 1, 3, 5, 2, 8, 7, 9, 6, 20, 19, 22];
 
   function addScores(a,b){
         return a.map((e,i) => e + b[i]);
   };
 
   useEffect(() => {
-    let currentScore = [0,0,0,0,0,0,0,0,0,0,0,0,0];
-    if (metrics1['tavg']) {
-      currentScore = addScores(currentScore, tavg_score);
-    }
+    let currentScore = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    if (metricMethod['Correlation']) {
     if (metrics1['n34t']) {
-      currentScore = addScores(currentScore, n34t_score);
+      currentScore = addScores(currentScore, n34t_r_score);
+    }
+    if (metrics1['n34pr']) {
+      currentScore = addScores(currentScore, n34pr_r_score);
     }
     if (metrics1['ttrend']) {
-      currentScore = addScores(currentScore, ttrend_score);
+      currentScore = addScores(currentScore, ttrend_r_score);
+    }
+    if (metrics1['ptrend']) {
+      currentScore = addScores(currentScore, ptrend_r_score);
     }
     if (metrics2['t90']) {
-      currentScore = addScores(currentScore, t90_score);
+      currentScore = addScores(currentScore, t90_r_score);
     }
     if (metrics2['t99']) {
-      currentScore = addScores(currentScore, t99_score);
+      currentScore = addScores(currentScore, t99_r_score);
     }
-    if (metrics2['djf_t']) {
-      currentScore = addScores(currentScore, djf_t_score);
+    if (metrics2['pr90']) {
+      currentScore = addScores(currentScore, pr90_r_score);
+    }
+    if (metrics2['pr99']) {
+      currentScore = addScores(currentScore, pr99_r_score);
+    }
+    if (metrics3['djf_t']) {
+      currentScore = addScores(currentScore, djf_t_r_score);
     }
     if (metrics3['mam_t']) {
-      currentScore = addScores(currentScore, mam_t_score);
+      currentScore = addScores(currentScore, mam_t_r_score);
     }
     if (metrics3['jja_t']) {
-      currentScore = addScores(currentScore, jja_t_score);
+      currentScore = addScores(currentScore, jja_t_r_score);
     }
     if (metrics3['son_t']) {
-      currentScore = addScores(currentScore, son_t_score);
+      currentScore = addScores(currentScore, son_t_r_score);
     }
-    if (metrics4['prec']) {
-      currentScore = addScores(currentScore, prec_score);
+    if (metrics4['djf_p']) {
+      currentScore = addScores(currentScore, djf_p_r_score);
     }
-    if (metrics4['n34pr']) {
-      currentScore = addScores(currentScore, n34pr_score);
+    if (metrics4['mam_p']) {
+      currentScore = addScores(currentScore, mam_p_r_score);
     }
-    if (metrics4['ptrend']) {
-      currentScore = addScores(currentScore, ptrend_score);
+    if (metrics4['jja_p']) {
+      currentScore = addScores(currentScore, jja_p_r_score);
     }
-    if (metrics5['pr90']) {
-      currentScore = addScores(currentScore, pr90_score);
+    if (metrics4['son_p']) {
+      currentScore = addScores(currentScore, son_p_r_score);
     }
-    if (metrics5['pr99']) {
-      currentScore = addScores(currentScore, pr99_score);
+    } else if (metricMethod['Std. Dev.']) {
+    if (stdDevMetrics1['djf_t']) {
+      currentScore = addScores(currentScore, djf_t_std_score);
     }
-    if (metrics5['djf_p']) {
-      currentScore = addScores(currentScore, djf_p_score);
+    if (stdDevMetrics1['mam_t']) {
+      currentScore = addScores(currentScore, mam_t_std_score);
     }
-    if (metrics6['mam_p']) {
-      currentScore = addScores(currentScore, mam_p_score);
+    if (stdDevMetrics1['jja_t']) {
+      currentScore = addScores(currentScore, jja_t_std_score);
     }
-    if (metrics6['jja_p']) {
-      currentScore = addScores(currentScore, jja_p_score);
+    if (stdDevMetrics1['son_t']) {
+      currentScore = addScores(currentScore, son_t_std_score);
     }
-    if (metrics6['son_p']) {
-      currentScore = addScores(currentScore, son_p_score);
+    if (stdDevMetrics2['djf_p']) {
+      currentScore = addScores(currentScore, djf_p_std_score);
     }
-
+    if (stdDevMetrics2['mam_p']) {
+      currentScore = addScores(currentScore, mam_p_std_score);
+    }
+    if (stdDevMetrics2['jja_p']) {
+      currentScore = addScores(currentScore, jja_p_std_score);
+    }
+    if (stdDevMetrics2['son_p']) {
+      currentScore = addScores(currentScore, son_p_std_score);
+    }
+    }
 
     if (numMetrics === 0) {
       setTopCombination("Select Metrics");
@@ -769,35 +903,23 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       let combo = [];
       let downscaling = [];
       let model = [];
+
       for (let n = 0; n < numClimateSignalSets; n++) {
-        let i = currentScore.indexOf(Math.max(...currentScore));
+        let i = currentScore.indexOf(Math.min(...currentScore));
         console.log(n, "SCORE =", currentScore, "and i", i);
         console.log(n, "best combination =", combinations[i]);
         combo.push(combinations[i]);
         downscaling.push(combinations_downscaling[i]);
         model.push(combinations_model[i]);
-        currentScore[i] = -1;
+        currentScore[i] = 9999;
       }
       setTopCombination(combo);
       setTopDownscaling(downscaling);
       setTopModel(model);
-
-      // let i = currentScore.indexOf(Math.max(...currentScore));
-      // console.log("SCORE =", currentScore, "and i", i)
-      // console.log("best combination =", combinations[i])
-      // setTopCombination(combinations[i])
-      // setTopDownscaling(combinations_downscaling[i])
-      // setTopModel(combinations_model[i])
-      // // set top score to -1 and find new max to find the second largest
-      // currentScore[i] = -1;
-      // let j = currentScore.indexOf(Math.max(...currentScore));
-      // setTopCombination2(combinations[j])
-      // setTopDownscaling2(combinations_downscaling[j])
-      // setTopModel2(combinations_model[j])
     }
   }, [numMetrics,
       setMetrics1, setMetrics2, setMetrics3,
-      setMetrics4, setMetrics5, setMetrics6,
+      setMetrics4,
       numClimateSignalSets]);
 
   const handleRCPValues = useCallback((e) => {
@@ -886,9 +1008,29 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   useEffect(() => {
     const numSelected = countNumMetrics();
     setNumMetrics(numSelected);
-  }, [metrics1, metrics2, metrics3, metrics4, metrics5, metrics6]);
+  }, [metrics1, metrics2, metrics3, metrics4,
+      stdDevMetrics1, stdDevMetrics2,
+      ]);
 
-  const handleMetrics = useCallback((e) => {
+  // const handleMetrics = useCallback((e) => {
+  //   const choice = e;
+  //   const keys = JSON.stringify(Object.keys(e));
+  //   if (keys === '["n34t","n34pr","ttrend","ptrend"]') {
+  //     setMetrics1(e);
+  //   } else if (keys === '["t90","t99","pr90","pr99"]') {
+  //     setMetrics2(e);
+  //   } else if (keys === '["djf_t","mam_t","jja_t","son_t"]') {
+  //     setMetrics3(e);
+  //   } else if (keys === '["prec","n34pr","ptrend"]') {
+  //     setMetrics4(e);
+  //   } else if (keys === '["pr90","pr99","djf_p"]') {
+  //     // setMetrics5(e);
+  //   } else if (keys === '["mam_p","jja_p","son_p"]') {
+  //     // setMetrics6(e);
+  //   }
+  // });
+
+  const handleStdDevMetrics = useCallback((e) => {
     const choice = e;
     const keys = JSON.stringify(Object.keys(e));
     if (keys === '["tavg","n34t","ttrend"]') {
@@ -900,12 +1042,30 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     } else if (keys === '["prec","n34pr","ptrend"]') {
       setMetrics4(e);
     } else if (keys === '["pr90","pr99","djf_p"]') {
-      setMetrics5(e);
+      // setMetrics5(e);
     } else if (keys === '["mam_p","jja_p","son_p"]') {
-      setMetrics6(e);
+      // setMetrics6(e);
     }
   });
 
+  const handleStdDevMetricsChange = useCallback((e) => {
+    const choice = e;
+    const all = e.all;
+    const clear = e.clear;
+
+    if (all) {
+      setNumMetrics(maxStdDevNumMetrics);
+      setMetrics({all: true, clear: false});
+      setStdDevMetrics1({djf_t: true, mam_t: true, jja_t: true, son_t: true,});
+      setStdDevMetrics2({djf_p: true, mam_p: true, jja_p: true, son_p: true,});
+    } else if (clear) {
+      setTopCombination("Select Metrics");
+      setNumMetrics(0);
+      setMetrics({all: false, clear: false});
+      setStdDevMetrics1({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
+      setStdDevMetrics2({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
+    }
+  });
 
   const handleClimateMetricsChange = useCallback((e) => {
     const choice = e;
@@ -915,22 +1075,18 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     if (all) {
       setNumMetrics(maxNumMetrics);
       setMetrics({all: true, clear: false});
-      setMetrics1({tavg: true, n34t: true, ttrend: true,});
-      setMetrics2({t90: true, t99: true, djf_t: true,});
-      setMetrics3({mam_t: true, jja_t: true, son_t: true,});
-      setMetrics4({prec: true, n34pr: true, ptrend: true,});
-      setMetrics5({pr90: true, pr99: true, djf_p: true,});
-      setMetrics6({mam_p: true, jja_p: true, son_p: true,});
+      setMetrics1({n34t: true, n34pr: true, ttrend: true, ptrend: true,});
+      setMetrics2({t90: true, t99: true, pr90: true, pr99: true,});
+      setMetrics3({djf_t: true, mam_t: true, jja_t: true, son_t: true,});
+      setMetrics4({djf_p: true, mam_p: true, jja_p: true, son_p: true,});
     } else if (clear) {
       setTopCombination("Select Metrics");
       setNumMetrics(0);
       setMetrics({all: false, clear: false});
-      setMetrics1({tavg: false, n34t: false, ttrend: false,});
-      setMetrics2({t90: false, t99: false, djf_t: false,});
-      setMetrics3({mam_t: false, jja_t: false, son_t: false,});
-      setMetrics4({prec: false, n34pr: false, ptrend: false,});
-      setMetrics5({pr90: false, pr99: false, djf_p: false,});
-      setMetrics6({mam_p: false, jja_p: false, son_p: false,});
+      setMetrics1({n34t: false, n34pr: false, ttrend: false, ptrend: false,});
+      setMetrics2({t90: false, t99: false, pr90: false, pr99: false,});
+      setMetrics3({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
+      setMetrics4({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
     }
   });
 
@@ -1263,11 +1419,26 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
   };
 
+  const NumDatasetsBox = () => {
+    if (numClimateSignalSets === 1){
+      return(
+      <>
+      <Box>4. TOP DATASET</Box>
+      </>
+      );
+    } else {
+      return(
+      <>
+      <Box>4. TOP {numClimateSignalSets} DATASETS</Box>
+      </>
+      );
+    }
+  };
+
   const NumClimateSignalDatasetsButton = () => {
     return(
       <>
-      <Box>3. NUMBER OF DATASETS</Box>
-      <Box sx={{ml:3}}>Average over {numClimateSignalSets}</Box>
+      <NumDatasetsBox />
       <Slider
         value={numClimateSignalSets}
         min={1}
@@ -1283,7 +1454,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const ClimateSignalComputeButton = () => {
     return(
       <>
-      <Box>4. COMPUTE CLIMATE SIGNAL</Box>
+      <Box>5. COMPUTE CLIMATE SIGNAL</Box>
       <BestPerformingBox topCombination={topCombination}/>
       <Filter
        values={computeClimateSignal}
@@ -1589,21 +1760,15 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     return(
       <>
 
-      <Box sx={{ ...sx.label, mt: [4] }}>1. Select Metrics</Box>
+      <Box sx={{ ...sx.label, mt: [4] }}>1. Analysis Method</Box>
       <Filter
-        values={metrics}
-        setValues={setMetrics}
-        setValues={handleClimateMetricsChange}
+        values={metricMethod}
+        setValues={setMetricMethod}
       />
-      <Filter values={metrics1} setValues={handleMetrics} multiSelect={true} />
-      <Filter values={metrics2} setValues={handleMetrics} multiSelect={true} />
-      <Filter values={metrics3} setValues={handleMetrics} multiSelect={true} />
-      <Filter values={metrics4} setValues={handleMetrics} multiSelect={true} />
-      <Filter values={metrics5} setValues={handleMetrics} multiSelect={true} />
-      <Filter values={metrics6} setValues={handleMetrics} multiSelect={true} />
 
-      <Box sx={{mt:4}}>2. SELECT FUTURE</Box>
-      <Box sx={{ml:3}}>RCP SCENARIO</Box>
+      <MetricBox />
+
+      <Box sx={{mt:4}}>3. FUTURE RCP SCENARIO</Box>
       <Filter
         values={rcpValues}
         setValues={handleRCPValues}
