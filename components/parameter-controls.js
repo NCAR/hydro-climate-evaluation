@@ -19,7 +19,7 @@ const sx = {
 };
 
 const readmeUrl =
-  'https://github.com/scrasmussen/icar-maps?readme-ov-file#hydro-climate-evaluation-map';
+  'https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#hydro-climate-evaluation-map';
 const precipDif = 1.0;
 const tempDif = 0.2;
 
@@ -257,7 +257,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   };
 
   const setMetricLabel = () => {
-    let link = 'https://github.com/scrasmussen/icar-maps?readme-ov-file#metrics';
+    let link = 'https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#metrics';
     let label = 'n34pr';
     let description  = ['further description'];
     if (metric === 'n34pr') {
