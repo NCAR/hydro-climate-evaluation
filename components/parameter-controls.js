@@ -918,9 +918,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       setTopModel(model);
     }
   }, [numMetrics,
-      setMetrics1, setMetrics2, setMetrics3,
-      setMetrics4,
-      numClimateSignalSets]);
+      setMetrics1, setMetrics2, setMetrics3, setMetrics4,
+      stdDevMetrics1, stdDevMetrics2,
+      numClimateSignalSets,
+      metricMethod,
+     ]);
+
 
   const handleRCPValues = useCallback((e) => {
     const choice = e;
@@ -1010,6 +1013,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setNumMetrics(numSelected);
   }, [metrics1, metrics2, metrics3, metrics4,
       stdDevMetrics1, stdDevMetrics2,
+      metricMethod,
       ]);
 
   // const handleMetrics = useCallback((e) => {
@@ -1054,14 +1058,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     const clear = e.clear;
 
     if (all) {
-      setNumMetrics(maxStdDevNumMetrics);
-      setMetrics({all: true, clear: false});
+      setStdDevMetrics({all: true, clear: false});
       setStdDevMetrics1({djf_t: true, mam_t: true, jja_t: true, son_t: true,});
       setStdDevMetrics2({djf_p: true, mam_p: true, jja_p: true, son_p: true,});
     } else if (clear) {
       setTopCombination("Select Metrics");
-      setNumMetrics(0);
-      setMetrics({all: false, clear: false});
+      setStdDevMetrics({all: false, clear: false});
       setStdDevMetrics1({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
       setStdDevMetrics2({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
     }
@@ -1073,7 +1075,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     const clear = e.clear;
 
     if (all) {
-      setNumMetrics(maxNumMetrics);
       setMetrics({all: true, clear: false});
       setMetrics1({n34t: true, n34pr: true, ttrend: true, ptrend: true,});
       setMetrics2({t90: true, t99: true, pr90: true, pr99: true,});
@@ -1081,7 +1082,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       setMetrics4({djf_p: true, mam_p: true, jja_p: true, son_p: true,});
     } else if (clear) {
       setTopCombination("Select Metrics");
-      setNumMetrics(0);
       setMetrics({all: false, clear: false});
       setMetrics1({n34t: false, n34pr: false, ttrend: false, ptrend: false,});
       setMetrics2({t90: false, t99: false, pr90: false, pr99: false,});
