@@ -195,8 +195,15 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const [baseDir, setBaseDir] = useState('map/');
 
-  const [metricMethod, setMetricMethod] = useState({'Std. Dev.': true,
+
+  const [metricMethod, setMetricMethod] = useState({'RMSE': true,
+                                                    'Std. Dev.': false,
                                                     'Correlation': false});
+  const [metricMethod1, setMetricMethod1] = useState({'RMSE': true,
+                                                      'Std. Dev.': false});
+  const [metricMethod2, setMetricMethod2] = useState({'Correlation': false});
+
+
 
   // const [computeChoice, setComputeChoice] = useState({
   //     'Ave.': true,
@@ -367,7 +374,20 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
 
   const MetricBox = () => {
-    if (metricMethod['Std. Dev.']) {
+    if (metricMethod['RMSE']) {
+      return(
+      <>
+      <Box sx={{ ...sx.label, mt: [4] }}>2. Select Metrics</Box>
+      <Filter
+        values={RMSEMetrics}
+        setValues={handleRMSEMetricsChange}
+      />
+      <Filter values={RMSEMetrics1} setValues={setRMSEMetrics1} multiSelect={true} />
+      <Filter values={RMSEMetrics2} setValues={setRMSEMetrics2} multiSelect={true} />
+      </>
+      );
+      }
+    else if (metricMethod['Std. Dev.']) {
       return(
       <>
       <Box sx={{ ...sx.label, mt: [4] }}>2. Select Metrics</Box>
@@ -380,7 +400,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       </>
       );
       }
-      else if (metricMethod['Correlation']) {
+    else if (metricMethod['Correlation']) {
       return(
       <>
       <Box sx={{ ...sx.label, mt: [4] }}>2. Select Metrics</Box>
@@ -606,7 +626,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const [methodAndModel, setMethodAndModel] = //useState(false);
           useState({ "Method & Model": true });
 
-  const [metrics, setMetrics] = useState({ all: false, clear: false, });
+  const [metrics, setMetrics] = useState({ all: false, clear: false, clearall: false});
 
   const [metrics1, setMetrics1] = useState({ n34t: false,
                                              n34pr: false,
@@ -625,7 +645,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
                                              jja_p: false,
                                              son_p: false,});
 
-  const [stdDevMetrics, setStdDevMetrics] = useState({ all: false, clear: false, });
+  const [stdDevMetrics, setStdDevMetrics] = useState({ all: false, clear: false,
+                                                       clearall: false});
   const [stdDevMetrics1, setStdDevMetrics1] = useState({ djf_t: false,
                                                          mam_t: false,
                                                          jja_t: false,
@@ -635,12 +656,29 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
                                                          jja_p: false,
                                                          son_p: false,});
 
+  const [RMSEMetrics, setRMSEMetrics] = useState({ all: false, clear: false,
+                                                   clearall: false});
+  const [RMSEMetrics1, setRMSEMetrics1] = useState({ n34t: false,
+                                                     ttrend: false,
+                                                     t90: false,
+                                                     t99: false,});
+  const [RMSEMetrics2, setRMSEMetrics2] = useState({ n34pr: false,
+                                                     ptrend: false,
+                                                     pr90: false,
+                                                     pr99: false,});
+
+
   const countNumMetrics = () => {
     let count = 0;
+    if (metricMethod['RMSE']) {
+      for (const key in RMSEMetrics1) { RMSEMetrics1[key] === true && count++; }
+      for (const key in RMSEMetrics2) { RMSEMetrics2[key] === true && count++; }
+    }
     if (metricMethod['Std. Dev.']) {
       for (const key in stdDevMetrics1) { stdDevMetrics1[key] === true && count++; }
       for (const key in stdDevMetrics2) { stdDevMetrics2[key] === true && count++; }
-    } else if (metricMethod['Correlation']) {
+    }
+    if (metricMethod['Correlation']) {
       for (const key in metrics1) { metrics1[key] === true && count++; }
       for (const key in metrics2) { metrics2[key] === true && count++; }
       for (const key in metrics3) { metrics3[key] === true && count++; }
@@ -759,55 +797,107 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   //                          10, 23, 18, 16, 26, 20, 19, 17, 27, 21, 6, 12, 7];
   // const jja_t_r_score = [16, 12, 13, 21, 19, 11, 24, 22, 17, 18, 10, 23,
   //                        20, 15, 14, 9, 5, 4, 8, 6, 1, 2, 7, 3, 26, 25, 27];
-  const djf_t_std_score = [8, 9, 1, 15, 14, 7, 5, 3, 11, 13, 6, 4, 2, 10, 12,
+  // gard between 4 and 15, 10 gar models
+  const gadd = 999;
+  const djf_t_std_score = [8, 9, 1, 15, 14,
+                           7+gadd, 5+gadd, 3+gadd, 11+gadd, 13+gadd, 6+gadd, 4+gadd, 2+gadd, 10+gadd, 12+gadd,
                            18, 23, 16, 26, 24, 22, 17, 27, 25, 19, 21, 20];
-  const mam_t_std_score = [7, 4, 1, 27, 17, 9, 6, 3, 16, 19, 8, 5, 2, 15, 18,
+  const mam_t_std_score = [7, 4, 1, 27, 17,
+                           9+gadd, 6+gadd, 3+gadd, 16+gadd, 19+gadd, 8+gadd, 5+gadd, 2+gadd, 15+gadd, 18+gadd,
                            20, 24, 12, 21, 26, 23, 14, 22, 25, 11, 10, 13];
-  const jja_t_std_score = [13, 2, 1, 22, 5, 14, 9, 4, 25, 11, 15, 8, 3, 24, 10,
-                           23, 18, 16, 26, 20, 19, 17, 27, 21, 6, 12 , 7];
-  const son_t_std_score = [5, 3, 1, 17, 2, 21, 12, 8, 26, 10, 23, 18, 9, 27, 14,
-                           19, 22, 13, 25, 16, 20, 15, 24, 11, 6, 7 , 4];
-  const djf_p_std_score = [2, 1, 3, 7, 4, 15, 9, 11, 13, 10, 21, 12, 18, 16,
-                            14, 23, 27, 25, 26, 19, 24, 20, 22, 17, 8,  6, 5];
-  const mam_p_std_score = [23, 24, 26, 25, 27, 1, 7, 14, 3, 15, 9, 17, 19, 5,
-                            22, 13, 21, 8, 11, 18, 20, 10, 6, 16, 12,  2, 4];
-  const jja_p_std_score = [25, 24, 26, 23, 27, 4, 2, 8, 1, 17, 20, 14, 21, 18,
-                            22, 3, 7, 5, 6, 11, 12, 10, 9, 13, 16, 15, 19];
-  const son_p_std_score = [1, 3, 2, 4, 8, 7, 16, 9, 15, 12, 6, 17, 11, 18, 13,
-                            19, 23, 27, 25, 22, 20, 26, 24, 21, 5, 14, 10];
+  const jja_t_std_score = [13, 2, 1, 22, 5,
+                           14+gadd, 9+gadd, 4+gadd, 25+gadd, 11+gadd, 15+gadd, 8+gadd, 3+gadd, 24+gadd, 10+gadd,
+                           23, 18, 16, 26, 20, 19, 17, 27, 21, 6, 12, 7];
+  const son_t_std_score = [5, 3, 1, 17, 2,
+                           21+gadd, 12+gadd, 8+gadd, 26+gadd, 10+gadd, 23+gadd, 18+gadd, 9+gadd, 27+gadd, 14+gadd,
+                           19, 22, 13, 25, 16, 20, 15, 24, 11, 6, 7, 4];
+  const djf_p_std_score = [2, 1, 3, 7, 4,
+                           15+gadd, 9+gadd, 11+gadd, 13+gadd, 10+gadd, 21+gadd, 12+gadd, 18+gadd, 16+gadd, 14+gadd,
+                           23, 27, 25, 26, 19, 24, 20, 22, 17, 8,  6, 5];
+  const mam_p_std_score = [23, 24, 26, 25, 27,
+                           1+gadd, 7+gadd, 14+gadd, 3+gadd, 15+gadd, 9+gadd, 17+gadd, 19+gadd, 5+gadd, 22+gadd,
+                           13, 21, 8, 11, 18, 20, 10, 6, 16, 12,  2, 4];
+  const jja_p_std_score = [25, 24, 26, 23, 27,
+                           4+gadd, 2+gadd, 8+gadd, 1+gadd, 17+gadd, 20+gadd, 14+gadd, 21+gadd, 18+gadd, 22+gadd,
+                           3, 7, 5, 6, 11, 12, 10, 9, 13, 16, 15, 19];
+  const son_p_std_score = [1, 3, 2, 4, 8,
+                           7+gadd, 16+gadd, 9+gadd, 15+gadd, 12+gadd, 6+gadd, 17+gadd, 11+gadd, 18+gadd, 13+gadd,
+                           19, 23, 27, 25, 22, 20, 26, 24, 21, 5, 14, 10];
 
-  const n34t_r_score = [1, 5, 8, 6, 7, 4, 16, 21, 23, 24, 3, 13, 20, 22, 25,
+  const n34t_r_score = [1, 5, 8, 6, 7,
+                        4+gadd, 16+gadd, 21+gadd, 23+gadd, 24+gadd, 3+gadd, 13+gadd, 20+gadd, 22+gadd, 25+gadd,
                         2, 12, 15, 27, 19, 10, 17, 14, 9, 11, 26, 18];
-  const ttrend_r_score = [27, 8, 10, 19, 5, 15, 14, 2, 18, 1, 16, 12, 4, 21, 3,
+  const ttrend_r_score = [27, 8, 10, 19, 5,
+                          15+gadd, 14+gadd, 2+gadd, 18+gadd, 1+gadd, 16+gadd, 12+gadd, 4+gadd, 21+gadd, 3+gadd,
                           26, 25, 6, 23, 13, 20, 9, 24, 7, 17, 22, 11];
-  const t90_r_score = [19, 13, 12, 24, 15, 11, 23, 21, 16, 18, 10, 22, 20, 14,
-                       17, 9, 6, 4, 8, 5, 2, 3, 7, 1, 26, 25, 27];
-  const t99_r_score = [22, 19, 12, 24, 23, 11, 21, 18, 15, 16, 10, 20, 17, 13,
-                       14, 7, 9, 8, 3, 4, 5, 6, 2, 1, 26, 25, 27];
-  const djf_t_r_score = [16, 20, 24, 17, 23, 11, 15, 22, 13, 19, 10, 14, 21, 12,
-                         18, 1, 9, 4, 7, 5, 8, 3, 6, 2, 25, 26, 27];
-  const mam_t_r_score = [24, 21, 16, 22, 23, 20, 14, 11, 15, 18, 19, 12, 10, 13,
-                         17, 8, 4, 3, 6, 9, 2, 1, 5, 7, 25, 26, 27];
-  const jja_t_r_score = [16, 12, 13, 21, 19, 11, 24, 22, 17, 18, 10, 23, 20, 15,
-                         14, 9, 5, 4, 8, 6, 1, 2, 7, 3, 26, 25, 27];
-  const son_t_r_score = [10, 15, 16, 18, 23, 12, 17, 21, 14, 24, 11, 19, 20, 13,
-                         22, 8, 5, 6, 9, 4, 2, 3, 7, 1, 26, 25, 27];
-  const n34pr_r_score = [14, 21, 15, 16, 6, 19, 23, 18, 20, 17, 25, 27, 26, 24,
-                         22, 12, 13, 8, 3, 5, 9, 11, 2, 1, 10, 4, 7];
-  const ptrend_r_score = [10, 9, 14, 25, 7, 20, 17, 13, 23, 11, 18, 16, 8, 22,
-                          19, 21, 6, 4, 24, 5, 15, 3, 27, 1, 12, 26, 2];
-  const pr90_r_score = [13, 10, 12, 14, 11, 21, 15, 20, 22, 17, 24, 16, 19, 23,
-                        18,  3, 4, 5, 2, 1, 6, 7, 9, 8, 25, 27, 26];
-  const pr99_r_score = [21, 10, 17, 24, 13, 19, 14, 15, 23, 11, 20, 18, 12, 22,
-                        16,  5, 3, 2, 4, 1, 8, 6, 9, 7, 27, 25, 26];
-  const djf_p_r_score = [25, 21, 26, 24, 27, 15, 16, 18, 17, 19, 12, 10, 11,
-                          13, 14, 5, 2, 1, 4, 3, 6, 7, 8, 9, 20, 22, 23];
-  const mam_p_r_score = [26, 22, 21, 25, 27, 20, 14, 10, 15, 13, 18, 12, 11,
-                          17, 16, 5, 4, 2, 3, 1, 8, 7, 9, 6, 23, 24, 19];
-  const jja_p_r_score = [24, 26, 25, 27, 23, 18, 22, 20, 19, 21, 13, 17, 15,
-                          16, 14, 2, 6, 4, 3, 1, 9, 7, 8, 5, 11, 12, 10];
-  const son_p_r_score = [24, 25, 26, 23, 27, 17, 21, 18, 15, 12, 16, 14, 10,
-                          13, 11, 4, 1, 3, 5, 2, 8, 7, 9, 6, 20, 19, 22];
+  const t90_r_score = [19, 13, 12, 24, 15,
+                       11+gadd, 23+gadd, 21+gadd, 16+gadd, 18+gadd, 10+gadd, 22+gadd, 20+gadd, 14+gadd, 17+gadd,
+                       9, 6, 4, 8, 5, 2, 3, 7, 1, 26, 25, 27];
+  const t99_r_score = [22, 19, 12, 24, 23,
+                       11+gadd, 21+gadd, 18+gadd, 15+gadd, 16+gadd, 10+gadd, 20+gadd, 17+gadd, 13+gadd, 14+gadd,
+                       7, 9, 8, 3, 4, 5, 6, 2, 1, 26, 25, 27];
+  const djf_t_r_score = [16, 20, 24, 17, 23,
+                         11+gadd, 15+gadd, 22+gadd, 13+gadd, 19+gadd, 10+gadd, 14+gadd, 21+gadd, 12+gadd, 18+gadd,
+                         1, 9, 4, 7, 5, 8, 3, 6, 2, 25, 26, 27];
+  const mam_t_r_score = [24, 21, 16, 22, 23,
+                         20+gadd, 14+gadd, 11+gadd, 15+gadd, 18+gadd, 19+gadd, 12+gadd, 10+gadd, 13+gadd, 17+gadd,
+                         8, 4, 3, 6, 9, 2, 1, 5, 7, 25, 26, 27];
+  const jja_t_r_score = [16, 12, 13, 21, 19,
+                         11+gadd, 24+gadd, 22+gadd, 17+gadd, 18+gadd, 10+gadd, 23+gadd, 20+gadd, 15+gadd, 14+gadd,
+                         9, 5, 4, 8, 6, 1, 2, 7, 3, 26, 25, 27];
+  const son_t_r_score = [10, 15, 16, 18, 23,
+                         12+gadd, 17+gadd, 21+gadd, 14+gadd, 24+gadd, 11+gadd, 19+gadd, 20+gadd, 13+gadd, 22+gadd,
+                         8, 5, 6, 9, 4, 2, 3, 7, 1, 26, 25, 27];
+  const n34pr_r_score = [14, 21, 15, 16, 6,
+                         19+gadd, 23+gadd, 18+gadd, 20+gadd, 17+gadd, 25+gadd, 27+gadd, 26+gadd, 24+gadd, 22+gadd,
+                         12, 13, 8, 3, 5, 9, 11, 2, 1, 10, 4, 7];
+  const ptrend_r_score = [10, 9, 14, 25, 7,
+                          20+gadd, 17+gadd, 13+gadd, 23+gadd, 11+gadd, 18+gadd, 16+gadd, 8+gadd, 22+gadd, 19+gadd,
+                          21, 6, 4, 24, 5, 15, 3, 27, 1, 12, 26, 2];
+  const pr90_r_score = [13, 10, 12, 14, 11,
+                        21+gadd, 15+gadd, 20+gadd, 22+gadd, 17+gadd, 24+gadd, 16+gadd, 19+gadd, 23+gadd, 18+gadd,
+                        3, 4, 5, 2, 1, 6, 7, 9, 8, 25, 27, 26];
+  const pr99_r_score = [21, 10, 17, 24, 13,
+                        19+gadd, 14+gadd, 15+gadd, 23+gadd, 11+gadd, 20+gadd, 18+gadd, 12+gadd, 22+gadd, 16+gadd,
+                        5, 3, 2, 4, 1, 8, 6, 9, 7, 27, 25, 26];
+  const djf_p_r_score = [25, 21, 26, 24, 27,
+                         15+gadd, 16+gadd, 18+gadd, 17+gadd, 19+gadd, 12+gadd, 10+gadd, 11+gadd, 13+gadd, 14+gadd,
+                         5, 2, 1, 4, 3, 6, 7, 8, 9, 20, 22, 23];
+  const mam_p_r_score = [26, 22, 21, 25, 27,
+                         20+gadd, 14+gadd, 10+gadd, 15+gadd, 13+gadd, 18+gadd, 12+gadd, 11+gadd, 17+gadd, 16+gadd,
+                         5, 4, 2, 3, 1, 8, 7, 9, 6, 23, 24, 19];
+  const jja_p_r_score = [24, 26, 25, 27, 23,
+                         18+gadd, 22+gadd, 20+gadd, 19+gadd, 21+gadd, 13+gadd, 17+gadd, 15+gadd, 16+gadd, 14+gadd,
+                         2, 6, 4, 3, 1, 9, 7, 8, 5, 11, 12, 10];
+  const son_p_r_score = [24, 25, 26, 23, 27,
+                         17+gadd, 21+gadd, 18+gadd, 15+gadd, 12+gadd, 16+gadd, 14+gadd, 10+gadd, 13+gadd, 11+gadd,
+                         4, 1, 3, 5, 2, 8, 7, 9, 6, 20, 19, 22];
+
+  const n34t_rmse_score = [1, 8, 26, 5, 15,
+                           7+gadd, 4+gadd, 25+gadd, 10+gadd, 19+gadd, 6+gadd, 3+gadd, 24+gadd, 12+gadd, 18+gadd,
+                           2, 13, 23, 11, 16, 22, 27, 14, 20, 21, 9, 17];
+  const ttrend_rmse_score = [8, 15, 13, 26, 17,
+                             6+gadd, 18+gadd, 9+gadd, 24+gadd, 12+gadd, 5+gadd, 19+gadd, 10+gadd, 23+gadd, 11+gadd,
+                             16, 14, 7, 22, 3, 20, 21, 27, 2, 4, 25, 1];
+  const t90_rmse_score = [25, 26, 27, 20, 22,
+                          11+gadd, 16+gadd, 19+gadd, 12+gadd, 15+gadd, 10+gadd, 17+gadd, 18+gadd, 13+gadd, 14+gadd,
+                          1, 7, 4, 2, 5, 8, 6, 9, 3, 23, 21, 24];
+  const t99_rmse_score = [22, 23, 26, 21, 20,
+                          11+gadd, 16+gadd, 19+gadd, 12+gadd, 15+gadd, 10+gadd, 17+gadd, 18+gadd, 13+gadd, 14+gadd,
+                          5, 8, 4, 2, 1, 6, 9, 7, 3, 25, 24, 27];
+  const n34pr_rmse_score = [4, 25, 23, 14, 5,
+                            17+gadd, 22+gadd, 20+gadd, 15+gadd, 12+gadd, 24+gadd, 26+gadd, 27+gadd, 19+gadd, 21+gadd,
+                            3, 8, 16, 11, 9, 1, 18, 7, 6, 2, 10, 13];
+  const ptrend_rmse_score = [8, 12, 17, 27, 7,
+                             16+gadd, 24+gadd, 6+gadd, 26+gadd, 5+gadd, 13+gadd, 22+gadd, 11+gadd, 25+gadd, 10+gadd,
+                             15, 9, 19, 14, 4, 20, 23, 21, 2, 3, 18, 1];
+  const pr90_rmse_score = [13, 10, 11, 14, 12,
+                           21+gadd, 16+gadd, 20+gadd, 22+gadd, 19+gadd, 24+gadd, 15+gadd, 17+gadd, 23+gadd, 18+gadd,
+                           5, 1, 3, 4, 2, 6, 7, 9, 8, 27, 26, 25];
+  const pr99_rmse_score = [14, 2, 13, 15, 12,
+                           8+gadd, 4+gadd, 5+gadd, 11+gadd, 1+gadd, 9+gadd, 7+gadd, 3+gadd, 10+gadd, 6+gadd,
+                           25, 21, 22, 24, 23, 19, 17, 20, 18, 27, 16, 26];
+
 
   function addScores(a,b){
         return a.map((e,i) => e + b[i]);
@@ -865,7 +955,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     if (metrics4['son_p']) {
       currentScore = addScores(currentScore, son_p_r_score);
     }
-    } else if (metricMethod['Std. Dev.']) {
+    }
+
+    if (metricMethod['Std. Dev.']) {
     if (stdDevMetrics1['djf_t']) {
       currentScore = addScores(currentScore, djf_t_std_score);
     }
@@ -892,6 +984,35 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
     }
 
+    if (metricMethod['RMSE']) {
+    if (RMSEMetrics1['n34t']) {
+      currentScore = addScores(currentScore, n34t_rmse_score);
+    }
+    if (RMSEMetrics1['ttrend']) {
+      currentScore = addScores(currentScore, ttrend_rmse_score);
+    }
+    if (RMSEMetrics1['t90']) {
+      currentScore = addScores(currentScore, t90_rmse_score);
+    }
+    if (RMSEMetrics1['t99']) {
+      currentScore = addScores(currentScore, t99_rmse_score);
+    }
+    if (RMSEMetrics2['n34pr']) {
+      currentScore = addScores(currentScore, n34pr_rmse_score);
+    }
+    if (RMSEMetrics2['ptrend']) {
+      currentScore = addScores(currentScore, ptrend_rmse_score);
+    }
+    if (RMSEMetrics2['pr90']) {
+      currentScore = addScores(currentScore, pr90_rmse_score);
+    }
+    if (RMSEMetrics2['pr99']) {
+      currentScore = addScores(currentScore, pr99_rmse_score);
+    }
+    }
+
+
+
     if (numMetrics === 0) {
       setTopCombination("Select Metrics");
       setTopDownscaling("None");
@@ -908,6 +1029,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         let i = currentScore.indexOf(Math.min(...currentScore));
         console.log(n, "SCORE =", currentScore, "and i", i);
         console.log(n, "best combination =", combinations[i]);
+        // if this is true it is a GARD model, with no future runs and data yet
+        // if (i > 4 && i < 15) {
+        //   console.log("best combo a GARD model, removing");
+        //   currentScore[i] = 9999;
+        //   continue;
+        // }
         combo.push(combinations[i]);
         downscaling.push(combinations_downscaling[i]);
         model.push(combinations_model[i]);
@@ -920,6 +1047,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   }, [numMetrics,
       setMetrics1, setMetrics2, setMetrics3, setMetrics4,
       stdDevMetrics1, stdDevMetrics2,
+      RMSEMetrics1, RMSEMetrics2,
       numClimateSignalSets,
       metricMethod,
      ]);
@@ -1013,8 +1141,27 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setNumMetrics(numSelected);
   }, [metrics1, metrics2, metrics3, metrics4,
       stdDevMetrics1, stdDevMetrics2,
+      RMSEMetrics1, RMSEMetrics2,
       metricMethod,
       ]);
+
+  useEffect(() => {
+    if (metricMethod1['RMSE']) {
+      setMetricMethod({'RMSE': true, 'Std. Dev.': false, 'Correlation': false});
+      setMetricMethod2({'Correlation': false});
+    }
+    else if (metricMethod1['Std. Dev.']) {
+      setMetricMethod({'RMSE': false, 'Std. Dev.': true, 'Correlation': false});
+      setMetricMethod2({'Correlation': false});
+    }
+  }, [metricMethod1]);
+
+  useEffect(() => {
+    if (metricMethod2['Correlation']) {
+      setMetricMethod({'RMSE': false, 'Std. Dev.': false, 'Correlation': true});
+      setMetricMethod1({'RMSE': false, 'Std. Dev.': false});
+    }
+  }, [metricMethod2]);
 
   // const handleMetrics = useCallback((e) => {
   //   const choice = e;
@@ -1052,37 +1199,87 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
   });
 
-  const handleStdDevMetricsChange = useCallback((e) => {
-    const choice = e;
+  const handleRMSEMetricsChange = useCallback((e) => {
     const all = e.all;
     const clear = e.clear;
+    const clearall = e.clearall;
 
     if (all) {
-      setStdDevMetrics({all: true, clear: false});
+      setRMSEMetrics({all: true, clear: false, clearall: false});
+      setRMSEMetrics1({n34t: true, ttrend: true, t90: true, t99: true,});
+      setRMSEMetrics2({n34pr: true, ptrend: true, pr90: true, pr99: true,});
+    } else if (clear) {
+      setRMSEMetrics({all: false, clear: false, clearall: false});
+      setRMSEMetrics1({n34t: false, ttrend: false, t90: false, t99: false,});
+      setRMSEMetrics2({n34pr: false, ptrend: false, pr90: false, pr99: false,});
+    } else if (clearall) {
+      setRMSEMetrics({all: false, clear: false, clearall: false});
+      setRMSEMetrics1({n34t: false, ttrend: false, t90: false, t99: false,});
+      setRMSEMetrics2({n34pr: false, ptrend: false, pr90: false, pr99: false,});
+      setStdDevMetrics({all: false, clear: false, clearall: false});
+      setStdDevMetrics1({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
+      setStdDevMetrics2({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
+      setMetrics({all: false, clear: false, clearall: false});
+      setMetrics1({n34t: false, n34pr: false, ttrend: false, ptrend: false,});
+      setMetrics2({t90: false, t99: false, pr90: false, pr99: false,});
+      setMetrics3({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
+      setMetrics4({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
+    }
+  });
+
+  const handleStdDevMetricsChange = useCallback((e) => {
+    const all = e.all;
+    const clear = e.clear;
+    const clearall = e.clearall;
+
+    if (all) {
+      setStdDevMetrics({all: true, clear: false, clearall: false});
       setStdDevMetrics1({djf_t: true, mam_t: true, jja_t: true, son_t: true,});
       setStdDevMetrics2({djf_p: true, mam_p: true, jja_p: true, son_p: true,});
     } else if (clear) {
-      setTopCombination("Select Metrics");
-      setStdDevMetrics({all: false, clear: false});
+      setStdDevMetrics({all: false, clear: false, clearall: false});
       setStdDevMetrics1({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
       setStdDevMetrics2({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
+    } else if (clearall) {
+      setRMSEMetrics({all: false, clear: false, clearall: false});
+      setRMSEMetrics1({n34t: false, ttrend: false, t90: false, t99: false,});
+      setRMSEMetrics2({n34pr: false, ptrend: false, pr90: false, pr99: false,});
+      setStdDevMetrics({all: false, clear: false, clearall: false});
+      setStdDevMetrics1({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
+      setStdDevMetrics2({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
+      setMetrics({all: false, clear: false, clearall: false});
+      setMetrics1({n34t: false, n34pr: false, ttrend: false, ptrend: false,});
+      setMetrics2({t90: false, t99: false, pr90: false, pr99: false,});
+      setMetrics3({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
+      setMetrics4({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
     }
   });
 
   const handleClimateMetricsChange = useCallback((e) => {
-    const choice = e;
     const all = e.all;
     const clear = e.clear;
+    const clearall = e.clearall;
 
     if (all) {
-      setMetrics({all: true, clear: false});
+      setMetrics({all: true, clear: false, clearall: false});
       setMetrics1({n34t: true, n34pr: true, ttrend: true, ptrend: true,});
       setMetrics2({t90: true, t99: true, pr90: true, pr99: true,});
       setMetrics3({djf_t: true, mam_t: true, jja_t: true, son_t: true,});
       setMetrics4({djf_p: true, mam_p: true, jja_p: true, son_p: true,});
     } else if (clear) {
-      setTopCombination("Select Metrics");
-      setMetrics({all: false, clear: false});
+      setMetrics({all: false, clear: false, clearall: false});
+      setMetrics1({n34t: false, n34pr: false, ttrend: false, ptrend: false,});
+      setMetrics2({t90: false, t99: false, pr90: false, pr99: false,});
+      setMetrics3({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
+      setMetrics4({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
+    } else if (clearall) {
+      setRMSEMetrics({all: false, clear: false, clearall: false});
+      setRMSEMetrics1({n34t: false, ttrend: false, t90: false, t99: false,});
+      setRMSEMetrics2({n34pr: false, ptrend: false, pr90: false, pr99: false,});
+      setStdDevMetrics({all: false, clear: false, clearall: false});
+      setStdDevMetrics1({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
+      setStdDevMetrics2({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
+      setMetrics({all: false, clear: false, clearall: false});
       setMetrics1({n34t: false, n34pr: false, ttrend: false, ptrend: false,});
       setMetrics2({t90: false, t99: false, pr90: false, pr99: false,});
       setMetrics3({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
@@ -1114,7 +1311,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         rel="noopener noreferrer"
         prefix={<RotatingArrow />}
       >
-        README
+        HELP
       </Button>
       </>
     );
@@ -1442,7 +1639,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       <Slider
         value={numClimateSignalSets}
         min={1}
-        max={4} // or combinations.length later
+        max={10} // or combinations.length later
         step={1}
         onChange={handleNumClimateSignalSets}
         sx={{mb:4}}
@@ -1762,8 +1959,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
       <Box sx={{ ...sx.label, mt: [4] }}>1. Analysis Method</Box>
       <Filter
-        values={metricMethod}
-        setValues={setMetricMethod}
+        values={metricMethod1}
+        setValues={setMetricMethod1}
+      />
+      <Filter
+        values={metricMethod2}
+        setValues={setMetricMethod2}
       />
 
       <MetricBox />
