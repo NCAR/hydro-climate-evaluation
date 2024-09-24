@@ -31,6 +31,13 @@ clean:
 cleanall: clean
 	rm -rf node_modules .next
 
+scp:
+	scp 
+
+untar:
+	tar zxf hatch_data.tar.gz
+	mv hatch_data data
+
 # runcached:
 # 	docker run -it -p ${port}:${port} --name runicarmaps icarmaps
 # 	docker run -t -d -p ${port}:${port} --name runicarmaps icarmaps
