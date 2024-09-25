@@ -45,6 +45,10 @@ const Index = () => {
   const [metric, setMetric] = useState('djf_t');
   const [rcp, setRCP] = useState('4.5');
 
+  const [bucketRes, setBucketRes] = useState(
+    {'Low': true,
+     'High': false});
+
   // const [yearRange, setYearRange] = useState('1980_2010')
   const [yearRange, setYearRange] = useState('1981_2004', '2070_2100');
   // diff dataset variables for model to compare against
@@ -96,7 +100,7 @@ const Index = () => {
                     downscalingDif, modelDif, yearRangeDif, obsDif,
                     mapSourceDif, chartSourceDif, scaleDif,
                     bucket_ndp, chartHeight, computeChoice,
-                    showClimateChange, showRegionPlot};
+                    showClimateChange, showRegionPlot, bucketRes};
   const setters = {
     setDisplay,
     setReload,
@@ -124,7 +128,8 @@ const Index = () => {
     setChartData,
     setComputeChoice,
     setShowClimateChange,
-    setShowRegionPlot
+    setShowRegionPlot,
+    setBucketRes
   };
 
   const fillValue = 3.4028234663852886e38; // black on land, red nans

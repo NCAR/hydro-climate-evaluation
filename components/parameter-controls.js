@@ -21,11 +21,11 @@ const sx = {
 const readmeUrl =
   'https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#hydro-climate-evaluation-map';
 const precipDif = 1.0;
-const tempDif = 0.2;
+const tempDif = 0.1;
 
 const Scale_Values = {
   // diference colormap
-  dif: 0.2,
+  dif: 0.11,
   dift: tempDif,
   difp: precipDif,
 
@@ -44,8 +44,8 @@ const Scale_Values = {
   dif_prec: precipDif,
   dif_n34pr: precipDif,
   dif_ptrend: 0.1,
-  dif_p90: precipDif,
-  dif_p99: precipDif,
+  dif_pr90: 0.1,
+  dif_pr99: 0.1,
   dif_djf_p: precipDif,
   dif_mam_p: precipDif,
   dif_jja_p: precipDif,
@@ -141,8 +141,8 @@ const Default_Colormaps = {
   dif_prec: 'difbrowngreen',
   dif_n34pr: 'difbrowngreen',
   dif_ptrend: 'difbrowngreen',
-  dif_p90: 'difbrowngreen',
-  dif_p99: 'difbrowngreen',
+  dif_pr90: 'difbrowngreen',
+  dif_pr99: 'difbrowngreen',
   dif_djf_p: 'difbrowngreen',
   dif_mam_p: 'difbrowngreen',
   dif_jja_p: 'difbrowngreen',
@@ -157,7 +157,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           downscalingDif, modelDif, yearRangeDif, obsDif,
           mapSourceDif, chartSourceDif, scaleDif,
           chartHeight, computeChoice,
-          showClimateChange, showRegionPlot
+          showClimateChange, showRegionPlot, bucketRes
         } = getters;
   const {
     setDisplay,
@@ -185,8 +185,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setChartData,
     setComputeChoice,
     setShowClimateChange,
-    setShowRegionPlot
+    setShowRegionPlot,
+    setBucketRes
   } = setters;
+
+  // 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/',
+  // 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/'});
 
   // const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false});
 
@@ -487,6 +491,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     if (computeChoice['Climate Signal']) {
       timeRange = getRCPKey(rcpValues);
     }
+    if (yearRange === '2070_2100') {
+      timeRange = getRCPKey(rcpValues);
+    }
 
     setMapSource([bucket+baseDir+downscaling+'/'+safemodel+'/'+timeRange+'/'+fname]);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
@@ -512,6 +519,10 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     if (computeChoice['Climate Signal']) {
       timeRange = getRCPKey(rcpValues)
     }
+    if (yearRange === '2070_2100') {
+      timeRange = getRCPKey(rcpValues);
+    }
+
 
     setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+timeRange+'/'+fname]);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
@@ -1089,12 +1100,20 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
 
   const handleSignalChoice = useCallback((e) => {
+    const choice = e;
     console.log("metric per", metricPerformance);
     console.log("method and model", methodAndModel);
     setMetricPerformance(prev =>
                          ({"Metric Performance": !prev["Metric Performance"]}));
     setMethodAndModel(prev =>
                       ({"Method & Model": !prev["Method & Model"]}));
+    if (choice["Method & Model"]) {
+    // if (methodAndModel["Method & Model"]) {
+      const rcp = getRCPKey(rcpValues);
+      let url = [bucket+baseDir+downscaling+'/'+model+'/'+rcp+'/'+fname];
+      setMapSource(url);
+    }
+
   });
 
   const handleNumClimateSignalSets = useCallback((e) => {
@@ -1344,7 +1363,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       setYearRangeDif('1980_2010');
       return(
         [<option value='1980_2010'>1980-2010</option>,
-         <option value='2070_2100'>2070-2100</option>]
+         <option value='2070_2100'>2006-2099</option>]
       );
     } else {
       setYearRangeDif('1980_2010');
@@ -1427,7 +1446,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     >
       {/* DifYearChoices() */}
       <option value='1980_2010'>1980-2010</option>
-      <option value='2070_2100'>2070-2100</option>
+      <option value='2070_2100'>2006-2099</option>
     </Select>
 
     <Box sx={{ ...sx.label, mt: [3] }}>
@@ -1531,6 +1550,10 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         // handleFilterAndSetClimColormapName(newValues);
         // above func handled below
         let yearRange_l = yearRange;
+        if (yearRange === '2070_2100') {
+          yearRange_l= getRCPKey(rcpValues);
+        }
+
         if (newValues['Ave.']) {
           setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
           setColormapName(Default_Colormaps[metric]);
@@ -1612,7 +1635,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       setYearRangeDif('1980_2010');
       return(
         [<option value='1980_2010'>1980-2010</option>,
-         <option value='2070_2100'>2070-2100</option>]
+         <option value='2070_2100'>2006-2099</option>]
       );
     } else {
       setYearRangeDif('1980_2010');
@@ -1744,11 +1767,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           {(downscaling != 'gard_r2' &&
             downscaling != 'gard_r3') && (
             <>
-            <option value='2070_2100'>2070-2100</option>
+            <option value='2070_2100'>2006-2099</option>
             </>
           )}
 {/*       <option value='1980_2010'>1980-2010</option>
-          <option value='2070_2100'>2070-2100</option>*/}
+          <option value='2070_2100'>2006-2099</option>*/}
      </Select>
      </>
     );
@@ -1876,7 +1899,17 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           setValues={handleAveChange}
           sx={{mt:3}}
         />
-        <Box sx={{ ...sx.label, mt: [3] }}>Dataset</Box>
+      <Box sx={{ ...sx.label, mt: [3] }}>Year Range</Box>
+      <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          sx={{ mt: [1] }}
+          value={'1981_2004'}
+       >
+          <option value='1981_2004'>1981-2004</option>
+     </Select>
+
+        <Box sx={{ ...sx.label, mt: [4] }}>Dataset</Box>
         <Select
           sxSelect={{ bg: 'transparent' }}
           size='xs'
@@ -1912,6 +1945,17 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         values={metricPerformance}
         setValues={handleSignalChoice}
       />
+      <Box sx={{ ...sx.label, mt: [2] }}>
+        Year Range
+      </Box>
+      <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          sx={{ mt: [1] }}
+          value={'2070_2100'}
+       >
+          <option value='2070_2100'>2006-2099</option>
+      </Select>
       </>
     );
   };
