@@ -178,7 +178,26 @@ const Colorbar = ({
         setClim((prev) => [Math.min(init[0] + dy * scale, 0), Math.max(init[1] - dy * scale, 0)])
       return;
     }
+
     if (filterValues['Ave.']) {
+      // prevent these precip values from dropping below 0
+      if (band === 'djfp' || band === 'jjap' ||
+          band === 'mamp' || band === 'sonp' ) {
+      if (horizontal) {
+        if (id === 'min')
+          setClim((prev) => [Math.min(init[0] + dx * scale, init[1]), prev[1]])
+        if (id === 'max')
+          setClim((prev) => [prev[0], Math.max(init[1] + dx * scale, init[0])])
+      } else {
+        if (id === 'min')
+          setClim((prev) => [Math.min(Math.abs(init[0] - dy * scale), init[1]), prev[1]])
+        if (id === 'max')
+          setClim((prev) => [prev[0], Math.max(init[1] - dy * scale, init[0])])
+      }
+      return;
+      }
+
+
       if (horizontal) {
         if (id === 'min')
           setClim((prev) => [Math.min(init[0] + dx * scale, init[1]), prev[1]])
