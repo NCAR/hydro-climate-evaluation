@@ -97,6 +97,7 @@ const Clim_Ranges = {
   dif_son_p: { max: 50, min: -50 },
 };
 
+const precip_colorname = 'blueprecip';
 const Default_Colormaps = {
   // temperature variables
   tavg: 'BuYlRd',
@@ -113,12 +114,12 @@ const Default_Colormaps = {
   prec: 'browngreen',
   n34pr: 'browngreen',
   ptrend: 'browngreen',
-  pr90: 'browngreen',
-  pr99: 'browngreen',
-  djf_p: 'browngreen',
-  mam_p: 'browngreen',
-  jja_p: 'browngreen',
-  son_p: 'browngreen',
+  pr90: precip_colorname,
+  pr99: precip_colorname,
+  djf_p: precip_colorname,
+  mam_p: precip_colorname,
+  jja_p: precip_colorname,
+  son_p: precip_colorname,
 
   // difference colormap
   dif: 'difredblue',
@@ -1319,6 +1320,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const LocalColorbar = () => {
     return (
+      <>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <Colorbar
         colormap={colormap}
@@ -1330,6 +1332,10 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         scaleDif={scaleDif}
       />
       </Box>
+      <Box sx={{ mt: [2], justifyContent: 'center'}}>
+      drag range
+      </Box>
+      </>
     );
   };
 
