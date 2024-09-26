@@ -1523,6 +1523,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       >
       {/* DifModelChoices() */}
         <option value='conus404'>Conus404</option>
+        <option value='gmet'>GMET</option>
         <option value='livneh'>Livneh</option>
         <option value='maurer'>Maurer</option>
         <option value='nldas'>NLDAS</option>
@@ -1918,6 +1919,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           value={obsDif}
         >
           <option value='conus404'>Conus404</option>
+          <option value='gmet'>GMET</option>
           <option value='livneh'>Livneh</option>
           <option value='maurer'>Maurer</option>
           <option value='nldas'>NLDAS</option>
