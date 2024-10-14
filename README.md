@@ -22,7 +22,8 @@ The site [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydr
 | 1981-2004 | Time range data yearly data averaged over |
 
 ### Downscaling Methods
-See this detailed [downscaling method document](https://docs.google.com/spreadsheets/d/e/2PACX-1vTYqCetwsunFVtImQ04HcmqH8uTrh62IGkkohCrAUD4oguSMfb9naUxsbYUCthsOw/pubhtml)
+See this detailed [downscaling method document](https://raw.githubusercontent.com/NCAR/hydro-climate-evaluation/refs/heads/main/docs/downscalingMethodsMatrix.html)
+<!-- google doc link https://docs.google.com/spreadsheets/d/e/2PACX-1vTYqCetwsunFVtImQ04HcmqH8uTrh62IGkkohCrAUD4oguSMfb9naUxsbYUCthsOw/pubhtml --->
 for more information on some of the dataset mapped.
 
 | **Name** | **URL**                                                                                               |
