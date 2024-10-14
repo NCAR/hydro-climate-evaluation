@@ -1,0 +1,74 @@
+Downscaling method,Literature describing method ,Datasets that use this method,Dataset descriptor paper(s),Data access,"Resolution
+( 1/8 ~= 12-km
+1/24 ~= 4-km )",Scenarios downscaled,Variables downscaled,Dataset domain & period,Training or calibration dataset,Other Notes
+STATISTICAL,,,,,,,,,,
+Bias Correction and Spatial Disaggregation (BCSD),"Wood et al. (2002)
+Wood et al. (2004)",21st Century Hydrologic Projections for Alaska and Hawaii,Mizukami et al. (2022),Public - NCAR Climate Data Gateway,"Daily, 1-km (Hawai'i) and 12-km (Alaska)","CMIP5 - historical, RCP4.5, RCP8.5","pr, tmax, tmin","Alaska and Hawai'i, 1950-2099","Daymet,
+University of Hawai'i dataset",
+,,"Downscaled CMIP3 and CMIP5
+Climate and Hydrology Projections (Bureau of Reclamation project) - BCSD simulations",Brekke et al. (2013),Public - GDO,"Monthly, 1/8°","CMIP5 - historical, RCP2.6, RCP4.5, RCP6.0, RCP8.5","pr, t_mean, tasmin, tasmax","CONUS, 1950-2099",Maurer et al 2002,
+,,NASA Earth Exchange Global Daily Downscaled Projections (NEX-GDDP),"Thrasher et al., 2012
+Thrasher et al. (2022)",Public - AWS S3 & NCCS THREDDS,"Daily, 0.25°","CMIP5 - historical, rcp45, rcp85
+CMIP6 - historical, ssp245, ssp370, ssp585","pr, tasmin, tasmax","Global, 1950-2099","Global Meteorological Forcing Dataset for Land Surface Modeling (GMFD)
+",
+,,NASA Earth Exchange (NEX) Downscaled Climate Projections (NEX-DCP30),NEX-DCP30 Tech Note,"Public - AWS S3
+(NCCS THREDDS link does not work)","Monthly, 30 arc-seconds (0.0083°)","CMIP5 - historical, RCP2.6, RCP4.5, RCP6.0, RCP8.5","pr, tasmin, tasmax","CONUS, 1950-2099",PRISM,
+Quantile Delta Mapping,Cannon et al. (2015),Climate Impacts Lab (CIL) Global Downscaled Projections for Climate Impacts Research,Gergel et al. (2024),Public - Planetary Computer,"Daily, 0.25°","CMIP6 - historical, SSP126, SSP245, SSp370, SSP585","pr, tasmin, tasmax","Global, 1950-2100",ERA5,"""This project makes use of statistical bias correction and downscaling algorithms... specifically designed to accurately represent changes in the extremes. ...we selected Quantile Delta Mapping (QDM), following the method introduced by Cannon et al. (2015), which preserves quantile-specific trends from the GCM while fitting the full distribution for a given day-of-year to... ERA5.
+We then introduce a similar method... to increase spatial resolution while preserving extreme behavior, Quantile-Preserving Localized-Analog Downscaling (QPLAD).
+Together, these methods provide a robust means to handle both the central and tail behavior seen in climate model output... and providing the spatial granularity needed to study surface impacts."""
+Constructed analog (CA) techniques,"Hidalgo et al. (2008)
+Maurer et al. (2010)
+Abatzoglou & Brown (2012)
+Gutmann et al. (2014)
+","Downscaled CMIP3 and CMIP5
+Climate and Hydrology Projections (Bureau of Reclamation project) - Bias Correction Constructed Analogs (BCCA) simulations",Brekke et al. (2013),Public - GDO,"Daily, 1/8°","CMIP5 - historical, RCP2.6, RCP4.5, RCP6.0, RCP8.5","pr, tasmin, tasmax","CONUS, 1950-2099",Maurer et al 2002,
+,,Double Bias Correction Constructed Analogs (DBCCA) (Oak Ridge National Lab),Rastogi et al. (2022),Public - ORNL,"Daily, 1/24°","6 CMIP6 members - historical, SSP585","pr, tasmin, tasmax","CONUS, 1980-2060",Livneh & Daymet (2 versions of DBCCA),
+,,Multivariate Adaptive Constructed Analogs (MACA),Abatzoglou & Brown (2011),Public - Climatology Lab,"Daily, at 4-km (gridMet-trained) and 6-km (Livneh-trained)","CMIP5 - historical, RCP4.5, and RCP8.5","lots (pr, tasmin, tasmax, hurs, ...)","CONUS, 1950-2100",6-km Livneh & 4-km gridMet (2 versions of MACA) ,CMIP6 version of MACA in progress - available sometime soon?
+,,Carbon Plan MACA,Chegwidden et al. (2022),Public - GitHub,"Daily, 0.25°","CMIP6 (MRI-ESM2, NorESM) - historical, SSP245, SSP585","pr, tasmin, tasmax","Global, 1950-2099",ERA5,
+,,CanDCS-M6,Sobie et al. (2023),Public,"Daily, 1/12°","CMIP6 - historical, SSP126, SSP245, SSP585","pr, tasmin, tasmax","Canada, 1950-2100","3 calibration datasets:
+AHCCDv3
+Adjusted Precipitation Dataset for Canada
+PNWNAmet",
+,,Bias Correction Constructed Analogues with Quantile mapping reordering (BCCAQ),Gebrechorkos et al 2023,Public - CEDA Archive,"Daily, 0.25°","18 CMIP6 GCMS - historical, SSP245, SSp370, SSP585","pr, ta, tmin,tmax, hus, wind, pressure, ps, hurs, sfcWind","Global, 1981-2100",GloH2O (MSWX & MSWEP),
+Locally constructed analogs (LoCA),Pierce et al. (2014),Locally Constructed Analogs (LOCA) versions 1 (CMIP5) and 2 (CMIP6),"LOCA: Pierce et al. (2014)
+LOCA2: Pierce et al. (2023)","Public -
+CMIP5
+CMIP6","Daily, 1/16°","CMIP6 - historical , ssp245, ssp370, and ssp585","precip, tasmin, tasmax","CONUS, 1950-2100","Livneh (LOCA)
+Livneh-unsplit (LOCA2)",
+The Ensemble Generalized Analog Regression Downscaling (En-GARD),Gutmann et al. (2022),En-GARD,Gutmann et al. (2022),"Not public, but available upon request","Daily, 1/8°","CMIP6 - historical, SSP370","precip, t_mean","CONUS, 1950-2100",GMET,
+,,GARD-LENS,Hartke et al. (2024),Public - NCAR RDA,"Daily, 1/8° to 1-km","3 CMIP6 LENS - historical, SSP370","precip, t_mean, t_range","CONUS (1/8°), Alaska (4-km), & Hawai'i (1-km), 1950-2100",GMET,
+,,Carbon Plan single variate and multivariate GARD,Chegwidden et al. (2022),Public - GitHub,"Daily, 0.25°","CMIP6 - 2 GCMs - historical, SSP245, SSP370, SSP585","pcp, tasmin, tasmax","Global, 1950-2099",ERA5,
+Seasonal Analysis of Residual Trends Empirical Statistical Downscaling Model (STAR-ESDM),Hayhoe et al. (2021),Seasonal Trend and Analysis of Residuals  Empirical-Statistical Downscaling Method (STAR-ESDM),No dataset desciptor for CMIP6 STAR-ESDM simulations,Not yet publicly available,"Daily, 1/24°","25 CMIP6 GCMs - historical, SSP245, SSP585","pcp, tasmin, tasmax","CONUS, 1950-2100",NClimGrid-Daily,
+Multivariate Bias Correction,Cannon et al. (2018),Canadian Large Ensembles Adjusted Datasets (CanLEAD v1),Cannon et al. (2021),Public - Canada Open Goverment Portal,"Daily, 0.5°","CanESM2 (CMIP5) - historical, RCP8.5","pr, tasmin, tasmax, hurs, ps, sfcWind, rsds, rlds","North America, 1950-2100","S14 global meteorological forcing dataset (S14FD)
+EartH2Observe, WFDEI and ERA-Interim data Merged and Bias-corrected for ISIMIP (EWEMBI)
+Canadian Regional Climate Model Large Ensemble",The Canadian Large Ensembles Adjusted Dataset version 1 (CanLEADv1) contains 50-member ensembles of bias-adjusted near-surface global and regional climate model variables on a 0.5° grid over North America for historical and future scenarios (1950–2100). Canadian Earth System Model Large Ensembles (CanESM2 LE) and Canadian Regional Climate Model Large Ensemble (CanRCM4 LE) datasets are bias-corrected using a multivariate quantile-mapping algorithm for statistical consistency with two observationally constrained historical meteorological forcing datasets
+Probabilistic ,"No paper, but Dave Lorenz's website describes the methodology",Coupled Model Intercomparison Project Phase 5 (CMIP5) University of Wisconsin-Madison Probabilistic Downscaling Dataset (UW-PD),"No paper, but Dave Lorenz's website describes the methodology",Public - AWS,"Daily, 0.1°","24 CMIP5 GCMs - historical, RCP2.6, RCP4.5, RCP6.0, RCP8.5","pr, tasmin, tasmax","US and southern Canada east of the Rocky Mountains, 1950-2100",NCEP Reanalysis,"This downscaling method predicts the Probability Density Function (PDF) for each day and grid point given the large-scale from the global climate model. (This takes into account that there's no exact relationship between the large-scale atmospheric state and the weather at a point. Instead, the large-scale determines the relative likelihood of certain events at a point.) To generate a time series of data given the PDFs, we draw random numbers from the PDFs. "
+DYNAMICAL,,,,,,,,,,
+Intermediate Complexity Atmospheric Research model (ICAR),Gutmann et al. (2016),Intermediate Complexity Atmospheric Research model (ICAR) dataset,Gutmann et al. (2016),"Not public, but available upon request","3-Hourly,
+6, 12 km","CMIP5 - Historical, RCP4.5, RCP8.5
+
+CMIP6 - Historical, SSP245, 370, 585
+(in progress) primarily Western US","pcp, tasmin, tasmax (daily)
+t2m,hus2m, u/v10m, rsds, rlds, psfc, rain/snow","Western CONUS, 1950-2100",--,
+Canadian Regional Climate Model (CanRCM4),,Canadian Regional Climate Model Large Ensemble,Scinocca et al. (2016),Public - Canada Open Government Portal,"Hourly, 50 km (0.44°)",CMIP5 - CanESM2 large ensemble,"clt, hurs, pr, ps, rlds, rsds, tas, uas, vas","North America, 1950-2100",--,"The CanRCM4 large ensemble is a 50-member ensemble from 1950-2100 with all historical forcings for the North American Domain. Each ensemble member is driven by a member of the CanESM2 large ensemble. The model, forcings, variable names, and file formats all follow those used in the Coordinated Regional Downscaling Experiment (CORDEX). Simulations were run to 2005 using CMIP5 historical forcings and then to 2100 using RCP 8.5 forcings following CMIP5 protocols."
+CORDEX (Mixed Regional Climate Models),,North America Coordinated Regional Downscaling Experiment (NA-CORDEX),Bukovsky & Mearns et al. (2020),Public - NCAR Climate Data Gateway,Various - 0.22° & 0.44°,"CMIP5 - RCP4.5, and RCP8.5","pcp, tasmin, tasmax (daily)
+t2m,hus2m, u/v10m, rsds, rlds, psfc, rain/snow and more","CONUS, 1950-2100",--,
+Weather Forecasting and Research (WRF) model,"Skamarock et al. (2008)
+Skamarock et al. (2019)",CONUS404,Rasmussen et al. (2023),Some public files - NCAR RDA,"Hourly,
+4 km","Historical
+Future PGW being run","pcp, tasmin, tasmax (daily)
+t2m,hus2m, u/v10m, rsds, rlds, psfc, rain/snow and more","CONUS, 1980-2020 (still being run for future PGW simulations)",ERA5 (for historical simulations),
+,,Western United States Dynamically Downscaled Dataset (WUS-D3),Rahimi et al. (2024),Public - AWS,"Hourly, 9-km","CMIP6 - Historical, SSP370","pcp, tasmin, tasmax (daily)
+t2m,hus2m, u/v10m, rsds, rlds, psfc, rain/snow and more","Western CONUS, 1980-2100",--,
+,,IM3/HyperFACETS Thermodynamic Global Warming (TGW) Simulation Datasets,Jones et al. (2023),Public - Globus via MSD Live,"Hourly, 1/8°","CMIP6 - historical, SSP245, SSP585","Lots - precip, surface temps, surface runoff, etc.",1980-2099,,"Regional climate models can be used to examine how past weather events might unfold under different climate conditions by simulating analogue versions of those events with modified thermodynamic conditions (i.e., warming signals). Here, we apply this approach... Warming signals follow two emission scenarios (SSP585 and SSP245) and are derived from two groups of global climate models based on whether they exhibit relatively high or low climate sensitivity. The resulting dataset... contains 25 hourly and over 200 3-hourly variables at 12 km resolution."
+,,"Argnne Dynamic Downscaled Achieve V2 (ADDA_V2)
+",Akinsonola et al. (2024),"Some data public - ClimRR portal
+Only accumulated statistics available, not raw dataset","Hourly, 4-km",Historical,"temperature, precip, wind speeds, degree days, fire weather index","CONUS, AK, and Puerto Rico, 2001-2020",ERA5 (for historical simulations),Hourly weather data for energy modeling coming soon?
+,,"EPA Dynamically Downscaled Ensemble (EDDE), Version 1","No dataset descriptor, but is described in a few publications linked to AWS data page",A subset of data is public via AWS,"Hourly, 36-km","2 CMIP5 GCMs (CESM & GFDL-CM3) - historical, RCP4.5, RCP6.0, RCP8.5","Lots - precip, surface temps, surface runoff, etc.","CONUS, 1975-2100",,
+Regional Climate Model Version 4 (RegCM4),Giorgi et al. (2012),RegCM (Oak Ridge National Lab),Rastogi et al. (2022),Public - ORNL,"Daily, 1/24°","CMIP6 - historical, ssp585","pr, tasmin, tasmax","CONUS, 1980-2060",Livneh & Daymet (2 separate versions of RegCM runs),
+MACHINE LEARNING,,,,,,,,,,
+Convolutional Neural Net (CNN),Baño-Medina et al. (2020),DeepSD (Carbon Plan),Chegwidden et al. (2022),Public - GitHub,"Daily, 0.25°","CMIP6 (CanESM5, MRI-ESM2) - historical, ssp245, ssp370, ssp585","pcp, tasmin, tasmax","Global, 1950-2099",ERA5,"Dataset does not have sufficient zero precipitation occurrences; instead a threshold value, e.g., 0.015 for the grid cell over Seattle, WA, appears to hold the place of zero precipitation. This threshold value varies across CONUS, but can be observed occurring for long stretches of time when one would expect to see 0.0 in a typical precipitation dataset."
+,,,,,,,,,,
+,,,,,,,,,,
+DISCLAIMER,"This catalog has been a group effort to describe gridded downscaled datasets available over the Contiguous United States and North America, and we cannot ensure that all information is correct.",,,,,,,,,
+CONTACT INFORMATION,"If information on this page needs to be updated, a downscaled dataset has not been included in this catalog, or for any other suggested changes to this catalog, please contact nlybarger@ucar.edu or gutmann@ucar.edu.",,,,,,,,,
