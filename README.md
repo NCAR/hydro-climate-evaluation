@@ -18,9 +18,10 @@ The site [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydr
 ## Variable Details
 ### Year Range
 
-| **Name**  | **Description**                           |
-|-----------|-------------------------------------------|
-| 1981-2004 | Time range data yearly data averaged over |
+| **Name**  | **Description**                              |
+|-----------|----------------------------------------------|
+| 1981-2004 | Time range past yearly data averaged over    |
+| 2006-2099 | Time range future yearly data averaged over  |
 
 ### Downscaling Methods
 See this detailed [downscaling methods matrix document](https://raw.githubusercontent.com/NCAR/hydro-climate-evaluation/refs/heads/main/docs/downscalingMethodsMatrixPublic.36x24.pdf) for more information on some of the datasets mapped.
