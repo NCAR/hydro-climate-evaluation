@@ -1,8 +1,8 @@
 const express = require('express');
 const next = require('next');
 const path = require('path');
-const serveIndex = require('serve-index'); 
-const cors = require('cors'); 
+const serveIndex = require('serve-index');
+const cors = require('cors');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -16,13 +16,15 @@ app.prepare().then(() => {
 	methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 	allowedHeaders: ['Content-Type', 'Authorization']
     }));
-    
+
+    // Server the static zarr array data site with a directory structure
     server.use('/hydro-climate-eval/data',
 	       express.static(path.join(__dirname, 'data'), { dotfiles: 'allow' }),
 	       serveIndex(path.join(__dirname, 'data'), {'icons': false, 'hidden': true }));
-    
+
+    // Serve the main Next.js site
     server.all('*', (req, res) => {
-	return handle(req, res);
+        return handle(req, res);
     });
 
     server.listen(8080, (err) => {
@@ -30,4 +32,3 @@ app.prepare().then(() => {
 	console.log('> Ready on http://localhost:8080');
     });
 });
-
