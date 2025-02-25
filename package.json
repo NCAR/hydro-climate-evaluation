@@ -8,6 +8,7 @@
     "build": "next build",
     "old-start": "next start -p 8080",
     "start": "node server.js",
+    "perf": "node --prof server.js",
     "format": "prettier --write {pages,components}/**/*.js'"
   },
   "author": "",
