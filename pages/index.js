@@ -150,12 +150,12 @@ const Index = () => {
     <Map zoom={4} center={{lon:-97, lat:38}} debug={debug}>
     <Fill
       color={'#4a80f5'}
-      source={bucket + 'basemaps/ocean'}
+      source={bucket_ndp + 'basemaps/ocean'}
       variable={'ocean'}
     />
     <Line
       color={theme.rawColors.primary}
-      source={bucket + 'basemaps/land'}
+      source={bucket_ndp + 'basemaps/land'}
       variable={'land'}
     />
     {showRegionPlot && (
