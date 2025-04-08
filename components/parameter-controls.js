@@ -196,7 +196,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const [chartToggle, setChartToggle] = useState(false);
 
-  const [units, setUnits] = useState('mm');
+  const [units, setUnits] = useState('°C');
 
   const [baseDir, setBaseDir] = useState('map/');
 
