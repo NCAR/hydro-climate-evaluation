@@ -14,6 +14,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@babel/runtime": ">=7.26.10",
     "@carbonplan/colormaps": "file:./colormaps",
     "@carbonplan/components": "^12.0.0",
     "@carbonplan/icons": "^2.0.0",
