@@ -8,6 +8,8 @@ rundocker: cleandocker builddocker
 
 # install nodejs dependencies and run
 run:
+	npm run start
+run-dev:
 	npm run dev
 init:
 	rm -rf node_modules
@@ -30,9 +32,6 @@ clean:
 
 cleanall: clean
 	rm -rf node_modules .next
-
-scp:
-	scp 
 
 untar:
 	tar zxf hatch_data.tar.gz
