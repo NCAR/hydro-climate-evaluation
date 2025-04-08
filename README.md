@@ -48,24 +48,24 @@ See this detailed [downscaling methods matrix document](https://raw.githubuserco
 
 ### Metrics
 
-| **Name** | **Description**                                                    |
-|----------|--------------------------------------------------------------------|
-| DJF_P    | Dec/Jan/Feb seasonal mean of precipitation                         |
-| DJF_T    | Dec/Jan/Feb seasonal mean of temperature                           |
-| JJA_P    | Jun/Jul/Aug seasonal mean of precipitation                         |
-| JJA_T    | Jun/Jul/Aug seasonal mean of temperature                           |
-| MAM_P    | Mar/Apr/May seasonal mean of precipitation                         |
-| MAM_T    | Mar/Apr/May seasonal mean of temperature                           |
-| N34PR    | Nino 3.4 precipitation teleconnection pattern spactial correlation |
-| N34T     | Nino 3.4 temperature teleconnection pattern spactial correlation   |
-| PR90     | Precipitation extremes in the 90th percentile                      |
-| PR99     | Precipitation extremes in the 99th percentile                      |
-| PTREND   | Precipitation trends                                               |
-| SON_P    | Sep/Oct/Nov seasonal mean of precipitation                         |
-| SON_T    | Sep/Oct/Nov seasonal mean of temperature                           |
-| T90      | Temperature extremes in the 90th percentile                        |
-| T99      | Temperature extremes in the 99th percentile                        |
-| TTREND   | Temperature trends                                                 |
+| **Name** | **Units** | **Description**                                                    |
+|----------|-----------|--------------------------------------------------------------------|
+| DJF_P    |        mm | Dec/Jan/Feb seasonal mean of precipitation                         |
+| DJF_T    |        °C | Dec/Jan/Feb seasonal mean of temperature                           |
+| JJA_P    |        mm | Jun/Jul/Aug seasonal mean of precipitation                         |
+| JJA_T    |        °C | Jun/Jul/Aug seasonal mean of temperature                           |
+| MAM_P    |        mm | Mar/Apr/May seasonal mean of precipitation                         |
+| MAM_T    |        °C | Mar/Apr/May seasonal mean of temperature                           |
+| N34PR    |        mm | Nino 3.4 precipitation teleconnection pattern spactial correlation |
+| N34T     |        °C | Nino 3.4 temperature teleconnection pattern spactial correlation   |
+| PR90     |        mm | Precipitation extremes in the 90th percentile                      |
+| PR99     |        mm | Precipitation extremes in the 99th percentile                      |
+| PTREND   |        mm | Precipitation trends                                               |
+| SON_P    |        mm | Sep/Oct/Nov seasonal mean of precipitation                         |
+| SON_T    |        °C | Sep/Oct/Nov seasonal mean of temperature                           |
+| T90      |        °C | Temperature extremes in the 90th percentile                        |
+| T99      |        °C | Temperature extremes in the 99th percentile                        |
+| TTREND   |        °C | Temperature trends                                                 |
 
 ### Dif. Obs. Data
 Observational dataset used to compute the difference against.
