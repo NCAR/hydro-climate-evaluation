@@ -86,7 +86,6 @@ const Label = ({ label, units, horizontal }) => (
         fontFamily: 'mono',
         fontSize: ['9px', 0, 0, 1],
         letterSpacing: 'smallcaps',
-        textTransform: 'uppercase',
         ...(horizontal
           ? {}
           : {
