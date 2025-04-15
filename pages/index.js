@@ -159,6 +159,13 @@ const Index = () => {
       source={bucket_ndp + 'basemaps/land'}
       variable={'land'}
     />
+    <Line
+      color={theme.rawColors.primary}
+      source={bucket_ndp + 'basemaps/states/us-states.json'}
+      variable={'state'}
+      ndp={false}
+    />;
+
     {showRegionPlot && (
      <RegionPicker
        color={theme.colors.primary}
