@@ -59,6 +59,9 @@ const Index = () => {
   const [yearRangeDif, setYearRangeDif] = useState('1981_2004');
   const [obsDif, setObsDif] = useState('livneh');
 
+  const [showStates, setStates] = useState(true);
+  const [showRivers, setRivers] = useState(true);
+
   const [fname, setFname] = useState('data.zarr');
   // paths to model dataset
   // const [mapSource, setMapSource] =
@@ -101,7 +104,8 @@ const Index = () => {
                     downscalingDif, modelDif, yearRangeDif, obsDif,
                     mapSourceDif, chartSourceDif, scaleDif,
                     bucket_ndp, chartHeight, computeChoice,
-                    showClimateChange, showRegionPlot, bucketRes};
+                    showClimateChange, showRegionPlot, bucketRes,
+                    showStates, showRivers};
   const setters = {
     setDisplay,
     setReload,
@@ -130,7 +134,9 @@ const Index = () => {
     setComputeChoice,
     setShowClimateChange,
     setShowRegionPlot,
-    setBucketRes
+    setBucketRes,
+    setStates,
+    setRivers
   };
 
   const fillValue = 3.4028234663852886e38; // black on land, red nans
@@ -159,12 +165,36 @@ const Index = () => {
       source={bucket_ndp + 'basemaps/land'}
       variable={'land'}
     />
+
+    {showStates && (
     <Line
-      color={theme.rawColors.primary}
+      color={'black'}
+      source={bucket_ndp + 'basemaps/states/ne_110m_admin_1_states_provinces_lakes.json'}
+      variable={'United States of America'}
+      ndp={false}
+    />)}
+
+    {showRivers && (
+    <Line
+      color={'black'}
+      source={bucket_ndp + 'basemaps/states/ne_10m_rivers_north_america.json'}
+      ndp={false}
+    />)}
+
+
+    {/*
+    <Line
+      color={'black'}
       source={bucket_ndp + 'basemaps/states/us-states.json'}
       variable={'state'}
       ndp={false}
     />;
+    <Line
+      color={'red'}
+      source={bucket_ndp + 'basemaps/states/rivers.geojson'}
+      ndp={false}
+    />;
+    */}
 
     {showRegionPlot && (
      <RegionPicker

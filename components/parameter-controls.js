@@ -157,7 +157,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           downscalingDif, modelDif, yearRangeDif, obsDif,
           mapSourceDif, chartSourceDif, scaleDif,
           chartHeight, computeChoice,
-          showClimateChange, showRegionPlot, bucketRes
+          showClimateChange, showRegionPlot, bucketRes,
+          showStates, showRivers
         } = getters;
   const {
     setDisplay,
@@ -186,7 +187,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setComputeChoice,
     setShowClimateChange,
     setShowRegionPlot,
-    setBucketRes
+    setBucketRes,
+    setStates,
+    setRivers
   } = setters;
 
   // 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/',
@@ -1322,9 +1325,30 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setChartHeight('20%');
   });
 
+  const RiversTag = () => {
+    return(
+    <Box>
+    <Tag value={showRivers} onClick={() => setRivers((prev) => !prev)}>
+      Rivers
+    </Tag>
+    </Box>
+    );
+  };
+
+  const StatesTag = () => {
+    return(
+      // <Toggle value={showStates} onClick={() => setStates(!showStates)} />
+    <Box>
+    <Tag value={showStates} onClick={() => setStates((prev) => !prev)}>
+      State Lines
+    </Tag>
+    </Box>
+    );
+  };
+
   const README = () => {
     return (
-      <>
+      <Box style={{ marginTop: '8px' }}>
       <Button
         href={readmeUrl}
         target="_blank"
@@ -1333,7 +1357,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       >
         HELP
       </Button>
-      </>
+      </Box>
     );
   };
 
@@ -2068,6 +2092,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
                },
             }}
     >
+      <RiversTag />
+      <StatesTag />
       <README />
     </Box>
     </>
