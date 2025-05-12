@@ -66,6 +66,7 @@ const Clim_Ranges = {
   mam_t: { max: 30, min: 0 },
   jja_t: { max: 30, min: 0 },
   son_t: { max: 30, min: 0 },
+  ann_t: { max: 30, min: 0 },
   dif_tavg: { max: 4, min: -4 },
   dif_n34t: { max: 1, min: -1 },
   dif_ttrend: { max: 1.0, min: -1.0 },
@@ -86,6 +87,7 @@ const Clim_Ranges = {
   mam_p: { max: 70, min: 0 },
   jja_p: { max: 70, min: 0 },
   son_p: { max: 70, min: 0 },
+  ann_p: { max: 2000, min: 0 },
   dif_prec: { max: 50, min: -50 },
   dif_n34pr: { max: 1, min: -1 },
   dif_ptrend: { max: 20, min: -20 },
@@ -95,6 +97,10 @@ const Clim_Ranges = {
   dif_mam_p: { max: 50, min: -50 },
   dif_jja_p: { max: 50, min: -50 },
   dif_son_p: { max: 50, min: -50 },
+
+  // misc
+  ann_snow: { max: 250, min: 0 },
+  freezethaw: { max: 250, min: 0 },
 };
 
 const precip_colorname = 'blueprecip';
@@ -109,6 +115,7 @@ const Default_Colormaps = {
   mam_t: 'BuYlRd',
   jja_t: 'BuYlRd',
   son_t: 'BuYlRd',
+  ann_t: 'BuYlRd',
 
   // precip variables
   prec: 'browngreen',
@@ -120,6 +127,11 @@ const Default_Colormaps = {
   mam_p: precip_colorname,
   jja_p: precip_colorname,
   son_p: precip_colorname,
+  ann_p: precip_colorname,
+
+  // snow
+  ann_snow: precip_colorname,
+  freezethaw: precip_colorname,
 
   // difference colormap
   dif: 'difredblue',
@@ -158,7 +170,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           mapSourceDif, chartSourceDif, scaleDif,
           chartHeight, computeChoice,
           showClimateChange, showRegionPlot, bucketRes,
-          showStates, showRivers
+          showStates, showRivers, sideBySide
         } = getters;
   const {
     setDisplay,
@@ -189,7 +201,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setShowRegionPlot,
     setBucketRes,
     setStates,
-    setRivers
+    setRivers,
+    setSideBySide
   } = setters;
 
   // 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/',
@@ -362,9 +375,35 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             ['Seasonal mean',
              'precipitation',
              'Sep/Oct/Nov'];
-    } //  else {
-    //   label = 'label undefined';
-    // }
+
+    }  else if (metric === 'ann_p') {
+      label = 'ann_p';
+      description =
+            ['Mean annual',
+             'total',
+             'precipitation'];
+    }  else if (metric === 'ann_t') {
+      label = 'ann_t';
+      description =
+            ['Annual mean',
+             'temperature',
+             ''];
+    }  else if (metric === 'ann_snow') {
+      label = 'ann_snow';
+      description =
+            ['Annual mean',
+             'total',
+             'snow'];
+    }  else if (metric === 'freezethaw') {
+      label = 'fzth';
+      description =
+            ['Annual mean',
+             'freeze-thaw',
+             'cycle'];
+     } else {
+       label = 'label undefined';
+       description = ['description undefined','',''];
+     }
 
     return(
       <Box sx={{ ...sx.label, mt: [4] }}>
@@ -590,7 +629,20 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }  else if (metric === 'son_p') {
       setBand('sonp');
       setUnits('mm');
+    }  else if (metric === 'ann_t') {
+      setBand('annt');
+      setUnits('°C');
+    }  else if (metric === 'ann_p') {
+      setBand('annp');
+      setUnits('mm');
+    }  else if (metric === 'ann_snow') {
+      setBand('anns');
+      setUnits('mm');
+    }  else if (metric === 'freezethaw') {
+      setBand('fzth');
+      setUnits('mm');
     }
+
 
     if (computeChoice['Dif.'] || computeChoice['Climate Signal']) {
       setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
@@ -1346,6 +1398,16 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     );
   };
 
+  const SideBySideTag = () => {
+    return(
+    <Box>
+    <Tag value={sideBySide} onClick={() => setSideBySide((prev) => !prev)}>
+      Side By Side
+    </Tag>
+    </Box>
+    );
+  };
+
   const README = () => {
     return (
       <Box style={{ marginTop: '8px' }}>
@@ -1745,6 +1807,10 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         <option value='jja_p'>jja_p</option>
         <option value='son_t'>son_t</option>
         <option value='son_p'>son_p</option>
+        <option value='ann_t'>ann_t</option>
+        <option value='ann_p'>ann_p</option>
+        <option value='ann_snow'>ann_snow</option>
+        <option value='freezethaw'>freezethaw</option>
       </Select>
     </>
     );
@@ -1944,8 +2010,10 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         >
           <option value='conus404'>Conus404</option>
           <option value='gmet'>GMET</option>
+          <option value='gridmet'>gridMET</option>
           <option value='livneh'>Livneh</option>
           <option value='maurer'>Maurer</option>
+          <option value='nclimgrid'>nClimGrid</option>
           <option value='nldas'>NLDAS</option>
           <option value='prism'>PRISM</option>
         </Select>
@@ -2094,6 +2162,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     >
       <RiversTag />
       <StatesTag />
+      <SideBySideTag />
       <README />
     </Box>
     </>

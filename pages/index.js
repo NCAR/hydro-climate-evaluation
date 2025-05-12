@@ -24,6 +24,35 @@ const bucket_ndp = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/';
 // const bucket_ndp = 'http://127.0.0.1:4000/data/';
 
 const Index = () => {
+
+  const { theme } = useThemeUI();
+  const [sideBySide, setSideBySide] = useState(false);
+
+  if (sideBySide){
+    return(
+      <div key={sideBySide} style={{ display: 'flex', width: '100%', height: '100vh' }}>
+        <Box sx={{ flex: 1, backgroundColor: '#f0f0f0', position: 'relative' }}>
+          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
+        </Box>
+        <Box sx={{ flex: 1, backgroundColor: '#e0e0e0', position: 'relative' }}>
+          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
+        </Box>
+      </div>
+    );
+  } else {
+      return(
+        <div key={sideBySide} style={{ display: 'flex', width: '100%', height: '100vh' }}>
+          <Box sx={{ flex: 1, backgroundColor: '#f0f0f0', position: 'relative' }}>
+          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
+          </Box>
+        </div>
+    );
+  }
+};
+
+const ClimateMapInstance = ({ sideBySideArgs }) => {
+  const { sideBySide, setSideBySide } = sideBySideArgs
+
   const { theme } = useThemeUI();
   const [display, setDisplay] = useState(true);
   const [reload, setReload] = useState(true);
@@ -60,7 +89,7 @@ const Index = () => {
   const [obsDif, setObsDif] = useState('livneh');
 
   const [showStates, setStates] = useState(true);
-  const [showRivers, setRivers] = useState(true);
+  const [showRivers, setRivers] = useState(false);
 
   const [fname, setFname] = useState('data.zarr');
   // paths to model dataset
@@ -105,7 +134,7 @@ const Index = () => {
                     mapSourceDif, chartSourceDif, scaleDif,
                     bucket_ndp, chartHeight, computeChoice,
                     showClimateChange, showRegionPlot, bucketRes,
-                    showStates, showRivers};
+                    showStates, showRivers, sideBySide};
   const setters = {
     setDisplay,
     setReload,
@@ -136,10 +165,12 @@ const Index = () => {
     setShowRegionPlot,
     setBucketRes,
     setStates,
-    setRivers
+    setRivers,
+    setSideBySide
   };
 
   const fillValue = 3.4028234663852886e38; // black on land, red nans
+
 
 
   return (
@@ -177,10 +208,20 @@ const Index = () => {
     {showRivers && (
     <Line
       color={'black'}
-      source={bucket_ndp + 'basemaps/states/ne_10m_rivers_north_america.json'}
+      source={bucket_ndp + 'basemaps/rivers/rivers.geojson'}
       ndp={false}
     />)}
+    {/*
+      source={bucket_ndp + 'basemaps/rivers/ne_10m_rivers_north_america.json'}
+    */}
 
+    {/*
+    <Line
+      color={'red'}
+      source={bucket_ndp + 'basemaps/huc/huc2-basins.geojson'}
+      ndp={false}
+    />;
+    */}
 
     {/*
     <Line
@@ -206,7 +247,7 @@ const Index = () => {
      />)}
 
     <Raster
-      key={`${mapSource}-${mapSourceDif}-${reload}-${JSON.stringify(computeChoice)}`}
+      key={`${mapSource}-${mapSourceDif}-${reload}-${sideBySide}-${JSON.stringify(computeChoice)}`}
       colormap={colormap}
       clim={clim}
       display={display}
