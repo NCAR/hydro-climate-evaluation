@@ -90,6 +90,7 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
 
   const [showStates, setStates] = useState(true);
   const [showRivers, setRivers] = useState(false);
+  const [showHuc2, setHuc2] = useState(false);
 
   const [fname, setFname] = useState('data.zarr');
   // paths to model dataset
@@ -134,7 +135,7 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
                     mapSourceDif, chartSourceDif, scaleDif,
                     bucket_ndp, chartHeight, computeChoice,
                     showClimateChange, showRegionPlot, bucketRes,
-                    showStates, showRivers, sideBySide};
+                    showStates, showRivers, showHuc2, sideBySide};
   const setters = {
     setDisplay,
     setReload,
@@ -166,6 +167,7 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
     setBucketRes,
     setStates,
     setRivers,
+    setHuc2,
     setSideBySide
   };
 
@@ -211,6 +213,14 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
       source={bucket_ndp + 'basemaps/rivers/rivers.geojson'}
       ndp={false}
     />)}
+
+    {showHuc2 && (
+    <Line
+      color={'red'}
+      source={bucket_ndp + 'basemaps/huc/huc2-basins.geojson'}
+      ndp={false}
+    />)}
+
     {/*
       source={bucket_ndp + 'basemaps/rivers/ne_10m_rivers_north_america.json'}
     */}

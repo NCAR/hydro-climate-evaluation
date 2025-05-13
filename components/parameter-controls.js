@@ -170,7 +170,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           mapSourceDif, chartSourceDif, scaleDif,
           chartHeight, computeChoice,
           showClimateChange, showRegionPlot, bucketRes,
-          showStates, showRivers, sideBySide
+          showStates, showRivers, showHuc2, sideBySide
         } = getters;
   const {
     setDisplay,
@@ -202,6 +202,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setBucketRes,
     setStates,
     setRivers,
+    setHuc2,
     setSideBySide
   } = setters;
 
@@ -640,7 +641,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       setUnits('mm');
     }  else if (metric === 'freezethaw') {
       setBand('fzth');
-      setUnits('mm');
+      setUnits('num. of days');
     }
 
 
@@ -1393,6 +1394,16 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     <Box>
     <Tag value={showStates} onClick={() => setStates((prev) => !prev)}>
       State Lines
+    </Tag>
+    </Box>
+    );
+  };
+
+  const Huc2Tag = () => {
+    return(
+    <Box>
+    <Tag value={showHuc2} onClick={() => setHuc2((prev) => !prev)}>
+      Huc 2
     </Tag>
     </Box>
     );
@@ -2162,6 +2173,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     >
       <RiversTag />
       <StatesTag />
+      <Huc2Tag />
       <SideBySideTag />
       <README />
     </Box>
