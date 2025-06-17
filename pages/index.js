@@ -118,7 +118,6 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
     'Climate Signal': false,
   });
 
-
   // const [filterValues, setFilterValues] = useState({'Ave.': true,
   //                                                   'Dif.': false,
   //                                                   'Obs.': false});
@@ -210,14 +209,14 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
     {showRivers && (
     <Line
       color={'black'}
-      source={bucket_ndp + 'basemaps/rivers/rivers.geojson'}
+      source={bucket_ndp + 'basemaps/rivers/rivers.3percent.geojson'}
       ndp={false}
     />)}
 
     {showHuc2 && (
     <Line
       color={'red'}
-      source={bucket_ndp + 'basemaps/huc/huc2-basins.geojson'}
+      source={bucket_ndp + 'basemaps/huc/huc2-basins-1percent.geojson'}
       ndp={false}
     />)}
 
