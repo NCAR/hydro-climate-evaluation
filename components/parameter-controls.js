@@ -76,6 +76,7 @@ const Clim_Ranges = {
   dif_mam_t: { max: 4, min: -4 },
   dif_jja_t: { max: 4, min: -4 },
   dif_son_t: { max: 4, min: -4 },
+  dif_ann_t: { max: 4, min: -4 },
 
   // precip variables
   prec: { max: 70, min: 0 },
@@ -97,68 +98,80 @@ const Clim_Ranges = {
   dif_mam_p: { max: 50, min: -50 },
   dif_jja_p: { max: 50, min: -50 },
   dif_son_p: { max: 50, min: -50 },
+  dif_ann_p: { max: 50, min: -50 },
 
   // misc
   ann_snow: { max: 250, min: 0 },
   freezethaw: { max: 250, min: 0 },
+  dif_ann_snow: { max: 50, min: -50 },
+  dif_freezethaw: { max: 50, min: -50 },
 };
 
-const precip_colorname = 'blueprecip';
+const precip_colormap = 'blueprecip';
+const temp_colormap = 'BuYlRd';
+const dif_temp_colormap = 'difbluered';
+const dif_precip_colormap = 'difbrowngreen';
 const Default_Colormaps = {
   // temperature variables
-  tavg: 'BuYlRd',
-  n34t: 'BuYlRd',
-  ttrend: 'BuYlRd',
-  t90: 'BuYlRd',
-  t99: 'BuYlRd',
-  djf_t: 'BuYlRd',
-  mam_t: 'BuYlRd',
-  jja_t: 'BuYlRd',
-  son_t: 'BuYlRd',
-  ann_t: 'BuYlRd',
+  tavg: temp_colormap,
+  n34t: temp_colormap,
+  ttrend: temp_colormap,
+  t90: temp_colormap,
+  t99: temp_colormap,
+  djf_t: temp_colormap,
+  mam_t: temp_colormap,
+  jja_t: temp_colormap,
+  son_t: temp_colormap,
+  ann_t: temp_colormap,
 
   // precip variables
   prec: 'browngreen',
   n34pr: 'browngreen',
   ptrend: 'browngreen',
-  pr90: precip_colorname,
-  pr99: precip_colorname,
-  djf_p: precip_colorname,
-  mam_p: precip_colorname,
-  jja_p: precip_colorname,
-  son_p: precip_colorname,
-  ann_p: precip_colorname,
+  pr90: precip_colormap,
+  pr99: precip_colormap,
+  djf_p: precip_colormap,
+  mam_p: precip_colormap,
+  jja_p: precip_colormap,
+  son_p: precip_colormap,
+  ann_p: precip_colormap,
 
   // snow
-  ann_snow: precip_colorname,
-  freezethaw: precip_colorname,
+  ann_snow: precip_colormap,
+  freezethaw: precip_colormap,
 
   // difference colormap
   dif: 'difredblue',
-  dift: 'difbluered',
-  difp: 'difbrowngreen',
+  dift: dif_temp_colormap,
+  difp: dif_precip_colormap,
 
   // temperature variables
-  dif_tavg: 'difbluered',
-  dif_n34t: 'difbluered',
-  dif_ttrend: 'difbluered',
-  dif_t90: 'difbluered',
-  dif_t99: 'difbluered',
-  dif_djf_t: 'difbluered',
-  dif_mam_t: 'difbluered',
-  dif_jja_t: 'difbluered',
-  dif_son_t: 'difbluered',
+  dif_tavg: dif_temp_colormap,
+  dif_n34t: dif_temp_colormap,
+  dif_ttrend: dif_temp_colormap,
+  dif_t90: dif_temp_colormap,
+  dif_t99: dif_temp_colormap,
+  dif_djf_t: dif_temp_colormap,
+  dif_mam_t: dif_temp_colormap,
+  dif_jja_t: dif_temp_colormap,
+  dif_son_t: dif_temp_colormap,
+  dif_ann_t: dif_temp_colormap,
 
   // precip variables
-  dif_prec: 'difbrowngreen',
-  dif_n34pr: 'difbrowngreen',
-  dif_ptrend: 'difbrowngreen',
-  dif_pr90: 'difbrowngreen',
-  dif_pr99: 'difbrowngreen',
-  dif_djf_p: 'difbrowngreen',
-  dif_mam_p: 'difbrowngreen',
-  dif_jja_p: 'difbrowngreen',
-  dif_son_p: 'difbrowngreen',
+  dif_prec: dif_precip_colormap,
+  dif_n34pr: dif_precip_colormap,
+  dif_ptrend: dif_precip_colormap,
+  dif_pr90: dif_precip_colormap,
+  dif_pr99: dif_precip_colormap,
+  dif_djf_p: dif_precip_colormap,
+  dif_mam_p: dif_precip_colormap,
+  dif_jja_p: dif_precip_colormap,
+  dif_son_p: dif_precip_colormap,
+  dif_ann_p: dif_precip_colormap,
+
+  // snow
+  dif_ann_snow: dif_precip_colormap,
+  dif_freezethaw: dif_precip_colormap,
 };
 
 
@@ -1665,6 +1678,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         }
         setMapSource([bucket+baseDir_l+downscaling+'/'+model+'/'+yearRange_l+'/'+fname]);
       }
+
       if (newValues['Climate Signal']) {
         console.log("CLIMATE SIGNAL SELECTED")
         const rcp = getRCPKey(rcpValues);
