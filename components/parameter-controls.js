@@ -179,7 +179,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const { display, reload, debug, opacity, clim, month,
           band, colormapName, colormap,
           downscaling, model, metric, yearRange, mapSource, chartSource,
-          downscalingDif, modelDif, yearRangeDif, obsDif,
+          downscalingDif, modelDif, yearRangeDif, obs, obsDif,
           mapSourceDif, chartSourceDif, scaleDif,
           chartHeight, computeChoice,
           showClimateChange, showRegionPlot, bucketRes,
@@ -203,6 +203,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setDownscalingDif,
     setModelDif,
     setYearRangeDif,
+    setObs,
     setObsDif,
     setMapSourceDif,
     setChartSourceDif,
@@ -707,6 +708,14 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const [methodAndModel, setMethodAndModel] = //useState(false);
           useState({ "Method & Model": true });
 
+  const [differenceChoice, setDifferenceChoice] =
+          useState({ "Minuend": true, "Subtrahend": false });
+  const [difObsOrDataChoice1, setObsOrDataChoice1] =
+          useState({ "Model": true, "Observation": false });
+  const [difObsOrDataChoice2, setObsOrDataChoice2] =
+          useState({ "Model": false, "Observation": true });
+
+
   const [metrics, setMetrics] = useState({ all: false, clear: false, clearall: false});
 
   const [metrics1, setMetrics1] = useState({ n34t: false,
@@ -1162,11 +1171,10 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     } else if (choice['Observation']) {
       setAveChoice(choice);
       // setAveChoice({ 'Modeling': false, 'Observation': true, }); //
-      const obs = obsDif
-      setMapSource([bucket+'/obs/'+obs+'/'+yearRangeDif+'/'+fname]);
+      const obs_l = obs
+      setMapSource([bucket+'/obs/'+obs_l+'/'+yearRangeDif+'/'+fname]);
     }
   });
-
 
   const handleSignalChoice = useCallback((e) => {
     const choice = e;
@@ -1597,53 +1605,43 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     );
   };
 
+
   const handleObsChange = useCallback((e) => {
-    const obs = e.target.value;
-    setObsDif(obs);
-    setMapSource([bucket+'/obs/'+obs+'/'+yearRangeDif+'/'+fname]);
+    const obs_l = e.target.value;
+    setObs(obs_l);
+    setMapSource([bucket+'/obs/'+obs_l+'/'+yearRangeDif+'/'+fname]);
   });
-
   const handleObsDifChange = useCallback((e) => {
-    const obs = e.target.value;
-    setObsDif(obs);
-    // console.log("obs =", obs); // works
-    setMapSourceDif(bucket+'/obs/'+obs+'/'+yearRangeDif+'/'+fname);
+    const obs_l = e.target.value;
+    setObsDif(obs_l);
+    setMapSourceDif(bucket+'/obs/'+obs_l+'/'+yearRangeDif+'/'+fname);
   });
 
-  const NewDifSourceChoices = () => {
+  const ObsChoicesBox = ({onChange, value, label='Dataset'}) => {
     return (
       <>
-      <Box sx={{ ...sx.label, mt: [3] }}>Dif. Obs. Data</Box>
-      {/*
-      <Box sx={{ mt: [1] }}>
-        <Select
-        sxSelect={{ bg: 'transparent' }}
-        size='xs'
-        >
-        <option value='historical'>Historical</option>
-        </Select>
-      </Box>
-      */}
+      <Box sx={{ ...sx.label, mt: [3] }}>{label}</Box>
       <Select
         sxSelect={{ bg: 'transparent' }}
         size='xs'
-        onChange={handleObsDifChange}
+        onChange={onChange}
         sx={{ mt: [1] }}
-        value={obsDif}
+        value={value}
       >
-      {/* DifModelChoices() */}
         <option value='conus404'>Conus404</option>
         <option value='gmet'>GMET</option>
+        <option value='gridmet'>gridMET</option>
         <option value='livneh'>Livneh</option>
         <option value='maurer'>Maurer</option>
+        <option value='nclimgrid'>nClimGrid</option>
         <option value='nldas'>NLDAS</option>
-        {/* <option value='oldlivneh'>Old Livneh</option> */}
         <option value='prism'>PRISM</option>
       </Select>
+      <VariableChoiceBox />
+      {setMetricLabel()}
       </>
     );
   };
-
 
   const ComputeChoiceFilter = () => {
     const handleComputeChoiceChange = (newValues) => {
@@ -1710,6 +1708,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       );
     }
     else if (computeChoice['Dif.']) {
+
+
       return (
         <>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -1719,9 +1719,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           multiSelect={false}
         />
         </Box>
-        <NewDifSourceChoices />
-        <DifYearRangeBox />
-        <MapChoicesBox />
+        <DifferenceBox />
         </>
       );
     }
@@ -2025,28 +2023,27 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           <option value='1981_2004'>1981-2004</option>
      </Select>
 
-        <Box sx={{ ...sx.label, mt: [4] }}>Dataset</Box>
-        <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          onChange={handleObsChange}
-          sx={{ mt: [1] }}
-          value={obsDif}
-        >
-          <option value='conus404'>Conus404</option>
-          <option value='gmet'>GMET</option>
-          <option value='gridmet'>gridMET</option>
-          <option value='livneh'>Livneh</option>
-          <option value='maurer'>Maurer</option>
-          <option value='nclimgrid'>nClimGrid</option>
-          <option value='nldas'>NLDAS</option>
-          <option value='prism'>PRISM</option>
-        </Select>
-        <VariableChoiceBox />
-        {setMetricLabel()}
+        <ObsChoicesBox onChange={handleObsChange} value={obs} />
         </>
       );
     }
+  };
+
+  const DifferenceChoiceBox = ({obsOrDataChoice, setObsOrDataChoice}) => {
+    return (
+      <>
+      <Filter
+        values={differenceChoice}
+        setValues={setDifferenceChoice}
+        sx={{mt:3}}
+      />
+      <Filter
+        values={obsOrDataChoice}
+        setValues={setObsOrDataChoice}
+        sx={{mt:3}}
+      />
+      </>
+    );
   };
 
   const ClimateSignalChoiceBox = () => {
@@ -2117,6 +2114,39 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
            setValues={handleRCPValues}
            multiSelect={false}
           />
+        </>
+      );
+    }
+  };
+
+  /* TODO */
+  const DifferenceBox = ({numMetrics}) => {
+    if (differenceChoice["Minuend"]) {
+      return(
+        <>
+          <DifferenceChoiceBox
+             obsOrDataChoice={difObsOrDataChoice1}
+             setObsOrDataChoice={setObsOrDataChoice1} />
+          <DifYearRangeBox />
+          {difObsOrDataChoice1['Model'] ? <MapChoicesBox /> :
+                                          <ObsChoicesBox
+                                           onChange={handleObsChange}
+                                           value={obs} />
+          }
+        </>
+      );
+    } else { // subtrahend
+      return(
+        <>
+          <DifferenceChoiceBox
+             obsOrDataChoice={difObsOrDataChoice2}
+             setObsOrDataChoice={setObsOrDataChoice2} />
+          <DifYearRangeBox />
+          {difObsOrDataChoice2['Model'] ? <MapChoicesBox /> :
+                                          <ObsChoicesBox
+                                           onChange={handleObsDifChange}
+                                           value={obsDif} />
+          }
         </>
       );
     }
