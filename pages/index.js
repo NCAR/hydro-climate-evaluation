@@ -50,11 +50,13 @@ const Index = () => {
   }
 };
 
+
 const ClimateMapInstance = ({ sideBySideArgs }) => {
   const { sideBySide, setSideBySide } = sideBySideArgs
 
   const { theme } = useThemeUI();
   const [display, setDisplay] = useState(true);
+    console.log("INDEX SET DISPLAY =",setDisplay);
   const [reload, setReload] = useState(true);
   const [debug, setDebug] = useState(false);
   const [opacity, setOpacity] = useState(1);
@@ -84,8 +86,9 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
   // diff dataset variables for model to compare against
   const [scaleDif, setScaleDif] = useState(1.0);
   const [downscalingDif, setDownscalingDif] = useState('icar');
-  const [modelDif, setModelDif] = useState('cesm');
+  const [modelDif, setModelDif] = useState('canesm2');
   const [yearRangeDif, setYearRangeDif] = useState('1981_2004');
+  const [obs, setObs] = useState('livneh');
   const [obsDif, setObsDif] = useState('livneh');
 
   const [showStates, setStates] = useState(true);
@@ -118,10 +121,6 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
     'Climate Signal': false,
   });
 
-  // const [filterValues, setFilterValues] = useState({'Ave.': true,
-  //                                                   'Dif.': false,
-  //                                                   'Obs.': false});
-
   // control the height of the charts, initially hidden
   const [chartHeight, setChartHeight] = useState('0%');
   const [chartData, setChartData] = useState(Array(12).fill(0));
@@ -130,7 +129,7 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
                     month, band, colormapName, colormap,
                     downscaling, model, metric,
                     yearRange, mapSource, chartSource,
-                    downscalingDif, modelDif, yearRangeDif, obsDif,
+                    downscalingDif, modelDif, yearRangeDif, obs, obsDif,
                     mapSourceDif, chartSourceDif, scaleDif,
                     bucket_ndp, chartHeight, computeChoice,
                     showClimateChange, showRegionPlot, bucketRes,
@@ -154,6 +153,7 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
     setDownscalingDif,
     setModelDif,
     setYearRangeDif,
+    setObs,
     setObsDif,
     setMapSourceDif,
     setChartSourceDif,
@@ -269,6 +269,7 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
       selector={{ band }}
       // selector={{ month, band }}
       filterValue={computeChoice}
+      setDisplay={setDisplay}
       // selector={{ month, band, source }}
       regionOptions={{ setData: setRegionData }}
     />;

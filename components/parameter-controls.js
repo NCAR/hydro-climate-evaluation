@@ -1143,6 +1143,29 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
      ]);
 
 
+  useEffect(() => {
+      if (difObsOrDataChoice1['Model']) {
+          const url = [bucket+baseDir+downscaling+'/'+model+'/'+yearRange+'/'+fname];
+          setMapSource(url);
+      } else {
+          const url=[bucket+'/obs/'+obs+'/'+yearRange+'/'+fname];
+          setMapSource(url);
+      }
+  }, [difObsOrDataChoice1]);
+
+  // difference options
+  useEffect(() => {
+      if (difObsOrDataChoice2['Model']) {
+          const url=[bucket+baseDir+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname];
+          console.log("dif model url =", url);
+          setMapSourceDif(url);
+      } else {
+          const url=[bucket+'/obs/'+obsDif+'/'+yearRangeDif+'/'+fname];
+          console.log("dif obs  url =", url);
+          setMapSourceDif(url);
+      }
+  }, [difObsOrDataChoice2]);
+
   const handleRCPValues = useCallback((e) => {
     const choice = e;
     console.log("RCP VALUES e =", e);
@@ -2120,6 +2143,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   };
 
   /* TODO */
+  /* add arguments to mapchoicesbox */
   const DifferenceBox = ({numMetrics}) => {
     if (differenceChoice["Minuend"]) {
       return(
@@ -2128,7 +2152,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
              obsOrDataChoice={difObsOrDataChoice1}
              setObsOrDataChoice={setObsOrDataChoice1} />
           <DifYearRangeBox />
-          {difObsOrDataChoice1['Model'] ? <MapChoicesBox /> :
+          {difObsOrDataChoice1['Model'] ? <MapChoicesBox
+                                           /> :
                                           <ObsChoicesBox
                                            onChange={handleObsChange}
                                            value={obs} />
