@@ -511,9 +511,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     let yearRange = e.target.value;
     setYearRange(yearRange);
     if (yearRange === '2070_2100') {
-      yearRange = getRCPKey(rcpValues);
+      yearRange = yearRange + '/' + getRCPKey(rcpValues) + '.2076-2099';
     }
-
+    console.log("year range =", yearRange);
     setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
@@ -549,7 +549,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       timeRange = getRCPKey(rcpValues);
     }
     if (yearRange === '2070_2100') {
-      timeRange = getRCPKey(rcpValues);
+      timeRange = yearRange + '/' + getRCPKey(rcpValues) + '.2076-2099';
     }
 
     setMapSource([bucket+baseDir+downscaling+'/'+safemodel+'/'+timeRange+'/'+fname]);
@@ -578,7 +578,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       timeRange = getRCPKey(rcpValues);
     }
     if (yearRangeDif === '2070_2100') {
-      timeRange = getRCPKey(rcpValues);
+      timeRange = yearRange + '/' + getRCPKey(rcpValues) + '.2076-2099';
     }
 
     setMapSourceDif(bucket+baseDir+downscalingDif+'/'+safemodel+'/'+timeRange+'/'+fname);
@@ -593,7 +593,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       timeRange = getRCPKey(rcpValues)
     }
     if (yearRange === '2070_2100') {
-      timeRange = getRCPKey(rcpValues);
+      timeRange = yearRange + '/' + getRCPKey(rcpValues) + '.2076-2099';
     }
 
     setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+timeRange+'/'+fname]);
@@ -1188,7 +1188,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setRCPValues(choice);
     if (methodAndModel["Method & Model"]) {
       const rcp = getRCPKey(choice)
-      let url = [bucket+baseDir+downscaling+'/'+model+'/'+rcp+'/'+fname];
+      let url = [bucket+baseDir+downscaling+'/'+model+'/2070_2100/'+rcp+'.2076-2099/'+fname];
       setMapSource(url);
       console.log("RCP RESET URL =", url)
     }
@@ -1204,7 +1204,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       setAveChoice(choice);
       let yearRange_l = yearRange;
       if (yearRange === '2070_2100') {
-        yearRange_l = getRCPKey(rcpValues);
+        yearRange_l = yearRange + '/' + getRCPKey(rcpValues) + '.2076-2099';
       }
       setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+yearRange_l+'/'+fname]);
     } else if (choice['Observation']) {
@@ -1433,7 +1433,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       timeRange = getRCPKey(rcpValues)
     }
     if (yearRange === '2070_2100') {
-      timeRange = getRCPKey(rcpValues);
+      timeRange = yearRange + '/' + getRCPKey(rcpValues) + '.2076-2099';
     }
 
     setMapSourceDif([bucket+baseDir+downscalingDif+'/'+modelDif+'/'+timeRange+'/'+fname]);
