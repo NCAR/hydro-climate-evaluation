@@ -553,17 +553,35 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
 
     setMapSource([bucket+baseDir+downscaling+'/'+safemodel+'/'+timeRange+'/'+fname]);
-    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
-    // setChartSource(bucket+'/chart/'+downscaling+'/'+safemodel+'/'+band);
-    // getData({chartSource}, setChartData);
   });
 
   const handleDownscalingDifChange = useCallback((e) => {
     const downscalingDif = e.target.value;
     setDownscalingDif(downscalingDif);
-    setMapSourceDif(bucket+baseDir+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname);
-    // setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band);
-    //getData({chartSource}, setChartData);
+
+    let safemodel = modelDif;
+    if (downscaling === 'maca') {
+      if (modelDif === 'access1_3') {
+        setModelDif('noresm1_m');
+        safemodel = 'noresm1_m';
+      }
+    }
+    if (downscalingDif === 'nasa_nex') {
+      if (model === 'access1_3' || model === 'ccsm4') {
+        setModelDif('noresm1_m');
+        safemodel = 'noresm1_m';
+      }
+    }
+
+    let timeRange = yearRangeDif
+    if (computeChoice['Climate Signal']) {
+      timeRange = getRCPKey(rcpValues);
+    }
+    if (yearRangeDif === '2070_2100') {
+      timeRange = getRCPKey(rcpValues);
+    }
+
+    setMapSourceDif(bucket+baseDir+downscalingDif+'/'+safemodel+'/'+timeRange+'/'+fname);
   });
 
   const handleModelChange = useCallback((e) => {
@@ -713,7 +731,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const [difObsOrDataChoice1, setObsOrDataChoice1] =
           useState({ "Model": true, "Observation": false });
   const [difObsOrDataChoice2, setObsOrDataChoice2] =
-          useState({ "Model": false, "Observation": true });
+          useState({ "Model": true, "Observation": false });
+          // useState({ "Model": false, "Observation": true });
 
 
   const [metrics, setMetrics] = useState({ all: false, clear: false, clearall: false});
@@ -1629,6 +1648,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   };
 
 
+
   const handleObsChange = useCallback((e) => {
     const obs_l = e.target.value;
     setObs(obs_l);
@@ -1915,7 +1935,19 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   };
 
 
-  const MapChoicesBox = () => {
+  const MapChoicesBox = ({dif=false}) => {
+    var downscalingChange;
+    var downscalingVar;
+    if (!dif) {
+      downscalingChange = handleDownscalingChange;
+      downscalingVar = downscaling
+console.log("DIF IS TRUE");
+    } else {
+      downscalingChange = handleDownscalingDifChange;
+      downscalingVar = downscalingDif
+console.log("DIF IS FALSE");
+    }
+
     return(
       <>
       {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
@@ -1926,9 +1958,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       <Select
         sxSelect={{ bg: 'transparent' }}
         size='xs'
-        onChange={handleDownscalingChange}
+        onChange={downscalingChange}
         sx={{ mt: [1] }}
-        value={downscaling}
+        value={downscalingVar}
       >
         <option value='icar'>ICAR</option>
         {yearRange === '1981_2004' && (
@@ -1951,7 +1983,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         value={model}
       >
 
-       {downscaling === 'icar' && (
+       {downscalingVar === 'icar' && (
          <>
          <option value='noresm1_m'>NorESM-M</option>
          <option value='access1_3'>ACCESS1-3</option>
@@ -1960,7 +1992,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
          <option value='miroc5'>MIROC5</option>
          </>
        )}
-       {downscaling === 'gard_r2' && (
+       {downscalingVar === 'gard_r2' && (
          <>
          <option value='noresm1_m'>NorESM-M</option>
          <option value='access1_3'>ACCESS1-3</option>
@@ -1969,7 +2001,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
          <option value='miroc5'>MIROC5</option>
          </>
        )}
-       {downscaling === 'gard_r3' && (
+       {downscalingVar === 'gard_r3' && (
          <>
          <option value='noresm1_m'>NorESM-M</option>
          <option value='access1_3'>ACCESS1-3</option>
@@ -1978,7 +2010,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
          <option value='miroc5'>MIROC5</option>
          </>
        )}
-       {downscaling === 'loca_8th' && (
+       {downscalingVar === 'loca_8th' && (
          <>
          <option value='noresm1_m'>NorESM-M</option>
          <option value='access1_3'>ACCESS1-3</option>
@@ -1987,7 +2019,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
          <option value='miroc5'>MIROC5</option>
          </>
        )}
-      {downscaling === 'maca' && (
+      {downscalingVar === 'maca' && (
         <>
         <option value='noresm1_m'>NorESM-M</option>
         <option value='canesm2'>CanESM2</option>
@@ -1995,7 +2027,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         <option value='miroc5'>MIROC5</option>
         </>
       )}
-      {downscaling === 'nasa_nex' && (
+      {downscalingVar === 'nasa_nex' && (
         <>
         <option value='noresm1_m'>NorESM-M</option>
         <option value='canesm2'>CanESM2</option>
@@ -2167,7 +2199,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
              obsOrDataChoice={difObsOrDataChoice2}
              setObsOrDataChoice={setObsOrDataChoice2} />
           <DifYearRangeBox />
-          {difObsOrDataChoice2['Model'] ? <MapChoicesBox /> :
+          {difObsOrDataChoice2['Model'] ? <MapChoicesBox dif={true} /> :
                                           <ObsChoicesBox
                                            onChange={handleObsDifChange}
                                            value={obsDif} />
