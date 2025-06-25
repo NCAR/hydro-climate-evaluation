@@ -587,8 +587,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const handleModelChange = useCallback((e) => {
     const model = e.target.value;
     setModel(model);
-    console.log("model e =", e.target.value);
-    console.log("model =", bucket+baseDir+'/'+downscaling+'/'+model+'/');
 
     let timeRange = yearRange
     if (computeChoice['Climate Signal']) {
@@ -597,7 +595,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     if (yearRange === '2070_2100') {
       timeRange = getRCPKey(rcpValues);
     }
-
 
     setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+timeRange+'/'+fname]);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
@@ -1430,9 +1427,16 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const handleModelDifChange = useCallback((e) => {
     const modelDif = e.target.value;
     setModelDif(modelDif);
-    setMapSourceDif([bucket+baseDir+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname]);
-    // setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band);
-    // getData({chartSourceDif}, setChartDataDif);
+
+    let timeRange = yearRangeDif
+    if (computeChoice['Climate Signal']) {
+      timeRange = getRCPKey(rcpValues)
+    }
+    if (yearRange === '2070_2100') {
+      timeRange = getRCPKey(rcpValues);
+    }
+
+    setMapSourceDif([bucket+baseDir+downscalingDif+'/'+modelDif+'/'+timeRange+'/'+fname]);
   });
 
 
@@ -1938,13 +1942,19 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const MapChoicesBox = ({dif=false}) => {
     var downscalingChange;
     var downscalingVar;
+    var modelChange;
+    var modelVar;
     if (!dif) {
       downscalingChange = handleDownscalingChange;
-      downscalingVar = downscaling
+      downscalingVar = downscaling;
+      modelChange = handleModelChange;
+      modelVar = model;
 console.log("DIF IS TRUE");
     } else {
       downscalingChange = handleDownscalingDifChange;
-      downscalingVar = downscalingDif
+      downscalingVar = downscalingDif;
+      modelChange = handleModelDifChange;
+      modelVar = modelDif;
 console.log("DIF IS FALSE");
     }
 
@@ -1978,9 +1988,9 @@ console.log("DIF IS FALSE");
       <Select
         sxSelect={{ bg: 'transparent' }}
         size='xs'
-        onChange={handleModelChange}
+        onChange={modelChange}
         sx={{ mt: [1] }}
-        value={model}
+        value={modelVar}
       >
 
        {downscalingVar === 'icar' && (
