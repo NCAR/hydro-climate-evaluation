@@ -520,9 +520,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   });
 
   const handleYearDifChange = useCallback((e) => {
-    const yearRangeDif = e.target.value;
+    let yearRangeDif = e.target.value;
     setYearRangeDif(yearRangeDif);
-    console.log("yearRange =", e.target.value);
+    console.log("yearRangeDif =", e.target.value);
+    if (yearRangeDif === '2070_2100') {
+      yearRangeDif = yearRangeDif + '/' + getRCPKey(rcpValues) + '.2076-2099';
+    }
     setMapSourceDif([bucket+baseDir+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname]);
     // setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band);
   });
@@ -1267,7 +1270,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         downscaling_l = topDownscaling[i];
         model_l = topModel[i];
         url = bucket+baseDir+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname;
-        setMapSource((prevSources) => [...prevSources, url]);;
+        setMapSource((prevSources) => [...prevSources, url]);
       }
     }
   }, [showRegionPlot, shouldUpdateMapSource]);
@@ -1707,7 +1710,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         // above func handled below
         let yearRange_l = yearRange;
         if (yearRange === '2070_2100') {
-          yearRange_l= getRCPKey(rcpValues);
+            yearRange_l = yearRange_l + '/' + getRCPKey(rcpValues) + '.2076-2099';
         }
 
         if (newValues['Ave.']) {
@@ -1897,6 +1900,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     return (combinationBox);
   };
 
+  {/* is this not used? */}
   const DifYearRangeBox = () => {
     return(
       <>
@@ -1905,28 +1909,30 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           sxSelect={{ bg: 'transparent' }}
           size='xs'
           sx={{ mt: [1] }}
-          value={'1981_2004'}
+          onChange={handleYearDifChange}
+          value={yearRangeDif}
        >
           <option value='1981_2004'>1981-2004</option>
+          <option value='2070_2100'>2006-2099</option>
      </Select>
      </>
     );
   };
 
-  const YearRangeBox = () => {
+  const YearRangeBox = ({onChange, value, downscaling_l}) => {
     return(
       <>
       <Box sx={{ ...sx.label, mt: [3] }}>Year Range</Box>
       <Select
           sxSelect={{ bg: 'transparent' }}
           size='xs'
-          onChange={handleYearChange}
+          onChange={onChange}
           sx={{ mt: [1] }}
-          value={yearRange}
+          value={value}
         >
           <option value='1981_2004'>1981-2004</option>
-          {(downscaling != 'gard_r2' &&
-            downscaling != 'gard_r3') && (
+          {(downscaling_l != 'gard_r2' &&
+            downscaling_l != 'gard_r3') && (
             <>
             <option value='2070_2100'>2006-2099</option>
             </>
@@ -1962,7 +1968,11 @@ console.log("DIF IS FALSE");
       <>
       {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
 
-      {computeChoice['Ave.'] && <YearRangeBox />}
+      {computeChoice['Ave.'] &&
+       <YearRangeBox
+           onChange={handleYearChange}
+           value={yearRange}
+           downscaling_l={downscaling} />}
 
       <Box sx={{ ...sx.label, mt: [4] }}>Downscaling Method</Box>
       <Select
@@ -2193,7 +2203,10 @@ console.log("DIF IS FALSE");
           <DifferenceChoiceBox
              obsOrDataChoice={difObsOrDataChoice1}
              setObsOrDataChoice={setObsOrDataChoice1} />
-          <DifYearRangeBox />
+          <YearRangeBox
+              onChange={handleYearChange}
+              value={yearRange}
+              downscaling_l={downscaling} />
           {difObsOrDataChoice1['Model'] ? <MapChoicesBox
                                            /> :
                                           <ObsChoicesBox
@@ -2208,7 +2221,10 @@ console.log("DIF IS FALSE");
           <DifferenceChoiceBox
              obsOrDataChoice={difObsOrDataChoice2}
              setObsOrDataChoice={setObsOrDataChoice2} />
-          <DifYearRangeBox />
+          <YearRangeBox
+              onChange={handleYearDifChange}
+              value={yearRangeDif}
+              downscaling_l={downscalingDif} />
           {difObsOrDataChoice2['Model'] ? <MapChoicesBox dif={true} /> :
                                           <ObsChoicesBox
                                            onChange={handleObsDifChange}
