@@ -727,7 +727,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           useState({ "Method & Model": true });
 
   const [differenceChoice, setDifferenceChoice] =
-          useState({ "Minuend": true, "Subtrahend": false });
+          useState({ "Dataset A": true, "Dataset B": false });
   const [difObsOrDataChoice1, setObsOrDataChoice1] =
           useState({ "Model": true, "Observation": false });
   const [difObsOrDataChoice2, setObsOrDataChoice2] =
@@ -1955,13 +1955,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       downscalingVar = downscaling;
       modelChange = handleModelChange;
       modelVar = model;
-console.log("DIF IS TRUE");
     } else {
       downscalingChange = handleDownscalingDifChange;
       downscalingVar = downscalingDif;
       modelChange = handleModelDifChange;
       modelVar = modelDif;
-console.log("DIF IS FALSE");
     }
 
     return(
@@ -2106,18 +2104,23 @@ console.log("DIF IS FALSE");
 
   const DifferenceChoiceBox = ({obsOrDataChoice, setObsOrDataChoice}) => {
     return (
-      <>
+      <Box>
+      <Box
+        sx={{fontSize: [2], fontFamily: 'mono', letterSpacing: 'mono',
+              mt:3, mb: 0,}}>
+        A-B for
+      </Box>
       <Filter
         values={differenceChoice}
         setValues={setDifferenceChoice}
-        sx={{mt:3}}
+        sx={{mt:0}}
       />
       <Filter
         values={obsOrDataChoice}
         setValues={setObsOrDataChoice}
         sx={{mt:3}}
       />
-      </>
+      </Box>
     );
   };
 
@@ -2197,9 +2200,9 @@ console.log("DIF IS FALSE");
   /* TODO */
   /* add arguments to mapchoicesbox */
   const DifferenceBox = ({numMetrics}) => {
-    if (differenceChoice["Minuend"]) {
+    if (differenceChoice["Dataset A"]) {
       return(
-        <>
+        <Box sx={{ mt: 0 }}>
           <DifferenceChoiceBox
              obsOrDataChoice={difObsOrDataChoice1}
              setObsOrDataChoice={setObsOrDataChoice1} />
@@ -2213,11 +2216,11 @@ console.log("DIF IS FALSE");
                                            onChange={handleObsChange}
                                            value={obs} />
           }
-        </>
+        </Box>
       );
-    } else { // subtrahend
+    } else { // Dataset B
       return(
-        <>
+        <Box sx={{ mt: 0 }}>
           <DifferenceChoiceBox
              obsOrDataChoice={difObsOrDataChoice2}
              setObsOrDataChoice={setObsOrDataChoice2} />
@@ -2230,7 +2233,7 @@ console.log("DIF IS FALSE");
                                            onChange={handleObsDifChange}
                                            value={obsDif} />
           }
-        </>
+        </Box>
       );
     }
   };
