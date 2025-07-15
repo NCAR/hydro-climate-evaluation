@@ -10,6 +10,7 @@ import ParameterControls from '../components/parameter-controls';
 import {options, linedata, linedata_stub} from '../components/plot-line';
 import { Line as LineCJS } from 'react-chartjs-2';
 import Charts from '../components/charts';
+import ErrorBoundary from '../components/ErrorBoundary';
 // import MetricControls from '../components/metric-controls'
 // import { NetCDFReader } from "netcdfjs";
 
@@ -85,7 +86,7 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
   const [yearRange, setYearRange] = useState('1981_2004', '2070_2100');
   // diff dataset variables for model to compare against
   const [scaleDif, setScaleDif] = useState(1.0);
-  const [downscalingDif, setDownscalingDif] = useState('icar');
+  const [downscalingDif, setDownscalingDif] = useState('nasa_nex');
   const [modelDif, setModelDif] = useState('canesm2');
   const [yearRangeDif, setYearRangeDif] = useState('1981_2004');
   const [obs, setObs] = useState('livneh');
@@ -175,6 +176,7 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
 
 
   return (
+  <ErrorBoundary>
     <>
     <Meta
       card={'https://ncar.ucar.edu/profiles/custom/ncar_ucar_umbrella/themes/custom/koru/libraries/koru-base/img/app-favicons/ncar/favicon.ico'}
@@ -215,9 +217,11 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
 
     {showHuc2 && (
     <Line
-      color={'red'}
+      color={'black'}
       source={bucket_ndp + 'basemaps/huc/huc2-basins-1percent.geojson'}
+      blur={1.0}
       ndp={false}
+      dashArray={[2, 4]}
     />)}
 
     {/*
@@ -272,7 +276,7 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
       setDisplay={setDisplay}
       // selector={{ month, band, source }}
       regionOptions={{ setData: setRegionData }}
-    />;
+    />
     {/*
     <RegionPlot
       band={band}
@@ -327,6 +331,7 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
 
     </Row>
     </>
+  </ErrorBoundary>
   ) // end return statement
 };
 
