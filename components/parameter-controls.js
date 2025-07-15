@@ -2,7 +2,7 @@ import { useState, Fragment } from 'react';
 import { Box, Flex } from 'theme-ui';
 import { useCallback, useEffect } from 'react';
 import { Button, Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components';
-import { ArrowThin, RotatingArrow } from '@carbonplan/icons';
+import { Right } from '@carbonplan/icons';
 import Colorbar from './colorbar';
 // import { colormaps } from '@carbonplan/colormaps';
 import { colormaps } from '../colormaps/src';
@@ -1451,7 +1451,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const RiversTag = () => {
     return(
     <Box>
-    <Tag value={showRivers} onClick={() => setRivers((prev) => !prev)}>
+    <Tag value={showRivers}
+         sx={{ color: "black"}}
+         onClick={() => setRivers((prev) => !prev)}>
       Rivers
     </Tag>
     </Box>
@@ -1462,7 +1464,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     return(
       // <Toggle value={showStates} onClick={() => setStates(!showStates)} />
     <Box>
-    <Tag value={showStates} onClick={() => setStates((prev) => !prev)}>
+    <Tag value={showStates}
+         sx={{ color: "black"}}
+         onClick={() => setStates((prev) => !prev)}>
       State Lines
     </Tag>
     </Box>
@@ -1472,7 +1476,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const Huc2Tag = () => {
     return(
     <Box>
-    <Tag value={showHuc2} onClick={() => setHuc2((prev) => !prev)}>
+    <Tag value={showHuc2}
+         sx={{ color: "black"}}
+         onClick={() => setHuc2((prev) => !prev)}>
       Huc 2
     </Tag>
     </Box>
@@ -1482,7 +1488,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const SideBySideTag = () => {
     return(
     <Box>
-    <Tag value={sideBySide} onClick={() => setSideBySide((prev) => !prev)}>
+    <Tag value={sideBySide}
+         sx={{ color: "black"}}
+         onClick={() => setSideBySide((prev) => !prev)}>
       Side By Side
     </Tag>
     </Box>
@@ -1496,7 +1504,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         href={readmeUrl}
         target="_blank"
         rel="noopener noreferrer"
-        prefix={<RotatingArrow />}
+        prefix={<Right />}
+        color="black"
       >
         HELP
       </Button>
