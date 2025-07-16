@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useRef, useEffect } from 'react';
 import { Box, useThemeUI } from 'theme-ui';
 import { Dimmer, Column, Row } from '@carbonplan/components';
-import { Map, Raster, Fill, Line, RegionPicker } from '../maps';
+import { Map, Raster, Fill, Line, RegionPicker, useControls } from '../maps';
 import Meta from '../components/meta';
 import { useThemedColormap } from '../colormaps/src';
 import RegionPlot from '../components/region-plot';
@@ -29,6 +29,11 @@ const Index = () => {
   const { theme } = useThemeUI();
   const [sideBySide, setSideBySide] = useState(false);
 
+  // const controls = useControls();
+  // const [center, setCenter] = useState(controls.center);
+  // const [zoom, setZoom] = useState(controls.zoom);
+  // controlArgs={{controls, center, setCenter, zoom, setZoom}}
+
   if (sideBySide){
     return(
       <div key={sideBySide} style={{ display: 'flex', width: '100%', height: '100vh' }}>
@@ -36,7 +41,9 @@ const Index = () => {
           <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
         </Box>
         <Box sx={{ flex: 1, backgroundColor: '#e0e0e0', position: 'relative' }}>
-          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
+          <ClimateMapInstance
+            sideBySideArgs={{sideBySide, setSideBySide}}
+           />
         </Box>
       </div>
     );
@@ -44,7 +51,8 @@ const Index = () => {
       return(
         <div key={sideBySide} style={{ display: 'flex', width: '100%', height: '100vh' }}>
           <Box sx={{ flex: 1, backgroundColor: '#f0f0f0', position: 'relative' }}>
-          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
+          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}}
+          />
           </Box>
         </div>
     );
@@ -52,8 +60,9 @@ const Index = () => {
 };
 
 
-const ClimateMapInstance = ({ sideBySideArgs }) => {
-  const { sideBySide, setSideBySide } = sideBySideArgs
+const ClimateMapInstance = ({ sideBySideArgs, controlArgs }) => {
+  const { sideBySide, setSideBySide } = sideBySideArgs;
+  // const {controls, center, setCenter, zoom, setZoom} = controlArgs;
 
   const { theme } = useThemeUI();
   const [display, setDisplay] = useState(true);
@@ -276,6 +285,11 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
       setDisplay={setDisplay}
       // selector={{ month, band, source }}
       regionOptions={{ setData: setRegionData }}
+      // controls={controls}
+      // zoom={zoom}
+      // setZoom={setZoom}
+      // center={center}
+      // setCenter={setCenter}
     />
     {/*
     <RegionPlot
