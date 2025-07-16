@@ -1,8 +1,9 @@
 import { useState, Fragment } from 'react';
 import { Box, Flex } from 'theme-ui';
 import { useCallback, useEffect } from 'react';
+import { useMapbox } from '../maps/src/mapbox';
 import { Button, Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components';
-import { Right } from '@carbonplan/icons';
+import { Right, Reset } from '@carbonplan/icons';
 import Colorbar from './colorbar';
 // import { colormaps } from '@carbonplan/colormaps';
 import { colormaps } from '../colormaps/src';
@@ -507,6 +508,36 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     // getData({chartSource}, setChartData);
   });
 
+  const { map } = useMapbox()
+
+  const resetLatLon = () => {
+    if (map) {
+      map.jumpTo({
+        center: [-97, 38],
+        zoom: 4,
+      });
+    }
+  };
+
+  const ResetZoomButton = () => {
+    return(
+      <Box sx={{ mt: 2 }}>
+      <Button prefix={<Reset/>} onClick={resetLatLon} sx={{ color: "black"}}>
+      Reset Zoom
+      </Button>
+      </Box>
+    );
+  };
+
+  const resetColorbar = () => {
+    if (computeChoice['Dif.'] || computeChoice['Climate Signal']) {
+      setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
+    } else if (computeChoice['Ave.']) {
+      setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
+    }
+  };
+
+
   const handleYearChange = useCallback((e) => {
     let yearRange = e.target.value;
     setYearRange(yearRange);
@@ -807,6 +838,28 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       }
     }
   };
+
+  // Pretty printing of the model and downscaling labels
+  const modelPP = {
+    access1_3: 'ACCESS1-3',
+    canesm2: 'CanESM2',
+    ccsm4: 'CCSM4',
+    cesm: 'CESM',
+    gfdl: 'GFDL',
+    miroc5: 'MIROC5',
+    noresm: 'NorESM',
+    noresm1_m: 'NorESM-M',
+  };
+
+  const downscalingPP = {
+    icar: 'ICAR',
+    gard_r2: 'GARD_r2',
+    gard_r3: 'GARD_r3',
+    loca_8th: 'LOCA_8th',
+    maca: 'MACA',
+    nasa_nex: 'NASA-NEX'
+  };
+
 
   // 13 = combinations
   const combinations =
@@ -1250,6 +1303,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   });
 
   useEffect(() => {
+    setComputeClimateSignal({'COMPUTE': false});
+  }, [metrics, metrics1, metrics2, metrics3, metrics4,
+      stdDevMetrics, stdDevMetrics1, stdDevMetrics2,
+      RMSEMetrics, RMSEMetrics1, RMSEMetrics2]);
+
+  useEffect(() => {
     if (!showRegionPlot && shouldUpdateMapSource) {
       console.log("ARTLESS top combination =", topCombination);
       let downscaling_l = topDownscaling[0];
@@ -1513,6 +1572,19 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     );
   };
 
+  const DifferenceLegend = () => {
+    return (
+      <Box sx={{ mt: [2], justifyContent: 'center'}}>
+        {modelPP[model]} downscaled
+        with {downscalingPP[downscaling]} <br />
+        minus <br />
+        {modelPP[modelDif]} downscaled
+        with {downscalingPP[downscalingDif]} <br />
+      </Box>
+    );
+  };
+
+
   const LocalColorbar = () => {
     return (
       <>
@@ -1528,11 +1600,57 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       />
       </Box>
       <Box sx={{ mt: [2], justifyContent: 'center'}}>
-      drag range
+      display range
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Button prefix={<Reset/>} inverted onClick={resetColorbar}>
+        reset
+      </Button>
       </Box>
       </>
     );
   };
+
+  const DifferenceLegendAndColorbar = () => {
+    return (
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 20,
+          right: 20,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2, // adds vertical spacing between the two
+          zIndex: 10,
+        }}
+      >
+      {computeChoice['Dif.'] && (
+        <Box
+          sx={{
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            padding: '10px',
+            borderRadius: '5px',
+          }}
+        >
+          <DifferenceLegend />
+        </Box>
+      )}
+
+      <Box
+        sx={{
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          padding: '10px',
+          borderRadius: '5px',
+          width: 'fit-content',
+          alignSelf: 'flex-end',
+        }}
+      >
+        <LocalColorbar />
+      </Box>
+    </Box>
+    );
+  };
+
 
   const DifYearChoices = () => {
     if (yearRange === '1980_2010') {
@@ -2282,14 +2400,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   return (
     <>
-    <Box
-      sx={{ position: 'absolute', top: 20, right: 20,
-            backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '10px',
-            borderRadius: '5px'}}
-    >
-      <LocalColorbar />
-    </Box>;
-
+    <DifferenceLegendAndColorbar/>
 
     <Box
       sx={{ position: 'absolute', top: 20, left: 20,
@@ -2297,7 +2408,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             borderRadius: '5px'}}
     >
       <ComputeChoiceFilter/>
-    </Box>;
+    </Box>
     {/* !showRegionPlot && <MapChoicesBox /> */}
     {/* showRegionPlot && <ClimateSignalBox numMetrics={numMetrics} /> */}
 
@@ -2314,6 +2425,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       <StatesTag />
       <Huc2Tag />
       <SideBySideTag />
+      <ResetZoomButton />
       <README />
     </Box>
     </>

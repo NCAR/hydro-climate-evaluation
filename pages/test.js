@@ -10,21 +10,54 @@ import ParameterControls from '../components/parameter-controls';
 import {options, linedata, linedata_stub} from '../components/plot-line';
 import { Line as LineCJS } from 'react-chartjs-2';
 import Charts from '../components/charts';
+import ErrorBoundary from '../components/ErrorBoundary';
 // import MetricControls from '../components/metric-controls'
 // import { NetCDFReader } from "netcdfjs";
 
 // option to use external zarr files only
 const TESTING = false;
 
-// base urls to zarr data
-const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/';
+// location of the map and pbf shape files
 const bucket_ndp = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/';
+// original hosting site
+// const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/';
 // local data address for testing
 // const bucket_ndp = 'http://127.0.0.1:4000/data/';
 
 const Index = () => {
+
+  const { theme } = useThemeUI();
+  const [sideBySide, setSideBySide] = useState(false);
+
+  if (sideBySide){
+    return(
+      <div key={sideBySide} style={{ display: 'flex', width: '100%', height: '100vh' }}>
+        <Box sx={{ flex: 1, backgroundColor: '#f0f0f0', position: 'relative' }}>
+          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
+        </Box>
+        <Box sx={{ flex: 1, backgroundColor: '#e0e0e0', position: 'relative' }}>
+          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
+        </Box>
+      </div>
+    );
+  } else {
+      return(
+        <div key={sideBySide} style={{ display: 'flex', width: '100%', height: '100vh' }}>
+          <Box sx={{ flex: 1, backgroundColor: '#f0f0f0', position: 'relative' }}>
+          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
+          </Box>
+        </div>
+    );
+  }
+};
+
+
+const ClimateMapInstance = ({ sideBySideArgs }) => {
+  const { sideBySide, setSideBySide } = sideBySideArgs
+
   const { theme } = useThemeUI();
   const [display, setDisplay] = useState(true);
+    console.log("INDEX SET DISPLAY =",setDisplay);
   const [reload, setReload] = useState(true);
   const [debug, setDebug] = useState(false);
   const [opacity, setOpacity] = useState(1);
@@ -53,10 +86,15 @@ const Index = () => {
   const [yearRange, setYearRange] = useState('1981_2004', '2070_2100');
   // diff dataset variables for model to compare against
   const [scaleDif, setScaleDif] = useState(1.0);
-  const [downscalingDif, setDownscalingDif] = useState('icar');
-  const [modelDif, setModelDif] = useState('cesm');
+  const [downscalingDif, setDownscalingDif] = useState('nasa_nex');
+  const [modelDif, setModelDif] = useState('canesm2');
   const [yearRangeDif, setYearRangeDif] = useState('1981_2004');
+  const [obs, setObs] = useState('livneh');
   const [obsDif, setObsDif] = useState('livneh');
+
+  const [showStates, setStates] = useState(true);
+  const [showRivers, setRivers] = useState(false);
+  const [showHuc2, setHuc2] = useState(false);
 
   const [fname, setFname] = useState('data.zarr');
   // paths to model dataset
@@ -84,11 +122,6 @@ const Index = () => {
     'Climate Signal': false,
   });
 
-
-  // const [filterValues, setFilterValues] = useState({'Ave.': true,
-  //                                                   'Dif.': false,
-  //                                                   'Obs.': false});
-
   // control the height of the charts, initially hidden
   const [chartHeight, setChartHeight] = useState('0%');
   const [chartData, setChartData] = useState(Array(12).fill(0));
@@ -97,10 +130,11 @@ const Index = () => {
                     month, band, colormapName, colormap,
                     downscaling, model, metric,
                     yearRange, mapSource, chartSource,
-                    downscalingDif, modelDif, yearRangeDif, obsDif,
+                    downscalingDif, modelDif, yearRangeDif, obs, obsDif,
                     mapSourceDif, chartSourceDif, scaleDif,
                     bucket_ndp, chartHeight, computeChoice,
-                    showClimateChange, showRegionPlot, bucketRes};
+                    showClimateChange, showRegionPlot, bucketRes,
+                    showStates, showRivers, showHuc2, sideBySide};
   const setters = {
     setDisplay,
     setReload,
@@ -120,6 +154,7 @@ const Index = () => {
     setDownscalingDif,
     setModelDif,
     setYearRangeDif,
+    setObs,
     setObsDif,
     setMapSourceDif,
     setChartSourceDif,
@@ -129,13 +164,19 @@ const Index = () => {
     setComputeChoice,
     setShowClimateChange,
     setShowRegionPlot,
-    setBucketRes
+    setBucketRes,
+    setStates,
+    setRivers,
+    setHuc2,
+    setSideBySide
   };
 
   const fillValue = 3.4028234663852886e38; // black on land, red nans
 
 
+
   return (
+  <ErrorBoundary>
     <>
     <Meta
       card={'https://ncar.ucar.edu/profiles/custom/ncar_ucar_umbrella/themes/custom/koru/libraries/koru-base/img/app-favicons/ncar/favicon.ico'}
@@ -150,14 +191,65 @@ const Index = () => {
     <Map zoom={4} center={{lon:-97, lat:38}} debug={debug}>
     <Fill
       color={'#4a80f5'}
-      source={bucket + 'basemaps/ocean'}
+      source={bucket_ndp + 'basemaps/ocean'}
       variable={'ocean'}
     />
     <Line
       color={theme.rawColors.primary}
-      source={bucket + 'basemaps/land'}
+      source={bucket_ndp + 'basemaps/land'}
       variable={'land'}
     />
+
+    {showStates && (
+    <Line
+      color={'black'}
+      source={bucket_ndp + 'basemaps/states/ne_110m_admin_1_states_provinces_lakes.json'}
+      variable={'United States of America'}
+      ndp={false}
+    />)}
+
+    {showRivers && (
+    <Line
+      color={'black'}
+      source={bucket_ndp + 'basemaps/rivers/rivers.3percent.geojson'}
+      ndp={false}
+    />)}
+
+    {showHuc2 && (
+    <Line
+      color={'black'}
+      source={bucket_ndp + 'basemaps/huc/huc2-basins-1percent.geojson'}
+      blur={1.0}
+      ndp={false}
+      dashArray={[2, 4]}
+    />)}
+
+    {/*
+      source={bucket_ndp + 'basemaps/rivers/ne_10m_rivers_north_america.json'}
+    */}
+
+    {/*
+    <Line
+      color={'red'}
+      source={bucket_ndp + 'basemaps/huc/huc2-basins.geojson'}
+      ndp={false}
+    />;
+    */}
+
+    {/*
+    <Line
+      color={'black'}
+      source={bucket_ndp + 'basemaps/states/us-states.json'}
+      variable={'state'}
+      ndp={false}
+    />;
+    <Line
+      color={'red'}
+      source={bucket_ndp + 'basemaps/states/rivers.geojson'}
+      ndp={false}
+    />;
+    */}
+
     {showRegionPlot && (
      <RegionPicker
        color={theme.colors.primary}
@@ -168,7 +260,7 @@ const Index = () => {
      />)}
 
     <Raster
-      key={`${mapSource}-${mapSourceDif}-${reload}-${JSON.stringify(computeChoice)}`}
+      key={`${mapSource}-${mapSourceDif}-${reload}-${sideBySide}-${JSON.stringify(computeChoice)}`}
       colormap={colormap}
       clim={clim}
       display={display}
@@ -181,9 +273,10 @@ const Index = () => {
       selector={{ band }}
       // selector={{ month, band }}
       filterValue={computeChoice}
+      setDisplay={setDisplay}
       // selector={{ month, band, source }}
       regionOptions={{ setData: setRegionData }}
-    />;
+    />
     {/*
     <RegionPlot
       band={band}
@@ -194,14 +287,15 @@ const Index = () => {
     />
     */}
 
-    </Map>
-
     <ParameterControls
       getters={getters}
       setters={setters}
       bucket={bucket_ndp}
       fname={fname}
     />
+
+    </Map>
+
 
     </Box>
     </Column>
@@ -238,6 +332,7 @@ const Index = () => {
 
     </Row>
     </>
+  </ErrorBoundary>
   ) // end return statement
 };
 

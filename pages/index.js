@@ -287,14 +287,15 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
     />
     */}
 
-    </Map>
-
     <ParameterControls
       getters={getters}
       setters={setters}
       bucket={bucket_ndp}
       fname={fname}
     />
+
+    </Map>
+
 
     </Box>
     </Column>
