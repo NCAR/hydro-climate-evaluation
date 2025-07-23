@@ -7,15 +7,18 @@ rundocker: cleandocker builddocker
 	docker run --entrypoint "/bin/sh" -it -p ${port}:${port} --name runicarmaps icarmaps
 
 # install nodejs dependencies and run
+install:
+	npm install .
+build:
+	npm run build
 run:
 	npm run start
-run-dev:
+dev:
 	npm run dev
+
+run-dev: dev
 init:
 	rm -rf node_modules
-	npm install .
-
-build:
 	npm install .
 
 # build and clean docker images

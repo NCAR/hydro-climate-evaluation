@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=development next -p 3000",
     "build": "next build",
-    "old-start": "next start -p 8080",
-    "start": "node server.js",
+    "start": "NODE_ENV=production node server.js",
+    "dev": "NODE_ENV=development node server.js",
     "perf": "node --prof server.js",
     "format": "prettier --write {pages,components}/**/*.js'"
   },
