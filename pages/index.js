@@ -126,6 +126,8 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
   const [chartHeight, setChartHeight] = useState('0%');
   const [chartData, setChartData] = useState(Array(12).fill(0));
 
+  const [mapVal, setMapVal] = useState(null);
+
   const getters = { display, reload, debug, opacity, clim,
                     month, band, colormapName, colormap,
                     downscaling, model, metric,
@@ -134,7 +136,7 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
                     mapSourceDif, chartSourceDif, scaleDif,
                     bucket_ndp, chartHeight, computeChoice,
                     showClimateChange, showRegionPlot, bucketRes,
-                    showStates, showRivers, showHuc2, sideBySide};
+                    showStates, showRivers, showHuc2, sideBySide, mapVal};
   const setters = {
     setDisplay,
     setReload,
@@ -221,6 +223,7 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
       source={bucket_ndp + 'basemaps/huc/huc2-basins-1percent.geojson'}
       blur={1.0}
       ndp={false}
+      width={0.7}
       dashArray={[2, 4]}
     />)}
 
@@ -259,7 +262,9 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
        maxRadius={200}
      />)}
 
+    {/* projection = equirectangular */}
     <Raster
+      setMapVal={setMapVal}
       key={`${mapSource}-${mapSourceDif}-${reload}-${sideBySide}-${JSON.stringify(computeChoice)}`}
       colormap={colormap}
       clim={clim}
