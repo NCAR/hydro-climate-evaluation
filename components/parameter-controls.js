@@ -184,7 +184,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           mapSourceDif, chartSourceDif, scaleDif,
           chartHeight, computeChoice,
           showClimateChange, showRegionPlot, bucketRes,
-          showStates, showRivers, showHuc2, sideBySide
+          showStates, showRivers, showHuc2, sideBySide, mapVal
         } = getters;
   const {
     setDisplay,
@@ -519,9 +519,53 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     }
   };
 
+  const [lon, setLon] = useState(null);
+  const [lat, setLat] = useState(null);
+  const [val, setVal] = useState(null);
+
+  const MapValueBox = ({ map }) => {
+    useEffect(() => {
+      if (!map) return
+      // console.log("layers =", map.getStyle().layers)
+      const onMouseMove = (e) => {
+      try{
+        const { lng, lat } = e.lngLat;
+        const x = e.point.x;
+        const y = e.point.y;
+        setLon(lng);
+        setLat(lat);
+        } catch (err) {
+          console.error('🔥 onMouseMove error:', err.message);
+        }
+      };
+
+
+    map.on('mousemove', onMouseMove);
+    return () => {
+      map.off('mousemove', onMouseMove)
+    }
+    }, [map])
+    return(
+      <Box sx={{
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          padding: '10px',
+          borderRadius: '5px',
+          width: 'fit-content',
+          alignSelf: 'flex-end',
+       }}>
+      <Box> Lat/Lon and Value </Box>
+      <Box> {lat !== null ? lat.toFixed(2) : '–'} /
+            {lon !== null ? lon.toFixed(2) : '–'}
+      </Box>
+      <Box> {mapVal !== null ? mapVal : '–'}</Box>
+      </Box>
+    );
+  };
+
+
   const ResetZoomButton = () => {
     return(
-      <Box sx={{ mt: 2 }}>
+      <Box sx={{ mt: 2, display: 'flex'}}>
       <Button prefix={<Reset/>} onClick={resetLatLon} sx={{ color: "black"}}>
       Reset Zoom
       </Button>
@@ -1603,7 +1647,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       display range
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-      <Button prefix={<Reset/>} inverted onClick={resetColorbar}>
+      <Button prefix={<Reset/>} inverted onClick={resetColorbar}
+        size='xs'>
         reset
       </Button>
       </Box>
@@ -1647,6 +1692,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       >
         <LocalColorbar />
       </Box>
+      <MapValueBox map={map} />
     </Box>
     );
   };
@@ -1978,7 +2024,33 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     );
   };
 
-  const VariableChoiceBox = ({showPlotLabel=false}) => {
+  const VariableChoiceBox = ({showPlotLabel=false, climateSignal=false}) => {
+    const metrics = [
+      'n34pr',
+      'n34t',
+      ...(climateSignal ? [] : ['ptrend', 'ttrend']),
+      'pr90',
+      'pr99',
+      't90',
+      't99',
+      'djf_t',
+      'djf_p',
+      'mam_t',
+      'mam_p',
+      'jja_t',
+      'jja_p',
+      'son_t',
+      'son_p',
+      'ann_t',
+      'ann_p',
+      'ann_snow',
+      'freezethaw'
+    ];
+    // if switching to climate signal make sure metrics is not a trend
+    if (climateSignal && (metric === 'ptrend' || metric === 'ttrend')) {
+      handleMetricsChange({ target: { value: 'n34pr' } });
+    }
+
     return(
       <>
       { showPlotLabel && <Box sx={{ ...sx.label, mt: [4] }}>Plot Metric</Box> }
@@ -1991,26 +2063,11 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         sx={{ mt: [1] }}
         value={metric}
       >
-        <option value='n34pr'>n34pr</option>
-        <option value='n34t'>n34t</option>
-        <option value='ptrend'>ptrend</option>
-        <option value='ttrend'>ttrend</option>
-        <option value='pr90'>pr90</option>
-        <option value='pr99'>pr99</option>
-        <option value='t90'>t90</option>
-        <option value='t99'>t99</option>
-        <option value='djf_t'>djf_t</option>
-        <option value='djf_p'>djf_p</option>
-        <option value='mam_t'>mam_t</option>
-        <option value='mam_p'>mam_p</option>
-        <option value='jja_t'>jja_t</option>
-        <option value='jja_p'>jja_p</option>
-        <option value='son_t'>son_t</option>
-        <option value='son_p'>son_p</option>
-        <option value='ann_t'>ann_t</option>
-        <option value='ann_p'>ann_p</option>
-        <option value='ann_snow'>ann_snow</option>
-        <option value='freezethaw'>freezethaw</option>
+        {metrics.map((m) => (
+          <option key={m} value={m}>
+            {m}
+          </option>
+        ))}
       </Select>
     </>
     );
@@ -2181,7 +2238,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       )}
       </Select>
 
-      <VariableChoiceBox />
+      <VariableChoiceBox climateSignal={computeChoice['Climate Signal']} />
       {(!computeChoice['Climate Signal'] &&
         yearRange === '1981_2004')
        && setMetricLabel()}
