@@ -27,26 +27,30 @@ const bucket_ndp = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/';
 const Index = () => {
   const { theme } = useThemeUI();
   const [sideBySide, setSideBySide] = useState(false);
+
   // Shared state for both map instances
   const [center, setCenter] = useState({ lat: 38, lng: -97 })
   const [zoom, setZoom] = useState(4)
-  const onZoomChange = (newCenter, newZoom) => {
-    console.log("SETTING NEW CENTER ZOOM :", newCenter, newZoom);
-    setCenter(newCenter);
-    setZoom(newZoom);
-  };
+  const lastUpdateSource = useRef(null)
+  const onZoomChange = (newCenter, newZoom, sourceId) => {
+  if (sourceId === lastUpdateSource.current) return
+    lastUpdateSource.current = sourceId
+    setCenter(newCenter)
+    setZoom(newZoom)
+  }
+
   if (sideBySide){
     return(
       <div key={sideBySide} style={{ display: 'flex', width: '100%', height: '100vh' }}>
         <Box sx={{ flex: 1, backgroundColor: '#f0f0f0', position: 'relative' }}>
           <ClimateMapInstance
-            zoomArgs={{center, setCenter, zoom, setZoom, onZoomChange }}
+            zoomArgs={{center, setCenter, zoom, setZoom, onZoomChange, mapId: 'left' }}
             sideBySideArgs={{ sideBySide, setSideBySide }}
           />
         </Box>
         <Box sx={{ flex: 1, backgroundColor: '#e0e0e0', position: 'relative' }}>
           <ClimateMapInstance
-            zoomArgs={{center, setCenter, zoom, setZoom, onZoomChange }}
+            zoomArgs={{center, setCenter, zoom, setZoom, onZoomChange, mapId: 'right' }}
             sideBySideArgs={{ sideBySide, setSideBySide }}
           />
         </Box>
@@ -70,7 +74,6 @@ const Index = () => {
 const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const { sideBySide, setSideBySide } = sideBySideArgs
   const {center, setCenter, zoom, setZoom, onZoomChange } = zoomArgs
-
   const { theme } = useThemeUI();
   const [display, setDisplay] = useState(true);
   console.log("INDEX SET DISPLAY =", setDisplay);
@@ -206,8 +209,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     <Box sx={{ position: 'absolute', top: 0, bottom: 0, width: '100%', height:'100%',
                backgroundColor: '#bbdaa4', zIndex: 0}}>
     {/* zoom to this location when page first loads */}
-    {/* <Map zoom={4} center={{lon:-97, lat:38}} debug={debug}> */}
-    <Map zoom={zoom} center={{lon:center.lng, lat:center.lat}} debug={debug} >
+    <Map zoom={zoom} center={{lon:center.lng, lat:center.lat}} debug={debug}>
     <Fill
       color={'#4a80f5'}
       source={bucket_ndp + 'basemaps/ocean'}
