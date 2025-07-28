@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useRef, useEffect } from 'react';
 import { Box, useThemeUI } from 'theme-ui';
 import { Dimmer, Column, Row } from '@carbonplan/components';
-import { Map, Raster, Fill, Line, RegionPicker } from '../maps';
+import { Map, Raster, Fill, Line, RegionPicker, useControls } from '../maps';
 import Meta from '../components/meta';
 import { useThemedColormap } from '../colormaps/src';
 import RegionPlot from '../components/region-plot';
@@ -25,18 +25,30 @@ const bucket_ndp = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/';
 // const bucket_ndp = 'http://127.0.0.1:4000/data/';
 
 const Index = () => {
-
   const { theme } = useThemeUI();
   const [sideBySide, setSideBySide] = useState(false);
-
+  // Shared state for both map instances
+  const [center, setCenter] = useState({ lat: 38, lng: -97 })
+  const [zoom, setZoom] = useState(4)
+  const onZoomChange = (newCenter, newZoom) => {
+    console.log("SETTING NEW CENTER ZOOM :", newCenter, newZoom);
+    setCenter(newCenter);
+    setZoom(newZoom);
+  };
   if (sideBySide){
     return(
       <div key={sideBySide} style={{ display: 'flex', width: '100%', height: '100vh' }}>
         <Box sx={{ flex: 1, backgroundColor: '#f0f0f0', position: 'relative' }}>
-          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
+          <ClimateMapInstance
+            zoomArgs={{center, setCenter, zoom, setZoom, onZoomChange }}
+            sideBySideArgs={{ sideBySide, setSideBySide }}
+          />
         </Box>
         <Box sx={{ flex: 1, backgroundColor: '#e0e0e0', position: 'relative' }}>
-          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
+          <ClimateMapInstance
+            zoomArgs={{center, setCenter, zoom, setZoom, onZoomChange }}
+            sideBySideArgs={{ sideBySide, setSideBySide }}
+          />
         </Box>
       </div>
     );
@@ -44,7 +56,10 @@ const Index = () => {
       return(
         <div key={sideBySide} style={{ display: 'flex', width: '100%', height: '100vh' }}>
           <Box sx={{ flex: 1, backgroundColor: '#f0f0f0', position: 'relative' }}>
-          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
+          <ClimateMapInstance
+            zoomArgs={{center, setCenter, zoom, setZoom, onZoomChange }}
+            sideBySideArgs={{ sideBySide, setSideBySide }}
+          />
           </Box>
         </div>
     );
@@ -52,8 +67,9 @@ const Index = () => {
 };
 
 
-const ClimateMapInstance = ({ sideBySideArgs }) => {
+const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const { sideBySide, setSideBySide } = sideBySideArgs
+  const {center, setCenter, zoom, setZoom, onZoomChange } = zoomArgs
 
   const { theme } = useThemeUI();
   const [display, setDisplay] = useState(true);
@@ -190,7 +206,8 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
     <Box sx={{ position: 'absolute', top: 0, bottom: 0, width: '100%', height:'100%',
                backgroundColor: '#bbdaa4', zIndex: 0}}>
     {/* zoom to this location when page first loads */}
-    <Map zoom={4} center={{lon:-97, lat:38}} debug={debug}>
+    {/* <Map zoom={4} center={{lon:-97, lat:38}} debug={debug}> */}
+    <Map zoom={zoom} center={{lon:center.lng, lat:center.lat}} debug={debug} >
     <Fill
       color={'#4a80f5'}
       source={bucket_ndp + 'basemaps/ocean'}
@@ -281,6 +298,7 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
       setDisplay={setDisplay}
       // selector={{ month, band, source }}
       regionOptions={{ setData: setRegionData }}
+      zoomArgs={zoomArgs}
     />
     {/*
     <RegionPlot
