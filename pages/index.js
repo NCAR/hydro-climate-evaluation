@@ -57,7 +57,7 @@ const ClimateMapInstance = ({ sideBySideArgs }) => {
 
   const { theme } = useThemeUI();
   const [display, setDisplay] = useState(true);
-    console.log("INDEX SET DISPLAY =",setDisplay);
+  console.log("INDEX SET DISPLAY =", setDisplay);
   const [reload, setReload] = useState(true);
   const [debug, setDebug] = useState(false);
   const [opacity, setOpacity] = useState(1);

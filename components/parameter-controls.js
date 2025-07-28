@@ -550,14 +550,13 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           backgroundColor: 'rgba(0, 0, 0, 0.7)',
           padding: '10px',
           borderRadius: '5px',
-          width: 'fit-content',
+          width: '110px',
           alignSelf: 'flex-end',
+          textAlign: 'left',
        }}>
-      <Box> Lat/Lon and Value </Box>
-      <Box> {lat !== null ? lat.toFixed(2) : '–'} /
-            {lon !== null ? lon.toFixed(2) : '–'}
-      </Box>
-      <Box> {mapVal !== null ? mapVal : '–'}</Box>
+      <Box> Lat: {lat !== null ? lat.toFixed(2) : '–'} </Box>
+      <Box> Lon: {lon !== null ? lon.toFixed(2) : '–'} </Box>
+      <Box> Val: {mapVal !== null ? mapVal.toFixed(2) : '–'} </Box>
       </Box>
     );
   };
