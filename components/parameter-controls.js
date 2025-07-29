@@ -8,6 +8,10 @@ import Colorbar from './colorbar';
 // import { colormaps } from '@carbonplan/colormaps';
 import { colormaps } from '../colormaps/src';
 import { getData } from './getData';
+import { openGroup } from "zarr";
+
+const future_year_range_s = '2076-2099';
+
 
 const sx = {
   label: {
@@ -239,6 +243,33 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   const [metricMethod1, setMetricMethod1] = useState({'RMSE': true,
                                                       'Std. Dev.': false});
   const [metricMethod2, setMetricMethod2] = useState({'Correlation': false});
+
+
+
+  // Testing opening zarr array
+  const [annPRValues, setAnnPRValues] = useState([])
+  useEffect(() => {
+  async function loadAnnPR() {
+    const store = "https://hydro.rap.ucar.edu/hydro-climate-eval/data/test_netcdf/bar_v2.zarr";
+
+    // openGroup works for consolidated metadata (zarr_format:3 + inline)
+    const group = await openGroup(store);
+
+    // get array by name
+    const annPR = await group.getItem("ann_p_r");
+    const data = await annPR.get();
+    const val = Object.values(data.data);
+
+    setAnnPRValues(val); // Convert to normal JS array
+    console.log("ann_p_r:", val);
+    // setAnnPRValues(data);
+  }
+
+  loadAnnPR();
+  }, []);
+
+
+
 
 
 
@@ -1004,6 +1035,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   // const jja_t_r_score = [16, 12, 13, 21, 19, 11, 24, 22, 17, 18, 10, 23,
   //                        20, 15, 14, 9, 5, 4, 8, 6, 1, 2, 7, 3, 26, 25, 27];
   // gard between 4 and 15, 10 gar models
+  // hack to avoid these files
   const gadd = 999;
   const djf_t_std_score = [8, 9, 1, 15, 14,
                            7+gadd, 5+gadd, 3+gadd, 11+gadd, 13+gadd, 6+gadd, 4+gadd, 2+gadd, 10+gadd, 12+gadd,
@@ -1703,7 +1735,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       setYearRangeDif('1980_2010');
       return(
         [<option value='1980_2010'>1980-2010</option>,
-         <option value='2070_2100'>2006-2099</option>]
+         <option value='2070_2100'>{future_year_range_s}</option>]
       );
     } else {
       setYearRangeDif('1980_2010');
@@ -1786,7 +1818,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     >
       {/* DifYearChoices() */}
       <option value='1980_2010'>1980-2010</option>
-      <option value='2070_2100'>2006-2099</option>
+      <option value='2070_2100'>{future_year_range_s}</option>
     </Select>
 
     <Box sx={{ ...sx.label, mt: [3] }}>
@@ -1968,7 +2000,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       setYearRangeDif('1980_2010');
       return(
         [<option value='1980_2010'>1980-2010</option>,
-         <option value='2070_2100'>2006-2099</option>]
+         <option value='2070_2100'>{future_year_range_s}</option>]
       );
     } else {
       setYearRangeDif('1980_2010');
@@ -2097,7 +2129,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           value={yearRangeDif}
        >
           <option value='1981_2004'>1981-2004</option>
-          <option value='2070_2100'>2006-2099</option>
+          <option value='2070_2100'>{future_year_range_s}</option>
      </Select>
      </>
     );
@@ -2118,7 +2150,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           {(downscaling_l != 'gard_r2' &&
             downscaling_l != 'gard_r3') && (
             <>
-            <option value='2070_2100'>2006-2099</option>
+            <option value='2070_2100'>{future_year_range_s}</option>
             </>
           )}
 {/*       <option value='1980_2010'>1980-2010</option>
@@ -2332,7 +2364,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           sx={{ mt: [1] }}
           value={'2070_2100'}
        >
-          <option value='2070_2100'>2006-2099</option>
+          <option value='2070_2100'>{future_year_range_s}</option>
       </Select>
       </>
     );
