@@ -530,9 +530,10 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       const onMouseMove = (e) => {
       try{
         const { lng, lat } = e.lngLat;
+        const lng_fixed = ((lng + 180) % 360 + 360) % 360 - 180;
         const x = e.point.x;
         const y = e.point.y;
-        setLon(lng);
+        setLon(lng_fixed);
         setLat(lat);
         } catch (err) {
           console.error('🔥 onMouseMove error:', err.message);
