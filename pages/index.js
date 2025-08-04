@@ -1,3 +1,4 @@
+import { settings } from '../initialConditions/conus';
 import { useState } from 'react';
 import { useRef, useEffect } from 'react';
 import { Box, useThemeUI } from 'theme-ui';
@@ -16,7 +17,6 @@ import ErrorBoundary from '../components/ErrorBoundary';
 
 // option to use external zarr files only
 const TESTING = false;
-
 // location of the map and pbf shape files
 const bucket = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/';
 // original hosting site
@@ -29,8 +29,8 @@ const Index = () => {
   const [sideBySide, setSideBySide] = useState(false);
 
   // Shared state for both map instances
-  const [center, setCenter] = useState({ lat: 38, lng: -97 })
-  const [zoom, setZoom] = useState(4)
+  const [center, setCenter] = useState({ lat: settings.lat, lng: settings.lon })
+  const [zoom, setZoom] = useState(settings.zoom)
   const lastUpdateSource = useRef(null)
   const onZoomChange = (newCenter, newZoom, sourceId) => {
   if (sourceId === lastUpdateSource.current) return
