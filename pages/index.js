@@ -18,11 +18,11 @@ import ErrorBoundary from '../components/ErrorBoundary';
 const TESTING = false;
 
 // location of the map and pbf shape files
-const bucket_ndp = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/';
+const bucket = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/';
 // original hosting site
 // const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/';
 // local data address for testing
-// const bucket_ndp = 'http://127.0.0.1:4000/data/';
+// const bucket = 'http://127.0.0.1:4000/data/';
 
 const Index = () => {
   const { theme } = useThemeUI();
@@ -118,20 +118,20 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [fname, setFname] = useState('data.zarr');
   // paths to model dataset
   // const [mapSource, setMapSource] =
-  //         useState([bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname])
+  //         useState([bucket+'map/icar/noresm1_m/1981_2004/'+fname])
   const [mapSource, setMapSource] =
-          useState([bucket_ndp+'map/icar/access1_3/1981_2004/'+fname]);
+          useState([bucket+'map/icar/access1_3/1981_2004/'+fname]);
   const [chartSource, setChartSource] =
-          useState(bucket_ndp+'chart/icar/noresm1_m/'+band);
+          useState(bucket+'chart/icar/noresm1_m/'+band);
   // paths to model dataset used for diff
   // const [mapSourceDif, setMapSourceDif] =
-  //         useState(bucket_ndp+'map/icar/cesm/1980_2010/'+fname);
+  //         useState(bucket+'map/icar/cesm/1980_2010/'+fname);
   // const [mapSourceDif, setMapSourceDif] =
-  //         useState(bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname);
+  //         useState(bucket+'map/icar/noresm1_m/1981_2004/'+fname);
   const [mapSourceDif, setMapSourceDif] =
-          useState(bucket_ndp+'obs/'+obsDif+'/1981_2004/'+fname);
+          useState(bucket+'obs/'+obsDif+'/1981_2004/'+fname);
   const [chartSourceDif, setChartSourceDif] =
-          useState(bucket_ndp+'chart/icar/cesm/'+band);
+          useState(bucket+'chart/icar/cesm/'+band);
   // set values to decide whether to map average or difference
   // const [filterValues, setFilterValues] = useState({'Ave.': true,
   //                                                   'Dif.': false});
@@ -153,7 +153,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
                     yearRange, mapSource, chartSource,
                     downscalingDif, modelDif, yearRangeDif, obs, obsDif,
                     mapSourceDif, chartSourceDif, scaleDif,
-                    bucket_ndp, chartHeight, computeChoice,
+                    bucket, chartHeight, computeChoice,
                     showClimateChange, showRegionPlot, bucketRes,
                     showStates, showRivers, showHuc2, sideBySide, mapVal};
   const setters = {
@@ -200,31 +200,33 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   <ErrorBoundary>
     <>
     <Meta
-      card={'https://ncar.ucar.edu/profiles/custom/ncar_ucar_umbrella/themes/custom/koru/libraries/koru-base/img/app-favicons/ncar/favicon.ico'}
-      description={"Climate Evaluation of Downscaling and Climate Model data. Based on Carbonplan's Maps"}
+      card={bucket+'favicon.ico'}
+      description={"Climate Evaluation of Downscaling and Climate Model data.\
+                    Based on Carbonplan's Maps"}
       title={'Hydro-Climate Evaluation'}
     />
     <Row columns={[4]}>
     <Column start={[1]} width={[1]}>
-    <Box sx={{ position: 'absolute', top: 0, bottom: 0, width: '100%', height:'100%',
+    <Box sx={{ position: 'absolute',
+               top: 0, bottom: 0, width: '100%', height:'100%',
                backgroundColor: '#bbdaa4', zIndex: 0}}>
     {/* zoom to this location when page first loads */}
     <Map zoom={zoom} center={{lon:center.lng, lat:center.lat}} debug={debug}>
     <Fill
       color={'#4a80f5'}
-      source={bucket_ndp + 'basemaps/ocean'}
+      source={bucket + 'basemaps/ocean'}
       variable={'ocean'}
     />
     <Line
       color={theme.rawColors.primary}
-      source={bucket_ndp + 'basemaps/land'}
+      source={bucket + 'basemaps/land'}
       variable={'land'}
     />
 
     {showStates && (
     <Line
       color={'black'}
-      source={bucket_ndp + 'basemaps/states/ne_110m_admin_1_states_provinces_lakes.json'}
+      source={bucket + 'basemaps/states/ne_110m_admin_1_states_provinces_lakes.json'}
       variable={'United States of America'}
       ndp={false}
     />)}
@@ -232,14 +234,14 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     {showRivers && (
     <Line
       color={'black'}
-      source={bucket_ndp + 'basemaps/rivers/rivers.3percent.geojson'}
+      source={bucket + 'basemaps/rivers/rivers.3percent.geojson'}
       ndp={false}
     />)}
 
     {showHuc2 && (
     <Line
       color={'black'}
-      source={bucket_ndp + 'basemaps/huc/huc2-basins-1percent.geojson'}
+      source={bucket + 'basemaps/huc/huc2-basins-1percent.geojson'}
       blur={1.0}
       ndp={false}
       width={0.7}
@@ -247,13 +249,13 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     />)}
 
     {/*
-      source={bucket_ndp + 'basemaps/rivers/ne_10m_rivers_north_america.json'}
+      source={bucket + 'basemaps/rivers/ne_10m_rivers_north_america.json'}
     */}
 
     {/*
     <Line
       color={'red'}
-      source={bucket_ndp + 'basemaps/huc/huc2-basins.geojson'}
+      source={bucket + 'basemaps/huc/huc2-basins.geojson'}
       ndp={false}
     />;
     */}
@@ -261,13 +263,13 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     {/*
     <Line
       color={'black'}
-      source={bucket_ndp + 'basemaps/states/us-states.json'}
+      source={bucket + 'basemaps/states/us-states.json'}
       variable={'state'}
       ndp={false}
     />;
     <Line
       color={'red'}
-      source={bucket_ndp + 'basemaps/states/rivers.geojson'}
+      source={bucket + 'basemaps/states/rivers.geojson'}
       ndp={false}
     />;
     */}
@@ -315,7 +317,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     <ParameterControls
       getters={getters}
       setters={setters}
-      bucket={bucket_ndp}
+      bucket={bucket}
       fname={fname}
     />
 
