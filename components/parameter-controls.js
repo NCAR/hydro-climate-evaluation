@@ -1688,48 +1688,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     );
   };
 
-  const DifferenceLegendAndColorbar = () => {
-    return (
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 20,
-          right: 20,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2, // adds vertical spacing between the two
-          zIndex: 10,
-        }}
-      >
-      {computeChoice['Dif.'] && (
-        <Box
-          sx={{
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            padding: '10px',
-            borderRadius: '5px',
-          }}
-        >
-          <DifferenceLegend />
-        </Box>
-      )}
-
-      <Box
-        sx={{
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          padding: '10px',
-          borderRadius: '5px',
-          width: 'fit-content',
-          alignSelf: 'flex-end',
-        }}
-      >
-        <LocalColorbar />
-      </Box>
-      <MapValueBox map={map} />
-    </Box>
-    );
-  };
-
-
   const DifYearChoices = () => {
     if (yearRange === '1980_2010') {
       setYearRangeDif('1980_2010');
@@ -1994,7 +1952,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     };
   }; // end ComputeChoiceFilter
 
-
   const ClimateSignalChoices = () => {
     if (yearRange === '1980_2010') {
       setYearRangeDif('1980_2010');
@@ -2153,8 +2110,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             <option value='2070_2100'>{future_year_range_s}</option>
             </>
           )}
-{/*       <option value='1980_2010'>1980-2010</option>
-          <option value='2070_2100'>2006-2099</option>*/}
      </Select>
      </>
     );
@@ -2487,10 +2442,50 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   }; {/* end of ClimateSignalBox */}
 
 
-  return (
-    <>
-    <DifferenceLegendAndColorbar/>
+  const LegendAndColorbarBox = () => {
+    return (
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 20,
+          right: 20,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2, // adds vertical spacing between the two
+          zIndex: 10,
+        }}
+      >
+      {computeChoice['Dif.'] && (
+        <Box
+          sx={{
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            padding: '10px',
+            borderRadius: '5px',
+          }}
+        >
+          <DifferenceLegend />
+        </Box>
+      )}
 
+      <Box
+        sx={{
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          padding: '10px',
+          borderRadius: '5px',
+          width: 'fit-content',
+          alignSelf: 'flex-end',
+        }}
+      >
+        <LocalColorbar />
+      </Box>
+      <MapValueBox map={map} />
+    </Box>
+    );
+  }; {/* end of LegendAndColorbarBox */}
+
+
+  const ComputeChoiceBox = () => {
+    return(
     <Box
       sx={{ position: 'absolute', top: 20, left: 20,
             backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '10px',
@@ -2498,9 +2493,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     >
       <ComputeChoiceFilter/>
     </Box>
-    {/* !showRegionPlot && <MapChoicesBox /> */}
-    {/* showRegionPlot && <ClimateSignalBox numMetrics={numMetrics} /> */}
+    );
+  };
 
+
+  const HelpResetTagsBox = () => {
+    return(
     <Box sx={{ position: 'absolute',
                bottom: 20,
                left: 20,
@@ -2517,6 +2515,16 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       <ResetZoomButton />
       <README />
     </Box>
+    );
+  };
+
+
+  // Top level return of three main control boxes
+  return (
+    <>
+    <LegendAndColorbarBox />
+    <ComputeChoiceBox />
+    <HelpResetTagsBox />
     </>
   );
 };
