@@ -1617,8 +1617,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         setMapSource(url);
         setYearRange('2070_2100');
         setScaleDif(Scale_Values['dif_'+metric]);
-        setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
+        setClim([Clim_Ranges['dif_'+metric].min,
+                 Clim_Ranges['dif_'+metric].max]);
         setColormapName(Default_Colormaps['dif_'+metric]);
+        if ((metric === 'ptrend' || metric === 'ttrend')) {
+          handleMetricsChange({ target: { value: settings.variables[0] } });
+        }
         // setShouldUpdateMapSource(true);
         // setComputeClimateSignal({'COMPUTE': true});
       }
@@ -1732,31 +1736,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
   const VariableChoiceBox = ({showPlotLabel=false, climateSignal=false}) => {
-    const metrics = [
-      'n34pr',
-      'n34t',
-      ...(climateSignal ? [] : ['ptrend', 'ttrend']),
-      'pr90',
-      'pr99',
-      't90',
-      't99',
-      'djf_t',
-      'djf_p',
-      'mam_t',
-      'mam_p',
-      'jja_t',
-      'jja_p',
-      'son_t',
-      'son_p',
-      'ann_t',
-      'ann_p',
-      'ann_snow',
-      'freezethaw'
-    ];
-    // if switching to climate signal make sure metrics is not a trend
-    if (climateSignal && (metric === 'ptrend' || metric === 'ttrend')) {
-      handleMetricsChange({ target: { value: 'n34pr' } });
-    }
+    const metrics = [...settings.variables,
+                     ...(climateSignal ? [] : settings.variables_trend)
+                    ];
 
     return(
       <>
