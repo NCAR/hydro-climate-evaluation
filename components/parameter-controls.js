@@ -411,8 +411,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
     console.log("year range =", yearRange);
     setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
-    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
-    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
   });
 
   const handleYearDifChange = useCallback((e) => {
@@ -1821,6 +1819,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       modelVar = modelDif;
     }
 
+    // hack, remove later
+    const downscaling_d = yearRange === '1981_2004'
+          ? settings.downscaling_past
+          : settings.downscaling_future;
+
     return(
       <>
       {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
@@ -1836,16 +1839,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         sx={{ mt: [1] }}
         value={downscalingVar}
       >
-        <option value='icar'>ICAR</option>
-        {yearRange === '1981_2004' && (
-        <>
-        <option value='gard_r2'>GARD_r2</option>
-        <option value='gard_r3'>GARD_r3</option>
-        </>
-        )}
-        <option value='loca_8th'>LOCA_8th</option>
-        <option value='maca'>MACA</option>
-        <option value='nasa_nex'>NASA-NEX</option>
+        {Object.entries(downscaling_d).map(([key, label]) => (
+          <option key={key} value={key}>
+          {label}
+          </option>
+        ))}
       </Select>
 
       <Box sx={{ ...sx.label, mt: [4] }}>Climate Model</Box>

@@ -36,7 +36,7 @@ export const settings = {
   },
 
   past_eras: {
-      '1980_2010': '1981-2004'
+      '1981_2004': '1981-2004'
   },
   past_eras_old_one: {
       '1981_2004': '1981-2004'
@@ -44,6 +44,23 @@ export const settings = {
   future_eras: {
       '2070_2100': '2076-2099'
   },
+
+  downscaling_past: {
+      'icar':'ICAR',
+      'gard_r2':'GARD_r2',
+      'gard_r3':'GARD_r3',
+      'loca_8th':'LOCA_8th',
+      'maca':'MACA',
+      'nasa_nex':'NASA-NEX',
+  },
+
+  downscaling_future: {
+      'icar':'ICAR',
+      'loca_8th':'LOCA_8th',
+      'maca':'MACA',
+      'nasa_nex':'NASA-NEX',
+  },
+
 
 
 };
