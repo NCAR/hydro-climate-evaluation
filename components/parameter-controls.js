@@ -26,7 +26,7 @@ const sx = {
 };
 
 
-const ParameterControls = ({ getters, setters, bucket, fname }) => {
+const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const { display, reload, debug, opacity, clim, month,
           band, colormapName, colormap,
           downscaling, model, metric, yearRange, mapSource, chartSource,
@@ -70,6 +70,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setHuc2,
     setSideBySide
   } = setters;
+
 
   const [chartToggle, setChartToggle] = useState(false);
 
@@ -1478,21 +1479,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     );
   };
 
-  const DifYearChoices = () => {
-    if (yearRange === '1980_2010') {
-      setYearRangeDif('1980_2010');
-      return(
-        [<option value='1980_2010'>1980-2010</option>,
-         <option value='2070_2100'>{future_year_range_s}</option>]
-      );
-    } else {
-      setYearRangeDif('1980_2010');
-      return(
-        <option value='1980_2010'>1980-2010</option>
-      );
-    }
-  };
-
   const DifDownscalingChoices = () => {
     if (yearRange === '1980_2010') {
       setDownscalingDif('icar');
@@ -1549,62 +1535,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       return(<option value='miroc5'>MIROC5</option>);
     }
    }
-  };
-
-  const DifSourceChoices = () => {
-    return (
-    <>
-    <Box sx={{ ...sx.label, mt: [2] }}>
-      Year Range
-    </Box>
-    <Select
-      sxSelect={{ bg: 'transparent' }}
-      size='xs'
-      onChange={handleYearDifChange}
-      sx={{ mt: [0] }}
-      value={yearRangeDif}
-    >
-      {/* DifYearChoices() */}
-      <option value='1980_2010'>1980-2010</option>
-      <option value='2070_2100'>{future_year_range_s}</option>
-    </Select>
-
-    <Box sx={{ ...sx.label, mt: [3] }}>
-      Downscaling
-    </Box>
-    <Box sx={{ ...sx.label, mt: [0] }}>
-      Method
-    </Box>
-    <Select
-      sxSelect={{ bg: 'transparent' }}
-      size='xs'
-      onChange={handleDownscalingDifChange}
-      sx={{ mt: [1] }}
-      value={downscalingDif}
-    >
-      {/* DifDownscalingChoices() */}
-      <option value='icar'>ICAR</option>
-      <option value='gard'>GARD</option>
-      <option value='loca'>LOCA</option>
-      <option value='bcsd'>BCSD</option>
-    </Select>
-    <Box sx={{ ...sx.label, mt: [3] }}>Climate</Box>
-    <Box sx={{ ...sx.label, mt: [0] }}>Model</Box>
-      <Select
-      sxSelect={{ bg: 'transparent' }}
-      size='xs'
-      onChange={handleModelDifChange}
-      sx={{ mt: [1] }}
-      value={modelDif}
-      >
-      {/* DifModelChoices() */}
-        <option value='noresm'>NorESM</option>
-        <option value='cesm'>CESM</option>
-        <option value='gfdl'>GFDL</option>
-        <option value='miroc5'>MIROC5</option>
-      </Select>
-    </>
-    );
   };
 
 
@@ -1687,6 +1617,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         let url = [bucket+baseDir_l+downscaling+'/'+model+'/'+rcp+'/'+fname];
         console.log("SIGNAL URL =", url)
         setMapSource(url);
+        setYearRange('2070_2100');
         setScaleDif(Scale_Values['dif_'+metric]);
         setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
         setColormapName(Default_Colormaps['dif_'+metric]);
@@ -1863,7 +1794,12 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   };
 
 
-  const YearRangeBox = ({onChange, value, downscaling_l}) => {
+  const YearRangeBox = ({onChange, value, downscaling_l,
+                         past = true, future = true}) => {
+    if (downscaling_l == 'gard_r2' ||
+        downscaling_l == 'gard_r3') {
+      future = false;
+    }
     return(
       <>
       <Box sx={{ ...sx.label, mt: [3] }}>Year Range</Box>
@@ -1874,9 +1810,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           sx={{ mt: [1] }}
           value={value}
         >
-          <option value='1981_2004'>1981-2004</option>
-          {(downscaling_l != 'gard_r2' &&
-            downscaling_l != 'gard_r3') && (
+          {past && <option value='1981_2004'>1981-2004</option>}
+          {future && (
             <>
             <option value='2070_2100'>{future_year_range_s}</option>
             </>
@@ -2020,7 +1955,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         </>
       );
     } else if (aveChoice['Observation']) {
-      // setMapSource([bucket+'/obs/'+obs+'/'+yearRangeDif+'/'+fname]);
+      setYearRange('1981_2004');
       return (
         <>
         <Filter
@@ -2028,16 +1963,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
           setValues={handleAveChange}
           sx={{mt:3}}
         />
-      <Box sx={{ ...sx.label, mt: [3] }}>Year Range</Box>
-      <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          sx={{ mt: [1] }}
-          value={'1981_2004'}
-       >
-          <option value='1981_2004'>1981-2004</option>
-     </Select>
-
+        <YearRangeBox onChange={null} value={yearRange}
+           downscaling_l={downscaling} future={false} />
         <ObsChoicesBox onChange={handleObsChange} value={obs} />
         </>
       );
@@ -2081,17 +2008,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         values={metricPerformance}
         setValues={handleSignalChoice}
       />
-      <Box sx={{ ...sx.label, mt: [2] }}>
-        Year Range
-      </Box>
-      <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          sx={{ mt: [1] }}
-          value={'2070_2100'}
-       >
-          <option value='2070_2100'>{future_year_range_s}</option>
-      </Select>
+      <YearRangeBox onChange={null} value={yearRange}
+        downscaling_l={downscaling} past={false} />
       </>
     );
   };
