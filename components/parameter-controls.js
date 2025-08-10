@@ -10,7 +10,7 @@ import { colormaps } from '../colormaps/src';
 import { openGroup } from "zarr";
 // local imports
 import { Scale_Values, Clim_Ranges} from './variableSettings';
-import { Default_Colormaps } from './variableSettings';
+import { Default_Colormaps, readmeUrl } from './variableSettings';
 import { getData } from './getData';
 
 const future_year_range_s = '2076-2099';
@@ -24,10 +24,6 @@ const sx = {
     mt: [3],
   },
 };
-
-const readmeUrl =
-  'https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#hydro-climate-evaluation-map';
-
 
 
 const ParameterControls = ({ getters, setters, bucket, fname }) => {
@@ -74,11 +70,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setHuc2,
     setSideBySide
   } = setters;
-
-  // 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/',
-  // 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/'});
-
-  // const [filterValues, setFilterValues] = useState({'Ave.': true, 'Dif.': false});
 
   const [chartToggle, setChartToggle] = useState(false);
 
@@ -342,30 +333,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
    };
 
 
-  // NOTE: Chart sources have not been created with yearRange yet
-  // TODO: fixed Clim_Ranges[band]
-  // const handleFilterAndSetClimColormapName = (e) => {
-  //   const filterVals = e;
-  //   if (filterVals['Ave.']) {
-  //     setComputeChoice({'Ave.': true, 'Dif.': false});
-  //     setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
-  //     setColormapName(Default_Colormaps[metric]);
-  //   } else if (filterVals['Dif.']) {
-  //     setFilterValues({'Ave.': false, 'Dif.': true});
-  //     setScaleDif(Scale_Values['dif_'+metric]);
-  //     setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
-  //     setColormapName(Default_Colormaps['dif_'+metric]);
-  //   }
-  // };
-
   const handleBandChange = useCallback((e) => {
     const band = e.target.value;
     setBand(band);
-    // handleFilterAndSetClimColormapName(filterValues);
-    // setMapSource([bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
-    // // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
-    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
-    // getData({chartSource}, setChartData);
   });
 
   const { map } = useMapbox()
@@ -1726,8 +1696,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
         let url = [bucket+baseDir_l+downscaling+'/'+model+'/'+rcp+'/'+fname];
         console.log("SIGNAL URL =", url)
         setMapSource(url);
-        // TODO this fix scaling but turn on dif in maps
-        // setFilterValues({'Ave.': false, 'Dif.': true});
         setScaleDif(Scale_Values['dif_'+metric]);
         setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
         setColormapName(Default_Colormaps['dif_'+metric]);

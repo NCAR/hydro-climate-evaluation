@@ -152,3 +152,6 @@ export const Default_Colormaps = Object.freeze({
   dif_ann_snow: dif_precip_colormap,
   dif_freezethaw: dif_precip_colormap,
 });
+
+export const readmeUrl =
+  'https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#hydro-climate-evaluation-map';
