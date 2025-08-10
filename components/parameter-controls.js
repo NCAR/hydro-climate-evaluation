@@ -7,11 +7,13 @@ import { Right, Reset } from '@carbonplan/icons';
 import Colorbar from './colorbar';
 // import { colormaps } from '@carbonplan/colormaps';
 import { colormaps } from '../colormaps/src';
-import { getData } from './getData';
 import { openGroup } from "zarr";
 
-const future_year_range_s = '2076-2099';
+// local imports
+import { Scale_Values } from './variableSettings';
+import { getData } from './getData';
 
+const future_year_range_s = '2076-2099';
 
 const sx = {
   label: {
@@ -25,37 +27,6 @@ const sx = {
 
 const readmeUrl =
   'https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#hydro-climate-evaluation-map';
-const precipDif = 1.0;
-const tempDif = 0.1;
-
-const Scale_Values = {
-  // diference colormap
-  dif: 0.11,
-  dift: tempDif,
-  difp: precipDif,
-
-  // temperature variables
-  dif_tavg: tempDif,
-  dif_n34t: tempDif,
-  dif_ttrend: 0.1,
-  dif_t90: tempDif,
-  dif_t99: tempDif,
-  dif_djf_t: tempDif,
-  dif_mam_t: tempDif,
-  dif_jja_t: tempDif,
-  dif_son_t: tempDif,
-
-  // precip variables
-  dif_prec: precipDif,
-  dif_n34pr: precipDif,
-  dif_ptrend: 0.1,
-  dif_pr90: 0.1,
-  dif_pr99: 0.1,
-  dif_djf_p: precipDif,
-  dif_mam_p: precipDif,
-  dif_jja_p: precipDif,
-  dif_son_p: precipDif,
-};
 
 
 const Clim_Ranges = {
@@ -1847,6 +1818,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       }
       setBaseDir(baseDir_l);
 
+      // Ave. or Dif. maps
       if (!newValues['Climate Signal']) {
         // handleFilterAndSetClimColormapName(newValues);
         // above func handled below
@@ -1885,6 +1857,8 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       }
     };
 
+
+    // --- Return Section ---
     if (computeChoice['Ave.']) {
       return (
         <>
@@ -1900,8 +1874,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       );
     }
     else if (computeChoice['Dif.']) {
-
-
       return (
         <>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
