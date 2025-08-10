@@ -61,6 +61,48 @@ export const settings = {
       'nasa_nex':'NASA-NEX',
   },
 
+  model: {
+      icar: {
+          noresm1_m: 'NorESM-M',
+          access1_3: 'ACCESS1-3',
+          canesm2: 'CanESM2',
+          ccsm4: 'CCSM4',
+          miroc5: 'MIROC5',
+      },
+      gard_r2: {
+          noresm1_m: 'NorESM-M',
+          access1_3: 'ACCESS1-3',
+          canesm2: 'CanESM2',
+          ccsm4: 'CCSM4',
+          miroc5: 'MIROC5',
+      },
+      gard_r3: {
+          noresm1_m: 'NorESM-M',
+          access1_3: 'ACCESS1-3',
+          canesm2: 'CanESM2',
+          ccsm4: 'CCSM4',
+          miroc5: 'MIROC5',
+      },
+      loca_8th: {
+          noresm1_m: 'NorESM-M',
+          access1_3: 'ACCESS1-3',
+          canesm2: 'CanESM2',
+          ccsm4: 'CCSM4',
+          miroc5: 'MIROC5',
+      },
+      maca: {
+          noresm1_m: 'NorESM-M',
+          canesm2: 'CanESM2',
+          ccsm4: 'CCSM4',
+          miroc5: 'MIROC5',
+      },
+      nasa_nex: {
+          noresm1_m: 'NorESM-M',
+          canesm2: 'CanESM2',
+          miroc5: 'MIROC5',
+      },
+  }
+
 
 
 };

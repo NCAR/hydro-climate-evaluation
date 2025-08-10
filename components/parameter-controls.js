@@ -1824,6 +1824,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           ? settings.downscaling_past
           : settings.downscaling_future;
 
+    const model_d = settings.model[downscaling];
+
     return(
       <>
       {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
@@ -1854,58 +1856,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         sx={{ mt: [1] }}
         value={modelVar}
       >
-
-       {downscalingVar === 'icar' && (
-         <>
-         <option value='noresm1_m'>NorESM-M</option>
-         <option value='access1_3'>ACCESS1-3</option>
-         <option value='canesm2'>CanESM2</option>
-         <option value='ccsm4'>CCSM4</option>
-         <option value='miroc5'>MIROC5</option>
-         </>
-       )}
-       {downscalingVar === 'gard_r2' && (
-         <>
-         <option value='noresm1_m'>NorESM-M</option>
-         <option value='access1_3'>ACCESS1-3</option>
-         <option value='canesm2'>CanESM2</option>
-         <option value='ccsm4'>CCSM4</option>
-         <option value='miroc5'>MIROC5</option>
-         </>
-       )}
-       {downscalingVar === 'gard_r3' && (
-         <>
-         <option value='noresm1_m'>NorESM-M</option>
-         <option value='access1_3'>ACCESS1-3</option>
-         <option value='canesm2'>CanESM2</option>
-         <option value='ccsm4'>CCSM4</option>
-         <option value='miroc5'>MIROC5</option>
-         </>
-       )}
-       {downscalingVar === 'loca_8th' && (
-         <>
-         <option value='noresm1_m'>NorESM-M</option>
-         <option value='access1_3'>ACCESS1-3</option>
-         <option value='canesm2'>CanESM2</option>
-         <option value='ccsm4'>CCSM4</option>
-         <option value='miroc5'>MIROC5</option>
-         </>
-       )}
-      {downscalingVar === 'maca' && (
-        <>
-        <option value='noresm1_m'>NorESM-M</option>
-        <option value='canesm2'>CanESM2</option>
-        <option value='ccsm4'>CCSM4</option>
-        <option value='miroc5'>MIROC5</option>
-        </>
-      )}
-      {downscalingVar === 'nasa_nex' && (
-        <>
-        <option value='noresm1_m'>NorESM-M</option>
-        <option value='canesm2'>CanESM2</option>
-        <option value='miroc5'>MIROC5</option>
-        </>
-      )}
+        {Object.entries(model_d).map(([key, label]) => (
+          <option key={key} value={key}>
+          {label}
+          </option>
+        ))}
       </Select>
 
       <VariableChoiceBox climateSignal={computeChoice['Climate Signal']} />
