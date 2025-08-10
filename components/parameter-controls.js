@@ -1790,7 +1790,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           size='xs'
           onChange={handleYearChange}
           sx={{ mt: [1] }}
-          value={value}
+          value={yearRange}
        >
 
        {Object.entries(options).map(([key, label]) => (

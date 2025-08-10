@@ -30,10 +30,17 @@ export const settings = {
       'gmet': 'GMET',
       'gridmet': 'gridMET',
       'livneh': 'Livneh',
-      'maurer': 'Maurer',
       'nclimgrid': 'nClimGrid',
       'nldas': 'NLDAS',
       'prism': 'PRISM',
   },
+
+  past_eras: {
+      '1980_2010': '1981-2004'
+  },
+  future_eras: {
+      '2070_2100': '2076-2099'
+  },
+
 
 };
