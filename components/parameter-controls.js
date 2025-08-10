@@ -136,14 +136,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
 
   const [numClimateSignalSets, setNumClimateSignalSets] = useState(2);
 
-  const flipReload = () => {
-    if (reload) {
-      setReload(false);
-    } else {
-      setReload(true);
-    }
-  };
-
   const setMetricLabel = () => {
     let link = 'https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#metrics';
     let label = 'n34pr';
@@ -1478,8 +1470,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
       display range
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-      <Button prefix={<Reset/>} inverted onClick={resetColorbar}
-        size='xs'>
+      <Button prefix={<Reset/>} inverted onClick={resetColorbar} size='xs'>
         reset
       </Button>
       </Box>
@@ -1617,7 +1608,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   };
 
 
-
   const handleObsChange = useCallback((e) => {
     const obs_l = e.target.value;
     setObs(obs_l);
@@ -1628,6 +1618,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     setObsDif(obs_l);
     setMapSourceDif(bucket+'/obs/'+obs_l+'/'+yearRangeDif+'/'+fname);
   });
+
 
   const ObsChoicesBox = ({onChange, value, label='Dataset'}) => {
     return (
@@ -1871,24 +1862,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
     return (combinationBox);
   };
 
-  {/* is this not used? */}
-  const DifYearRangeBox = () => {
-    return(
-      <>
-      <Box sx={{ ...sx.label, mt: [3] }}>Year Range</Box>
-      <Select
-          sxSelect={{ bg: 'transparent' }}
-          size='xs'
-          sx={{ mt: [1] }}
-          onChange={handleYearDifChange}
-          value={yearRangeDif}
-       >
-          <option value='1981_2004'>1981-2004</option>
-          <option value='2070_2100'>{future_year_range_s}</option>
-     </Select>
-     </>
-    );
-  };
 
   const YearRangeBox = ({onChange, value, downscaling_l}) => {
     return(
