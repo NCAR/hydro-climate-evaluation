@@ -1475,64 +1475,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
-  const DifDownscalingChoices = () => {
-    if (yearRange === '1980_2010') {
-      setDownscalingDif('icar');
-      return(
-        [ <option value='icar'>ICAR</option>,
-          <option value='gard'>GARD</option>,
-          <option value='loca'>LOCA</option>,
-          <option value='bcsd'>BCSD</option>]
-      );
-    } else {
-    if (downscaling === 'icar') {
-      setDownscalingDif('icar');
-      return(<option value='icar'>ICAR</option>);
-    }
-    else if (downscaling === 'gard') {
-      setDownscalingDif('gard');
-      return(<option value='gard'>GARD</option>);
-    }
-    else if (downscaling === 'loca') {
-      setDownscalingDif('loca');
-      return(<option value='loca'>LOCA</option>);
-    }
-    else if (downscaling === 'bcsd'){
-      setDownscalingDif('bcsd');
-      return(<option value='bcsd'>BCSD</option>);
-    }
-   }
-  };
-
-  const DifModelChoices = () => {
-    if (yearRange === '1980_2010') {
-      setModelDif('noresm')
-      return(
-        [ <option value='noresm'>NorESM</option>,
-          <option value='cesm'>CESM</option>,
-          <option value='gfdl'>GFDL</option>,
-          <option value='miroc5'>MIROC5</option>]
-      );
-    } else {
-    if (model === 'noresm') {
-      setModelDif('noresm')
-      return(<option value='noresm'>NorESM</option>);
-    }
-    else if (model === 'cesm') {
-      setModelDif('cesm')
-      return(<option value='cesm'>CESM</option>);
-    }
-    else if (model === 'gfdl') {
-      setModelDif('gfdl')
-      return(<option value='gfdl'>GFDL</option>);
-    }
-    else if (model === 'miroc5'){
-      setModelDif('miroc5')
-      return(<option value='miroc5'>MIROC5</option>);
-    }
-   }
-  };
-
 
   const handleObsChange = useCallback((e) => {
     const obs_l = e.target.value;
