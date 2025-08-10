@@ -1771,24 +1771,33 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
 
-  const YearRangeBox = ({onChange, value, downscaling_l,
-                         past = true, future = true}) => {
+  const YearRangeBox = ({downscaling_l, past = true, future = true}) => {
     if (downscaling_l == 'gard_r2' ||
         downscaling_l == 'gard_r3') {
       future = false;
     }
+    const options = {
+      ...(past ? settings.past_eras : {}),
+      ...(future ? settings.future_eras : {}),
+    };
+
+    const value = Object.values(options)[0];
     return(
       <>
       <Box sx={{ ...sx.label, mt: [3] }}>Year Range</Box>
       <Select
           sxSelect={{ bg: 'transparent' }}
           size='xs'
-          onChange={onChange}
+          onChange={handleYearChange}
           sx={{ mt: [1] }}
           value={value}
        >
-       {past && <option value='1981_2004'>1981-2004</option>}
-       {future && <option value='2070_2100'>2076-2099</option>}
+
+       {Object.entries(options).map(([key, label]) => (
+            <option key={key} value={key}>
+            {label}
+          </option>
+        ))}
      </Select>
      </>
     );
@@ -1817,10 +1826,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
 
       {computeChoice['Ave.'] &&
-       <YearRangeBox
-           onChange={handleYearChange}
-           value={yearRange}
-           downscaling_l={downscaling} />}
+       <YearRangeBox downscaling_l={downscaling} />}
 
       <Box sx={{ ...sx.label, mt: [4] }}>Downscaling Method</Box>
       <Select
@@ -1936,8 +1942,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           setValues={handleAveChange}
           sx={{mt:3}}
         />
-        <YearRangeBox onChange={null} value={yearRange}
-           downscaling_l={downscaling} future={false} />
+        <YearRangeBox downscaling_l={downscaling} future={false} />
         <ObsChoicesBox onChange={handleObsChange} value={obs} />
         </>
       );
@@ -1981,8 +1986,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         values={metricPerformance}
         setValues={handleSignalChoice}
       />
-      <YearRangeBox onChange={null} value={yearRange}
-        downscaling_l={downscaling} past={false} />
+      <YearRangeBox downscaling_l={downscaling} past={false} />
       </>
     );
   };
@@ -2039,10 +2043,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           <DifferenceChoiceBox
              obsOrDataChoice={difObsOrDataChoice1}
              setObsOrDataChoice={setObsOrDataChoice1} />
-          <YearRangeBox
-              onChange={handleYearChange}
-              value={yearRange}
-              downscaling_l={downscaling} />
+          <YearRangeBox value={yearRange} downscaling_l={downscaling} />
           {difObsOrDataChoice1['Model'] ? <MapChoicesBox
                                            /> :
                                           <ObsChoicesBox
@@ -2057,10 +2058,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           <DifferenceChoiceBox
              obsOrDataChoice={difObsOrDataChoice2}
              setObsOrDataChoice={setObsOrDataChoice2} />
-          <YearRangeBox
-              onChange={handleYearDifChange}
-              value={yearRangeDif}
-              downscaling_l={downscalingDif} />
+          <YearRangeBox value={yearRangeDif} downscaling_l={downscalingDif} />
           {difObsOrDataChoice2['Model'] ? <MapChoicesBox dif={true} /> :
                                           <ObsChoicesBox
                                            onChange={handleObsDifChange}
