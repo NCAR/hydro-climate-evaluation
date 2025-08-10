@@ -13,8 +13,6 @@ import { Scale_Values, Clim_Ranges} from './variableSettings';
 import { Default_Colormaps, readmeUrl } from './variableSettings';
 import { getData } from './getData';
 
-const future_year_range_s = '2076-2099';
-
 const sx = {
   label: {
     fontFamily: 'mono',
@@ -1677,7 +1675,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setYearRangeDif('1980_2010');
       return(
         [<option value='1980_2010'>1980-2010</option>,
-         <option value='2070_2100'>{future_year_range_s}</option>]
+         <option value='2070_2100'>2076-2099</option>]
       );
     } else {
       setYearRangeDif('1980_2010');
@@ -1809,13 +1807,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           onChange={onChange}
           sx={{ mt: [1] }}
           value={value}
-        >
-          {past && <option value='1981_2004'>1981-2004</option>}
-          {future && (
-            <>
-            <option value='2070_2100'>{future_year_range_s}</option>
-            </>
-          )}
+       >
+       {past && <option value='1981_2004'>1981-2004</option>}
+       {future && <option value='2070_2100'>2076-2099</option>}
      </Select>
      </>
     );
