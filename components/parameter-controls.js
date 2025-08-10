@@ -1559,14 +1559,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         sx={{ mt: [1] }}
         value={value}
       >
-        <option value='conus404'>Conus404</option>
-        <option value='gmet'>GMET</option>
-        <option value='gridmet'>gridMET</option>
-        <option value='livneh'>Livneh</option>
-        <option value='maurer'>Maurer</option>
-        <option value='nclimgrid'>nClimGrid</option>
-        <option value='nldas'>NLDAS</option>
-        <option value='prism'>PRISM</option>
+      {Object.entries(settings.obs).map(([key, label]) => (
+          <option key={key} value={key}>
+          {label}
+        </option>
+      ))}
       </Select>
       <VariableChoiceBox />
       {setMetricLabel()}

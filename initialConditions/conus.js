@@ -25,4 +25,15 @@ export const settings = {
   ],
   variables_trend: ['ptrend', 'ttrend'],
 
+  obs: {
+      'conus404': 'Conus404',
+      'gmet': 'GMET',
+      'gridmet': 'gridMET',
+      'livneh': 'Livneh',
+      'maurer': 'Maurer',
+      'nclimgrid': 'nClimGrid',
+      'nldas': 'NLDAS',
+      'prism': 'PRISM',
+  },
+
 };
