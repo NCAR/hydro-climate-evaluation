@@ -268,27 +268,6 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   loadAnnPR();
   }, []);
 
-
-
-
-
-
-  // const [computeChoice, setComputeChoice] = useState({
-  //     'Ave.': true,
-  //     'Dif.': false,
-  //     'Climate Signal': false,
-  // });
-
-  // const handleComputeChoice = (e) => {
-  //   setComputeChoice(e);
-  //   console.log("HANDLE COMPUTE CHOICE e =",e);
-  //   if (['Climate Signal']) {
-  //     setBaseDir('climateSignal/');
-  //   } else {
-  //     setBaseDir('map/');
-  //   }
-  // };
-
   const getRCPString = (value) => {
       if (value === "8.5") {
         return "rcp85";
@@ -2442,6 +2421,9 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
   }; {/* end of ClimateSignalBox */}
 
 
+{/*------------------------------------------------------------------*/}
+
+
   const LegendAndColorbarBox = () => {
     return (
       <Box
@@ -2491,7 +2473,7 @@ const ParameterControls = ({ getters, setters, bucket, fname }) => {
             backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '10px',
             borderRadius: '5px'}}
     >
-      <ComputeChoiceFilter/>
+      <ComputeChoiceFilter />
     </Box>
     );
   };
