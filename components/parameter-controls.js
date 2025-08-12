@@ -128,7 +128,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   const getYearRangeString = (yearRange) => {
     let yearRange_s = "hist." + yearRange;
-    if (yearRange === '2076_2099') {
+    if (Object.keys(settings.future_eras).includes(yearRange)) {
       yearRange_s = getRCPKey(rcpValues) + "." + yearRange
     }
     return yearRange_s;
@@ -1583,21 +1583,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     };
   }; // end ComputeChoiceFilter
 
-  const ClimateSignalChoices = () => {
-    if (yearRange === '1980_2010') {
-      setYearRangeDif('1980_2010');
-      return(
-        [<option value='1980_2010'>1980-2010</option>,
-         <option value='2070_2100'>2076-2099</option>]
-      );
-    } else {
-      setYearRangeDif('1980_2010');
-      return(
-        <option value='1980_2010'>1980-2010</option>
-      );
-    }
-  };
-
   const NumDatasetsBox = () => {
     if (numClimateSignalSets === 1){
       return(
@@ -1733,8 +1718,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       modelVar = modelDif;
     }
 
-    // hack, remove later
-    const downscaling_d = yearRange === '1981_2004'
+    const downscaling_d = Object.keys(settings.past_eras).includes(yearRange)
           ? settings.downscaling_past
           : settings.downscaling_future;
 
@@ -1779,7 +1763,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
       <VariableChoiceBox climateSignal={computeChoice['Climate Signal']} />
       {(!computeChoice['Climate Signal'] &&
-        yearRange === '1981_2004')
+        Object.keys(settings.past_eras).includes(yearRange))
        && setMetricLabel()}
       {/* </Box> */}
     </>
@@ -1801,7 +1785,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         </>
       );
     } else if (aveChoice['Observation']) {
-      setYearRange('1981_2004');
+      setYearRange(Object.keys(settings.past_eras)[0]);
       return (
         <>
         <Filter
@@ -1859,7 +1843,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
   const RcpBox = () => {
-    if (yearRange === '2070_2100') {
+    if (Object.keys(settings.future_eras).includes(yearRange)) {
       return(
       <>
       <Box sx={{mt:4}}>RCP SCENARIO</Box>
