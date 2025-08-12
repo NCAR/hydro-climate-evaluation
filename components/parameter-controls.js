@@ -126,6 +126,14 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     return null;
   };
 
+  const getYearRangeString = (yearRange) => {
+    let yearRange_s = "hist." + yearRange;
+    if (yearRange === '2076_2099') {
+      yearRange_s = getRCPKey(rcpValues) + "." + yearRange
+    }
+    return yearRange_s;
+  }
+
   const [rcpValues, setRCPValues] = useState({'4.5': true,
                                               '8.5': false
                                              });
@@ -406,22 +414,17 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const handleYearChange = useCallback((e) => {
     let yearRange = e.target.value;
     setYearRange(yearRange);
-    if (yearRange === '2070_2100') {
-      yearRange = yearRange + '/' + getRCPKey(rcpValues) + '.2076-2099';
-    }
-    console.log("year range =", yearRange);
-    setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
+    const time = getYearRangeString(yearRange);
+    const url = bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname
+    setMapSource([url]);
   });
 
   const handleYearDifChange = useCallback((e) => {
     let yearRangeDif = e.target.value;
     setYearRangeDif(yearRangeDif);
-    console.log("yearRangeDif =", e.target.value);
-    if (yearRangeDif === '2070_2100') {
-      yearRangeDif = yearRangeDif + '/' + getRCPKey(rcpValues) + '.2076-2099';
-    }
-    setMapSourceDif([bucket+baseDir+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname]);
-    // setChartSourceDif(bucket+'/chart/'+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+band);
+    const time = getYearRangeString(yearRangeDif);
+    const url = bucket+baseDir+downscalingDif+'/'+modelDif+'/'+time+'/'+fname;
+    setMapSourceDif([url]);
   });
 
   const handleDownscalingChange = useCallback((e) => {
@@ -441,15 +444,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       }
     }
 
-    let timeRange = yearRange
-    if (computeChoice['Climate Signal']) {
-      timeRange = getRCPKey(rcpValues);
-    }
-    if (yearRange === '2070_2100') {
-      timeRange = yearRange + '/' + getRCPKey(rcpValues) + '.2076-2099';
-    }
-
-    setMapSource([bucket+baseDir+downscaling+'/'+safemodel+'/'+timeRange+'/'+fname]);
+    const time = getYearRangeString(yearRange)
+    const url = bucket+baseDir+downscaling+'/'+safemodel+'/'+time+'/'+fname;
+    setMapSource([url]);
   });
 
   const handleDownscalingDifChange = useCallback((e) => {
@@ -470,30 +467,18 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       }
     }
 
-    let timeRange = yearRangeDif
-    if (computeChoice['Climate Signal']) {
-      timeRange = getRCPKey(rcpValues);
-    }
-    if (yearRangeDif === '2070_2100') {
-      timeRange = yearRange + '/' + getRCPKey(rcpValues) + '.2076-2099';
-    }
-
-    setMapSourceDif(bucket+baseDir+downscalingDif+'/'+safemodel+'/'+timeRange+'/'+fname);
+    const time = getYearRangeString(yearRange)
+    const url = bucket+baseDir+downscalingDif+'/'+safemodel+'/'+time+'/'+fname
+    setMapSourceDif(url);
   });
 
   const handleModelChange = useCallback((e) => {
     const model = e.target.value;
     setModel(model);
 
-    let timeRange = yearRange
-    if (computeChoice['Climate Signal']) {
-      timeRange = getRCPKey(rcpValues)
-    }
-    if (yearRange === '2070_2100') {
-      timeRange = yearRange + '/' + getRCPKey(rcpValues) + '.2076-2099';
-    }
-
-    setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+timeRange+'/'+fname]);
+    const time = getYearRangeString(yearRange)
+    const url = bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname
+    setMapSource([url]);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
     // getData({chartSource}, setChartData);
@@ -503,11 +488,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     const metric = e.target.value;
     setMetric(metric);
     console.log("metric e =", e.target.value);
-    // console.log("model =", bucket+'/'+downscaling+'/'+model+'/');
-    // setMapSource(bucket+'map/'+downscaling+'/'+model+'/'+yearRange+'/'+fname);
-    // // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
-    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
-    // getData({chartSource}, setChartData);
+
     if (metric === 'n34pr') {
       setBand('n34p');
       setUnits('correlation');
@@ -1080,24 +1061,24 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
 
   useEffect(() => {
-      if (difObsOrDataChoice1['Model']) {
-          const url = [bucket+baseDir+downscaling+'/'+model+'/'+yearRange+'/'+fname];
-          setMapSource(url);
-      } else {
-          const url=[bucket+'/obs/'+obs+'/'+yearRange+'/'+fname];
-          setMapSource(url);
-      }
+    const time = getYearRangeString(yearRange);
+    if (difObsOrDataChoice1['Model']) {
+      const url = [bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname];
+      setMapSource(url);
+    } else {
+      const url=[bucket+'/obs/'+obs+'/.'+time+'/'+fname];
+      setMapSource(url);
+    }
   }, [difObsOrDataChoice1]);
 
   // difference options
   useEffect(() => {
-      if (difObsOrDataChoice2['Model']) {
-          const url=[bucket+baseDir+downscalingDif+'/'+modelDif+'/'+yearRangeDif+'/'+fname];
-          console.log("dif model url =", url);
+    const time = getYearRangeString(yearRangeDif);
+    if (difObsOrDataChoice2['Model']) {
+      const url=[bucket+baseDir+downscalingDif+'/'+modelDif+'/'+time+'/'+fname];
           setMapSourceDif(url);
       } else {
-          const url=[bucket+'/obs/'+obsDif+'/'+yearRangeDif+'/'+fname];
-          console.log("dif obs  url =", url);
+          const url=[bucket+'/obs/'+obsDif+'/'+time+'/'+fname];
           setMapSourceDif(url);
       }
   }, [difObsOrDataChoice2]);
@@ -1107,10 +1088,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     console.log("RCP VALUES e =", e);
     setRCPValues(choice);
     if (methodAndModel["Method & Model"]) {
-      const rcp = getRCPKey(choice)
-      let url = [bucket+baseDir+downscaling+'/'+model+'/2070_2100/'+rcp+'.2076-2099/'+fname];
+      // copied from getYearRangeString function
+      const time = getRCPKey(choice) + "." + yearRange
+      let url = [bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname];
       setMapSource(url);
-      console.log("RCP RESET URL =", url)
     }
   });
 
@@ -1122,16 +1103,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     if (choice['Modeling']) {
       // setAveChoice({ 'Modeling': true, 'Observation': false, });
       setAveChoice(choice);
-      let yearRange_l = yearRange;
-      if (yearRange === '2070_2100') {
-        yearRange_l = yearRange + '/' + getRCPKey(rcpValues) + '.2076-2099';
-      }
-      setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+yearRange_l+'/'+fname]);
+      const time = getYearRangeString(yearRange);
+      setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname]);
     } else if (choice['Observation']) {
       setAveChoice(choice);
-      // setAveChoice({ 'Modeling': false, 'Observation': true, }); //
+      const time = getYearRangeString(yearRangeDif);
       const obs_l = obs
-      setMapSource([bucket+'/obs/'+obs_l+'/'+yearRangeDif+'/'+fname]);
+      setMapSource([bucket+'/obs/'+obs_l+'/'+time+'/'+fname]);
     }
   });
 
@@ -1144,9 +1122,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setMethodAndModel(prev =>
                       ({"Method & Model": !prev["Method & Model"]}));
     if (choice["Method & Model"]) {
-    // if (methodAndModel["Method & Model"]) {
-      const rcp = getRCPKey(rcpValues);
-      let url = [bucket+baseDir+downscaling+'/'+model+'/'+rcp+'/'+fname];
+      const time = getYearRangeString(yearRange)
+      let url = [bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname];
       setMapSource(url);
     }
 
@@ -1177,8 +1154,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       console.log("ARTLESS top combination =", topCombination);
       let downscaling_l = topDownscaling[0];
       let model_l = topModel[0];
-      const rcp = getRCPKey(rcpValues);
-      let url = [bucket+baseDir+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname];
+      const time = getYearRangeString(yearRange)
+      let url = [bucket+baseDir+downscaling_l+'/'+model_l+'/'+time+'/'+fname];
       const numClimateSignalSets_i = parseInt(numClimateSignalSets, 10);
 
       setMapSource(url);
@@ -1354,15 +1331,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     const modelDif = e.target.value;
     setModelDif(modelDif);
 
-    let timeRange = yearRangeDif
-    if (computeChoice['Climate Signal']) {
-      timeRange = getRCPKey(rcpValues)
-    }
-    if (yearRange === '2070_2100') {
-      timeRange = yearRange + '/' + getRCPKey(rcpValues) + '.2076-2099';
-    }
-
-    setMapSourceDif([bucket+baseDir+downscalingDif+'/'+modelDif+'/'+timeRange+'/'+fname]);
+    const time = getYearRangeString(yearRange);
+    const url = bucket+baseDir+downscalingDif+'/'+modelDif+'/'+time+'/'+fname;
+    setMapSourceDif([url]);
   });
 
 
@@ -1479,12 +1450,14 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const handleObsChange = useCallback((e) => {
     const obs_l = e.target.value;
     setObs(obs_l);
-    setMapSource([bucket+'/obs/'+obs_l+'/'+yearRangeDif+'/'+fname]);
+    const time = getYearRangeString(yearRange);
+    setMapSource([bucket+'/obs/'+obs_l+'/'+time+'/'+fname]);
   });
   const handleObsDifChange = useCallback((e) => {
     const obs_l = e.target.value;
     setObsDif(obs_l);
-    setMapSourceDif(bucket+'/obs/'+obs_l+'/'+yearRangeDif+'/'+fname);
+    const time = getYearRangeString(yearRangeDif);
+    setMapSourceDif(bucket+'/obs/'+obs_l+'/'+time+'/'+fname);
   });
 
 
@@ -1527,32 +1500,31 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       if (!newValues['Climate Signal']) {
         // handleFilterAndSetClimColormapName(newValues);
         // above func handled below
-        let yearRange_l = yearRange;
-        if (yearRange === '2070_2100') {
-            yearRange_l = yearRange_l + '/' + getRCPKey(rcpValues) + '.2076-2099';
-        }
+        let time = getYearRangeString(yearRange);
 
         if (newValues['Ave.']) {
           setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
           setColormapName(Default_Colormaps[metric]);
         }
         if (newValues['Dif.']) {
-          yearRange_l = '1981_2004';
-          setYearRange(yearRange_l);
+          const yearRange_key = Object.keys(settings.past_eras)[0];
+          setYearRange(yearRange_key);
+          time = getYearRangeString(yearRange_key);
           setScaleDif(Scale_Values['dif_'+metric]);
           setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
           setColormapName(Default_Colormaps['dif_'+metric]);
         }
-        setMapSource([bucket+baseDir_l+downscaling+'/'+model+'/'+yearRange_l+'/'+fname]);
+        const url = bucket+baseDir_l+downscaling+'/'+model+'/'+time+'/'+fname;
+        setMapSource([url]);
       }
 
       if (newValues['Climate Signal']) {
         console.log("CLIMATE SIGNAL SELECTED")
-        const rcp = getRCPKey(rcpValues);
-        let url = [bucket+baseDir_l+downscaling+'/'+model+'/'+rcp+'/'+fname];
+        const time = getYearRangeString(yearRange)
+        let url = [bucket+baseDir_l+downscaling+'/'+model+'/'+time+'/'+fname];
         console.log("SIGNAL URL =", url)
         setMapSource(url);
-        setYearRange('2070_2100');
+        setYearRange(Object.keys(settings.future_eras)[0]);
         setScaleDif(Scale_Values['dif_'+metric]);
         setClim([Clim_Ranges['dif_'+metric].min,
                  Clim_Ranges['dif_'+metric].max]);
