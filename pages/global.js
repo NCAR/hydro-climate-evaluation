@@ -18,7 +18,8 @@ import ErrorBoundary from '../components/ErrorBoundary';
 // option to use external zarr files only
 const TESTING = false;
 // location of the map and pbf shape files
-const bucket = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/';
+const bucket = settings.bucket;
+// const bucket = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/';
 // original hosting site
 // const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/';
 // local data address for testing
@@ -120,25 +121,18 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   // const [mapSource, setMapSource] =
   //         useState([bucket+'map/icar/noresm1_m/1981_2004/'+fname])
   const [mapSource, setMapSource] =
-          useState([bucket+'map/icar/access1_3/1981_2004/'+fname]);
+          useState([bucket+'map/icar/access1_3/hist.1981_2004/'+fname]);
   const [chartSource, setChartSource] =
           useState(bucket+'chart/icar/noresm1_m/'+band);
-  // paths to model dataset used for diff
-  // const [mapSourceDif, setMapSourceDif] =
-  //         useState(bucket+'map/icar/cesm/1980_2010/'+fname);
-  // const [mapSourceDif, setMapSourceDif] =
-  //         useState(bucket+'map/icar/noresm1_m/1981_2004/'+fname);
   const [mapSourceDif, setMapSourceDif] =
-          useState(bucket+'obs/'+obsDif+'/1981_2004/'+fname);
+          useState(bucket+'obs/'+obsDif+'/hist.1981_2004/'+fname);
   const [chartSourceDif, setChartSourceDif] =
           useState(bucket+'chart/icar/cesm/'+band);
-  // set values to decide whether to map average or difference
-  // const [filterValues, setFilterValues] = useState({'Ave.': true,
-  //                                                   'Dif.': false});
+
   const [computeChoice, setComputeChoice] = useState({
     'Ave.': true,
     'Dif.': false,
-    'Climate Signal': false,
+    ...(settings.climateSignal ? { 'Climate Signal': false } : {}),
   });
 
   // control the height of the charts, initially hidden
@@ -319,6 +313,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       setters={setters}
       bucket={bucket}
       fname={fname}
+      settings={settings}
     />
 
     </Map>
