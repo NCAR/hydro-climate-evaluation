@@ -2,6 +2,9 @@ export const settings = {
   lat: 38,
   lon: -97,
   zoom: 4,
+  climateSignal: false,
+  bucket: 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/',
+
 
   variables: [
       'n34pr',
@@ -38,11 +41,8 @@ export const settings = {
   past_eras: {
       '1981_2004': '1981-2004'
   },
-  past_eras_old_one: {
-      '1981_2004': '1981-2004'
-  },
   future_eras: {
-      '2070_2100': '2076-2099'
+      '2076_2099': '2076-2099'
   },
 
   downscaling_past: {
@@ -101,8 +101,7 @@ export const settings = {
           canesm2: 'CanESM2',
           miroc5: 'MIROC5',
       },
-  }
-
+  },
 
 
 };

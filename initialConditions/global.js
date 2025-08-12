@@ -2,6 +2,9 @@ export const settings = {
   lat: 38,
   lon: -37,
   zoom: 1.5,
+  climateSignal: false,
+  // bucket: 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/global/',
+  bucket: 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/',
 
   variables: [
       'n34pr',
@@ -39,7 +42,7 @@ export const settings = {
       '1981_20004': '1981-2004'
   },
   future_eras: {
-      '2070_2100': '2076-2099'
+      '2076_2099': '2076-2099'
   },
 
   downscaling_past: {
@@ -57,6 +60,50 @@ export const settings = {
       'maca':'MACA',
       'nasa_nex':'NASA-NEX',
   },
+
+  model: {
+      icar: {
+          noresm1_m: 'NorESM-M',
+          access1_3: 'ACCESS1-3',
+          canesm2: 'CanESM2',
+          ccsm4: 'CCSM4',
+          miroc5: 'MIROC5',
+      },
+      gard_r2: {
+          noresm1_m: 'NorESM-M',
+          access1_3: 'ACCESS1-3',
+          canesm2: 'CanESM2',
+          ccsm4: 'CCSM4',
+          miroc5: 'MIROC5',
+      },
+      gard_r3: {
+          noresm1_m: 'NorESM-M',
+          access1_3: 'ACCESS1-3',
+          canesm2: 'CanESM2',
+          ccsm4: 'CCSM4',
+          miroc5: 'MIROC5',
+      },
+      loca_8th: {
+          noresm1_m: 'NorESM-M',
+          access1_3: 'ACCESS1-3',
+          canesm2: 'CanESM2',
+          ccsm4: 'CCSM4',
+          miroc5: 'MIROC5',
+      },
+      maca: {
+          noresm1_m: 'NorESM-M',
+          canesm2: 'CanESM2',
+          ccsm4: 'CCSM4',
+          miroc5: 'MIROC5',
+      },
+      nasa_nex: {
+          noresm1_m: 'NorESM-M',
+          canesm2: 'CanESM2',
+          miroc5: 'MIROC5',
+      },
+  }
+
+
 
 
 
