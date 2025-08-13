@@ -28,6 +28,15 @@ export const Scale_Values = Object.freeze({
   dif_mam_p: precipDif,
   dif_jja_p: precipDif,
   dif_son_p: precipDif,
+
+  // drought
+  dif_drought_1yr: 0.1,
+  dif_drought_2yr: 0.1,
+  dif_drought_5yr: 0.1,
+
+  // new cmip variables
+  eli_t: tempDif,
+  eli_p: precipDif,
 });
 
 export const Clim_Ranges = Object.freeze({
@@ -77,11 +86,26 @@ export const Clim_Ranges = Object.freeze({
   dif_son_p: { max: 50, min: -50 },
   dif_ann_p: { max: 50, min: -50 },
 
+
   // misc
   ann_snow: { max: 250, min: 0 },
   freezethaw: { max: 250, min: 0 },
   dif_ann_snow: { max: 50, min: -50 },
   dif_freezethaw: { max: 50, min: -50 },
+
+  // drought
+  drought_1yr: { max: 20, min: 0 },
+  drought_2yr: { max: 20, min: 0 },
+  drought_5yr: { max: 20, min: 0 },
+  dif_drought_1yr: { max: 4, min: -4 },
+  dif_drought_2yr: { max: 4, min: -4 },
+  dif_drought_5yr: { max: 4, min: -4 },
+
+  // new cmip variables
+  eli_t: { max: 30, min: 0 },
+  eli_p: { max: 70, min: 0 },
+  dif_eli_t: { max: 4, min: -4 },
+  dif_eli_p: { max: 50, min: -50 },
 });
 
 
@@ -119,6 +143,11 @@ export const Default_Colormaps = Object.freeze({
   ann_snow: precip_colormap,
   freezethaw: precip_colormap,
 
+  // drought
+  drought_1yr: precip_colormap,
+  drought_2yr: precip_colormap,
+  drought_5yr: precip_colormap,
+
   // difference colormap
   dif: 'difredblue',
   dift: dif_temp_colormap,
@@ -151,6 +180,17 @@ export const Default_Colormaps = Object.freeze({
   // snow
   dif_ann_snow: dif_precip_colormap,
   dif_freezethaw: dif_precip_colormap,
+
+  // drought
+  drought_1yr: dif_precip_colormap,
+  drought_2yr: dif_precip_colormap,
+  drought_5yr: dif_precip_colormap,
+
+  // new cmip variables
+  eli_t: temp_colormap,
+  eli_p: precip_colormap,
+  dif_eli_t: dif_temp_colormap,
+  dif_eli_p: dif_precip_colormap,
 });
 
 export const readmeUrl =

@@ -193,6 +193,18 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
             ['Temperature',
              'extremes',
              '99th percentile'];
+    }  else if (metric === 'eli_t') {
+      label = 'eli_t';
+      description =
+            ['Seasonal mean',
+             'temperature',
+             'Dec/ Jan/Feb'];
+    }  else if (metric === 'eli_p') {
+      label = 'eli_p';
+      description =
+            ['Seasonal mean',
+             'precipitation',
+             'Dec/Jan/Feb'];
     }  else if (metric === 'djf_t') {
       label = 'djf_t';
       description =
@@ -266,6 +278,24 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
             ['Annual mean',
              'freeze-thaw',
              'cycle'];
+    }  else if (metric === 'drought_1yr') {
+      label = 'drought_1yr';
+      description =
+            ['Drought',
+             '1 year',
+             'trend'];
+    }  else if (metric === 'drought_2yr') {
+      label = 'drought_2yr';
+      description =
+            ['Drought',
+             '2 year',
+             'trend'];
+    }  else if (metric === 'drought_5yr') {
+      label = 'drought_5yr';
+      description =
+            ['Drought',
+             '5 year',
+             'trend'];
      } else {
        label = 'label undefined';
        description = ['description undefined','',''];
@@ -549,7 +579,17 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }  else if (metric === 'freezethaw') {
       setBand('fzth');
       setUnits('num. of days');
+    } else if (metric === 'drought_1yr') {
+      setBand('d1yr');
+      setUnits('?');
+    } else if (metric === 'drought_2yr') {
+      setBand('d2yr');
+      setUnits('?');
+    } else if (metric === 'drought_5yr') {
+      setBand('d5yr');
+      setUnits('?');
     }
+
 
 
     if (computeChoice['Dif.'] || computeChoice['Climate Signal']) {
@@ -594,7 +634,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const [topDownscaling2, setTopDownscaling2] = useState("None");
   const [topModel2, setTopModel2] = useState("None");
 
-  const [aveChoice, setAveChoice] = useState({ 'Modeling': true, 'Observation': false, });
+  let aveChoice = null;
+  let setAveChoice = null;
+  if (settings.observation) {
+    [aveChoice, setAveChoice] = useState({ 'Modeling': true, 'Observation': false, });
+  } else {
+    [aveChoice, setAveChoice] = useState({ 'Modeling': true });
+  }
 
   const [metricPerformance, setMetricPerformance] = //useState(true);
           useState({ "Metric Performance": false });
@@ -1107,8 +1153,15 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname]);
     } else if (choice['Observation']) {
       setAveChoice(choice);
-      const time = getYearRangeString(yearRangeDif);
+      let time = getYearRangeString(yearRangeDif);
+      if (settings.obs_eras !== undefined) {
+        time = 'hist.'+settings.obs_eras;
+        setYearRange(time);
+        console.log("FOO time", time);
+      }
       const obs_l = obs
+      console.log("obs_l", obs_l, "time", time);
+
       setMapSource([bucket+'/obs/'+obs_l+'/'+time+'/'+fname]);
     }
   });
@@ -1472,7 +1525,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         sx={{ mt: [1] }}
         value={value}
       >
-      {Object.entries(settings.obs).map(([key, label]) => (
+      {Object.entries(settings.obs_lev1).map(([key, label]) => (
           <option key={key} value={key}>
           {label}
         </option>
@@ -1724,6 +1777,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
     const model_d = settings.model[downscaling];
 
+    // console.log("dd =", downscaling_d);
+    // console.log("md =", model_d);
+
     return(
       <>
       {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
@@ -1731,7 +1787,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       {computeChoice['Ave.'] &&
        <YearRangeBox downscaling_l={downscaling} />}
 
-      <Box sx={{ ...sx.label, mt: [4] }}>Downscaling Method</Box>
+      <Box sx={{ ...sx.label, mt: [4] }}>{settings.downscaling_title}</Box>
       <Select
         sxSelect={{ bg: 'transparent' }}
         size='xs'
@@ -1786,6 +1842,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       );
     } else if (aveChoice['Observation']) {
       setYearRange(Object.keys(settings.past_eras)[0]);
+      // if (settings.obs_era !== undefined) {
+      //   console.log("FOO RIGHT HERE");
+      //   setYearRange(settings.obs_era);
+      // }
+
       return (
         <>
         <Filter
@@ -1794,7 +1855,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           sx={{mt:3}}
         />
         <YearRangeBox downscaling_l={downscaling} future={false} />
-        <ObsChoicesBox onChange={handleObsChange} value={obs} />
+        <ObsChoicesBox
+           onChange={handleObsChange}
+           value={obs}
+           label={settings.obs_lev1_title}
+        />
         </>
       );
     }

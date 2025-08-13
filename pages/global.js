@@ -93,7 +93,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [showRegionPlot, setShowRegionPlot] = useState(false);
   const [regionData, setRegionData] = useState({ loading: true });
   // set variables to access datasets
-  const [downscaling, setDownscaling] = useState('icar');
+  const [downscaling, setDownscaling] = useState('cmip5');
   const [model, setModel] = useState('access1_3');
   const [metric, setMetric] = useState('djf_t');
   const [rcp, setRCP] = useState('4.5');
@@ -103,14 +103,14 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
      'High': false});
 
   // const [yearRange, setYearRange] = useState('1980_2010')
-  const [yearRange, setYearRange] = useState('1981_2004', '2070_2100');
+  const [yearRange, setYearRange] = useState('1850_2005/r1i1p1/');
   // diff dataset variables for model to compare against
   const [scaleDif, setScaleDif] = useState(1.0);
-  const [downscalingDif, setDownscalingDif] = useState('nasa_nex');
+  const [downscalingDif, setDownscalingDif] = useState('cmip5');
   const [modelDif, setModelDif] = useState('canesm2');
-  const [yearRangeDif, setYearRangeDif] = useState('1981_2004');
-  const [obs, setObs] = useState('livneh');
-  const [obsDif, setObsDif] = useState('livneh');
+  const [yearRangeDif, setYearRangeDif] = useState('1850_2005/r1i1p1/');
+  const [obs, setObs] = useState('global/cru');
+  const [obsDif, setObsDif] = useState('global');
 
   const [showStates, setStates] = useState(true);
   const [showRivers, setRivers] = useState(false);
@@ -120,18 +120,20 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   // paths to model dataset
   // const [mapSource, setMapSource] =
   //         useState([bucket+'map/icar/noresm1_m/1981_2004/'+fname])
+  // FIX THIS
   const [mapSource, setMapSource] =
-          useState([bucket+'map/icar/access1_3/hist.1981_2004/'+fname]);
+          useState([bucket+'map/cmip5/canesm2/hist.1850_2005/r1i1p1/'+fname]);
   const [chartSource, setChartSource] =
-          useState(bucket+'chart/icar/noresm1_m/'+band);
+          useState(bucket+'chart/cmip5/noresm1_m/'+band);
   const [mapSourceDif, setMapSourceDif] =
-          useState(bucket+'obs/'+obsDif+'/hist.1981_2004/'+fname);
+          useState([bucket+'map/cmip5/canesm2/hist.1850_2005/r1i1p1/'+fname]);
+          // useState(bucket+'obs/'+obsDif+'/hist.1981_2004/'+fname);
   const [chartSourceDif, setChartSourceDif] =
           useState(bucket+'chart/icar/cesm/'+band);
 
   const [computeChoice, setComputeChoice] = useState({
     'Ave.': true,
-    'Dif.': false,
+    ...(settings.dif ? { 'Climate Signal': false } : {}),
     ...(settings.climateSignal ? { 'Climate Signal': false } : {}),
   });
 

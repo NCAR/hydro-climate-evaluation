@@ -3,6 +3,8 @@ export const settings = {
   lon: -97,
   zoom: 4,
   climateSignal: false,
+  dif: true,
+  observation: true,
   bucket: 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/',
 
 
@@ -24,11 +26,15 @@ export const settings = {
       'ann_t',
       'ann_p',
       'ann_snow',
-      'freezethaw'
+      'freezethaw',
+      'drought_1yr',
+      'drought_2yr',
+      'drought_5yr',
   ],
   variables_trend: ['ptrend', 'ttrend'],
 
-  obs: {
+  obs_lev1_title: "Dataset",
+  obs_lev1: {
       'conus404': 'Conus404',
       'gmet': 'GMET',
       'gridmet': 'gridMET',
@@ -45,6 +51,8 @@ export const settings = {
       '2076_2099': '2076-2099'
   },
 
+
+  downscaling_title: "Downscaling Method",
   downscaling_past: {
       'icar':'ICAR',
       'gard_r2':'GARD_r2',
