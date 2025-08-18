@@ -536,10 +536,25 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setUrl(downscalingDif, safemodel, yearRangeDif, ensemble);
   });
 
+  function checkModelEnsemble(model) {
+    let ens = ensemble;
+    console.log("ens =", ens)
+    if (!ens) {
+      return ens;
+    }
+    const ensList = settings.ensemble[model];
+    if (!ensList.includes(ens)) {
+      ens = ensList[0];
+      setEnsemble(ens);
+    }
+    return ens;
+  }
+
   const handleModelChange = useCallback((e) => {
     const model = e.target.value;
+    const ens = checkModelEnsemble(model);
     setModel(model);
-    setUrl(downscaling, model, yearRange, ensemble);
+    setUrl(downscaling, model, yearRange, ens);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
     // getData({chartSource}, setChartData);
