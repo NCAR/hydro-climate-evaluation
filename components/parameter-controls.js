@@ -87,7 +87,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   function setUrl(downscaling, model, yearRange, ensemble, dif=false) {
     const time = getYearRangeString(yearRange);
-    // const url = bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+ensemble+'/'+fname
     const url = `${bucket}${baseDir}${downscaling}/${model}/${time}/${ensemble}/${fname}`;
     if (dif) {
       setMapSourceDif([url]);
@@ -98,7 +97,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   function addUrlArrayMember(downscaling, model, yearRange, ensemble) {
     const time = getYearRangeString(yearRange);
-    const url = bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+ensemble+'/'+fname
+    const url = `${bucket}${baseDir}${downscaling}/${model}/${time}/${ensemble}/${fname}`;
     setMapSource((prevSources) => [...prevSources, url]);
   };
 
@@ -112,7 +111,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       console.log("FOO time", time);
     }
 
-    const url= bucket+'/obs/'+obs+'/.'+time+'/'+fname;  // ARTLESS maybe no .?
+    const url= `${bucket}/obs/${obs}/${time}/${fname}`;
     if (dif) {
       setMapSourceDif([url]);
     } else {
@@ -542,7 +541,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     if (!ens) {
       return ens;
     }
-    const ensList = settings.ensemble[model];
+    const ensList = settings.ensemble[downscaling][model];
     if (!ensList.includes(ens)) {
       ens = ensList[0];
       setEnsemble(ens);
@@ -1192,7 +1191,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setAveChoice(choice);
       setUrl(downscaling, model, yearRange, ensemble)
     } else if (choice['Observation']) {
-      // setAveChoice(choice);
+      setAveChoice(choice);
       // let time = getYearRangeString(yearRangeDif);
       // if (settings.obs_eras !== undefined) {
       //   time = 'hist.'+settings.obs_eras;
@@ -1202,7 +1201,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       // const obs_l = obs
       // console.log("obs_l", obs_l, "time", time);
       // setMapSource([bucket+'/obs/'+obs_l+'/'+time+'/'+fname]);
-      setObsUrl(obs_l, yearRange)
+      setObsUrl(obs, yearRange)
     }
   });
 
@@ -1796,7 +1795,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           value={ensemble}
        >
 
-       {settings.ensemble[model].map(ens => (
+       {settings.ensemble[downscaling][model].map(ens => (
           <option key={ens} value={ens}>
           {ens}
         </option>
