@@ -32,7 +32,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           mapSourceDif, chartSourceDif, scaleDif,
           chartHeight, computeChoice,
           showClimateChange, showRegionPlot, bucketRes,
-          showStates, showRivers, showHuc2, sideBySide, mapVal
+          showStates, showRivers, showHuc2, sideBySide, mapVal, ensemble
         } = getters;
   const {
     setDisplay,
@@ -66,7 +66,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setStates,
     setRivers,
     setHuc2,
-    setSideBySide
+    setSideBySide,
+    setEnsemble
   } = setters;
 
 
@@ -83,6 +84,41 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const [metricMethod1, setMetricMethod1] = useState({'RMSE': true,
                                                       'Std. Dev.': false});
   const [metricMethod2, setMetricMethod2] = useState({'Correlation': false});
+
+  function setUrl(downscaling, model, yearRange, ensemble, dif=false) {
+    const time = getYearRangeString(yearRange);
+    // const url = bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+ensemble+'/'+fname
+    const url = `${bucket}${baseDir}${downscaling}/${model}/${time}/${ensemble}/${fname}`;
+    if (dif) {
+      setMapSourceDif([url]);
+    } else {
+      setMapSource([url]);
+    }
+  };
+
+  function addUrlArrayMember(downscaling, model, yearRange, ensemble) {
+    const time = getYearRangeString(yearRange);
+    const url = bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+ensemble+'/'+fname
+    setMapSource((prevSources) => [...prevSources, url]);
+  };
+
+
+
+  function setObsUrl(obs, yearRange, dif=false) {
+    let time = getYearRangeString(yearRange);
+    if (settings.obs_eras !== undefined) {
+      time = 'hist.'+settings.obs_eras;
+      setYearRange(time);
+      console.log("FOO time", time);
+    }
+
+    const url= bucket+'/obs/'+obs+'/.'+time+'/'+fname;  // ARTLESS maybe no .?
+    if (dif) {
+      setMapSourceDif([url]);
+    } else {
+      setMapSource([url]);
+    }
+  };
 
 
 
@@ -441,20 +477,22 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
 
+  const handleEnsembleChange = useCallback((e) => {
+    let ensemble = e.target.value;
+    setEnsemble(ensemble);
+    setUrl(downscaling, model, yearRange, ensemble);
+  });
+
   const handleYearChange = useCallback((e) => {
     let yearRange = e.target.value;
     setYearRange(yearRange);
-    const time = getYearRangeString(yearRange);
-    const url = bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname
-    setMapSource([url]);
+    setUrl(downscaling, model, yearRange, ensemble);
   });
 
   const handleYearDifChange = useCallback((e) => {
     let yearRangeDif = e.target.value;
     setYearRangeDif(yearRangeDif);
-    const time = getYearRangeString(yearRangeDif);
-    const url = bucket+baseDir+downscalingDif+'/'+modelDif+'/'+time+'/'+fname;
-    setMapSourceDif([url]);
+    setUrl(downscalingDif, modelDif, yearRangeDif, ensemble);
   });
 
   const handleDownscalingChange = useCallback((e) => {
@@ -474,9 +512,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       }
     }
 
-    const time = getYearRangeString(yearRange)
-    const url = bucket+baseDir+downscaling+'/'+safemodel+'/'+time+'/'+fname;
-    setMapSource([url]);
+    setUrl(downscaling, safemodel, yearRange, ensemble);
   });
 
   const handleDownscalingDifChange = useCallback((e) => {
@@ -497,18 +533,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       }
     }
 
-    const time = getYearRangeString(yearRange)
-    const url = bucket+baseDir+downscalingDif+'/'+safemodel+'/'+time+'/'+fname
-    setMapSourceDif(url);
+    setUrl(downscalingDif, safemodel, yearRangeDif, ensemble);
   });
 
   const handleModelChange = useCallback((e) => {
     const model = e.target.value;
     setModel(model);
-
-    const time = getYearRangeString(yearRange)
-    const url = bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname
-    setMapSource([url]);
+    setUrl(downscaling, model, yearRange, ensemble);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
     // getData({chartSource}, setChartData);
@@ -1107,25 +1138,20 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
 
   useEffect(() => {
-    const time = getYearRangeString(yearRange);
     if (difObsOrDataChoice1['Model']) {
-      const url = [bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname];
-      setMapSource(url);
+      setUrl(downscaling, model, yearRange, ensemble);
     } else {
-      const url=[bucket+'/obs/'+obs+'/.'+time+'/'+fname];
-      setMapSource(url);
+      setObsUrl(obs, yearRange);
     }
   }, [difObsOrDataChoice1]);
 
   // difference options
   useEffect(() => {
-    const time = getYearRangeString(yearRangeDif);
+    const difTrue = true;
     if (difObsOrDataChoice2['Model']) {
-      const url=[bucket+baseDir+downscalingDif+'/'+modelDif+'/'+time+'/'+fname];
-          setMapSourceDif(url);
+      setUrl(downscalingDif, modelDif, yearRangeDif, ensemble, difTrue);
       } else {
-          const url=[bucket+'/obs/'+obsDif+'/'+time+'/'+fname];
-          setMapSourceDif(url);
+      setObsUrl(obs, yearRangeDif, difTrue);
       }
   }, [difObsOrDataChoice2]);
 
@@ -1149,20 +1175,19 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     if (choice['Modeling']) {
       // setAveChoice({ 'Modeling': true, 'Observation': false, });
       setAveChoice(choice);
-      const time = getYearRangeString(yearRange);
-      setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname]);
+      setUrl(downscaling, model, yearRange, ensemble)
     } else if (choice['Observation']) {
-      setAveChoice(choice);
-      let time = getYearRangeString(yearRangeDif);
-      if (settings.obs_eras !== undefined) {
-        time = 'hist.'+settings.obs_eras;
-        setYearRange(time);
-        console.log("FOO time", time);
-      }
-      const obs_l = obs
-      console.log("obs_l", obs_l, "time", time);
-
-      setMapSource([bucket+'/obs/'+obs_l+'/'+time+'/'+fname]);
+      // setAveChoice(choice);
+      // let time = getYearRangeString(yearRangeDif);
+      // if (settings.obs_eras !== undefined) {
+      //   time = 'hist.'+settings.obs_eras;
+      //   setYearRange(time);
+      //   console.log("FOO time", time);
+      // }
+      // const obs_l = obs
+      // console.log("obs_l", obs_l, "time", time);
+      // setMapSource([bucket+'/obs/'+obs_l+'/'+time+'/'+fname]);
+      setObsUrl(obs_l, yearRange)
     }
   });
 
@@ -1175,9 +1200,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setMethodAndModel(prev =>
                       ({"Method & Model": !prev["Method & Model"]}));
     if (choice["Method & Model"]) {
-      const time = getYearRangeString(yearRange)
-      let url = [bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname];
-      setMapSource(url);
+      setUrl(downscaling, model, yearRange, ensemble)
     }
 
   });
@@ -1211,7 +1234,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       let url = [bucket+baseDir+downscaling_l+'/'+model_l+'/'+time+'/'+fname];
       const numClimateSignalSets_i = parseInt(numClimateSignalSets, 10);
 
-      setMapSource(url);
+      setUrl(downscaling_l, model_l, yearRange, ensemble);
       setDownscaling(downscaling_l);
       setModel(model_l);
       setShouldUpdateMapSource(false); // Reset the flag
@@ -1222,8 +1245,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       for (let i=1; i<numClimateSignalSets_i; i++) {
         downscaling_l = topDownscaling[i];
         model_l = topModel[i];
-        url = bucket+baseDir+downscaling_l+'/'+model_l+'/'+rcp+'/'+fname;
-        setMapSource((prevSources) => [...prevSources, url]);
+        addUrlArrayMember(downscaling_l, model_l, yearRange, ensemble);
       }
     }
   }, [showRegionPlot, shouldUpdateMapSource]);
@@ -1383,10 +1405,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const handleModelDifChange = useCallback((e) => {
     const modelDif = e.target.value;
     setModelDif(modelDif);
-
-    const time = getYearRangeString(yearRange);
-    const url = bucket+baseDir+downscalingDif+'/'+modelDif+'/'+time+'/'+fname;
-    setMapSourceDif([url]);
+    setUrl(downscalingDif, modelDif, yearRangeDif, ensemble, dif=true);
   });
 
 
@@ -1503,14 +1522,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const handleObsChange = useCallback((e) => {
     const obs_l = e.target.value;
     setObs(obs_l);
-    const time = getYearRangeString(yearRange);
-    setMapSource([bucket+'/obs/'+obs_l+'/'+time+'/'+fname]);
+    setObsUrl(obs_l, yearRange);
   });
   const handleObsDifChange = useCallback((e) => {
     const obs_l = e.target.value;
     setObsDif(obs_l);
-    const time = getYearRangeString(yearRangeDif);
-    setMapSourceDif(bucket+'/obs/'+obs_l+'/'+time+'/'+fname);
+    setObsUrl(obs_l, yearRangeDif, dif=true);
   });
 
 
@@ -1553,30 +1570,29 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       if (!newValues['Climate Signal']) {
         // handleFilterAndSetClimColormapName(newValues);
         // above func handled below
-        let time = getYearRangeString(yearRange);
+        let yearRange_key = yearRange;
 
         if (newValues['Ave.']) {
           setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
           setColormapName(Default_Colormaps[metric]);
         }
         if (newValues['Dif.']) {
-          const yearRange_key = Object.keys(settings.past_eras)[0];
+          yearRange_key = Object.keys(settings.past_eras)[0];
           setYearRange(yearRange_key);
-          time = getYearRangeString(yearRange_key);
           setScaleDif(Scale_Values['dif_'+metric]);
           setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
           setColormapName(Default_Colormaps['dif_'+metric]);
         }
-        const url = bucket+baseDir_l+downscaling+'/'+model+'/'+time+'/'+fname;
-        setMapSource([url]);
+        setUrl(downscaling, model, yearRange_key, ensemble)
       }
 
       if (newValues['Climate Signal']) {
         console.log("CLIMATE SIGNAL SELECTED")
-        const time = getYearRangeString(yearRange)
-        let url = [bucket+baseDir_l+downscaling+'/'+model+'/'+time+'/'+fname];
-        console.log("SIGNAL URL =", url)
-        setMapSource(url);
+        // const time = getYearRangeString(yearRange)
+        // let url = [bucket+baseDir_l+downscaling+'/'+model+'/'+time+'/'+fname];
+        // console.log("SIGNAL URL =", url)
+        // setMapSource(url);
+        setUrl(downscaling, model, yearRange, ensemble)
         setYearRange(Object.keys(settings.future_eras)[0]);
         setScaleDif(Scale_Values['dif_'+metric]);
         setClim([Clim_Ranges['dif_'+metric].min,
@@ -1753,6 +1769,27 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
+  const EnsembleBox = () => {
+    return(
+      <>
+      <Box sx={{ ...sx.label, mt: [3] }}>Ensemble</Box>
+      <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={handleEnsembleChange}
+          sx={{ mt: [1] }}
+          value={ensemble}
+       >
+
+       {settings.ensemble[model].map(ens => (
+          <option key={ens} value={ens}>
+          {ens}
+        </option>
+      ))}
+     </Select>
+     </>
+    );
+  };
 
   const MapChoicesBox = ({dif=false}) => {
     var downscalingChange;
@@ -1816,6 +1853,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           </option>
         ))}
       </Select>
+
+      {settings.ensemble !== null && <EnsembleBox />}
 
       <VariableChoiceBox climateSignal={computeChoice['Climate Signal']} />
       {(!computeChoice['Climate Signal'] &&

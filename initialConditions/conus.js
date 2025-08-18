@@ -111,5 +111,6 @@ export const settings = {
       },
   },
 
-
+  show_ensemble: false,
+  ensemble: null
 };
