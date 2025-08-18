@@ -77,7 +77,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const {center, setCenter, zoom, setZoom, onZoomChange } = zoomArgs
   const { theme } = useThemeUI();
   const [display, setDisplay] = useState(true);
-  console.log("INDEX SET DISPLAY =", setDisplay);
+  // console.log("INDEX SET DISPLAY =", setDisplay);
   const [reload, setReload] = useState(true);
   const [debug, setDebug] = useState(false);
   const [opacity, setOpacity] = useState(1);
@@ -102,13 +102,14 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     {'Low': true,
      'High': false});
 
+  const  [ensemble, setEnsemble] = useState('r1i1p1');
   // const [yearRange, setYearRange] = useState('1980_2010')
-  const [yearRange, setYearRange] = useState('1850_2005/r1i1p1/');
+  const [yearRange, setYearRange] = useState('1850_2005');
   // diff dataset variables for model to compare against
   const [scaleDif, setScaleDif] = useState(1.0);
   const [downscalingDif, setDownscalingDif] = useState('cmip5');
   const [modelDif, setModelDif] = useState('canesm2');
-  const [yearRangeDif, setYearRangeDif] = useState('1850_2005/r1i1p1/');
+  const [yearRangeDif, setYearRangeDif] = useState('1850_2005');
   const [obs, setObs] = useState('global/cru');
   const [obsDif, setObsDif] = useState('global');
 
@@ -151,7 +152,8 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
                     mapSourceDif, chartSourceDif, scaleDif,
                     bucket, chartHeight, computeChoice,
                     showClimateChange, showRegionPlot, bucketRes,
-                    showStates, showRivers, showHuc2, sideBySide, mapVal};
+                    showStates, showRivers, showHuc2, sideBySide, mapVal,
+                    ensemble};
   const setters = {
     setDisplay,
     setReload,
@@ -185,7 +187,8 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     setStates,
     setRivers,
     setHuc2,
-    setSideBySide
+    setSideBySide,
+    setEnsemble
   };
 
   const fillValue = 3.4028234663852886e38; // black on land, red nans
