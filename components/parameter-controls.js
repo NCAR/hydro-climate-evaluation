@@ -497,21 +497,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const handleDownscalingChange = useCallback((e) => {
     const downscaling = e.target.value;
     setDownscaling(downscaling);
-    let safemodel = model;
-    if (downscaling === 'maca') {
-      if (model === 'access1_3') {
-        setModel('noresm1_m');
-        safemodel = 'noresm1_m';
-      }
-    }
-    if (downscaling === 'nasa_nex') {
-      if (model === 'access1_3' || model === 'ccsm4') {
-        setModel('noresm1_m');
-        safemodel = 'noresm1_m';
-      }
-    }
 
-    setUrl(downscaling, safemodel, yearRange, ensemble);
+    let safe_model = checkDownscalingModel(downscaling);
+    let safe_ensemble = checkModelEnsemble(safe_model, downscaling);
+    setModel(safe_model);
+    setUrl(downscaling, safe_model, yearRange, safe_ensemble);
   });
 
   const handleDownscalingDifChange = useCallback((e) => {
@@ -535,12 +525,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setUrl(downscalingDif, safemodel, yearRangeDif, ensemble);
   });
 
-  function checkModelEnsemble(model) {
+  function checkModelEnsemble(model, downscaling) {
     let ens = ensemble;
-    console.log("ens =", ens)
     if (!ens) {
       return ens;
     }
+
     const ensList = settings.ensemble[downscaling][model];
     if (!ensList.includes(ens)) {
       ens = ensList[0];
@@ -549,9 +539,24 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     return ens;
   }
 
+  function checkDownscalingModel(downscaling) {
+    let mod = model
+    if (!mod) {
+      return mod;
+    }
+
+    const modList = Object.keys(settings.model[downscaling] || {});
+    if (!modList.includes(mod)) {
+      mod = modList[0];
+      setModel(mod);
+    }
+    return mod;
+  }
+
+
   const handleModelChange = useCallback((e) => {
     const model = e.target.value;
-    const ens = checkModelEnsemble(model);
+    const ens = checkModelEnsemble(model, downscaling);
     setModel(model);
     setUrl(downscaling, model, yearRange, ens);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
@@ -626,13 +631,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setUnits('num. of days');
     } else if (metric === 'drought_1yr') {
       setBand('d1yr');
-      setUnits('?');
+      setUnits('num. months SPI < -1');
     } else if (metric === 'drought_2yr') {
       setBand('d2yr');
-      setUnits('?');
+      setUnits('num. months SPI < -1');
     } else if (metric === 'drought_5yr') {
       setBand('d5yr');
-      setUnits('?');
+      setUnits('num. months SPI < -1');
     }
 
 
