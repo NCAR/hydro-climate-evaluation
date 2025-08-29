@@ -501,7 +501,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const handleDownscalingChange = useCallback((e) => {
     const downscaling = e.target.value;
     setDownscaling(downscaling);
-
     let safe_model = checkDownscalingModel(downscaling);
     let safe_ensemble = checkModelEnsemble(safe_model, downscaling);
     setModel(safe_model);
@@ -543,16 +542,51 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     return ens;
   }
 
+  function checkDownscaling(computeChoice) {
+    let ds = downscaling
+    if (!ds) {
+      return ds;
+    }
+
+    if (computeChoice['Climate Signal']) {
+      const dsList = Object.keys(settings.downscaling_climateSignal || {});
+      if (!dsList.includes(ds)) {
+        ds = dsList[0];
+        setDownscaling(ds);
+      }
+        console.log("DS =", ds)
+        console.log("dsList = ", dsList)
+
+    } else {
+      const dsListb = Object.keys(settings.past_eras).includes(yearRange)
+        ? Object.keys(settings.downscaling_past || {})
+        : Object.keys(settings.downscaling_future|| {});
+      if (!dsListb.includes(ds)) {
+        ds = dsListb[0];
+        setDownscaling(ds);
+      }
+    }
+    return ds;
+  };
+
   function checkDownscalingModel(downscaling) {
     let mod = model
     if (!mod) {
       return mod;
     }
 
-    const modList = Object.keys(settings.model[downscaling] || {});
-    if (!modList.includes(mod)) {
-      mod = modList[0];
-      setModel(mod);
+    if (computeChoice['Climate Signal']) {
+      const modList = Object.keys(settings.model_climateSignal[downscaling] || {});
+      if (!modList.includes(mod)) {
+        mod = modList[0];
+        setModel(mod);
+      }
+    } else {
+      const modList = Object.keys(settings.model[downscaling] || {});
+      if (!modList.includes(mod)) {
+        mod = modList[0];
+        setModel(mod);
+      }
     }
     return mod;
   }
@@ -1609,7 +1643,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         // handleFilterAndSetClimColormapName(newValues);
         // above func handled below
         let yearRange_key = yearRange;
-
+        const downscaling = checkDownscaling(newValues);
+        const model = checkDownscalingModel(downscaling);
+4
         if (newValues['Ave.']) {
           setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
           setColormapName(Default_Colormaps[metric]);
@@ -1838,7 +1874,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
-  const MapChoicesBox = ({dif=false}) => {
+  const MapChoicesBox = ({dif=false, climateSignal=false}) => {
     var downscalingChange;
     var downscalingVar;
     var modelChange;
@@ -1858,11 +1894,21 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       showMetricLabel = Object.keys(settings.past_eras).includes(yearRangeDif)
     }
 
-    const downscaling_d = Object.keys(settings.past_eras).includes(yearRange)
-          ? settings.downscaling_past
-          : settings.downscaling_future;
+    let downscaling_d, model_d
+    if (climateSignal == false) {
+      downscaling_d = Object.keys(settings.past_eras).includes(yearRange)
+        ? settings.downscaling_past
+        : settings.downscaling_future;
 
-    const model_d = settings.model[downscaling];
+      model_d = settings.model[downscaling];
+    } else {
+      downscaling_d = settings.downscaling_climateSignal;
+      model_d = settings.model_climateSignal[downscaling];
+      console.log("DD=",downscaling_d);
+      console.log("MD=",model_d);
+      console.log("downscaling", downscaling)
+    }
+
 
     // console.log("dd =", downscaling_d);
     // console.log("md =", model_d);
@@ -2037,7 +2083,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       return(
         <>
           <ClimateSignalChoiceBox />
-          <MapChoicesBox />
+          <MapChoicesBox climateSignal={true}/>
           <Box sx={{mt:4}}>RCP SCENARIO</Box>
           <Filter
            values={rcpValues}
