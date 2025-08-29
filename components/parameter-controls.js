@@ -23,6 +23,7 @@ const sx = {
   },
 };
 
+const dif_t = true;
 
 const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const { display, reload, debug, opacity, clim, month,
@@ -102,7 +103,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
 
-
   function setObsUrl(obs, yearRange, dif=false) {
     let time = getYearRangeString(yearRange);
     if (settings.obs_eras !== undefined) {
@@ -170,8 +170,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   }
 
   const [rcpValues, setRCPValues] = useState({'4.5': true,
-                                              '8.5': false
-                                             });
+                                              '8.5': false});
+
+  const [rcpValuesDif, setRCPValuesDif] = useState({'4.5': true,
+                                                    '8.5': false});
+
 
   const [computeClimateSignal, setComputeClimateSignal] =
           useState({'COMPUTE': false});
@@ -490,8 +493,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   const handleYearDifChange = useCallback((e) => {
     let yearRangeDif = e.target.value;
+    const dif = true
     setYearRangeDif(yearRangeDif);
-    setUrl(downscalingDif, modelDif, yearRangeDif, ensemble);
+    setUrl(downscalingDif, modelDif, yearRangeDif, ensemble, dif);
   });
 
   const handleDownscalingChange = useCallback((e) => {
@@ -1160,6 +1164,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     if (difObsOrDataChoice1['Model']) {
       setUrl(downscaling, model, yearRange, ensemble);
     } else {
+      const yearRange = Object.keys(settings.past_eras)[0];
+      setYearRange(yearRange);
       setObsUrl(obs, yearRange);
     }
   }, [difObsOrDataChoice1]);
@@ -1169,22 +1175,41 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     const difTrue = true;
     if (difObsOrDataChoice2['Model']) {
       setUrl(downscalingDif, modelDif, yearRangeDif, ensemble, difTrue);
-      } else {
+    } else {
+      const yearRangeDif = Object.keys(settings.past_eras)[0];
+      setYearRangeDif(yearRangeDif);
       setObsUrl(obs, yearRangeDif, difTrue);
-      }
+    }
   }, [difObsOrDataChoice2]);
 
   const handleRCPValues = useCallback((e) => {
     const choice = e;
-    console.log("RCP VALUES e =", e);
+    // console.log("RCP VALUES e =", e);
     setRCPValues(choice);
     if (methodAndModel["Method & Model"]) {
       // copied from getYearRangeString function
-      const time = getRCPKey(choice) + "." + yearRange
-      let url = [bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname];
-      setMapSource(url);
+      // const time = getRCPKey(choice) + "." + yearRange
+      // let url = [bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname];
+      // setMapSource(url);
     }
+      setUrl(downscaling, model, yearRange, ensemble);
   });
+
+  const handleRCPValuesDif = useCallback((e) => {
+    const choice = e;
+    // console.log("RCP Dif VALUES e =", e);
+    setRCPValuesDif(choice);
+    if (methodAndModel["Method & Model"]) {
+      // copied from getYearRangeString function
+      // const time = getRCPKey(choice) + "." + yearRangeDif
+      // let url = [bucket+baseDir+downscaling+'/'+model+'/'+time+'/'+fname];
+      // setMapSourceDif(url);
+
+    }
+    setUrl(downscalingDif, modelDif, yearRangeDif, ensemble, dif_t);
+  });
+
+
 
   const [shouldUpdateMapSource, setShouldUpdateMapSource] = useState(false);
 
@@ -1197,15 +1222,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setUrl(downscaling, model, yearRange, ensemble)
     } else if (choice['Observation']) {
       setAveChoice(choice);
-      // let time = getYearRangeString(yearRangeDif);
-      // if (settings.obs_eras !== undefined) {
-      //   time = 'hist.'+settings.obs_eras;
-      //   setYearRange(time);
-      //   console.log("FOO time", time);
-      // }
-      // const obs_l = obs
-      // console.log("obs_l", obs_l, "time", time);
-      // setMapSource([bucket+'/obs/'+obs_l+'/'+time+'/'+fname]);
+      const yearRange = Object.keys(settings.past_eras)[0];
+      setYearRange(yearRange);
       setObsUrl(obs, yearRange)
     }
   });
@@ -1423,8 +1441,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   const handleModelDifChange = useCallback((e) => {
     const modelDif = e.target.value;
+    const dif = true
     setModelDif(modelDif);
-    setUrl(downscalingDif, modelDif, yearRangeDif, ensemble, dif=true);
+    setUrl(downscalingDif, modelDif, yearRangeDif, ensemble, dif);
   });
 
 
@@ -1756,7 +1775,16 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
 
-  const YearRangeBox = ({downscaling_l, past = true, future = true}) => {
+  const YearRangeBox = ({downscaling_l, past = true, future = true,
+                         dif=false}) => {
+    let handle, val;
+    if (dif === true)  {
+      handle = handleYearDifChange;
+      val =  yearRangeDif;
+    } else {
+      handle = handleYearChange;
+      val =  yearRange;
+    }
     if (downscaling_l == 'gard_r2' ||
         downscaling_l == 'gard_r3') {
       future = false;
@@ -1766,16 +1794,16 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       ...(future ? settings.future_eras : {}),
     };
 
-    const value = Object.values(options)[0];
+    const value = Object.values(options)[0];  // dead code
     return(
       <>
       <Box sx={{ ...sx.label, mt: [3] }}>Year Range</Box>
       <Select
           sxSelect={{ bg: 'transparent' }}
           size='xs'
-          onChange={handleYearChange}
+          onChange={handle}
           sx={{ mt: [1] }}
-          value={yearRange}
+          value={val}
        >
 
        {Object.entries(options).map(([key, label]) => (
@@ -1815,16 +1843,19 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     var downscalingVar;
     var modelChange;
     var modelVar;
+    let showMetricLabel;
     if (!dif) {
       downscalingChange = handleDownscalingChange;
       downscalingVar = downscaling;
       modelChange = handleModelChange;
       modelVar = model;
+      showMetricLabel = Object.keys(settings.past_eras).includes(yearRange)
     } else {
       downscalingChange = handleDownscalingDifChange;
       downscalingVar = downscalingDif;
       modelChange = handleModelDifChange;
       modelVar = modelDif;
+      showMetricLabel = Object.keys(settings.past_eras).includes(yearRangeDif)
     }
 
     const downscaling_d = Object.keys(settings.past_eras).includes(yearRange)
@@ -1842,6 +1873,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
       {computeChoice['Ave.'] &&
        <YearRangeBox downscaling_l={downscaling} />}
+
 
       <Box sx={{ ...sx.label, mt: [4] }}>{settings.downscaling_title}</Box>
       <Select
@@ -1876,8 +1908,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       {settings.ensemble !== null && <EnsembleBox />}
 
       <VariableChoiceBox climateSignal={computeChoice['Climate Signal']} />
-      {(!computeChoice['Climate Signal'] &&
-        Object.keys(settings.past_eras).includes(yearRange))
+      {(!computeChoice['Climate Signal'] && showMetricLabel)
        && setMetricLabel()}
       {/* </Box> */}
     </>
@@ -1965,14 +1996,24 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
-  const RcpBox = () => {
-    if (Object.keys(settings.future_eras).includes(yearRange)) {
+  const RcpBox = ({dif=false}) => {
+    let showRcp, val, handle;
+    if (dif == true) {
+      showRcp = Object.keys(settings.future_eras).includes(yearRangeDif);
+      val = rcpValuesDif;
+      handle = handleRCPValuesDif
+    } else {
+      showRcp = Object.keys(settings.future_eras).includes(yearRange);
+      val = rcpValues;
+      handle = handleRCPValues
+    }
+    if (showRcp) {
       return(
       <>
       <Box sx={{mt:4}}>RCP SCENARIO</Box>
       <Filter
-        values={rcpValues}
-        setValues={handleRCPValues}
+        values={val}
+        setValues={handle}
         multiSelect={false}
       />
       </>
@@ -2018,11 +2059,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
              obsOrDataChoice={difObsOrDataChoice1}
              setObsOrDataChoice={setObsOrDataChoice1} />
           <YearRangeBox value={yearRange} downscaling_l={downscaling} />
-          {difObsOrDataChoice1['Model'] ? <MapChoicesBox
-                                           /> :
-                                          <ObsChoicesBox
-                                           onChange={handleObsChange}
-                                           value={obs} />
+
+          {difObsOrDataChoice1['Model'] ?
+                      <><MapChoicesBox /> <RcpBox /></>
+                      :
+                      <ObsChoicesBox onChange={handleObsChange} value={obs} />
           }
         </Box>
       );
@@ -2032,11 +2073,14 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           <DifferenceChoiceBox
              obsOrDataChoice={difObsOrDataChoice2}
              setObsOrDataChoice={setObsOrDataChoice2} />
-          <YearRangeBox value={yearRangeDif} downscaling_l={downscalingDif} />
-          {difObsOrDataChoice2['Model'] ? <MapChoicesBox dif={true} /> :
-                                          <ObsChoicesBox
-                                           onChange={handleObsDifChange}
-                                           value={obsDif} />
+          <YearRangeBox value={yearRangeDif} downscaling_l={downscalingDif}
+                        dif={dif_t}
+          />
+          {difObsOrDataChoice2['Model'] ?
+                      <><MapChoicesBox dif={true} />  <RcpBox dif={true} /></>
+                      :
+                      <ObsChoicesBox onChange={handleObsDifChange}
+                                     value={obsDif} />
           }
         </Box>
       );
