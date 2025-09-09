@@ -105,6 +105,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
 
+  const dif_false = false;
+  const dif_true = true;
   function setObsUrl(obs, yearRange, dif=false, region_l=null) {
     let time = getYearRangeString(yearRange);
     if (settings.obs_eras !== undefined) {
@@ -1230,13 +1232,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   // difference options
   useEffect(() => {
-    const difTrue = true;
     if (difObsOrDataChoice2['Model']) {
-      setUrl(downscalingDif, modelDif, yearRangeDif, ensemble, difTrue);
+      setUrl(downscalingDif, modelDif, yearRangeDif, ensemble, dif_true);
     } else {
       const yearRangeDif = Object.keys(settings.past_eras)[0];
       setYearRangeDif(yearRangeDif);
-      setObsUrl(obs, yearRangeDif, difTrue);
+      setObsUrl(obs, yearRangeDif, dif_true);
     }
   }, [difObsOrDataChoice2]);
 
@@ -1282,7 +1283,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setAveChoice(choice);
       const yearRange = Object.keys(settings.past_eras)[0];
       setYearRange(yearRange);
-      setObsUrl(obs, yearRange, false, region);
+      setObsUrl(obs, yearRange, dif_false, region);
     }
   });
 
@@ -1634,18 +1635,18 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       region_l = region
     }
     console.log("handleobschange region=", region)
-    setObsUrl(obs_l, yearRange, false, region_l);
+    setObsUrl(obs_l, yearRange, dif_false, region_l);
   });
   const handleObsDifChange = useCallback((e) => {
     const obs_l = e.target.value;
     setObsDif(obs_l);
-    setObsUrl(obs_l, yearRangeDif, true);
+    setObsUrl(obs_l, yearRangeDif, dif_true);
   });
 
   const handleRegionChange = useCallback((e) => {
     const region = e.target.value
     setRegion(region);
-    setObsUrl(obs, yearRange, false, region);
+    setObsUrl(obs, yearRange, dif_false, region);
   });
 
   const ObsChoiceRegionBox = () => {
