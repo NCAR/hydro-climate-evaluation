@@ -33,7 +33,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           mapSourceDif, chartSourceDif, scaleDif,
           chartHeight, computeChoice,
           showClimateChange, showRegionPlot, bucketRes,
-          showStates, showRivers, showHuc2, sideBySide, mapVal, ensemble
+          showStates, showRivers, showHuc2, sideBySide, mapVal, ensemble,
+          region
         } = getters;
   const {
     setDisplay,
@@ -68,7 +69,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setRivers,
     setHuc2,
     setSideBySide,
-    setEnsemble
+    setEnsemble,
+    setRegion,
   } = setters;
 
 
@@ -103,15 +105,20 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
 
-  function setObsUrl(obs, yearRange, dif=false) {
+  function setObsUrl(obs, yearRange, dif=false, region_l=null) {
     let time = getYearRangeString(yearRange);
     if (settings.obs_eras !== undefined) {
       time = 'hist.'+settings.obs_eras;
       setYearRange(time);
-      console.log("FOO time", time);
     }
 
-    const url= `${bucket}/obs/${obs}/${time}/${fname}`;
+    let url;
+    if (region_l == null) {
+      url= `${bucket}/obs/${obs}/${time}/${fname}`;
+    } else {
+      url= `${bucket}/obs/${region_l}/${obs}/${time}/${fname}`;
+    }
+
     if (dif) {
       setMapSourceDif([url]);
     } else {
@@ -234,15 +241,15 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }  else if (metric === 'eli_t') {
       label = 'eli_t';
       description =
-            ['Seasonal mean',
-             'temperature',
-             'Dec/ Jan/Feb'];
+            ['Temperature',
+             'ENSO Longitude',
+             'Index'];
     }  else if (metric === 'eli_p') {
       label = 'eli_p';
       description =
-            ['Seasonal mean',
-             'precipitation',
-             'Dec/Jan/Feb'];
+            ['Precip',
+             'ENSO Longitude',
+             'Index'];
     }  else if (metric === 'djf_t') {
       label = 'djf_t';
       description =
@@ -613,6 +620,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     } else if (metric === 'n34t') {
       setBand('n34t');
       setUnits('correlation');
+    } else if (metric === 'eli_t') {
+      setBand('elit');
+      setUnits('°E');
+    } else if (metric === 'eli_p') {
+      setBand('elip');
+      // average longitude of cells capable of deep convection (SST>28C)
+      setUnits('°E');
     }  else if (metric === 'ptrend') {
       setBand('ptre');
       setUnits('mm per year');
@@ -837,6 +851,16 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     maca: 'MACA',
     nasa_nex: 'NASA-NEX'
   };
+
+  const obsPP = {
+    conus404: 'Conus404',
+    gmet: 'GMET',
+    gridmet: 'gridMET',
+    livneh: 'Livneh',
+    nclimgrid: 'nClimGrid',
+    nldas: 'NLDAS',
+    prism: 'PRISM',
+  }
 
 
   // 13 = combinations
@@ -1258,7 +1282,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setAveChoice(choice);
       const yearRange = Object.keys(settings.past_eras)[0];
       setYearRange(yearRange);
-      setObsUrl(obs, yearRange)
+      setObsUrl(obs, yearRange, false, region);
     }
   });
 
@@ -1552,13 +1576,24 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
   const DifferenceLegend = () => {
+    let a_label, b_label
+    if (difObsOrDataChoice1['Model']) {
+      a_label = `${modelPP[model]} downscaled with ${downscalingPP[downscaling]}`
+    } else {
+      a_label = `${obsPP[obs]} observation`
+    }
+    if (difObsOrDataChoice2['Model']) {
+      b_label = `${modelPP[modelDif]} downscaled with ${downscalingPP[downscalingDif]}`
+    } else {
+      b_label = `${obsPP[obsDif]} observation`
+    }
+
+
     return (
       <Box sx={{ mt: [2], justifyContent: 'center'}}>
-        {modelPP[model]} downscaled
-        with {downscalingPP[downscaling]} <br />
+        {a_label} <br />
         minus <br />
-        {modelPP[modelDif]} downscaled
-        with {downscalingPP[downscalingDif]} <br />
+        {b_label} <br />
       </Box>
     );
   };
@@ -1594,14 +1629,45 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const handleObsChange = useCallback((e) => {
     const obs_l = e.target.value;
     setObs(obs_l);
-    setObsUrl(obs_l, yearRange);
+    let region_l = null;
+    if (settings.obs_lev2 != null) {
+      region_l = region
+    }
+    console.log("handleobschange region=", region)
+    setObsUrl(obs_l, yearRange, false, region_l);
   });
   const handleObsDifChange = useCallback((e) => {
     const obs_l = e.target.value;
     setObsDif(obs_l);
-    setObsUrl(obs_l, yearRangeDif, dif=true);
+    setObsUrl(obs_l, yearRangeDif, true);
   });
 
+  const handleRegionChange = useCallback((e) => {
+    const region = e.target.value
+    setRegion(region);
+    setObsUrl(obs, yearRange, false, region);
+  });
+
+  const ObsChoiceRegionBox = () => {
+    return (
+      <>
+      <Box sx={{ ...sx.label, mt: [3] }}>{settings.obs_lev2_title}</Box>
+      <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={handleRegionChange}
+        sx={{ mt: [1] }}
+        value={region}
+      >
+      {Object.entries(settings.obs_lev2).map(([key, label]) => (
+          <option key={key} value={key}>
+          {label}
+        </option>
+      ))}
+      </Select>
+      </>
+    );
+  };
 
   const ObsChoicesBox = ({onChange, value, label='Dataset'}) => {
     return (
@@ -1620,6 +1686,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         </option>
       ))}
       </Select>
+      {settings.obs_lev2 && <ObsChoiceRegionBox/>}
       <VariableChoiceBox />
       {setMetricLabel()}
       </>
@@ -1977,6 +2044,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       );
     } else if (aveChoice['Observation']) {
       setYearRange(Object.keys(settings.past_eras)[0]);
+
       // if (settings.obs_era !== undefined) {
       //   console.log("FOO RIGHT HERE");
       //   setYearRange(settings.obs_era);

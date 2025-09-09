@@ -17,6 +17,7 @@ export const Scale_Values = Object.freeze({
   dif_mam_t: tempDif,
   dif_jja_t: tempDif,
   dif_son_t: tempDif,
+  dif_ann_t: tempDif,
 
   // precip variables
   dif_prec: precipDif,
@@ -28,6 +29,7 @@ export const Scale_Values = Object.freeze({
   dif_mam_p: precipDif,
   dif_jja_p: precipDif,
   dif_son_p: precipDif,
+  dif_ann_p: precipDif,
 
   // drought
   dif_drought_1yr: 0.1,
@@ -35,8 +37,8 @@ export const Scale_Values = Object.freeze({
   dif_drought_5yr: 0.1,
 
   // new cmip variables
-  eli_t: tempDif,
-  eli_p: precipDif,
+  eli_t: 0.1,
+  eli_p: 0.1,
 });
 
 export const Clim_Ranges = Object.freeze({
@@ -94,18 +96,18 @@ export const Clim_Ranges = Object.freeze({
   dif_freezethaw: { max: 50, min: -50 },
 
   // drought
-  drought_1yr: { max: 20, min: 0 },
-  drought_2yr: { max: 20, min: 0 },
-  drought_5yr: { max: 20, min: 0 },
-  dif_drought_1yr: { max: 4, min: -4 },
-  dif_drought_2yr: { max: 4, min: -4 },
-  dif_drought_5yr: { max: 4, min: -4 },
+  drought_1yr: { max: 12, min: 0 },
+  drought_2yr: { max: 24, min: 0 },
+  drought_5yr: { max: 60, min: 0 },
+  dif_drought_1yr: { max: 12, min: -12 },
+  dif_drought_2yr: { max: 24, min: -24 },
+  dif_drought_5yr: { max: 60, min: -60 },
 
   // new cmip variables
-  eli_t: { max: 30, min: 0 },
-  eli_p: { max: 70, min: 0 },
-  dif_eli_t: { max: 4, min: -4 },
-  dif_eli_p: { max: 50, min: -50 },
+  eli_t: { max: 1, min: -1 },
+  eli_p: { max: 1, min: -1 },
+  dif_eli_t: { max: 1, min: -1 },
+  dif_eli_p: { max: 1, min: -1 },
 });
 
 
@@ -182,9 +184,9 @@ export const Default_Colormaps = Object.freeze({
   dif_freezethaw: dif_precip_colormap,
 
   // drought
-  drought_1yr: dif_precip_colormap,
-  drought_2yr: dif_precip_colormap,
-  drought_5yr: dif_precip_colormap,
+  dif_drought_1yr: dif_precip_colormap,
+  dif_drought_2yr: dif_precip_colormap,
+  dif_drought_5yr: dif_precip_colormap,
 
   // new cmip variables
   eli_t: temp_colormap,
