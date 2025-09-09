@@ -2284,7 +2284,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     <Box
       sx={{ position: 'absolute', top: 20, left: 20,
             backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '10px',
-            borderRadius: '5px'}}
+            borderRadius: '5px',
+            maxHeight: '95vh',     // or any height you want
+            overflowY: 'auto'       // adds vertical scrollbar if needed
+          }}
     >
       <ComputeChoiceFilter />
     </Box>
@@ -2296,7 +2299,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     return(
     <Box sx={{ position: 'absolute',
                bottom: 20,
-               left: 20,
+               left: metricPerformance["Metric Performance"] ? 'auto' : 20,
+               right: metricPerformance["Metric Performance"] ? 20 : 'auto',
                '@media screen and (max-height: 850px)': {
                  left: 'auto',
                  right: 20, // Move to the right if the window is too small
