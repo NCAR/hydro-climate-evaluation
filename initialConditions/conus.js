@@ -2,7 +2,7 @@ export const settings = {
   lat: 38,
   lon: -97,
   zoom: 4,
-  climateSignal: false,
+  climateSignal: true,
   dif: true,
   observation: true,
   bucket: 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/',
@@ -51,6 +51,8 @@ export const settings = {
       '2076_2099': '2076-2099'
   },
 
+  obs_lev2_title: null,
+  obs_lev2: null,
 
   downscaling_title: "Downscaling Method",
   downscaling_past: {
@@ -110,6 +112,54 @@ export const settings = {
           miroc5: 'MIROC5',
       },
   },
+
+  downscaling_climateSignal: {
+      icar: 'ICAR',
+      icarwest: 'ICAR West',
+      loca_8th: 'LOCA_8th',
+      maca: 'MACA',
+      nasa_nex: 'NASA_NEX',
+  },
+
+  model_climateSignal: {
+      icar: {
+          access1_3: 'access1_3',
+          canesm2: 'canesm2',
+          ccsm4: 'ccsm4',
+          miroc5: 'miroc5',
+          mri_cgcm3: 'mri_cgcm3',
+          noresm1_m: 'noresm1_m',
+      },
+      icarwest: {
+          canesm2: 'canesm2',
+          ccsm4: 'ccsm4',
+          miroc5: 'miroc5',
+          mri_cgcm3: 'mri_cgcm3',
+      },
+      loca_8th: {
+          access1_3: 'access1_3',
+          canesm2: 'canesm2',
+          ccsm4: 'ccsm4',
+          miroc5: 'miroc5',
+          mri_cgcm3: 'mri_cgcm3',
+          noresm1_m: 'noresm1_m',
+      },
+      maca: {
+          canesm2: 'canesm2',
+          ccsm4: 'ccsm4',
+          miroc5: 'miroc5',
+          mri_cgcm3: 'mri_cgcm3',
+          noresm1_m: 'noresm1_m',
+      },
+      nasa_nex: {
+          canesm2: 'canesm2',
+          miroc5: 'miroc5',
+          mri_cgcm3: 'mri_cgcm3',
+          noresm1_m: 'noresm1_m',
+      },
+  },
+
+
 
   show_ensemble: false,
   ensemble: null

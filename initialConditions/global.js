@@ -4,7 +4,7 @@ export const settings = {
   zoom: 1.5,
   climateSignal: false,
   dif: false,
-  observation: false,
+  observation: true,
   bucket: 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/global/',
 
   variables: [
@@ -23,9 +23,30 @@ export const settings = {
   ],
   variables_trend: [],
 
-
-  obs_lev1_title: "Region",
+  obs_lev1_title: "Dataset",
   obs_lev1: {
+      'cru': "CRU",
+      'era_5': "ERA-5",
+      'udel': "UDel",
+  },
+
+  obs_lev2_title: "Region",
+  obs_lev2: {
+    'global': 'Global',
+  },
+  obs_lev2_full: {
+    'global': 'Global',
+    'midwest': 'Midwest',
+    'northeast':'Northeast',
+    'northwest':'Northwest',
+    'southeast':'Southeast',
+    'southwest':'Southwest',
+    'northerngreatplains':'Northern Great Plains',
+    'southerngreatplains':'Southern Great Plains',
+  },
+
+  obs_lev1_title_tmp: "Region",
+  obs_lev1_tmp: {
     global: "Global",
     midwest: "Midwest",
     northeast: "Northeast",
@@ -80,11 +101,11 @@ export const settings = {
         }
     },
 
-  obs_eras_test: {1850_2100: '1850-2100'},
+  obs_eras_test: {1850_2100: '1850_2100'},
   obs_eras: '1850_2100',
 
   past_eras: {
-      1850_2005: '1850-2005'
+      '1850_2005': '1850_2005'
   },
   future_eras: {
   },
