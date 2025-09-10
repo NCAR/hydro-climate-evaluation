@@ -57,6 +57,7 @@ export const settings = {
   downscaling_title: "Downscaling Method",
   downscaling_past: {
       'icar':'ICAR',
+      'icarwest':'ICAR West',
       'gard_r2':'GARD_r2',
       'gard_r3':'GARD_r3',
       'loca_8th':'LOCA_8th',
@@ -66,52 +67,26 @@ export const settings = {
 
   downscaling_future: {
       'icar':'ICAR',
+      'icarwest':'ICAR West',
       'loca_8th':'LOCA_8th',
       'maca':'MACA',
       'nasa_nex':'NASA-NEX',
   },
 
-  model: {
-      icar: {
-          noresm1_m: 'NorESM-M',
-          access1_3: 'ACCESS1-3',
-          canesm2: 'CanESM2',
-          ccsm4: 'CCSM4',
-          miroc5: 'MIROC5',
-      },
-      gard_r2: {
-          noresm1_m: 'NorESM-M',
-          access1_3: 'ACCESS1-3',
-          canesm2: 'CanESM2',
-          ccsm4: 'CCSM4',
-          miroc5: 'MIROC5',
-      },
-      gard_r3: {
-          noresm1_m: 'NorESM-M',
-          access1_3: 'ACCESS1-3',
-          canesm2: 'CanESM2',
-          ccsm4: 'CCSM4',
-          miroc5: 'MIROC5',
-      },
-      loca_8th: {
-          noresm1_m: 'NorESM-M',
-          access1_3: 'ACCESS1-3',
-          canesm2: 'CanESM2',
-          ccsm4: 'CCSM4',
-          miroc5: 'MIROC5',
-      },
-      maca: {
-          noresm1_m: 'NorESM-M',
-          canesm2: 'CanESM2',
-          ccsm4: 'CCSM4',
-          miroc5: 'MIROC5',
-      },
-      nasa_nex: {
-          noresm1_m: 'NorESM-M',
-          canesm2: 'CanESM2',
-          miroc5: 'MIROC5',
-      },
+  model: {icar: {access1_3: "ACCESS1-3", canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5",
+      mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"}, gard_r3: {access1_3: "ACCESS1-3",
+      canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3",
+      noresm1_m: "NorESM1-M"}, maca: {canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5",
+      mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"}, gard_r2: {access1_3: "ACCESS1-3",
+      canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3",
+      noresm1_m: "NorESM1-M"}, loca_8th: {access1_3: "ACCESS1-3", canesm2: "CanESM2",
+      ccsm4: "CCSM4", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"},
+      icarwest: {canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3"},
+      nasa_nex: {canesm2: "CanESM2", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"}
   },
+
+
+
 
   downscaling_climateSignal: {
       icar: 'ICAR',
@@ -123,39 +98,39 @@ export const settings = {
 
   model_climateSignal: {
       icar: {
-          access1_3: 'access1_3',
-          canesm2: 'canesm2',
-          ccsm4: 'ccsm4',
-          miroc5: 'miroc5',
-          mri_cgcm3: 'mri_cgcm3',
-          noresm1_m: 'noresm1_m',
+          access1_3: 'ACCESS1-3',
+          canesm2: 'CanESM2',
+          ccsm4: 'CCSM4',
+          miroc5: 'MIROC5',
+          mri_cgcm3: 'MRI-CGCM3',
+          noresm1_m: 'NorESM1-M',
       },
       icarwest: {
-          canesm2: 'canesm2',
-          ccsm4: 'ccsm4',
-          miroc5: 'miroc5',
-          mri_cgcm3: 'mri_cgcm3',
+          canesm2: 'CanESM2',
+          ccsm4: 'CCSM4',
+          miroc5: 'MIROC5',
+          mri_cgcm3: 'MRI-CGCM3',
       },
       loca_8th: {
-          access1_3: 'access1_3',
-          canesm2: 'canesm2',
-          ccsm4: 'ccsm4',
-          miroc5: 'miroc5',
-          mri_cgcm3: 'mri_cgcm3',
-          noresm1_m: 'noresm1_m',
+          access1_3: 'ACCESS1-3',
+          canesm2: 'CanESM2',
+          ccsm4: 'CCSM4',
+          miroc5: 'MIROC5',
+          mri_cgcm3: 'MRI-CGCM3',
+          noresm1_m: 'NorESM1-M',
       },
       maca: {
-          canesm2: 'canesm2',
-          ccsm4: 'ccsm4',
-          miroc5: 'miroc5',
-          mri_cgcm3: 'mri_cgcm3',
-          noresm1_m: 'noresm1_m',
+          canesm2: 'CanESM2',
+          ccsm4: 'CCSM4',
+          miroc5: 'MIROC5',
+          mri_cgcm3: 'MRI-CGCM3',
+          noresm1_m: 'NoRESM1-M',
       },
       nasa_nex: {
-          canesm2: 'canesm2',
-          miroc5: 'miroc5',
-          mri_cgcm3: 'mri_cgcm3',
-          noresm1_m: 'noresm1_m',
+          canesm2: 'CanESM2',
+          miroc5: 'MIROC5',
+          mri_cgcm3: 'MRI-CGCM3',
+          noresm1_m: 'NoRESM1-M',
       },
   },
 
