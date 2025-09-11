@@ -2187,7 +2187,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           <DifferenceChoiceBox
              obsOrDataChoice={difObsOrDataChoice1}
              setObsOrDataChoice={setObsOrDataChoice1} />
-          <YearRangeBox value={yearRange} downscaling_l={downscaling} />
+          <YearRangeBox value={yearRange} downscaling_l={downscaling}
+                        future={false}
+           />
 
           {difObsOrDataChoice1['Model'] ?
                       <><MapChoicesBox /> <RcpBox /></>
@@ -2203,7 +2205,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
              obsOrDataChoice={difObsOrDataChoice2}
              setObsOrDataChoice={setObsOrDataChoice2} />
           <YearRangeBox value={yearRangeDif} downscaling_l={downscalingDif}
-                        dif={dif_t}
+                        future={false} dif={dif_t}
           />
           {difObsOrDataChoice2['Model'] ?
                       <><MapChoicesBox dif={true} />  <RcpBox dif={true} /></>
