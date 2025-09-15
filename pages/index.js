@@ -110,6 +110,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [downscalingDif, setDownscalingDif] = useState('nasa_nex');
   const [modelDif, setModelDif] = useState('canesm2');
   const [yearRangeDif, setYearRangeDif] = useState('1981_2004');
+  const [region, setRegion] = useState(null);
   const [obs, setObs] = useState('livneh');
   const [obsDif, setObsDif] = useState('livneh');
 
@@ -151,7 +152,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
                     bucket, chartHeight, computeChoice,
                     showClimateChange, showRegionPlot, bucketRes,
                     showStates, showRivers, showHuc2, sideBySide, mapVal,
-                    ensemble};
+                    ensemble, region};
   const setters = {
     setDisplay,
     setReload,
@@ -186,7 +187,8 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     setRivers,
     setHuc2,
     setSideBySide,
-    setEnsemble
+    setEnsemble,
+    setRegion
   };
 
   const fillValue = 3.4028234663852886e38; // black on land, red nans
@@ -283,7 +285,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     {/* projection = equirectangular */}
     <Raster
       setMapVal={setMapVal}
-      key={`${mapSource}-${mapSourceDif}-${reload}-${sideBySide}-${JSON.stringify(computeChoice)}`}
+      key={`${mapSource[0]}-${mapSourceDif[0]}-${reload}-${sideBySide}-${JSON.stringify(computeChoice)}`}
       colormap={colormap}
       clim={clim}
       display={display}
