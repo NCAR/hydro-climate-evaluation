@@ -12,6 +12,7 @@ import { openGroup } from "zarr";
 import { Scale_Values, Clim_Ranges} from './variableSettings';
 import { Default_Colormaps, readmeUrl } from './variableSettings';
 import { getData } from './getData';
+import {metrics_settings} from '../metrics/metrics.js';
 
 const sx = {
   label: {
@@ -77,6 +78,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const [chartToggle, setChartToggle] = useState(false);
 
   const [units, setUnits] = useState('°C');
+
+
+  // TODO: HANDLE ALL THE REGIONS
+  const [metricRegion, setMetricRegion] = useState('desertsouthwest');
 
   const [baseDir, setBaseDir] = useState('map/');
 
@@ -868,204 +873,44 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
 
   // 13 = combinations
-  const combinations =
-        [
-          "ICAR with ACCESS1-3",
-          "ICAR with CanESM2",
-          "ICAR with CCSM4",
-          "ICAR with MIROC5",
-          "ICAR with NorESM1-M",
-          "GARD_r2 with ACCESS1-3",
-          "GARD_r2 with CanESM2",
-          "GARD_r2 with CCSM4",
-          "GARD_r2 with MIROC5",
-          "GARD_r2 with NorESM1-M",
-          "GARD_r3 with ACCESS1-3",
-          "GARD_r3 with CanESM2",
-          "GARD_r3 with CCSM4",
-          "GARD_r3 with MIROC5",
-          "GARD_r3 with NorESM1-M",
-          "LOCA_8th with ACCESS1-3",
-          "LOCA_8th with CanESM2",
-          "LOCA_8th with CCSM4",
-          "LOCA_8th with MIROC5",
-          "LOCA_8th with NorESM1-M",
-          "MACA with CanESM2",
-          "MACA with CCSM4",
-          "MACA with MIROC5",
-          "MACA with NorESM1-M",
-          "NASA-NEX with CanESM2",
-          "NASA-NEX with MIROC5",
-          "NASA-NEX with NorESM1-M",
-        ];
+  const combinations = metrics_settings['combinations'];
+  const combinations_downscaling = metrics_settings['combinations_downscaling'];
+  const combinations_model = metrics_settings['combinations_model'];
 
-  const combinations_downscaling =
-        [
-          "icar",
-          "icar",
-          "icar",
-          "icar",
-          "icar",
-          "gard_r2",
-          "gard_r2",
-          "gard_r2",
-          "gard_r2",
-          "gard_r2",
-          "gard_r3",
-          "gard_r3",
-          "gard_r3",
-          "gard_r3",
-          "gard_r3",
-          "loca_8th",
-          "loca_8th",
-          "loca_8th",
-          "loca_8th",
-          "loca_8th",
-          "maca",
-          "maca",
-          "maca",
-          "maca",
-          "nasa_nex",
-          "nasa_nex",
-          "nasa_nex",
-        ];
-
-  const combinations_model =
-        [
-          "access1_3",
-          "canesm2",
-          "ccsm4",
-          "miroc5",
-          "noresm1_m",
-          "access1_3",
-          "canesm2",
-          "ccsm4",
-          "miroc5",
-          "noresm1_m",
-          "access1_3",
-          "canesm2",
-          "ccsm4",
-          "miroc5",
-          "noresm1_m",
-          "access1_3",
-          "canesm2",
-          "ccsm4",
-          "miroc5",
-          "noresm1_m",
-          "canesm2",
-          "ccsm4",
-          "miroc5",
-          "noresm1_m",
-          "canesm2",
-          "miroc5",
-          "noresm1_m",
-        ];
-  // metric scores: future, read in from dataset
-  // const jja_t_std_score = [13, 2, 1, 22, 5, 14, 9, 4, 25, 11, 15, 8, 3, 24,
-  //                          10, 23, 18, 16, 26, 20, 19, 17, 27, 21, 6, 12, 7];
-  // const jja_t_r_score = [16, 12, 13, 21, 19, 11, 24, 22, 17, 18, 10, 23,
-  //                        20, 15, 14, 9, 5, 4, 8, 6, 1, 2, 7, 3, 26, 25, 27];
-  // gard between 4 and 15, 10 gar models
-  // hack to avoid these files
-  const gadd = 999;
-  const djf_t_std_score = [8, 9, 1, 15, 14,
-                           7+gadd, 5+gadd, 3+gadd, 11+gadd, 13+gadd, 6+gadd, 4+gadd, 2+gadd, 10+gadd, 12+gadd,
-                           18, 23, 16, 26, 24, 22, 17, 27, 25, 19, 21, 20];
-  const mam_t_std_score = [7, 4, 1, 27, 17,
-                           9+gadd, 6+gadd, 3+gadd, 16+gadd, 19+gadd, 8+gadd, 5+gadd, 2+gadd, 15+gadd, 18+gadd,
-                           20, 24, 12, 21, 26, 23, 14, 22, 25, 11, 10, 13];
-  const jja_t_std_score = [13, 2, 1, 22, 5,
-                           14+gadd, 9+gadd, 4+gadd, 25+gadd, 11+gadd, 15+gadd, 8+gadd, 3+gadd, 24+gadd, 10+gadd,
-                           23, 18, 16, 26, 20, 19, 17, 27, 21, 6, 12, 7];
-  const son_t_std_score = [5, 3, 1, 17, 2,
-                           21+gadd, 12+gadd, 8+gadd, 26+gadd, 10+gadd, 23+gadd, 18+gadd, 9+gadd, 27+gadd, 14+gadd,
-                           19, 22, 13, 25, 16, 20, 15, 24, 11, 6, 7, 4];
-  const djf_p_std_score = [2, 1, 3, 7, 4,
-                           15+gadd, 9+gadd, 11+gadd, 13+gadd, 10+gadd, 21+gadd, 12+gadd, 18+gadd, 16+gadd, 14+gadd,
-                           23, 27, 25, 26, 19, 24, 20, 22, 17, 8,  6, 5];
-  const mam_p_std_score = [23, 24, 26, 25, 27,
-                           1+gadd, 7+gadd, 14+gadd, 3+gadd, 15+gadd, 9+gadd, 17+gadd, 19+gadd, 5+gadd, 22+gadd,
-                           13, 21, 8, 11, 18, 20, 10, 6, 16, 12,  2, 4];
-  const jja_p_std_score = [25, 24, 26, 23, 27,
-                           4+gadd, 2+gadd, 8+gadd, 1+gadd, 17+gadd, 20+gadd, 14+gadd, 21+gadd, 18+gadd, 22+gadd,
-                           3, 7, 5, 6, 11, 12, 10, 9, 13, 16, 15, 19];
-  const son_p_std_score = [1, 3, 2, 4, 8,
-                           7+gadd, 16+gadd, 9+gadd, 15+gadd, 12+gadd, 6+gadd, 17+gadd, 11+gadd, 18+gadd, 13+gadd,
-                           19, 23, 27, 25, 22, 20, 26, 24, 21, 5, 14, 10];
-
-  const n34t_r_score = [1, 5, 8, 6, 7,
-                        4+gadd, 16+gadd, 21+gadd, 23+gadd, 24+gadd, 3+gadd, 13+gadd, 20+gadd, 22+gadd, 25+gadd,
-                        2, 12, 15, 27, 19, 10, 17, 14, 9, 11, 26, 18];
-  const ttrend_r_score = [27, 8, 10, 19, 5,
-                          15+gadd, 14+gadd, 2+gadd, 18+gadd, 1+gadd, 16+gadd, 12+gadd, 4+gadd, 21+gadd, 3+gadd,
-                          26, 25, 6, 23, 13, 20, 9, 24, 7, 17, 22, 11];
-  const t90_r_score = [19, 13, 12, 24, 15,
-                       11+gadd, 23+gadd, 21+gadd, 16+gadd, 18+gadd, 10+gadd, 22+gadd, 20+gadd, 14+gadd, 17+gadd,
-                       9, 6, 4, 8, 5, 2, 3, 7, 1, 26, 25, 27];
-  const t99_r_score = [22, 19, 12, 24, 23,
-                       11+gadd, 21+gadd, 18+gadd, 15+gadd, 16+gadd, 10+gadd, 20+gadd, 17+gadd, 13+gadd, 14+gadd,
-                       7, 9, 8, 3, 4, 5, 6, 2, 1, 26, 25, 27];
-  const djf_t_r_score = [16, 20, 24, 17, 23,
-                         11+gadd, 15+gadd, 22+gadd, 13+gadd, 19+gadd, 10+gadd, 14+gadd, 21+gadd, 12+gadd, 18+gadd,
-                         1, 9, 4, 7, 5, 8, 3, 6, 2, 25, 26, 27];
-  const mam_t_r_score = [24, 21, 16, 22, 23,
-                         20+gadd, 14+gadd, 11+gadd, 15+gadd, 18+gadd, 19+gadd, 12+gadd, 10+gadd, 13+gadd, 17+gadd,
-                         8, 4, 3, 6, 9, 2, 1, 5, 7, 25, 26, 27];
-  const jja_t_r_score = [16, 12, 13, 21, 19,
-                         11+gadd, 24+gadd, 22+gadd, 17+gadd, 18+gadd, 10+gadd, 23+gadd, 20+gadd, 15+gadd, 14+gadd,
-                         9, 5, 4, 8, 6, 1, 2, 7, 3, 26, 25, 27];
-  const son_t_r_score = [10, 15, 16, 18, 23,
-                         12+gadd, 17+gadd, 21+gadd, 14+gadd, 24+gadd, 11+gadd, 19+gadd, 20+gadd, 13+gadd, 22+gadd,
-                         8, 5, 6, 9, 4, 2, 3, 7, 1, 26, 25, 27];
-  const n34pr_r_score = [14, 21, 15, 16, 6,
-                         19+gadd, 23+gadd, 18+gadd, 20+gadd, 17+gadd, 25+gadd, 27+gadd, 26+gadd, 24+gadd, 22+gadd,
-                         12, 13, 8, 3, 5, 9, 11, 2, 1, 10, 4, 7];
-  const ptrend_r_score = [10, 9, 14, 25, 7,
-                          20+gadd, 17+gadd, 13+gadd, 23+gadd, 11+gadd, 18+gadd, 16+gadd, 8+gadd, 22+gadd, 19+gadd,
-                          21, 6, 4, 24, 5, 15, 3, 27, 1, 12, 26, 2];
-  const pr90_r_score = [13, 10, 12, 14, 11,
-                        21+gadd, 15+gadd, 20+gadd, 22+gadd, 17+gadd, 24+gadd, 16+gadd, 19+gadd, 23+gadd, 18+gadd,
-                        3, 4, 5, 2, 1, 6, 7, 9, 8, 25, 27, 26];
-  const pr99_r_score = [21, 10, 17, 24, 13,
-                        19+gadd, 14+gadd, 15+gadd, 23+gadd, 11+gadd, 20+gadd, 18+gadd, 12+gadd, 22+gadd, 16+gadd,
-                        5, 3, 2, 4, 1, 8, 6, 9, 7, 27, 25, 26];
-  const djf_p_r_score = [25, 21, 26, 24, 27,
-                         15+gadd, 16+gadd, 18+gadd, 17+gadd, 19+gadd, 12+gadd, 10+gadd, 11+gadd, 13+gadd, 14+gadd,
-                         5, 2, 1, 4, 3, 6, 7, 8, 9, 20, 22, 23];
-  const mam_p_r_score = [26, 22, 21, 25, 27,
-                         20+gadd, 14+gadd, 10+gadd, 15+gadd, 13+gadd, 18+gadd, 12+gadd, 11+gadd, 17+gadd, 16+gadd,
-                         5, 4, 2, 3, 1, 8, 7, 9, 6, 23, 24, 19];
-  const jja_p_r_score = [24, 26, 25, 27, 23,
-                         18+gadd, 22+gadd, 20+gadd, 19+gadd, 21+gadd, 13+gadd, 17+gadd, 15+gadd, 16+gadd, 14+gadd,
-                         2, 6, 4, 3, 1, 9, 7, 8, 5, 11, 12, 10];
-  const son_p_r_score = [24, 25, 26, 23, 27,
-                         17+gadd, 21+gadd, 18+gadd, 15+gadd, 12+gadd, 16+gadd, 14+gadd, 10+gadd, 13+gadd, 11+gadd,
-                         4, 1, 3, 5, 2, 8, 7, 9, 6, 20, 19, 22];
-
-  const n34t_rmse_score = [1, 8, 26, 5, 15,
-                           7+gadd, 4+gadd, 25+gadd, 10+gadd, 19+gadd, 6+gadd, 3+gadd, 24+gadd, 12+gadd, 18+gadd,
-                           2, 13, 23, 11, 16, 22, 27, 14, 20, 21, 9, 17];
-  const ttrend_rmse_score = [8, 15, 13, 26, 17,
-                             6+gadd, 18+gadd, 9+gadd, 24+gadd, 12+gadd, 5+gadd, 19+gadd, 10+gadd, 23+gadd, 11+gadd,
-                             16, 14, 7, 22, 3, 20, 21, 27, 2, 4, 25, 1];
-  const t90_rmse_score = [25, 26, 27, 20, 22,
-                          11+gadd, 16+gadd, 19+gadd, 12+gadd, 15+gadd, 10+gadd, 17+gadd, 18+gadd, 13+gadd, 14+gadd,
-                          1, 7, 4, 2, 5, 8, 6, 9, 3, 23, 21, 24];
-  const t99_rmse_score = [22, 23, 26, 21, 20,
-                          11+gadd, 16+gadd, 19+gadd, 12+gadd, 15+gadd, 10+gadd, 17+gadd, 18+gadd, 13+gadd, 14+gadd,
-                          5, 8, 4, 2, 1, 6, 9, 7, 3, 25, 24, 27];
-  const n34pr_rmse_score = [4, 25, 23, 14, 5,
-                            17+gadd, 22+gadd, 20+gadd, 15+gadd, 12+gadd, 24+gadd, 26+gadd, 27+gadd, 19+gadd, 21+gadd,
-                            3, 8, 16, 11, 9, 1, 18, 7, 6, 2, 10, 13];
-  const ptrend_rmse_score = [8, 12, 17, 27, 7,
-                             16+gadd, 24+gadd, 6+gadd, 26+gadd, 5+gadd, 13+gadd, 22+gadd, 11+gadd, 25+gadd, 10+gadd,
-                             15, 9, 19, 14, 4, 20, 23, 21, 2, 3, 18, 1];
-  const pr90_rmse_score = [13, 10, 11, 14, 12,
-                           21+gadd, 16+gadd, 20+gadd, 22+gadd, 19+gadd, 24+gadd, 15+gadd, 17+gadd, 23+gadd, 18+gadd,
-                           5, 1, 3, 4, 2, 6, 7, 9, 8, 27, 26, 25];
-  const pr99_rmse_score = [14, 2, 13, 15, 12,
-                           8+gadd, 4+gadd, 5+gadd, 11+gadd, 1+gadd, 9+gadd, 7+gadd, 3+gadd, 10+gadd, 6+gadd,
-                           25, 21, 22, 24, 23, 19, 17, 20, 18, 27, 16, 26];
+  // TODO SCORES METRIC
+  // --- SCORES ---
+  const djf_t_std_score = metrics_settings['djf_t_std']
+  const mam_t_std_score = metrics_settings['mam_t_std']
+  const jja_t_std_score = metrics_settings['jja_t_std']
+  const son_t_std_score = metrics_settings['son_t_std']
+  const djf_p_std_score = metrics_settings['djf_p_std']
+  const mam_p_std_score = metrics_settings['mam_p_std']
+  const jja_p_std_score = metrics_settings['jja_p_std']
+  const son_p_std_score = metrics_settings['son_p_std']
+  const n34t_r_score = metrics_settings['n34t_r']
+  const ttrend_r_score = metrics_settings['ttrend_r']
+  const t90_r_score = metrics_settings['t90_r']
+  const t99_r_score = metrics_settings['t99_r']
+  const djf_t_r_score = metrics_settings['djf_t_r']
+  const mam_t_r_score = metrics_settings['mam_t_r']
+  const jja_t_r_score = metrics_settings['jja_t_r']
+  const son_t_r_score = metrics_settings['son_t_r']
+  const n34pr_r_score = metrics_settings['n34pr_r']
+  const ptrend_r_score = metrics_settings['ptrend_r']
+  const pr90_r_score = metrics_settings['pr90_r']
+  const pr99_r_score = metrics_settings['pr99_r']
+  const djf_p_r_score = metrics_settings['djf_p_r']
+  const mam_p_r_score = metrics_settings['mam_p_r']
+  const jja_p_r_score = metrics_settings['jja_p_r']
+  const son_p_r_score = metrics_settings['son_p_r']
+  const n34t_rmse_score = metrics_settings['n34t_rmse']
+  const ttrend_rmse_score = metrics_settings['ttrend_rmse']
+  const t90_rmse_score = metrics_settings['t90_rmse']
+  const t99_rmse_score = metrics_settings['t99_rmse']
+  const n34pr_rmse_score = metrics_settings['n34pr_rmse']
+  const ptrend_rmse_score = metrics_settings['ptrend_rmse']
+  const pr90_rmse_score = metrics_settings['pr90_rmse']
+  const pr99_rmse_score = metrics_settings['pr99_rmse']
 
 
   function addScores(a,b){
@@ -1073,8 +918,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
   useEffect(() => {
-    let currentScore = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    // let currentScore = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    //                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let currentScore = Array(metrics_settings.num_datasets).fill(0);
     if (metricMethod['Correlation']) {
     if (metrics1['n34t']) {
       currentScore = addScores(currentScore, n34t_r_score);
@@ -2154,11 +2000,34 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   };
 
+  const MetricRegionChoiceBox = () => {
+    console.log("metric region =", metricRegion);
+    return(
+      <>
+      <Box sx={{ ...sx.label, mt: [4] }}>Region</Box>
+      <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={(e) => setMetricRegion(e.target.value)}
+        sx={{ mt: [1] }}
+        value={metricRegion}
+      >
+      {Object.entries(settings.metricRegions).map(([key, label]) => (
+          <option key={key} value={key}>
+          {label}
+        </option>
+      ))}
+      </Select>
+      </>
+    );
+  }
+
   const ClimateSignalBox = ({numMetrics}) => {
     if (metricPerformance["Metric Performance"]) {
       return(
         <>
           <ClimateSignalChoiceBox />
+          <MetricRegionChoiceBox />
           <ClimateSignalBoxMetrics />
         </>
       );
