@@ -12,7 +12,38 @@ import { openGroup } from "zarr";
 import { Scale_Values, Clim_Ranges} from './variableSettings';
 import { Default_Colormaps, readmeUrl } from './variableSettings';
 import { getData } from './getData';
-import {metrics_settings} from '../metrics/metrics.js';
+
+import {metrics_settings as desertsouthwest_metrics} from
+  '../metrics/desertsouthwest_metrics.js';
+import {metrics_settings as gulfcoast_metrics} from
+  '../metrics/gulfcoast_metrics.js';
+import {metrics_settings as mountainwest_metrics} from
+  '../metrics/mountainwest_metrics.js';
+import {metrics_settings as northernplains_metrics} from
+  '../metrics/northernplains_metrics.js';
+import {metrics_settings as pacificsouthwest_metrics} from
+  '../metrics/pacificsouthwest_metrics.js';
+import {metrics_settings as greatlakes_metrics} from
+  '../metrics/greatlakes_metrics.js';
+import {metrics_settings as midatlantic_metrics} from
+  '../metrics/midatlantic_metrics.js';
+import {metrics_settings as northatlantic_metrics} from
+  '../metrics/northatlantic_metrics.js';
+import {metrics_settings as pacificnorthwest_metrics} from
+  '../metrics/pacificnorthwest_metrics.js';
+const region_metric_settings = {
+  'desertsouthwest': desertsouthwest_metrics,
+  'gulfcoast': gulfcoast_metrics,
+  'mountainwest': mountainwest_metrics,
+  'northernplains': northernplains_metrics,
+  'pacificsouthwest': pacificsouthwest_metrics,
+  'greatlakes': greatlakes_metrics,
+  'midatlantic': midatlantic_metrics,
+  'northatlantic': northatlantic_metrics,
+  'pacificnorthwest': pacificnorthwest_metrics,
+}
+let metrics_settings = desertsouthwest_metrics;
+
 
 const sx = {
   label: {
@@ -874,6 +905,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   // 13 = combinations
   const combinations = metrics_settings['combinations'];
+  console.log("COMBINATIONS", combinations);
   const combinations_downscaling = metrics_settings['combinations_downscaling'];
   const combinations_model = metrics_settings['combinations_model'];
 
@@ -1044,16 +1076,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         let i = currentScore.indexOf(Math.min(...currentScore));
         console.log(n, "SCORE =", currentScore, "and i", i);
         console.log(n, "best combination =", combinations[i]);
-        // if this is true it is a GARD model, with no future runs and data yet
-        // if (i > 4 && i < 15) {
-        //   console.log("best combo a GARD model, removing");
-        //   currentScore[i] = 9999;
-        //   continue;
-        // }
         combo.push(combinations[i]);
         downscaling.push(combinations_downscaling[i]);
         model.push(combinations_model[i]);
-        currentScore[i] = 9999;
+        // currentScore[i] = 9999;
       }
       setTopCombination(combo);
       setTopDownscaling(downscaling);
@@ -2000,6 +2026,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   };
 
+  const handleMetricRegionChange = useCallback((e) => {
+    const metricRegion = e.target.value;
+    setMetricRegion(metricRegion);
+    metrics_settings = region_metric_settings[metricRegion];
+    handleRMSEMetricsChange({ all: false, clear: false, clearall: true });
+  });
+
   const MetricRegionChoiceBox = () => {
     console.log("metric region =", metricRegion);
     return(
@@ -2008,7 +2041,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       <Select
         sxSelect={{ bg: 'transparent' }}
         size='xs'
-        onChange={(e) => setMetricRegion(e.target.value)}
+        onChange={handleMetricRegionChange}
         sx={{ mt: [1] }}
         value={metricRegion}
       >
