@@ -110,6 +110,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   const [units, setUnits] = useState('°C');
 
+  const [computeMetricScore, computeMetricScoreToggle] = useState(true);
+
+
 
   // TODO: HANDLE ALL THE REGIONS
   const [metricRegion, setMetricRegion] = useState('desertsouthwest');
@@ -1059,7 +1062,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
 
 
-
     if (numMetrics === 0) {
       setTopCombination("Select Metrics");
       setTopDownscaling("None");
@@ -1072,14 +1074,30 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       let downscaling = [];
       let model = [];
 
+      let scoreFunc;
+      let scoreNull;
+      if (metricMethod['RMSE']) {
+        scoreFunc = Math.min
+        scoreNull = 9999
+      } else if (metricMethod['Std. Dev.']) {
+        scoreFunc = Math.min
+        scoreNull = 9999
+      }  else if (metricMethod['Correlation']) {
+        scoreFunc = Math.max
+        scoreNull = -9999
+      }
+
+      // console.log("METRIC METHOD=", metricMethod)
+      // console.log("scorefunc=", scoreFunc)
+
       for (let n = 0; n < numClimateSignalSets; n++) {
-        let i = currentScore.indexOf(Math.min(...currentScore));
-        console.log(n, "SCORE =", currentScore, "and i", i);
-        console.log(n, "best combination =", combinations[i]);
+        let i = currentScore.indexOf(scoreFunc(...currentScore));
+        // console.log("SCORE =", currentScore, "and i", i);
+        // console.log(n+1, "best combination =", combinations[i]);
         combo.push(combinations[i]);
         downscaling.push(combinations_downscaling[i]);
         model.push(combinations_model[i]);
-        // currentScore[i] = 9999;
+        currentScore[i] = scoreNull; // only use combination once
       }
       setTopCombination(combo);
       setTopDownscaling(downscaling);
@@ -1090,7 +1108,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       stdDevMetrics1, stdDevMetrics2,
       RMSEMetrics1, RMSEMetrics2,
       numClimateSignalSets,
-      metricMethod,
+      metricMethod, computeMetricScore
      ]);
 
 
@@ -2030,7 +2048,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     const metricRegion = e.target.value;
     setMetricRegion(metricRegion);
     metrics_settings = region_metric_settings[metricRegion];
-    handleRMSEMetricsChange({ all: false, clear: false, clearall: true });
+    computeMetricScoreToggle(v => !v);
   });
 
   const MetricRegionChoiceBox = () => {
