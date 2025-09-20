@@ -1,339 +1,155 @@
-import { useState } from 'react';
-import { useRef, useEffect } from 'react';
-import { Box, useThemeUI } from 'theme-ui';
-import { Dimmer, Column, Row } from '@carbonplan/components';
-import { Map, Raster, Fill, Line, RegionPicker } from '../maps';
-import Meta from '../components/meta';
-import { useThemedColormap } from '../colormaps/src';
-import RegionPlot from '../components/region-plot';
-import ParameterControls from '../components/parameter-controls';
-import {options, linedata, linedata_stub} from '../components/plot-line';
-import { Line as LineCJS } from 'react-chartjs-2';
-import Charts from '../components/charts';
-import ErrorBoundary from '../components/ErrorBoundary';
-// import MetricControls from '../components/metric-controls'
-// import { NetCDFReader } from "netcdfjs";
+// pages/test.js (or any client component)
+import { useEffect, useState } from "react";
+import { settings } from '../initialConditions/conus';
 
-// option to use external zarr files only
-const TESTING = false;
+export default function Test() {
+  const [rows, setRows] = useState([]);
 
-// location of the map and pbf shape files
-const bucket_ndp = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/';
-// original hosting site
-// const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/';
-// local data address for testing
-// const bucket_ndp = 'http://127.0.0.1:4000/data/';
+  // your inputs
+  // const data = ["hist.1981_2004", "rcp45.2076_2099", "rcp85.2076_2099", "foobar"];
+  const data = ["hist.1981_2004", "rcp45.2076_2099", "rcp85.2076_2099"];
+  const bucket = "https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/map/";
+  const bucket_ndp = bucket;// + "maca/mri_cgcm3/"; // ensure trailing slash
 
-const Index = () => {
-
-  const { theme } = useThemeUI();
-  const [sideBySide, setSideBySide] = useState(false);
-
-  if (sideBySide){
-    return(
-      <div key={sideBySide} style={{ display: 'flex', width: '100%', height: '100vh' }}>
-        <Box sx={{ flex: 1, backgroundColor: '#f0f0f0', position: 'relative' }}>
-          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
-        </Box>
-        <Box sx={{ flex: 1, backgroundColor: '#e0e0e0', position: 'relative' }}>
-          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
-        </Box>
-      </div>
-    );
-  } else {
-      return(
-        <div key={sideBySide} style={{ display: 'flex', width: '100%', height: '100vh' }}>
-          <Box sx={{ flex: 1, backgroundColor: '#f0f0f0', position: 'relative' }}>
-          <ClimateMapInstance sideBySideArgs={{sideBySide, setSideBySide}} />
-          </Box>
-        </div>
-    );
+  // helper: fetch with timeout
+  async function fetchWithTimeout(url, ms = 8000, init = {}) {
+    const ac = new AbortController();
+    const t = setTimeout(() => ac.abort(), ms);
+    try {
+      const res = await fetch(url, { ...init, signal: ac.signal, redirect: "follow" });
+      return res;
+    } finally {
+      clearTimeout(t);
+    }
   }
-};
 
+  // try HEAD, fall back to GET (some servers disallow HEAD)
+  async function headOrGetOK(url) {
+    try {
+      const h = await fetchWithTimeout(url, 8000, { method: "HEAD" });
+      if (h.ok) return { ok: true, status: h.status, method: "HEAD" };
+      const g = await fetchWithTimeout(url, 8000, { method: "GET" });
+      return { ok: g.ok, status: g.status, method: "GET" };
+    } catch (e) {
+      // CORS or network error ends up here
+      return { ok: false, status: 0, method: "ERR" };
+    }
+  }
 
-const ClimateMapInstance = ({ sideBySideArgs }) => {
-  const { sideBySide, setSideBySide } = sideBySideArgs
+  // load exactly once when component opens
+  // useEffect(() => {
+  //   (async () => {
+  //     const checks = await Promise.all(
+  //       data.map(async (p, i) => {
+  //         const url = bucket_ndp + "/" + String(p);
+  //         const r = await headOrGetOK(url);
+  //         return { index: i, path: p, url, ...r };
+  //       })
+  //     );
+  //     setRows(checks);
+  //   })();
+  // }, []); // <-- empty deps: run once
 
-  const { theme } = useThemeUI();
-  const [display, setDisplay] = useState(true);
-    console.log("INDEX SET DISPLAY =",setDisplay);
-  const [reload, setReload] = useState(true);
-  const [debug, setDebug] = useState(false);
-  const [opacity, setOpacity] = useState(1);
-  const [month, setMonth] = useState(1);
-  const [time, setTime] = useState(1);
-  // --- precipitation defaults
-  const [band, setBand] = useState('djft');
-  const [colormapName, setColormapName] = useState('BuYlRd');
-  const [clim, setClim] = useState([-10, 15]);
+useEffect(() => {
+  const trimSlashes = (s) => String(s).replace(/^\/+|\/+$/g, "");
 
-  const colormap = useThemedColormap(colormapName);
-  const [showClimateChange, setShowClimateChange] = useState(false);
-  const [showRegionPlot, setShowRegionPlot] = useState(false);
-  const [regionData, setRegionData] = useState({ loading: true });
-  // set variables to access datasets
-  const [downscaling, setDownscaling] = useState('icar');
-  const [model, setModel] = useState('access1_3');
-  const [metric, setMetric] = useState('djf_t');
-  const [rcp, setRCP] = useState('4.5');
+  // Build all (model, method, data) combinations
+  const combos = [];
+  for (const [method, models] of Object.entries(settings.model || {})) {
+    for (const [modelKey, modelLabel] of Object.entries(models || {})) {
+      for (const p of data) {
+        const url = [
+          bucket_ndp,      // base
+          method,          // <method>
+          modelKey,        // <model>
+          p,               // <data>
+        ].map(trimSlashes).join("/");
 
-  const [bucketRes, setBucketRes] = useState(
-    {'Low': true,
-     'High': false});
+        const entry = {
+          model: modelKey,
+          method,
+          // label: modelLabel,
+          path: p,
+          url,
+        }
 
-  // const [yearRange, setYearRange] = useState('1980_2010')
-  const [yearRange, setYearRange] = useState('1981_2004', '2070_2100');
-  // diff dataset variables for model to compare against
-  const [scaleDif, setScaleDif] = useState(1.0);
-  const [downscalingDif, setDownscalingDif] = useState('nasa_nex');
-  const [modelDif, setModelDif] = useState('canesm2');
-  const [yearRangeDif, setYearRangeDif] = useState('1981_2004');
-  const [obs, setObs] = useState('livneh');
-  const [obsDif, setObsDif] = useState('livneh');
+        // console.log("e =", entry);
+        combos.push(entry);
+      }
+    }
+  }
 
-  const [showStates, setStates] = useState(true);
-  const [showRivers, setRivers] = useState(false);
-  const [showHuc2, setHuc2] = useState(false);
-
-  const [fname, setFname] = useState('data.zarr');
-  // paths to model dataset
-  // const [mapSource, setMapSource] =
-  //         useState([bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname])
-  const [mapSource, setMapSource] =
-          useState([bucket_ndp+'map/icar/access1_3/1981_2004/'+fname]);
-  const [chartSource, setChartSource] =
-          useState(bucket_ndp+'chart/icar/noresm1_m/'+band);
-  // paths to model dataset used for diff
-  // const [mapSourceDif, setMapSourceDif] =
-  //         useState(bucket_ndp+'map/icar/cesm/1980_2010/'+fname);
-  // const [mapSourceDif, setMapSourceDif] =
-  //         useState(bucket_ndp+'map/icar/noresm1_m/1981_2004/'+fname);
-  const [mapSourceDif, setMapSourceDif] =
-          useState(bucket_ndp+'obs/'+obsDif+'/1981_2004/'+fname);
-  const [chartSourceDif, setChartSourceDif] =
-          useState(bucket_ndp+'chart/icar/cesm/'+band);
-  // set values to decide whether to map average or difference
-  // const [filterValues, setFilterValues] = useState({'Ave.': true,
-  //                                                   'Dif.': false});
-  const [computeChoice, setComputeChoice] = useState({
-    'Ave.': true,
-    'Dif.': false,
-    'Climate Signal': false,
-  });
-
-  // control the height of the charts, initially hidden
-  const [chartHeight, setChartHeight] = useState('0%');
-  const [chartData, setChartData] = useState(Array(12).fill(0));
-
-  const getters = { display, reload, debug, opacity, clim,
-                    month, band, colormapName, colormap,
-                    downscaling, model, metric,
-                    yearRange, mapSource, chartSource,
-                    downscalingDif, modelDif, yearRangeDif, obs, obsDif,
-                    mapSourceDif, chartSourceDif, scaleDif,
-                    bucket_ndp, chartHeight, computeChoice,
-                    showClimateChange, showRegionPlot, bucketRes,
-                    showStates, showRivers, showHuc2, sideBySide};
-  const setters = {
-    setDisplay,
-    setReload,
-    setDebug,
-    setOpacity,
-    setClim,
-    setMonth,
-    setTime,
-    setBand,
-    setColormapName,
-    setDownscaling,
-    setModel,
-    setMetric,
-    setYearRange,
-    setMapSource,
-    setChartSource,
-    setDownscalingDif,
-    setModelDif,
-    setYearRangeDif,
-    setObs,
-    setObsDif,
-    setMapSourceDif,
-    setChartSourceDif,
-    setScaleDif,
-    setChartHeight,
-    setChartData,
-    setComputeChoice,
-    setShowClimateChange,
-    setShowRegionPlot,
-    setBucketRes,
-    setStates,
-    setRivers,
-    setHuc2,
-    setSideBySide
-  };
-
-  const fillValue = 3.4028234663852886e38; // black on land, red nans
+  (async () => {
+    const checks = await Promise.all(
+      combos.map(async (c, i) => {
+        const r = await headOrGetOK(c.url); // your HEAD/GET probe
+        return { index: i, ...c, ...r };
+      })
+    );
+    setRows(checks);
+  })();
+}, []);
 
 
 
   return (
-  <ErrorBoundary>
-    <>
-    <Meta
-      card={'https://ncar.ucar.edu/profiles/custom/ncar_ucar_umbrella/themes/custom/koru/libraries/koru-base/img/app-favicons/ncar/favicon.ico'}
-      description={"Climate Evaluation of Downscaling and Climate Model data. Based on Carbonplan's Maps"}
-      title={'Hydro-Climate Evaluation'}
-    />
-    <Row columns={[4]}>
-    <Column start={[1]} width={[1]}>
-    <Box sx={{ position: 'absolute', top: 0, bottom: 0, width: '100%', height:'100%',
-               backgroundColor: '#bbdaa4', zIndex: 0}}>
-    {/* zoom to this location when page first loads */}
-    <Map zoom={4} center={{lon:-97, lat:38}} debug={debug}>
-    <Fill
-      color={'#4a80f5'}
-      source={bucket_ndp + 'basemaps/ocean'}
-      variable={'ocean'}
-    />
-    <Line
-      color={theme.rawColors.primary}
-      source={bucket_ndp + 'basemaps/land'}
-      variable={'land'}
-    />
+    <div style={{ fontFamily: "system-ui, Arial, sans-serif", padding: 24 }}>
+      <h1>URL Status</h1>
+      <table style={{ borderCollapse: "collapse", width: "100%", maxWidth: 1000 }}>
+        <thead>
+          <tr>
+            <th style={{...th, color: "#000"}} >#</th>
+            <th style={{...th, color: "#000"}}>Full URL</th>
+            <th style={{...th, color: "#000"}}>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((c) => (
+            <tr key={c.url}>
+              <td style={td}>{c.index + 1}</td>
+              <td style={td}>
+                <a href={c.url} target="_blank" rel="noreferrer" style={{ color: '#fff' }} >
+                  {c.url}
+                </a>
+              </td>
+              <td style={td}>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "4px 10px",
+                    borderRadius: 999,
+                    background: c.ok ? "#e6ffed" : "#ffebe9",
+                    color: c.ok ? "#096a2e" : "#a40e26",
+                    fontWeight: 600,
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      background: "currentColor",
+                    }}
+                  />
+                  {c.ok ? "Exists" : "Missing"}
+                </span>
+              </td>
+            </tr>
+          ))}
+          {rows.length === 0 && (
+            <tr>
+              <td style={td} colSpan={3}>
+                Checking…
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
-    {showStates && (
-    <Line
-      color={'black'}
-      source={bucket_ndp + 'basemaps/states/ne_110m_admin_1_states_provinces_lakes.json'}
-      variable={'United States of America'}
-      ndp={false}
-    />)}
-
-    {showRivers && (
-    <Line
-      color={'black'}
-      source={bucket_ndp + 'basemaps/rivers/rivers.3percent.geojson'}
-      ndp={false}
-    />)}
-
-    {showHuc2 && (
-    <Line
-      color={'black'}
-      source={bucket_ndp + 'basemaps/huc/huc2-basins-1percent.geojson'}
-      blur={1.0}
-      ndp={false}
-      dashArray={[2, 4]}
-    />)}
-
-    {/*
-      source={bucket_ndp + 'basemaps/rivers/ne_10m_rivers_north_america.json'}
-    */}
-
-    {/*
-    <Line
-      color={'red'}
-      source={bucket_ndp + 'basemaps/huc/huc2-basins.geojson'}
-      ndp={false}
-    />;
-    */}
-
-    {/*
-    <Line
-      color={'black'}
-      source={bucket_ndp + 'basemaps/states/us-states.json'}
-      variable={'state'}
-      ndp={false}
-    />;
-    <Line
-      color={'red'}
-      source={bucket_ndp + 'basemaps/states/rivers.geojson'}
-      ndp={false}
-    />;
-    */}
-
-    {showRegionPlot && (
-     <RegionPicker
-       color={theme.colors.primary}
-       backgroundColor={theme.colors.background}
-       fontFamily={theme.fonts.mono}
-       fontSize={'14px'}
-       maxRadius={200}
-     />)}
-
-    <Raster
-      key={`${mapSource}-${mapSourceDif}-${reload}-${sideBySide}-${JSON.stringify(computeChoice)}`}
-      colormap={colormap}
-      clim={clim}
-      display={display}
-      opacity={opacity}
-      mode={'texture'}
-      sources={mapSource}
-      sourceDif={mapSourceDif}
-      fillValue={fillValue}
-      variable={'climate'}
-      selector={{ band }}
-      // selector={{ month, band }}
-      filterValue={computeChoice}
-      setDisplay={setDisplay}
-      // selector={{ month, band, source }}
-      regionOptions={{ setData: setRegionData }}
-    />
-    {/*
-    <RegionPlot
-      band={band}
-      source={mapSource}
-      regionData={regionData}
-      showRegionPlot={showRegionPlot}
-      setShowRegionPlot={setShowRegionPlot}
-    />
-    */}
-
-    <ParameterControls
-      getters={getters}
-      setters={setters}
-      bucket={bucket_ndp}
-      fname={fname}
-    />
-
-    </Map>
-
-
-    </Box>
-    </Column>
-
-    {/*
-    <Column start={[1]} width={[1]}>
-     <Box
-      sx={{
-        color: 'blue',
-        backgroundColor: 'lightgray',
-        bottom: 0, right: 0,
-        padding: 2,
-        fontSize: 16,
-        position: 'fixed',
-        height: chartHeight,
-        width: '100%' }}>
-        <LineCJS options={options} data={ linedata_stub } />
-      </Box>
-    </Column>
-    */}
-
-    {/*
-    <Charts
-      chartHeight={chartHeight}
-      source={chartSource}
-      downscaling={downscaling}
-      model={model}
-      band={band}
-      month={month}
-      chartData={chartData}
-      setChartData={setChartData}/>
-    */}
-
-
-    </Row>
-    </>
-  </ErrorBoundary>
-  ) // end return statement
-};
-
-export default Index
+const th = { border: "1px solid #ddd", padding: 10, background: "#f7f7f7", textAlign: "left" };
+const td = { border: "1px solid #ddd", padding: 10, textAlign: "left" };
