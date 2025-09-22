@@ -285,7 +285,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     {/* projection = equirectangular */}
     <Raster
       setMapVal={setMapVal}
-      key={`${mapSource[0]}-${mapSourceDif[0]}-${reload}-${sideBySide}-${JSON.stringify(computeChoice)}`}
+      key={`${JSON.stringify(mapSource)}-${mapSourceDif[0]}-${reload}-${sideBySide}-${JSON.stringify(computeChoice)}`}
       colormap={colormap}
       clim={clim}
       display={display}

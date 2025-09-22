@@ -42,8 +42,6 @@ const region_metric_settings = {
   'northatlantic': northatlantic_metrics,
   'pacificnorthwest': pacificnorthwest_metrics,
 }
-let metrics_settings = desertsouthwest_metrics;
-
 
 const sx = {
   label: {
@@ -106,6 +104,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   } = setters;
 
 
+  const [metrics_settings, setMetricsSettings] =
+        useState(desertsouthwest_metrics);
+
   const [chartToggle, setChartToggle] = useState(false);
 
   const [units, setUnits] = useState('°C');
@@ -120,12 +121,16 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const [baseDir, setBaseDir] = useState('map/');
 
 
-  const [metricMethod, setMetricMethod] = useState({'RMSE': true,
-                                                    'Std. Dev.': false,
-                                                    'Correlation': false});
-  const [metricMethod1, setMetricMethod1] = useState({'RMSE': true,
-                                                      'Std. Dev.': false});
-  const [metricMethod2, setMetricMethod2] = useState({'Correlation': false});
+  const schemeLabels = {
+    'equal': "Equal",
+    'equal_nowt': "Equal, No WT",
+    'obsstd': "Obs SD",
+    'ensstd': "Ens SD",
+    'combstd': "Comb SD",
+  };
+  // set to combstd
+  const [scheme, setScheme] =  useState('combstd');
+
 
   function setUrl(baseDir, downscaling, model, yearRange, ensemble, dif=false, rcp=null) {
     const time = getYearRangeString(yearRange, rcp);
@@ -140,6 +145,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   function addUrlArrayMember(downscaling, model, yearRange, ensemble) {
     const time = getYearRangeString(yearRange);
     const url = `${bucket}${baseDir}${downscaling}/${model}/${time}/${ensemble}/${fname}`;
+    console.log("COMPUTE should be adding url = ",url);
     setMapSource((prevSources) => [...prevSources, url]);
   };
 
@@ -213,7 +219,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     let yearRange_s = "hist." + yearRange;
     if (Object.keys(settings.future_eras).includes(yearRange)) {
       const rcpValues_l = rcp_in ?? rcpValues;
-      console.log("getyearrangestirng rcip_in", rcpValues_l)
       yearRange_s = getRCPKey(rcpValues_l) + "." + yearRange
     }
     return yearRange_s;
@@ -384,7 +389,23 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
             ['Drought',
              '5 year',
              'trend'];
-     } else {
+    }  else if (metric === 'tpcorr') {
+      label = 'tpcorr';
+      description =
+            ['tp',
+             'correlation'];
+    }  else if (metric === 'wt_day_to_day') {
+      label = 'wt_day_to_day';
+      description =
+            ['Weight,',
+             'day to',
+             'day'];
+    }  else if (metric === 'wt_clim') {
+      label = 'wt_clim';
+      description =
+            ['Weight',
+             'Climate'];
+    } else {
        label = 'label undefined';
        description = ['description undefined','',''];
      }
@@ -404,35 +425,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
 
-  const MetricBox = () => {
-    if (metricMethod['RMSE']) {
-      return(
-      <>
-      <Box sx={{ ...sx.label, mt: [4] }}>2. Select Metrics</Box>
-      <Filter
-        values={RMSEMetrics}
-        setValues={handleRMSEMetricsChange}
-      />
-      <Filter values={RMSEMetrics1} setValues={setRMSEMetrics1} multiSelect={true} />
-      <Filter values={RMSEMetrics2} setValues={setRMSEMetrics2} multiSelect={true} />
-      </>
-      );
-      }
-    else if (metricMethod['Std. Dev.']) {
-      return(
-      <>
-      <Box sx={{ ...sx.label, mt: [4] }}>2. Select Metrics</Box>
-      <Filter
-        values={stdDevMetrics}
-        setValues={handleStdDevMetricsChange}
-      />
-      <Filter values={stdDevMetrics1} setValues={setStdDevMetrics1} multiSelect={true} />
-      <Filter values={stdDevMetrics2} setValues={setStdDevMetrics2} multiSelect={true} />
-      </>
-      );
-      }
-    else if (metricMethod['Correlation']) {
-      return(
+  const MetricsBox = () => {
+    return(
       <>
       <Box sx={{ ...sx.label, mt: [4] }}>2. Select Metrics</Box>
       <Filter
@@ -444,9 +438,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       <Filter values={metrics2} setValues={setMetrics2} multiSelect={true} />
       <Filter values={metrics3} setValues={setMetrics3} multiSelect={true} />
       <Filter values={metrics4} setValues={setMetrics4} multiSelect={true} />
+      <Filter values={metrics5} setValues={setMetrics5} multiSelect={true} />
+      <Filter values={metrics6} setValues={setMetrics6} multiSelect={true} />
+      <Filter values={metrics7} setValues={setMetrics7} multiSelect={true} />
       </>
-      );
-    }
+    );
    };
 
 
@@ -733,9 +729,16 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     } else if (metric === 'drought_5yr') {
       setBand('d5yr');
       setUnits('num. months SPI < -1');
-    }
-
-
+    } // else if (metric === 'drought_5yr') {
+    //   setBand('d5yr');
+    //   setUnits('num. months SPI < -1');
+    // } else if (metric === 'drought_5yr') {
+    //   setBand('d5yr');
+    //   setUnits('num. months SPI < -1');
+    // } else if (metric === 'drought_5yr') {
+    //   setBand('d5yr');
+    //   setUnits('num. months SPI < -1');
+    // }  // Add     'tpcorr',      'wt_day_to_day',      'wt_clim',
 
     if (computeChoice['Dif.'] || computeChoice['Climate Signal']) {
       setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
@@ -749,6 +752,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   const maxStdDevNumMetrics = 8;
   const maxNumMetrics = 16;
+
+  // DEAD CODE?o
   const [allMetrics, setAllMetrics] =
     useState({
       tavg: false,
@@ -801,7 +806,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           // useState({ "Model": false, "Observation": true });
 
 
-  const [metrics, setMetrics] = useState({ all: false, clear: false, clearall: false});
+  const [metrics, setMetrics] = useState({ all: false, clear: false});
 
   const [metrics1, setMetrics1] = useState({ n34t: false,
                                              n34pr: false,
@@ -819,46 +824,38 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
                                              mam_p: false,
                                              jja_p: false,
                                              son_p: false,});
+  const [metrics5, setMetrics5] = useState({ ann_snow: false,
+                                             ann_t: false,
+                                             ann_p: false,
+                                             tpcorr: false,});
+  const [metrics6, setMetrics6] = useState({ drought_1yr: false,
+                                             drought_2yr: false,
+                                             drought_5yr: false,});
+  const [metrics7, setMetrics7] = useState({ wt_day_to_day: false,
+                                             wt_clim: false,
+                                             freezethaw: false,});
 
-  const [stdDevMetrics, setStdDevMetrics] = useState({ all: false, clear: false,
-                                                       clearall: false});
-  const [stdDevMetrics1, setStdDevMetrics1] = useState({ djf_t: false,
-                                                         mam_t: false,
-                                                         jja_t: false,
-                                                         son_t: false,});
-  const [stdDevMetrics2, setStdDevMetrics2] = useState({ djf_p: false,
-                                                         mam_p: false,
-                                                         jja_p: false,
-                                                         son_p: false,});
-
-  const [RMSEMetrics, setRMSEMetrics] = useState({ all: false, clear: false,
-                                                   clearall: false});
-  const [RMSEMetrics1, setRMSEMetrics1] = useState({ n34t: false,
-                                                     ttrend: false,
-                                                     t90: false,
-                                                     t99: false,});
-  const [RMSEMetrics2, setRMSEMetrics2] = useState({ n34pr: false,
-                                                     ptrend: false,
-                                                     pr90: false,
-                                                     pr99: false,});
+    // ann_snow
+    // ann_t
+    // ann_p
+    // tpcorr
+    // drought_1yr
+    // drought_2yr
+    // drought_5yr
+    // wt_day_to_day
+    // wt_clim
+    // freezethaw
 
 
   const countNumMetrics = () => {
     let count = 0;
-    if (metricMethod['RMSE']) {
-      for (const key in RMSEMetrics1) { RMSEMetrics1[key] === true && count++; }
-      for (const key in RMSEMetrics2) { RMSEMetrics2[key] === true && count++; }
-    }
-    if (metricMethod['Std. Dev.']) {
-      for (const key in stdDevMetrics1) { stdDevMetrics1[key] === true && count++; }
-      for (const key in stdDevMetrics2) { stdDevMetrics2[key] === true && count++; }
-    }
-    if (metricMethod['Correlation']) {
-      for (const key in metrics1) { metrics1[key] === true && count++; }
-      for (const key in metrics2) { metrics2[key] === true && count++; }
-      for (const key in metrics3) { metrics3[key] === true && count++; }
-      for (const key in metrics4) { metrics4[key] === true && count++; }
-    }
+    for (const key in metrics1) { metrics1[key] === true && count++; }
+    for (const key in metrics2) { metrics2[key] === true && count++; }
+    for (const key in metrics3) { metrics3[key] === true && count++; }
+    for (const key in metrics4) { metrics4[key] === true && count++; }
+    for (const key in metrics5) { metrics5[key] === true && count++; }
+    for (const key in metrics6) { metrics6[key] === true && count++; }
+    for (const key in metrics7) { metrics7[key] === true && count++; }
     return count;
   };
 
@@ -908,160 +905,138 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   // 13 = combinations
   const combinations = metrics_settings['combinations'];
-  console.log("COMBINATIONS", combinations);
   const combinations_downscaling = metrics_settings['combinations_downscaling'];
   const combinations_model = metrics_settings['combinations_model'];
 
   // TODO SCORES METRIC
   // --- SCORES ---
-  const djf_t_std_score = metrics_settings['djf_t_std']
-  const mam_t_std_score = metrics_settings['mam_t_std']
-  const jja_t_std_score = metrics_settings['jja_t_std']
-  const son_t_std_score = metrics_settings['son_t_std']
-  const djf_p_std_score = metrics_settings['djf_p_std']
-  const mam_p_std_score = metrics_settings['mam_p_std']
-  const jja_p_std_score = metrics_settings['jja_p_std']
-  const son_p_std_score = metrics_settings['son_p_std']
-  const n34t_r_score = metrics_settings['n34t_r']
-  const ttrend_r_score = metrics_settings['ttrend_r']
-  const t90_r_score = metrics_settings['t90_r']
-  const t99_r_score = metrics_settings['t99_r']
-  const djf_t_r_score = metrics_settings['djf_t_r']
-  const mam_t_r_score = metrics_settings['mam_t_r']
-  const jja_t_r_score = metrics_settings['jja_t_r']
-  const son_t_r_score = metrics_settings['son_t_r']
-  const n34pr_r_score = metrics_settings['n34pr_r']
-  const ptrend_r_score = metrics_settings['ptrend_r']
-  const pr90_r_score = metrics_settings['pr90_r']
-  const pr99_r_score = metrics_settings['pr99_r']
-  const djf_p_r_score = metrics_settings['djf_p_r']
-  const mam_p_r_score = metrics_settings['mam_p_r']
-  const jja_p_r_score = metrics_settings['jja_p_r']
-  const son_p_r_score = metrics_settings['son_p_r']
-  const n34t_rmse_score = metrics_settings['n34t_rmse']
-  const ttrend_rmse_score = metrics_settings['ttrend_rmse']
-  const t90_rmse_score = metrics_settings['t90_rmse']
-  const t99_rmse_score = metrics_settings['t99_rmse']
-  const n34pr_rmse_score = metrics_settings['n34pr_rmse']
-  const ptrend_rmse_score = metrics_settings['ptrend_rmse']
-  const pr90_rmse_score = metrics_settings['pr90_rmse']
-  const pr99_rmse_score = metrics_settings['pr99_rmse']
-
-
+  const [metric_scores, setMetricScores] =
+        useState(metrics_settings['scores']['combstd']);
   function addScores(a,b){
         return a.map((e,i) => e + b[i]);
   };
+
+  const [n34t_score, set_n34t_score] = useState(metric_scores["n34t"]);
+  const [ttrend_score, set_ttrend_score] = useState(metric_scores["ttrend"]);
+  const [t90_score, set_t90_score] = useState(metric_scores["t90"]);
+  const [t99_score, set_t99_score] = useState(metric_scores["t99"]);
+  const [freezethaw_score, set_freezethaw_score] =
+        useState(metric_scores["freezethaw"]);
+  const [djf_t_score, set_djf_t_score] = useState(metric_scores["djf_t"]);
+  const [mam_t_score, set_mam_t_score] = useState(metric_scores["mam_t"]);
+  const [jja_t_score, set_jja_t_score] = useState(metric_scores["jja_t"]);
+  const [son_t_score, set_son_t_score] = useState(metric_scores["son_t"]);
+  const [ann_t_score, set_ann_t_score] = useState(metric_scores["ann_t"]);
+  const [tpcorr_score, set_tpcorr_score] = useState(metric_scores["tpcorr"]);
+  const [n34pr_score, set_n34pr_score] = useState(metric_scores["n34pr"]);
+  const [ptrend_score, set_ptrend_score] = useState(metric_scores["ptrend"]);
+  const [pr90_score, set_pr90_score] = useState(metric_scores["pr90"]);
+  const [pr99_score, set_pr99_score] = useState(metric_scores["pr99"]);
+  const [drought_1yr_score, set_drought_1yr_score] =
+        useState(metric_scores["drought_1yr"]);
+  const [drought_2yr_score, set_drought_2yr_score] =
+        useState(metric_scores["drought_2yr"]);
+  const [drought_5yr_score, set_drought_5yr_score] =
+        useState(metric_scores["drought_5yr"]);
+  const [djf_p_score, set_djf_p_score] = useState(metric_scores["djf_p"]);
+  const [mam_p_score, set_mam_p_score] = useState(metric_scores["mam_p"]);
+  const [jja_p_score, set_jja_p_score] = useState(metric_scores["jja_p"]);
+  const [son_p_score, set_son_p_score] = useState(metric_scores["son_p"]);
+  const [ann_p_score, set_ann_p_score] = useState(metric_scores["ann_p"]);
+  const [ann_snow_score, set_ann_snow_score] =
+        useState(metric_scores["ann_snow"]);
+  const [wt_day_to_day_score, set_wt_day_to_day_score] =
+        useState(metric_scores["wt_day_to_day"]);
+  const [wt_clim_score, set_wt_clim_score] =
+        useState(metric_scores["wt_clim"]);
 
   useEffect(() => {
     // let currentScore = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     //                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     let currentScore = Array(metrics_settings.num_datasets).fill(0);
-    if (metricMethod['Correlation']) {
+
+    console.log("FOO metrics5 =", metrics5);
     if (metrics1['n34t']) {
-      currentScore = addScores(currentScore, n34t_r_score);
+      currentScore = addScores(currentScore, n34t_score);
     }
     if (metrics1['n34pr']) {
-      currentScore = addScores(currentScore, n34pr_r_score);
+      currentScore = addScores(currentScore, n34pr_score);
     }
     if (metrics1['ttrend']) {
-      currentScore = addScores(currentScore, ttrend_r_score);
+      currentScore = addScores(currentScore, ttrend_score);
     }
     if (metrics1['ptrend']) {
-      currentScore = addScores(currentScore, ptrend_r_score);
+      currentScore = addScores(currentScore, ptrend_score);
     }
     if (metrics2['t90']) {
-      currentScore = addScores(currentScore, t90_r_score);
+      currentScore = addScores(currentScore, t90_score);
     }
     if (metrics2['t99']) {
-      currentScore = addScores(currentScore, t99_r_score);
+      currentScore = addScores(currentScore, t99_score);
     }
     if (metrics2['pr90']) {
-      currentScore = addScores(currentScore, pr90_r_score);
+      currentScore = addScores(currentScore, pr90_score);
     }
     if (metrics2['pr99']) {
-      currentScore = addScores(currentScore, pr99_r_score);
+      currentScore = addScores(currentScore, pr99_score);
     }
     if (metrics3['djf_t']) {
-      currentScore = addScores(currentScore, djf_t_r_score);
+      currentScore = addScores(currentScore, djf_t_score);
     }
     if (metrics3['mam_t']) {
-      currentScore = addScores(currentScore, mam_t_r_score);
+      currentScore = addScores(currentScore, mam_t_score);
     }
     if (metrics3['jja_t']) {
-      currentScore = addScores(currentScore, jja_t_r_score);
+      currentScore = addScores(currentScore, jja_t_score);
     }
     if (metrics3['son_t']) {
-      currentScore = addScores(currentScore, son_t_r_score);
+      currentScore = addScores(currentScore, son_t_score);
     }
     if (metrics4['djf_p']) {
-      currentScore = addScores(currentScore, djf_p_r_score);
+      currentScore = addScores(currentScore, djf_p_score);
     }
     if (metrics4['mam_p']) {
-      currentScore = addScores(currentScore, mam_p_r_score);
+      currentScore = addScores(currentScore, mam_p_score);
     }
     if (metrics4['jja_p']) {
-      currentScore = addScores(currentScore, jja_p_r_score);
+      currentScore = addScores(currentScore, jja_p_score);
     }
     if (metrics4['son_p']) {
-      currentScore = addScores(currentScore, son_p_r_score);
+      currentScore = addScores(currentScore, son_p_score);
     }
+    if (metrics5['ann_snow']) {
+      currentScore = addScores(currentScore, ann_snow_score);
     }
-
-    if (metricMethod['Std. Dev.']) {
-    if (stdDevMetrics1['djf_t']) {
-      currentScore = addScores(currentScore, djf_t_std_score);
+    if (metrics5['ann_t']) {
+      currentScore = addScores(currentScore, ann_t_score);
     }
-    if (stdDevMetrics1['mam_t']) {
-      currentScore = addScores(currentScore, mam_t_std_score);
+    if (metrics5['ann_p']) {
+      currentScore = addScores(currentScore, ann_p_score);
     }
-    if (stdDevMetrics1['jja_t']) {
-      currentScore = addScores(currentScore, jja_t_std_score);
+    if (metrics5['tpcorr']) {
+      currentScore = addScores(currentScore, tpcorr_score);
     }
-    if (stdDevMetrics1['son_t']) {
-      currentScore = addScores(currentScore, son_t_std_score);
+    if (metrics6['drought_1yr']) {
+      currentScore = addScores(currentScore, drought_1yr_score);
     }
-    if (stdDevMetrics2['djf_p']) {
-      currentScore = addScores(currentScore, djf_p_std_score);
+    if (metrics6['drought_2yr']) {
+      currentScore = addScores(currentScore, drought_2yr_score);
     }
-    if (stdDevMetrics2['mam_p']) {
-      currentScore = addScores(currentScore, mam_p_std_score);
+    if (metrics6['drought_5yr']) {
+      currentScore = addScores(currentScore, drought_5yr_score);
     }
-    if (stdDevMetrics2['jja_p']) {
-      currentScore = addScores(currentScore, jja_p_std_score);
+    if (metrics7['wt_day_to_day']) {
+      currentScore = addScores(currentScore, wt_day_to_day_score);
     }
-    if (stdDevMetrics2['son_p']) {
-      currentScore = addScores(currentScore, son_p_std_score);
+    if (metrics7['wt_clim']) {
+      currentScore = addScores(currentScore, wt_clim_score);
     }
-    }
-
-    if (metricMethod['RMSE']) {
-    if (RMSEMetrics1['n34t']) {
-      currentScore = addScores(currentScore, n34t_rmse_score);
-    }
-    if (RMSEMetrics1['ttrend']) {
-      currentScore = addScores(currentScore, ttrend_rmse_score);
-    }
-    if (RMSEMetrics1['t90']) {
-      currentScore = addScores(currentScore, t90_rmse_score);
-    }
-    if (RMSEMetrics1['t99']) {
-      currentScore = addScores(currentScore, t99_rmse_score);
-    }
-    if (RMSEMetrics2['n34pr']) {
-      currentScore = addScores(currentScore, n34pr_rmse_score);
-    }
-    if (RMSEMetrics2['ptrend']) {
-      currentScore = addScores(currentScore, ptrend_rmse_score);
-    }
-    if (RMSEMetrics2['pr90']) {
-      currentScore = addScores(currentScore, pr90_rmse_score);
-    }
-    if (RMSEMetrics2['pr99']) {
-      currentScore = addScores(currentScore, pr99_rmse_score);
-    }
+    if (metrics7['freezethaw']) {
+      currentScore = addScores(currentScore, freezethaw_score);
     }
 
 
+    console.log("FOO numetrics =", numMetrics);
     if (numMetrics === 0) {
       setTopCombination("Select Metrics");
       setTopDownscaling("None");
@@ -1070,29 +1045,19 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setTopDownscaling2("None");
       setTopModel2("None");
     } else {
+
       let combo = [];
       let downscaling = [];
       let model = [];
 
-      let scoreFunc;
-      let scoreNull;
-      if (metricMethod['RMSE']) {
-        scoreFunc = Math.min
-        scoreNull = 9999
-      } else if (metricMethod['Std. Dev.']) {
-        scoreFunc = Math.min
-        scoreNull = 9999
-      }  else if (metricMethod['Correlation']) {
-        scoreFunc = Math.max
-        scoreNull = -9999
-      }
+      const scoreFunc = Math.min;
+      const scoreNull = 9999;
 
       // console.log("METRIC METHOD=", metricMethod)
       // console.log("scorefunc=", scoreFunc)
-
       for (let n = 0; n < numClimateSignalSets; n++) {
         let i = currentScore.indexOf(scoreFunc(...currentScore));
-        // console.log("SCORE =", currentScore, "and i", i);
+        console.log(scheme, " FOO SCORE =", currentScore, "and i", i);
         // console.log(n+1, "best combination =", combinations[i]);
         combo.push(combinations[i]);
         downscaling.push(combinations_downscaling[i]);
@@ -1104,11 +1069,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setTopModel(model);
     }
   }, [numMetrics,
+      scheme, metric_scores, metricRegion,
       setMetrics1, setMetrics2, setMetrics3, setMetrics4,
-      stdDevMetrics1, stdDevMetrics2,
-      RMSEMetrics1, RMSEMetrics2,
+      setMetrics5, setMetrics6, setMetrics7,
       numClimateSignalSets,
-      metricMethod, computeMetricScore
+      computeMetricScore,
      ]);
 
 
@@ -1204,23 +1169,28 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
     setComputeClimateSignal({'COMPUTE': true});
     setShowRegionPlot(false);
-    setShouldUpdateMapSource(true);
+    setShouldUpdateMapSource(prev => !prev);
   });
 
   useEffect(() => {
     setComputeClimateSignal({'COMPUTE': false});
+
   }, [metrics, metrics1, metrics2, metrics3, metrics4,
-      stdDevMetrics, stdDevMetrics1, stdDevMetrics2,
-      RMSEMetrics, RMSEMetrics1, RMSEMetrics2]);
+      scheme, metricRegion, rcpValues, numClimateSignalSets,
+     // MORE TO THIS?
+     ]);
 
   useEffect(() => {
     if (!showRegionPlot && shouldUpdateMapSource) {
-      console.log("ARTLESS top combination =", topCombination);
+      console.log("COMPUTE top combination =", topCombination);
       let downscaling_l = topDownscaling[0];
       let model_l = topModel[0];
       const time = getYearRangeString(yearRange)
       let url = [bucket+baseDir+downscaling_l+'/'+model_l+'/'+time+'/'+fname];
       const numClimateSignalSets_i = parseInt(numClimateSignalSets, 10);
+
+      console.log("COMPUTE i=",0);
+      console.log("COMPUTE should be adding url = ",url);
 
       setUrl(baseDir, downscaling_l, model_l, yearRange, ensemble);
       setDownscaling(downscaling_l);
@@ -1231,6 +1201,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       // handleFilterAndSetClimColormapName(local_filterValue);
 
       for (let i=1; i<numClimateSignalSets_i; i++) {
+        console.log("COMPUTE i=",i);
         downscaling_l = topDownscaling[i];
         model_l = topModel[i];
         addUrlArrayMember(downscaling_l, model_l, yearRange, ensemble);
@@ -1242,28 +1213,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     const numSelected = countNumMetrics();
     setNumMetrics(numSelected);
   }, [metrics1, metrics2, metrics3, metrics4,
-      stdDevMetrics1, stdDevMetrics2,
-      RMSEMetrics1, RMSEMetrics2,
-      metricMethod,
+      metrics5, metrics6, metrics7,
+      scheme, metricRegion, rcpValues // more to this?
       ]);
 
-  useEffect(() => {
-    if (metricMethod1['RMSE']) {
-      setMetricMethod({'RMSE': true, 'Std. Dev.': false, 'Correlation': false});
-      setMetricMethod2({'Correlation': false});
-    }
-    else if (metricMethod1['Std. Dev.']) {
-      setMetricMethod({'RMSE': false, 'Std. Dev.': true, 'Correlation': false});
-      setMetricMethod2({'Correlation': false});
-    }
-  }, [metricMethod1]);
-
-  useEffect(() => {
-    if (metricMethod2['Correlation']) {
-      setMetricMethod({'RMSE': false, 'Std. Dev.': false, 'Correlation': true});
-      setMetricMethod1({'RMSE': false, 'Std. Dev.': false});
-    }
-  }, [metricMethod2]);
 
   // const handleMetrics = useCallback((e) => {
   //   const choice = e;
@@ -1283,109 +1236,30 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   //   }
   // });
 
-  const handleStdDevMetrics = useCallback((e) => {
-    const choice = e;
-    const keys = JSON.stringify(Object.keys(e));
-    if (keys === '["tavg","n34t","ttrend"]') {
-      setMetrics1(e);
-    } else if (keys === '["t90","t99","djf_t"]') {
-      setMetrics2(e);
-    } else if (keys === '["mam_t","jja_t","son_t"]') {
-      setMetrics3(e);
-    } else if (keys === '["prec","n34pr","ptrend"]') {
-      setMetrics4(e);
-    } else if (keys === '["pr90","pr99","djf_p"]') {
-      // setMetrics5(e);
-    } else if (keys === '["mam_p","jja_p","son_p"]') {
-      // setMetrics6(e);
-    }
-  });
-
-  const handleRMSEMetricsChange = useCallback((e) => {
-    const all = e.all;
-    const clear = e.clear;
-    const clearall = e.clearall;
-
-    if (all) {
-      setRMSEMetrics({all: true, clear: false, clearall: false});
-      setRMSEMetrics1({n34t: true, ttrend: true, t90: true, t99: true,});
-      setRMSEMetrics2({n34pr: true, ptrend: true, pr90: true, pr99: true,});
-    } else if (clear) {
-      setRMSEMetrics({all: false, clear: false, clearall: false});
-      setRMSEMetrics1({n34t: false, ttrend: false, t90: false, t99: false,});
-      setRMSEMetrics2({n34pr: false, ptrend: false, pr90: false, pr99: false,});
-    } else if (clearall) {
-      setRMSEMetrics({all: false, clear: false, clearall: false});
-      setRMSEMetrics1({n34t: false, ttrend: false, t90: false, t99: false,});
-      setRMSEMetrics2({n34pr: false, ptrend: false, pr90: false, pr99: false,});
-      setStdDevMetrics({all: false, clear: false, clearall: false});
-      setStdDevMetrics1({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
-      setStdDevMetrics2({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
-      setMetrics({all: false, clear: false, clearall: false});
-      setMetrics1({n34t: false, n34pr: false, ttrend: false, ptrend: false,});
-      setMetrics2({t90: false, t99: false, pr90: false, pr99: false,});
-      setMetrics3({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
-      setMetrics4({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
-    }
-  });
-
-  const handleStdDevMetricsChange = useCallback((e) => {
-    const all = e.all;
-    const clear = e.clear;
-    const clearall = e.clearall;
-
-    if (all) {
-      setStdDevMetrics({all: true, clear: false, clearall: false});
-      setStdDevMetrics1({djf_t: true, mam_t: true, jja_t: true, son_t: true,});
-      setStdDevMetrics2({djf_p: true, mam_p: true, jja_p: true, son_p: true,});
-    } else if (clear) {
-      setStdDevMetrics({all: false, clear: false, clearall: false});
-      setStdDevMetrics1({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
-      setStdDevMetrics2({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
-    } else if (clearall) {
-      setRMSEMetrics({all: false, clear: false, clearall: false});
-      setRMSEMetrics1({n34t: false, ttrend: false, t90: false, t99: false,});
-      setRMSEMetrics2({n34pr: false, ptrend: false, pr90: false, pr99: false,});
-      setStdDevMetrics({all: false, clear: false, clearall: false});
-      setStdDevMetrics1({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
-      setStdDevMetrics2({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
-      setMetrics({all: false, clear: false, clearall: false});
-      setMetrics1({n34t: false, n34pr: false, ttrend: false, ptrend: false,});
-      setMetrics2({t90: false, t99: false, pr90: false, pr99: false,});
-      setMetrics3({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
-      setMetrics4({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
-    }
-  });
-
   const handleClimateMetricsChange = useCallback((e) => {
     const all = e.all;
     const clear = e.clear;
-    const clearall = e.clearall;
 
     if (all) {
-      setMetrics({all: true, clear: false, clearall: false});
+      setMetrics({all: true, clear: false});
       setMetrics1({n34t: true, n34pr: true, ttrend: true, ptrend: true,});
       setMetrics2({t90: true, t99: true, pr90: true, pr99: true,});
       setMetrics3({djf_t: true, mam_t: true, jja_t: true, son_t: true,});
       setMetrics4({djf_p: true, mam_p: true, jja_p: true, son_p: true,});
+      setMetrics5({ ann_snow: true, ann_t: true, ann_p: true, tpcorr: true,});
+      setMetrics6({ drought_1yr: true, drought_2yr: true, drought_5yr: true,});
+      setMetrics7({ wt_day_to_day: true, wt_clim: true, freezethaw: true,});
     } else if (clear) {
-      setMetrics({all: false, clear: false, clearall: false});
+      setMetrics({all: false, clear: false});
       setMetrics1({n34t: false, n34pr: false, ttrend: false, ptrend: false,});
       setMetrics2({t90: false, t99: false, pr90: false, pr99: false,});
       setMetrics3({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
       setMetrics4({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
-    } else if (clearall) {
-      setRMSEMetrics({all: false, clear: false, clearall: false});
-      setRMSEMetrics1({n34t: false, ttrend: false, t90: false, t99: false,});
-      setRMSEMetrics2({n34pr: false, ptrend: false, pr90: false, pr99: false,});
-      setStdDevMetrics({all: false, clear: false, clearall: false});
-      setStdDevMetrics1({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
-      setStdDevMetrics2({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
-      setMetrics({all: false, clear: false, clearall: false});
-      setMetrics1({n34t: false, n34pr: false, ttrend: false, ptrend: false,});
-      setMetrics2({t90: false, t99: false, pr90: false, pr99: false,});
-      setMetrics3({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
-      setMetrics4({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
+      setMetrics5({ ann_snow: false, ann_t: false, ann_p: false,
+                    tpcorr: false,});
+      setMetrics6({ drought_1yr: false, drought_2yr: false,
+                    drought_5yr: false,});
+      setMetrics7({ wt_day_to_day: false, wt_clim: false, freezethaw: false,});
     }
   });
 
@@ -2044,11 +1918,57 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   };
 
+  // const [metricRegion, setMetricRegion] = useState('desertsouthwest');
+  useEffect(() => {
+    set_n34t_score(metric_scores["n34t"]);
+    set_ttrend_score(metric_scores["ttrend"]);
+    set_t90_score(metric_scores["t90"]);
+    set_t99_score(metric_scores["t99"]);
+    set_freezethaw_score(metric_scores["freezethaw"]);
+    set_djf_t_score(metric_scores["djf_t"]);
+    set_mam_t_score(metric_scores["mam_t"]);
+    set_jja_t_score(metric_scores["jja_t"]);
+    set_son_t_score(metric_scores["son_t"]);
+    set_ann_t_score(metric_scores["ann_t"]);
+    set_tpcorr_score(metric_scores["tpcorr"]);
+    set_n34pr_score(metric_scores["n34pr"]);
+    set_ptrend_score(metric_scores["ptrend"]);
+    set_pr90_score(metric_scores["pr90"]);
+    set_pr99_score(metric_scores["pr99"]);
+    set_drought_1yr_score(metric_scores["drought_1yr"]);
+    set_drought_2yr_score(metric_scores["drought_2yr"]);
+    set_drought_5yr_score(metric_scores["drought_5yr"]);
+    set_djf_p_score(metric_scores["djf_p"]);
+    set_mam_p_score(metric_scores["mam_p"]);
+    set_jja_p_score(metric_scores["jja_p"]);
+    set_son_p_score(metric_scores["son_p"]);
+    set_ann_p_score(metric_scores["ann_p"]);
+    set_ann_snow_score(metric_scores["ann_snow"]);
+    set_wt_day_to_day_score(metric_scores["wt_day_to_day"]);
+    set_wt_clim_score(metric_scores["wt_clim"]);
+    computeMetricScoreToggle(false);
+  }, [metric_scores, scheme, region]);
+
+
+  useEffect(() => {
+    setMetricsSettings(region_metric_settings[metricRegion]);
+  }, [metricRegion]);
+
+
+  useEffect(() => {
+    console.log("COMPUTE SOURCE =", mapSource);
+  }, [mapSource]);
+
+  // call setMetricScores when variables change
+  useEffect(() => {
+    const metrics_settings_l = region_metric_settings[metricRegion];
+    setMetricScores(metrics_settings_l['scores'][scheme]);
+  }, [scheme, metricRegion]);
+
+
   const handleMetricRegionChange = useCallback((e) => {
     const metricRegion = e.target.value;
     setMetricRegion(metricRegion);
-    metrics_settings = region_metric_settings[metricRegion];
-    computeMetricScoreToggle(v => !v);
   });
 
   const MetricRegionChoiceBox = () => {
@@ -2137,22 +2057,41 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       );
     }
   };
+          // {schemeLabels[key]}
+
+
+  const handleSchemeChange = useCallback((e) => {
+    const scheme = e.target.value;
+    setScheme(scheme);
+    // setObsUrl(obs, yearRange, dif_false, region);
+  });
+
+  const SchemeBox = () => {
+    return(
+      <>
+      <Box sx={{ ...sx.label, mt: [4] }}>1. Normalization Scheme</Box>
+      <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={handleSchemeChange}
+        sx={{ mt: [1] }}
+        value={scheme}
+      >
+      {Object.entries(metrics_settings.schemes).map(([key, label]) => (
+          <option key={key} value={key}>
+          {label}
+          </option>
+      ))}
+      </Select>
+      </>
+    );
+  };
 
   const ClimateSignalBoxMetrics = ({numMetrics}) => {
     return(
       <>
-
-      <Box sx={{ ...sx.label, mt: [4] }}>1. Analysis Method</Box>
-      <Filter
-        values={metricMethod1}
-        setValues={setMetricMethod1}
-      />
-      <Filter
-        values={metricMethod2}
-        setValues={setMetricMethod2}
-      />
-
-      <MetricBox />
+      <SchemeBox />
+      <MetricsBox />
 
       <Box sx={{mt:4}}>3. FUTURE RCP SCENARIO</Box>
       <Filter
