@@ -1,6 +1,7 @@
 // pages/test.js (or any client component)
 import { useEffect, useState } from "react";
 import { settings } from '../initialConditions/conus';
+import { metrics_settings } from '../metrics/desertsouthwest_metrics';
 
 export default function Test() {
   const [rows, setRows] = useState([]);
@@ -8,8 +9,9 @@ export default function Test() {
   // your inputs
   // const data = ["hist.1981_2004", "rcp45.2076_2099", "rcp85.2076_2099", "foobar"];
   const data = ["hist.1981_2004", "rcp45.2076_2099", "rcp85.2076_2099"];
-  const bucket = "https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/map/";
-  const bucket_ndp = bucket;// + "maca/mri_cgcm3/"; // ensure trailing slash
+  const bucket = "https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/";
+  const bucket_ndp = bucket+"map/";// + "maca/mri_cgcm3/" ensure trailing slash
+  const bucket_metric = bucket+"climateSignal/";
 
   // helper: fetch with timeout
   async function fetchWithTimeout(url, ms = 8000, init = {}) {
@@ -36,19 +38,6 @@ export default function Test() {
     }
   }
 
-  // load exactly once when component opens
-  // useEffect(() => {
-  //   (async () => {
-  //     const checks = await Promise.all(
-  //       data.map(async (p, i) => {
-  //         const url = bucket_ndp + "/" + String(p);
-  //         const r = await headOrGetOK(url);
-  //         return { index: i, path: p, url, ...r };
-  //       })
-  //     );
-  //     setRows(checks);
-  //   })();
-  // }, []); // <-- empty deps: run once
 
 useEffect(() => {
   const trimSlashes = (s) => String(s).replace(/^\/+|\/+$/g, "");
@@ -79,6 +68,28 @@ useEffect(() => {
     }
   }
 
+
+  metrics_settings.combinations_downscaling.forEach((method, i) => {
+      const model = metrics_settings.combinations_model[i];
+      for (const p of data) {
+          const url = [
+              bucket_metric,   // base
+              method,          // <method>
+              model,           // <model>
+              p,               // <data>
+          ].map(trimSlashes).join("/")
+          const entry = {
+              model: model,
+              method,
+              path: p,
+              url,
+          }
+          combos.push(entry);
+      }
+  });
+
+
+
   (async () => {
     const checks = await Promise.all(
       combos.map(async (c, i) => {
@@ -92,8 +103,59 @@ useEffect(() => {
 
 
 
+  const okCount = rows.filter(r => r.ok).length;
+  const total = rows.length;
+  const pct = total ? Math.round((okCount / total) * 100) : 0;
+
+
   return (
     <div style={{ fontFamily: "system-ui, Arial, sans-serif", padding: 24 }}>
+
+      {/* --- DASHBOARD --- */}
+      <div
+        style={{
+                  display: "flex",
+          alignItems: "center",
+          gap: 16,
+          marginBottom: 16,
+          padding: "10px 14px",
+          borderRadius: 12,
+          background: "#111",
+          color: "#fff",
+          border: "1px solid #333",
+          maxWidth: 1000,      // match table
+        }}
+      >
+        <strong style={{ fontSize: 18 }}>Datasets Up:</strong>
+        <span style={{ fontSize: 18 }}>{okCount} / {total}</span>
+        <span
+          style={{
+            fontSize: 12,
+            padding: "2px 8px",
+            borderRadius: 999,
+            background: okCount === total && total > 0 ? "#0f5132" : "#5a1a1a",
+            color: "#fff",
+            marginLeft: 6,
+          }}
+        >
+          {pct}%
+        </span>
+
+        {/* simple progress bar */}
+        <div style={{ flex: 1, height: 8, background: "#333", borderRadius: 999, marginLeft: 12 }}>
+          <div
+            style={{
+              width: `${pct}%`,
+              height: "100%",
+              background: "#22c55e",
+              borderRadius: 999,
+              transition: "width 200ms linear",
+            }}
+          />
+        </div>
+      </div>
+
+
       <h1>URL Status</h1>
       <table style={{ borderCollapse: "collapse", width: "100%", maxWidth: 1000 }}>
         <thead>
