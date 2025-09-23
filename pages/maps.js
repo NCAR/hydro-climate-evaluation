@@ -47,7 +47,7 @@ useEffect(() => {
   for (const [method, models] of Object.entries(settings.model || {})) {
     for (const [modelKey, modelLabel] of Object.entries(models || {})) {
       for (const p of data) {
-        if (method.includes("gard")) {
+        if (method.includes("gard") && p.includes("rcp")) {
           continue; // skip this iteration
         }
 

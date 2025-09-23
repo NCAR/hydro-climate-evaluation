@@ -46,6 +46,21 @@ useEffect(() => {
   metrics_settings.combinations_downscaling.forEach((method, i) => {
       const model = metrics_settings.combinations_model[i];
       for (const p of data) {
+        if (method.includes("gard") && p.includes("rcp")) {
+          continue; // skip this iteration
+        }
+        if (method.includes("maca") && model.includes("access1_3") && p.includes("rcp")) {
+          continue; // skip this iteration
+        }
+        if (method.includes("nasa_nex") && model.includes("access1_3") && p.includes("rcp")) {
+          continue; // skip this iteration
+        }
+        if (method.includes("nasa_nex") && model.includes("ccsm4") && p.includes("rcp")) {
+          continue; // skip this iteration
+        }
+
+
+
           const url = [
               bucket_metric,   // base
               method,          // <method>
