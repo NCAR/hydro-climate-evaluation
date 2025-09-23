@@ -68,28 +68,6 @@ useEffect(() => {
     }
   }
 
-
-  metrics_settings.combinations_downscaling.forEach((method, i) => {
-      const model = metrics_settings.combinations_model[i];
-      for (const p of data) {
-          const url = [
-              bucket_metric,   // base
-              method,          // <method>
-              model,           // <model>
-              p,               // <data>
-          ].map(trimSlashes).join("/")
-          const entry = {
-              model: model,
-              method,
-              path: p,
-              url,
-          }
-          combos.push(entry);
-      }
-  });
-
-
-
   (async () => {
     const checks = await Promise.all(
       combos.map(async (c, i) => {
@@ -156,7 +134,7 @@ useEffect(() => {
       </div>
 
 
-      <h1>URL Status</h1>
+      <h1>Maps URL Status Report</h1>
       <table style={{ borderCollapse: "collapse", width: "100%", maxWidth: 1000 }}>
         <thead>
           <tr>
