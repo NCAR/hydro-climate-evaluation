@@ -47,6 +47,10 @@ useEffect(() => {
   for (const [method, models] of Object.entries(settings.model || {})) {
     for (const [modelKey, modelLabel] of Object.entries(models || {})) {
       for (const p of data) {
+        if (method.includes("gard")) {
+          continue; // skip this iteration
+        }
+
         const url = [
           bucket_ndp,      // base
           method,          // <method>
