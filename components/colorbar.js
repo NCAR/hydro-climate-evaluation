@@ -158,7 +158,9 @@ const Colorbar = ({
   }
 
   if (band === 'ptre' || band === 'ttre' ||
-      band === 'n34p' || band === 'n34t' ) {
+      band === 'n34p' || band === 'n34t' ||
+      band === 'tpco'
+     ) {
     scale = 0.1;
     fixedVal = 1;
   }

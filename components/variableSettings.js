@@ -36,6 +36,15 @@ export const Scale_Values = Object.freeze({
   dif_drought_2yr: 0.1,
   dif_drought_5yr: 0.1,
 
+  // new metrics
+  dif_tpcorr: 0.1,
+  dif_wt_clim: 0.1,
+  dif_wt_day_to_day: 0.1,
+
+  // this does nothing, change in colorbar.js
+  tpcorr: 0.1,
+
+
   // new cmip variables
   eli_t: 0.1,
   eli_p: 0.1,
@@ -66,6 +75,7 @@ export const Clim_Ranges = Object.freeze({
   dif_son_t: { max: 4, min: -4 },
   dif_ann_t: { max: 4, min: -4 },
 
+
   // precip variables
   prec: { max: 70, min: 0 },
   n34pr: { max: 1, min: -1 },
@@ -94,6 +104,15 @@ export const Clim_Ranges = Object.freeze({
   freezethaw: { max: 250, min: 0 },
   dif_ann_snow: { max: 50, min: -50 },
   dif_freezethaw: { max: 50, min: -50 },
+
+  // new vars
+  tpcorr: { max: 1, min: -1},
+  wt_clim: { max: 1, min: 0},
+  wt_day_to_day: { max: 1, min: 0},
+  dif_tpcorr: { max: 1, min: -1},
+  dif_wt_clim: { max: 10, min: -10},
+  dif_wt_day_to_day: { max: 10, min: -10},
+
 
   // drought
   drought_1yr: { max: 12, min: 0 },
@@ -193,6 +212,15 @@ export const Default_Colormaps = Object.freeze({
   eli_p: precip_colormap,
   dif_eli_t: dif_temp_colormap,
   dif_eli_p: dif_precip_colormap,
+
+  // new variables
+  tpcorr: precip_colormap,
+  wt_clim: precip_colormap,
+  wt_day_to_day: precip_colormap,
+  dif_tpcorr: dif_precip_colormap,
+  dif_wt_clim: dif_precip_colormap,
+  dif_wt_day_to_day: dif_precip_colormap,
+
 });
 
 export const readmeUrl =
