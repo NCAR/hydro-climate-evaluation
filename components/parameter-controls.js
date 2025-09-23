@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react';
+import { useRef, useLayoutEffect, useState, Fragment } from 'react';
 import { Box, Flex } from 'theme-ui';
 import { useCallback, useEffect } from 'react';
 import { useMapbox } from '../maps/src/mapbox';
@@ -1647,17 +1647,28 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
-
-  const BestPerformingBox = ({topCombination}) => {
-    let combinationBox;
+  const BestPerformingBox = ({ topCombination }) => {
     if (topCombination === "Select Metrics") {
-        combinationBox = <Box> {topCombination} </Box>
-    } else {
-        combinationBox = topCombination.map((item) => (<Box> {item} </Box>))
+      return <Box>{topCombination}</Box>;
     }
-    return (combinationBox);
-  };
 
+    const items = Array.isArray(topCombination) ? topCombination : [];
+
+    return (
+      <Box as="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
+        {items.map((item, idx) => (
+          <Box
+            as="li"
+            // prefer item as key; fallback to idx
+            key={typeof item === 'string' && item ? item : idx}
+            sx={{ mb: 1 }}
+          >
+            {item}
+          </Box>
+        ))}
+      </Box>
+    );
+  };
 
   const YearRangeBox = ({downscaling_l, past = true, future = true,
                          dif=false}) => {
@@ -2028,7 +2039,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
              obsOrDataChoice={difObsOrDataChoice1}
              setObsOrDataChoice={setObsOrDataChoice1} />
           <YearRangeBox value={yearRange} downscaling_l={downscaling}
-                        future={false}
+                        future={true}
            />
 
           {difObsOrDataChoice1['Model'] ?
@@ -2045,7 +2056,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
              obsOrDataChoice={difObsOrDataChoice2}
              setObsOrDataChoice={setObsOrDataChoice2} />
           <YearRangeBox value={yearRangeDif} downscaling_l={downscalingDif}
-                        future={false} dif={dif_t}
+                        future={true} dif={dif_t}
           />
           {difObsOrDataChoice2['Model'] ?
                       <><MapChoicesBox dif={true} />  <RcpBox dif={true} /></>
@@ -2155,16 +2166,22 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   }; {/* end of LegendAndColorbarBox */}
 
 
+  const scrollref = useRef(null);
+  const lastTop = useRef(0);
+
   const ComputeChoiceBox = () => {
+    // restore after each render
+    useLayoutEffect(() => {
+      if (scrollref.current) scrollref.current.scrollTop = lastTop.current;
+    });
     return(
     <Box
-      sx={{ position: 'absolute', top: 20, left: 20,
-            backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '10px',
-            borderRadius: '5px',
-            maxHeight: '95vh',     // or any height you want
-            overflowY: 'auto'       // adds vertical scrollbar if needed
-          }}
-    >
+      ref={scrollref}
+      onScroll={(e) => (lastTop.current = e.currentTarget.scrollTop)}
+      sx={{ position: 'fixed', top: 20, left: 20, zIndex: 1000,
+            maxHeight: '95vh', overflowY: 'auto',
+            backgroundColor: 'rgba(0,0,0,0.7)', p: '10px', borderRadius: '5px',
+            overflowAnchor: 'none' }}    >
       <ComputeChoiceFilter />
     </Box>
     );
