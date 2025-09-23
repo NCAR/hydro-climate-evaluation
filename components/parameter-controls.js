@@ -456,8 +456,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const resetLatLon = () => {
     if (map) {
       map.jumpTo({
-        center: [-97, 38],
-        zoom: 4,
+        center: [settings.lon, settings.lat],
+        zoom: settings.zoom,
       });
     }
   };
@@ -1156,6 +1156,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     if (choice['Modeling']) {
       // setAveChoice({ 'Modeling': true, 'Observation': false, });
       setAveChoice(choice);
+      const yearRange = Object.keys(settings.past_eras)[0];
+      setYearRange(yearRange);
       setUrl(baseDir, downscaling, model, yearRange, ensemble)
     } else if (choice['Observation']) {
       setAveChoice(choice);
