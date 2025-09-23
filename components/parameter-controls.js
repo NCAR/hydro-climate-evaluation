@@ -1822,7 +1822,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   const AveChoiceBox = () => {
     if (aveChoice['Modeling']) {
-      // setMapSource([bucket+baseDir+downscaling+'/'+model+'/'+yearRange+'/'+fname]);
       return (
         <>
         <Filter
@@ -1835,13 +1834,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         </>
       );
     } else if (aveChoice['Observation']) {
-      setYearRange(Object.keys(settings.past_eras)[0]);
-
-      // if (settings.obs_era !== undefined) {
-      //   console.log("FOO RIGHT HERE");
-      //   setYearRange(settings.obs_era);
-      // }
-
       return (
         <>
         <Filter
