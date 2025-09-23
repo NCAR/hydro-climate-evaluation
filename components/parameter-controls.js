@@ -729,7 +729,28 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     } else if (metric === 'drought_5yr') {
       setBand('d5yr');
       setUnits('num. months SPI < -1');
-    } // else if (metric === 'drought_5yr') {
+    } else if (metric === 'wt_clim') {
+      // setBand('wt_clim');
+      setUnits('recreate dataset');
+    } else if (metric === 'wt_day_to_day') {
+      // setBand('wt_day_to_day');
+      setUnits('recreate dataset');
+    } else if (metric === 'tpcorr') {
+      setBand('tpco');
+      setUnits('correlation');
+    }
+
+    else {
+      setUnits('fill in missing units for '+metric);
+    }
+
+    // else if (metric === '') {
+    //   setBand('');
+    //   setUnits('');
+    // }
+
+
+    // else if (metric === 'drought_5yr') {
     //   setBand('d5yr');
     //   setUnits('num. months SPI < -1');
     // } else if (metric === 'drought_5yr') {
@@ -1813,7 +1834,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       {settings.ensemble !== null && <EnsembleBox />}
 
       <VariableChoiceBox climateSignal={computeChoice['Climate Signal']} />
-      {(!computeChoice['Climate Signal'] && showMetricLabel)
+      {/*(!computeChoice['Climate Signal'] && showMetricLabel)
+       && setMetricLabel()*/}
+      {(!computeChoice['Climate Signal'])
        && setMetricLabel()}
       {/* </Box> */}
     </>
@@ -2003,6 +2026,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           <ClimateSignalChoiceBox />
           <MetricRegionChoiceBox />
           <ClimateSignalBoxMetrics />
+          {setMetricLabel()}
         </>
       );
     } else { // method and model
@@ -2016,6 +2040,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
            setValues={handleRCPValues}
            multiSelect={false}
           />
+          {setMetricLabel()}
         </>
       );
     }
@@ -2170,7 +2195,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     <Box
       ref={scrollref}
       onScroll={(e) => (lastTop.current = e.currentTarget.scrollTop)}
-      sx={{ position: 'fixed', top: 20, left: 20, zIndex: 1000,
+      sx={{ position: 'absolute', top: 20, left: 20, zIndex: 1000,
             maxHeight: '95vh', overflowY: 'auto',
             backgroundColor: 'rgba(0,0,0,0.7)', p: '10px', borderRadius: '5px',
             overflowAnchor: 'none' }}    >
