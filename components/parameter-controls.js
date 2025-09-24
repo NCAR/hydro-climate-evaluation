@@ -131,6 +131,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   // set to combstd
   const [scheme, setScheme] =  useState('combstd');
 
+  useEffect(() => {
+    console.log("BAR: ------------------------------------");
+    console.log("BAR: map =", mapSource);
+    console.log("BAR: dif =", mapSourceDif);
+  }, [mapSource, mapSourceDif]);
+
+
 
   function setUrl(baseDir, downscaling, model, yearRange, ensemble, dif=false, rcp=null) {
     const time = getYearRangeString(yearRange, rcp);
@@ -556,22 +563,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const handleDownscalingDifChange = useCallback((e) => {
     const downscalingDif = e.target.value;
     setDownscalingDif(downscalingDif);
-
-    let safemodel = modelDif;
-    if (downscaling === 'maca') {
-      if (modelDif === 'access1_3') {
-        setModelDif('noresm1_m');
-        safemodel = 'noresm1_m';
-      }
-    }
-    if (downscalingDif === 'nasa_nex') {
-      if (model === 'access1_3' || model === 'ccsm4') {
-        setModelDif('noresm1_m');
-        safemodel = 'noresm1_m';
-      }
-    }
-
-    setUrl(baseDir, downscalingDif, safemodel, yearRangeDif, ensemble);
+    let safe_modelDif = checkDownscalingModel(downscalingDif, true);
+    let safe_ensembleDif = checkModelEnsemble(safe_modelDif, downscalingDif);
+    setModelDif(safe_modelDif);
+    setUrl(baseDir, downscalingDif, safe_modelDif, yearRangeDif,
+           safe_ensembleDif, dif_t);
   });
 
   function checkModelEnsemble(model, downscaling) {
@@ -615,7 +611,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     return ds;
   };
 
-  function checkDownscalingModel(downscaling) {
+  function checkDownscalingModel(downscaling, dif=false) {
     let mod = model
     if (!mod) {
       return mod;
@@ -625,13 +621,21 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       const modList = Object.keys(settings.model_climateSignal[downscaling] || {});
       if (!modList.includes(mod)) {
         mod = modList[0];
-        setModel(mod);
+        if (!dif) {
+          setModel(mod);
+        } else {
+          setModelDif(mod);
+        }
       }
     } else {
       const modList = Object.keys(settings.model[downscaling] || {});
       if (!modList.includes(mod)) {
         mod = modList[0];
-        setModel(mod);
+        if (!dif) {
+          setModel(mod);
+        } else {
+          setModelDif(mod);
+        }
       }
     }
     return mod;
@@ -1761,24 +1765,26 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     var downscalingVar;
     var modelChange;
     var modelVar;
+    var yearRange_l;
     let showMetricLabel;
     if (!dif) {
       downscalingChange = handleDownscalingChange;
       downscalingVar = downscaling;
       modelChange = handleModelChange;
       modelVar = model;
-      showMetricLabel = Object.keys(settings.past_eras).includes(yearRange)
+      yearRange_l = yearRange
     } else {
       downscalingChange = handleDownscalingDifChange;
       downscalingVar = downscalingDif;
       modelChange = handleModelDifChange;
       modelVar = modelDif;
-      showMetricLabel = Object.keys(settings.past_eras).includes(yearRangeDif)
+      yearRange_l = yearRangeDif
     }
+    showMetricLabel = Object.keys(settings.past_eras).includes(yearRange_l)
 
     let downscaling_d, model_d
     if (climateSignal == false) {
-      downscaling_d = Object.keys(settings.past_eras).includes(yearRange)
+      downscaling_d = Object.keys(settings.past_eras).includes(yearRange_l)
         ? settings.downscaling_past
         : settings.downscaling_future;
 
@@ -1786,21 +1792,17 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     } else {
       downscaling_d = settings.downscaling_climateSignal;
       model_d = settings.model_climateSignal[downscaling];
-      console.log("DD=",downscaling_d);
-      console.log("MD=",model_d);
-      console.log("downscaling", downscaling)
+      // console.log("DD=",downscaling_d);
+      // console.log("MD=",model_d);
+      // console.log("downscaling", downscaling)
     }
-
-
-    // console.log("dd =", downscaling_d);
-    // console.log("md =", model_d);
 
     return(
       <>
       {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
 
       {computeChoice['Ave.'] &&
-       <YearRangeBox downscaling_l={downscaling} />}
+       <YearRangeBox downscaling_l={downscalingVar} />}
 
 
       <Box sx={{ ...sx.label, mt: [4] }}>{settings.downscaling_title}</Box>
