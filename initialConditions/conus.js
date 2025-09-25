@@ -1,3 +1,6 @@
+      // 'wt_day_to_day',
+      // 'wt_clim',
+
 export const settings = {
   lat: 38,
   lon: -97,
@@ -6,7 +9,6 @@ export const settings = {
   dif: true,
   observation: true,
   bucket: 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/',
-
 
   variables: [
       'n34pr',
@@ -30,6 +32,7 @@ export const settings = {
       'drought_1yr',
       'drought_2yr',
       'drought_5yr',
+      'tpcorr',
   ],
   variables_trend: ['ptrend', 'ttrend'],
 
@@ -48,6 +51,8 @@ export const settings = {
       '1981_2004': '1981-2004'
   },
   future_eras: {
+      '2036_2059': '2036-2059',
+      '2056_2079': '2056-2079',
       '2076_2099': '2076-2099'
   },
 
@@ -58,12 +63,14 @@ export const settings = {
   downscaling_past: {
       'icar':'ICAR',
       'icarwest':'ICAR West',
-      'gard_r2':'GARD_r2',
-      'gard_r3':'GARD_r3',
       'loca_8th':'LOCA_8th',
       'maca':'MACA',
       'nasa_nex':'NASA-NEX',
   },
+  tmp_ds_past: {
+      'gard_r2':'GARD_r2',
+      'gard_r3':'GARD_r3',},
+
 
   downscaling_future: {
       'icar':'ICAR',
@@ -73,20 +80,17 @@ export const settings = {
       'nasa_nex':'NASA-NEX',
   },
 
-  model: {icar: {access1_3: "ACCESS1-3", canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5",
-      mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"}, gard_r3: {access1_3: "ACCESS1-3",
+  model: {loca_8th: {access1_3: "ACCESS1-3", canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5",
+      mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"}, icar: {access1_3: "ACCESS1-3",
       canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3",
-      noresm1_m: "NorESM1-M"}, maca: {canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5",
-      mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"}, gard_r2: {access1_3: "ACCESS1-3",
-      canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3",
-      noresm1_m: "NorESM1-M"}, loca_8th: {access1_3: "ACCESS1-3", canesm2: "CanESM2",
+      noresm1_m: "NorESM1-M"}, gard_r3: {access1_3: "ACCESS1-3", canesm2: "CanESM2",
       ccsm4: "CCSM4", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"},
-      icarwest: {canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3"},
-      nasa_nex: {canesm2: "CanESM2", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"}
+      gard_r2: {access1_3: "ACCESS1-3", canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5",
+      mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"}, maca: {canesm2: "CanESM2",
+      ccsm4: "CCSM4", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"},
+      nasa_nex: {canesm2: "CanESM2", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"},
+      icarwest: {canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3"}
   },
-
-
-
 
   downscaling_climateSignal: {
       icar: 'ICAR',
@@ -95,45 +99,52 @@ export const settings = {
       maca: 'MACA',
       nasa_nex: 'NASA_NEX',
   },
-
-  model_climateSignal: {
-      icar: {
-          access1_3: 'ACCESS1-3',
-          canesm2: 'CanESM2',
-          ccsm4: 'CCSM4',
-          miroc5: 'MIROC5',
-          mri_cgcm3: 'MRI-CGCM3',
-          noresm1_m: 'NorESM1-M',
-      },
-      icarwest: {
-          canesm2: 'CanESM2',
-          ccsm4: 'CCSM4',
-          miroc5: 'MIROC5',
-          mri_cgcm3: 'MRI-CGCM3',
-      },
-      loca_8th: {
-          access1_3: 'ACCESS1-3',
-          canesm2: 'CanESM2',
-          ccsm4: 'CCSM4',
-          miroc5: 'MIROC5',
-          mri_cgcm3: 'MRI-CGCM3',
-          noresm1_m: 'NorESM1-M',
-      },
-      maca: {
-          canesm2: 'CanESM2',
-          ccsm4: 'CCSM4',
-          miroc5: 'MIROC5',
-          mri_cgcm3: 'MRI-CGCM3',
-          noresm1_m: 'NoRESM1-M',
-      },
-      nasa_nex: {
-          canesm2: 'CanESM2',
-          miroc5: 'MIROC5',
-          mri_cgcm3: 'MRI-CGCM3',
-          noresm1_m: 'NoRESM1-M',
-      },
+  tmp: {
+      gard_r2: 'GARD_R2',
+      gard_r3: 'GARD_R3',
   },
 
+  model_climateSignal: {
+    icar: {access1_3: "ACCESS1-3", canesm2: "CanESM2", ccsm4: "CCSM4",
+           miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"},
+    gard_r2: {access1_3: "ACCESS1-3", canesm2: "CanESM2", ccsm4: "CCSM4",
+              miroc5: "MIROC5",
+              mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"},
+    gard_r3: {access1_3: "ACCESS1-3",
+              canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5",
+              mri_cgcm3: "MRI-CGCM3",
+              noresm1_m: "NorESM1-M"},
+    loca_8th: {access1_3: "ACCESS1-3", canesm2: "CanESM2",
+               ccsm4: "CCSM4", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3",
+               noresm1_m: "NorESM1-M"},
+    icarwest: {canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5",
+               mri_cgcm3: "MRI-CGCM3"},
+    maca: {canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5",
+           mri_cgcm3: "MRI-CGCM3",
+           noresm1_m: "NorESM1-M"},
+    nasa_nex: {canesm2: "CanESM2", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3",
+               noresm1_m: "NorESM1-M"}
+  },
+
+
+
+  metricRegions: {
+    desertsouthwest: 'Desert Southwest',
+    greatlakes: 'Great Lakes',
+    gulfcoast: 'Gulf Coast',
+    midatlantic: 'Mid-Atlantic',
+    mountainwest: 'Mountain West',
+    northatlantic: 'North Atlantic',
+    northernplains: 'Northern Plains',
+    pacificnorthwest: 'Pacific Northwest',
+    pacificsouthwest: 'Pacific Southwest',
+  },
+
+  metrics: {
+    desertsouthwest: {
+
+    },
+  },
 
 
   show_ensemble: false,
