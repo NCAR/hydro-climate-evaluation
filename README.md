@@ -1,5 +1,5 @@
-# Hydro Climate Evaluation Map
-The site [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydro-climate-eval) is an interactive web map of hydro-climate data based on [CarbonPlan's maps](https://github.com/carbonplan/maps).
+# Hydro Climate Evaluation Maps
+The sites [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydro-climate-eval) and [hydro.rap.ucar.edu/hydro-climate-eval/global](https://hydro.rap.ucar.edu/hydro-climate-eval/global) are interactive web maps of hydro-climate data, the site is based on [CarbonPlan's maps](https://github.com/carbonplan/maps).
 
 - [Map Viewing Options](https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#map-viewing-options)
 - [Map Variable Details](https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#variable-details)
