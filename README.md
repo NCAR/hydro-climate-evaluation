@@ -48,24 +48,36 @@ See this detailed [downscaling methods matrix document](https://raw.githubuserco
 
 ### Metrics
 
-| **Name** | **Units** | **Description**                                                    |
-|----------|-----------|--------------------------------------------------------------------|
-| DJF_P    |        mm | Dec/Jan/Feb seasonal mean of precipitation                         |
-| DJF_T    |        °C | Dec/Jan/Feb seasonal mean of temperature                           |
-| JJA_P    |        mm | Jun/Jul/Aug seasonal mean of precipitation                         |
-| JJA_T    |        °C | Jun/Jul/Aug seasonal mean of temperature                           |
-| MAM_P    |        mm | Mar/Apr/May seasonal mean of precipitation                         |
-| MAM_T    |        °C | Mar/Apr/May seasonal mean of temperature                           |
-| N34PR    |        mm | Nino 3.4 precipitation teleconnection pattern spactial correlation |
-| N34T     |        °C | Nino 3.4 temperature teleconnection pattern spactial correlation   |
-| PR90     |        mm | Precipitation extremes in the 90th percentile                      |
-| PR99     |        mm | Precipitation extremes in the 99th percentile                      |
-| PTREND   |        mm | Precipitation trends                                               |
-| SON_P    |        mm | Sep/Oct/Nov seasonal mean of precipitation                         |
-| SON_T    |        °C | Sep/Oct/Nov seasonal mean of temperature                           |
-| T90      |        °C | Temperature extremes in the 90th percentile                        |
-| T99      |        °C | Temperature extremes in the 99th percentile                        |
-| TTREND   |        °C | Temperature trends                                                 |
+| **Name**        | **Units** | **Description**                                                    |
+|-----------------|-----------|--------------------------------------------------------------------|
+| `ann_t`         | °C        |                                                                    |
+| `ann_p`         | mm        |                                                                    |
+| `ann_snow`      | mm        |                                                                    |
+| `djf_p`         | mm        | Dec/Jan/Feb seasonal mean of precipitation                         |
+| `djf_t`         | °C        | Dec/Jan/Feb seasonal mean of temperature                           |
+| `drought_1yr`   | Months    | Number of months where 1-year SPI falls below -1.5                 |
+| `drought_2yr`   | Months    | Number of months where 2-year SPI falls below -1.5                 |
+| `drought_5yr`   | Months    | Number of months where 5-year SPI falls below -1.5                 |
+| `freezethaw`    | Days      | Days with daily minimum temperatures below 0°C                     |
+|                 |           | and daily maximum temperatures above 0°C                           |
+| `jja_p`         | mm        | Jun/Jul/Aug seasonal mean of precipitation                         |
+| `jja_t`         | °C        | Jun/Jul/Aug seasonal mean of temperature                           |
+| `mam_p`         | mm        | Mar/Apr/May seasonal mean of precipitation                         |
+| `mam_t`         | °C        | Mar/Apr/May seasonal mean of temperature                           |
+| `n34pr`         | mm        | Nino 3.4 precipitation teleconnection pattern spactial correlation |
+| `n34t`          | °C        | Nino 3.4 temperature teleconnection pattern spactial correlation   |
+| `pr90`          | mm        | Precipitation extremes in the 90th percentile                      |
+| `pr99`          | mm        | Precipitation extremes in the 99th percentile                      |
+| `ptrend`        | mm        | Precipitation trends                                               |
+| `son_p`         | mm        | Sep/Oct/Nov seasonal mean of precipitation                         |
+| `son_t`         | °C        | Sep/Oct/Nov seasonal mean of temperature                           |
+| `t90`           | °C        | Temperature extremes in the 90th percentile                        |
+| `t99`           | °C        | Temperature extremes in the 99th percentile                        |
+| `tpcorr`        |           | Annual temperature-precepitation correlation                       |
+| `ttrend`        | °C        | Temperature trends                                                 |
+| `wt_day_to_day` |           | Weather typing spacial correlation                                 |
+| `wt_clim`       |           | Weather typing climatologies                                       |
+
 
 ### Dif. Obs. Data
 Observational dataset used to compute the difference against.
