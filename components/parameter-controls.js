@@ -228,6 +228,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       const rcpValues_l = rcp_in ?? rcpValues;
       yearRange_s = getRCPKey(rcpValues_l) + "." + yearRange
     }
+    // console.log("DEBUG: yearrang",yearRange_s);
     return yearRange_s;
   }
 
@@ -726,13 +727,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setUnits('num. of days');
     } else if (metric === 'drought_1yr') {
       setBand('d1yr');
-      setUnits('num. months SPI < -1');
+      setUnits('num. months SPI < -1.5');
     } else if (metric === 'drought_2yr') {
       setBand('d2yr');
-      setUnits('num. months SPI < -1');
+      setUnits('num. months SPI < -1.5');
     } else if (metric === 'drought_5yr') {
       setBand('d5yr');
-      setUnits('num. months SPI < -1');
+      setUnits('num. months SPI < -1.5');
     } else if (metric === 'wt_clim') {
       // setBand('wt_clim');
       setUnits('recreate dataset');
@@ -980,7 +981,17 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     //                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     let currentScore = Array(metrics_settings.num_datasets).fill(0);
 
-    console.log("FOO metrics5 =", metrics5);
+    console.log("HACK: metric hack until datsets fixed");
+    metrics_settings.combinations.forEach((val, i) => {
+        if (val === "MACA with ACCESS1-3" ||
+            val === "NASA-NEX with ACCESS1-3" ||
+            val === "NASA-NEX with CCSM4"
+           ) {
+          currentScore[i] += 999;
+        }
+    });
+
+    // console.log("FOO metrics5 =", metrics5);
     if (metrics1['n34t']) {
       currentScore = addScores(currentScore, n34t_score);
     }
@@ -1200,10 +1211,20 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   });
 
   useEffect(() => {
-    setComputeClimateSignal({'COMPUTE': false});
+    if (metricPerformance["Metric Performance"] &&
+        (computeClimateSignal['COMPUTE'] === false)) {
+      setDisplay(false);
+    } else {
+      setDisplay(true);
+    }
+  }, [computeClimateSignal, metricPerformance]);
 
-  }, [metrics, metrics1, metrics2, metrics3, metrics4,
+  useEffect(() => {
+    setComputeClimateSignal({'COMPUTE': false});
+  }, [metrics, metrics1, metrics2, metrics3,
+      metrics4, metrics6, metrics7,
       scheme, metricRegion, rcpValues, numClimateSignalSets,
+      yearRange,
      // MORE TO THIS?
      ]);
 
@@ -1707,16 +1728,18 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       handle = handleYearChange;
       val =  yearRange;
     }
-    if (downscaling_l == 'gard_r2' ||
-        downscaling_l == 'gard_r3') {
-      future = false;
-    }
+
+    // this hack was breaking the options after hitting COMPUTE
+    // if (downscaling_l == 'gard_r2' ||
+    //     downscaling_l == 'gard_r3') {
+    //   future = false;
+    // }
     const options = {
       ...(past ? settings.past_eras : {}),
       ...(future ? settings.future_eras : {}),
     };
 
-    const value = Object.values(options)[0];  // dead code
+    // const value = Object.values(options)[0];  // dead code
     return(
       <>
       <Box sx={{ ...sx.label, mt: [3] }}>Year Range</Box>
