@@ -223,7 +223,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
   const getYearRangeString = (yearRange, rcp_in=null) => {
-    let yearRange_s = "hist." + yearRange;
+    // let yearRange_s = "hist." + yearRange;
+    let yearRange_s = yearRange.startsWith("hist.")
+        ? yearRange
+        : "hist." + yearRange;
     if (Object.keys(settings.future_eras).includes(yearRange)) {
       const rcpValues_l = rcp_in ?? rcpValues;
       yearRange_s = getRCPKey(rcpValues_l) + "." + yearRange
@@ -436,7 +439,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const MetricsBox = () => {
     return(
       <>
-      <Box sx={{ ...sx.label, mt: [4] }}>2. Select Metrics</Box>
+      <Box sx={{ ...sx.label, mt: [4] }}>Select Metrics</Box>
       <Filter
         values={metrics}
         setValues={setMetrics}
@@ -735,10 +738,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setBand('d5yr');
       setUnits('num. months SPI < -1.5');
     } else if (metric === 'wt_clim') {
-      // setBand('wt_clim');
+      // setBand('wtcl');
       setUnits('recreate dataset');
     } else if (metric === 'wt_day_to_day') {
-      // setBand('wt_day_to_day');
+      // setBand('wtds');
       setUnits('recreate dataset');
     } else if (metric === 'tpcorr') {
       setBand('tpco');
@@ -860,17 +863,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const [metrics7, setMetrics7] = useState({ wt_day_to_day: false,
                                              wt_clim: false,
                                              freezethaw: false,});
-
-    // ann_snow
-    // ann_t
-    // ann_p
-    // tpcorr
-    // drought_1yr
-    // drought_2yr
-    // drought_5yr
-    // wt_day_to_day
-    // wt_clim
-    // freezethaw
 
 
   const countNumMetrics = () => {
@@ -1443,18 +1435,24 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   const handleObsChange = useCallback((e) => {
     const obs_l = e.target.value;
+    console.log("DEBUG: handleobschange region=", region)
     setObs(obs_l);
     let region_l = null;
     if (settings.obs_lev2 != null) {
       region_l = region
     }
-    console.log("handleobschange region=", region)
     setObsUrl(obs_l, yearRange, dif_false, region_l);
   });
   const handleObsDifChange = useCallback((e) => {
     const obs_l = e.target.value;
+    console.log("DEBUG: handleobschange region=", region)
     setObsDif(obs_l);
     setObsUrl(obs_l, yearRangeDif, dif_true);
+    // let region_l = null;
+    // if (settings.obs_lev2 != null) {
+    //   region_l = region
+    // }
+    // setObsUrl(obs_l, yearRangeDif, dif_true, region_l);
   });
 
   const handleRegionChange = useCallback((e) => {
@@ -1576,7 +1574,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       }
     };
 
-
     // --- Return Section ---
     if (computeChoice['Ave.']) {
       return (
@@ -1626,13 +1623,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     if (numClimateSignalSets === 1){
       return(
       <>
-      <Box>4. TOP DATASET</Box>
+      <Box>TOP DATASET</Box>
       </>
       );
     } else {
       return(
       <>
-      <Box>4. TOP {numClimateSignalSets} DATASETS</Box>
+      <Box>TOP {numClimateSignalSets} DATASETS</Box>
       </>
       );
     }
@@ -1657,7 +1654,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const ClimateSignalComputeButton = () => {
     return(
       <>
-      <Box>5. COMPUTE CLIMATE SIGNAL</Box>
+      <Box>COMPUTE CLIMATE SIGNAL</Box>
       <BestPerformingBox topCombination={topCombination}/>
       <Filter
        values={computeClimateSignal}
@@ -1733,7 +1730,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     // if (downscaling_l == 'gard_r2' ||
     //     downscaling_l == 'gard_r3') {
     //   future = false;
-    // }
+    // }  ! ARTLESS
     const options = {
       ...(past ? settings.past_eras : {}),
       ...(future ? settings.future_eras : {}),
@@ -2076,6 +2073,16 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   /* TODO */
   /* add arguments to mapchoicesbox */
   const DifferenceBox = ({numMetrics}) => {
+    let futureChoice1 = true;
+    let futureChoice2 = true;
+
+    if (difObsOrDataChoice1['Observation']) {
+      futureChoice1 = false;
+    }
+    if (difObsOrDataChoice2['Observation']) {
+      futureChoice2 = false;
+    }
+
     if (differenceChoice["Dataset A"]) {
       return(
         <Box sx={{ mt: 0 }}>
@@ -2083,7 +2090,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
              obsOrDataChoice={difObsOrDataChoice1}
              setObsOrDataChoice={setObsOrDataChoice1} />
           <YearRangeBox value={yearRange} downscaling_l={downscaling}
-                        future={true}
+                        future={futureChoice1}
            />
 
           {difObsOrDataChoice1['Model'] ?
@@ -2100,7 +2107,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
              obsOrDataChoice={difObsOrDataChoice2}
              setObsOrDataChoice={setObsOrDataChoice2} />
           <YearRangeBox value={yearRangeDif} downscaling_l={downscalingDif}
-                        future={true} dif={dif_t}
+                        future={futureChoice2} dif={dif_t}
           />
           {difObsOrDataChoice2['Model'] ?
                       <><MapChoicesBox dif={true} />  <RcpBox dif={true} /></>
@@ -2124,7 +2131,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const SchemeBox = () => {
     return(
       <>
-      <Box sx={{ ...sx.label, mt: [4] }}>1. Normalization Scheme</Box>
+      <Box sx={{ ...sx.label, mt: [4] }}>Normalization Scheme</Box>
       <Select
         sxSelect={{ bg: 'transparent' }}
         size='xs'
@@ -2148,7 +2155,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       <SchemeBox />
       <MetricsBox />
 
-      <Box sx={{mt:4}}>3. FUTURE RCP SCENARIO</Box>
+      <Box sx={{mt:4}}>FUTURE RCP SCENARIO</Box>
       <Filter
         values={rcpValues}
         setValues={handleRCPValues}
