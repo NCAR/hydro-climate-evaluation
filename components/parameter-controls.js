@@ -138,7 +138,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   }, [mapSource, mapSourceDif]);
 
 
-
   function setUrl(baseDir, downscaling, model, yearRange, ensemble, dif=false, rcp=null) {
     const time = getYearRangeString(yearRange, rcp);
     const url = `${bucket}${baseDir}${downscaling}/${model}/${time}/${ensemble}/${fname}`;
@@ -835,34 +834,34 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           // useState({ "Model": false, "Observation": true });
 
 
-  const [metrics, setMetrics] = useState({ all: false, clear: false});
+  const [metrics, setMetrics] = useState({ all: true, clear: false});
 
-  const [metrics1, setMetrics1] = useState({ n34t: false,
-                                             n34pr: false,
-                                             ttrend: false,
-                                             ptrend: false,});
-  const [metrics2, setMetrics2] = useState({ t90: false,
-                                             t99: false,
-                                             pr90: false,
-                                             pr99: false,});
-  const [metrics3, setMetrics3] = useState({ djf_t: false,
-                                             mam_t: false,
-                                             jja_t: false,
-                                             son_t: false,});
-  const [metrics4, setMetrics4] = useState({ djf_p: false,
-                                             mam_p: false,
-                                             jja_p: false,
-                                             son_p: false,});
-  const [metrics5, setMetrics5] = useState({ ann_snow: false,
-                                             ann_t: false,
-                                             ann_p: false,
-                                             tpcorr: false,});
-  const [metrics6, setMetrics6] = useState({ drought_1yr: false,
-                                             drought_2yr: false,
-                                             drought_5yr: false,});
-  const [metrics7, setMetrics7] = useState({ wt_day_to_day: false,
-                                             wt_clim: false,
-                                             freezethaw: false,});
+  const [metrics1, setMetrics1] = useState({ n34t: true,
+                                             n34pr: true,
+                                             ttrend: true,
+                                             ptrend: true,});
+  const [metrics2, setMetrics2] = useState({ t90: true,
+                                             t99: true,
+                                             pr90: true,
+                                             pr99: true,});
+  const [metrics3, setMetrics3] = useState({ djf_t: true,
+                                             mam_t: true,
+                                             jja_t: true,
+                                             son_t: true,});
+  const [metrics4, setMetrics4] = useState({ djf_p: true,
+                                             mam_p: true,
+                                             jja_p: true,
+                                             son_p: true,});
+  const [metrics5, setMetrics5] = useState({ ann_snow: true,
+                                             ann_t: true,
+                                             ann_p: true,
+                                             tpcorr: true,});
+  const [metrics6, setMetrics6] = useState({ drought_1yr: true,
+                                             drought_2yr: true,
+                                             drought_5yr: true,});
+  const [metrics7, setMetrics7] = useState({ wt_day_to_day: true,
+                                             wt_clim: true,
+                                             freezethaw: true,});
 
 
   const countNumMetrics = () => {
@@ -1252,6 +1251,27 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   useEffect(() => {
     const numSelected = countNumMetrics();
     setNumMetrics(numSelected);
+
+    if (Object.values(metrics1).includes(false) ||
+        Object.values(metrics2).includes(false) ||
+        Object.values(metrics3).includes(false) ||
+        Object.values(metrics4).includes(false) ||
+        Object.values(metrics5).includes(false) ||
+        Object.values(metrics6).includes(false) ||
+        Object.values(metrics7).includes(false)) {
+      setMetrics({all: false, clear: false});
+    }
+    if (!Object.values(metrics1).includes(false) &&
+        !Object.values(metrics2).includes(false) &&
+        !Object.values(metrics3).includes(false) &&
+        !Object.values(metrics4).includes(false) &&
+        !Object.values(metrics5).includes(false) &&
+        !Object.values(metrics6).includes(false) &&
+        !Object.values(metrics7).includes(false)) {
+      setMetrics({all: true, clear: false});
+    }
+
+
   }, [metrics1, metrics2, metrics3, metrics4,
       metrics5, metrics6, metrics7,
       scheme, metricRegion, rcpValues // more to this?
