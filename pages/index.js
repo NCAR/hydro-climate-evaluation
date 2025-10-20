@@ -80,8 +80,11 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   // console.log("INDEX SET DISPLAY =", setDisplay);
   const [reload, setReload] = useState(true);
   const [debug, setDebug] = useState(false);
-  const [opacity, setOpacity] = useState(1);
-  const [month, setMonth] = useState(1);
+  // const [opacity, setOpacity] = useState(1.0);
+  const [metricPerformance, setMetricPerformance] = //useState(true);
+          useState({ "Metric Performance": false });
+  // const [metricRegion, setMetricRegion] = useState(1);
+  const [metricRegion, setMetricRegion] = useState('desertsouthwest');
   const [time, setTime] = useState(1);
   // --- precipitation defaults
   const [band, setBand] = useState('djft');
@@ -143,8 +146,8 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
 
   const [mapVal, setMapVal] = useState(null);
 
-  const getters = { display, reload, debug, opacity, clim,
-                    month, band, colormapName, colormap,
+  const getters = { display, reload, debug, metricPerformance, clim,
+                    metricRegion, band, colormapName, colormap,
                     downscaling, model, metric,
                     yearRange, mapSource, chartSource,
                     downscalingDif, modelDif, yearRangeDif, obs, obsDif,
@@ -157,9 +160,9 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     setDisplay,
     setReload,
     setDebug,
-    setOpacity,
+    setMetricPerformance,
     setClim,
-    setMonth,
+    setMetricRegion,
     setTime,
     setBand,
     setColormapName,
@@ -192,6 +195,18 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   };
 
   const fillValue = 3.4028234663852886e38; // black on land, red nans
+
+  const region_metric_geojson = {
+      'desertsouthwest': 'Desert_border.geojson',
+      'gulfcoast': 'Desert_border.geojson',
+      'mountainwest': 'MtWest_border.geojson',
+      'northernplains': 'NPlains_border.geojson',
+      'pacificsouthwest': 'PacificNW_border.geojson',
+      'greatlakes': 'GreatLakes_border.geojson',
+      'midatlantic': 'MidAtlantic_border.geojson',
+      'northatlantic': 'NorthAtlantic_border.geojson',
+      'pacificnorthwest': 'PacificSW_border.geojson',
+  }
 
 
 
@@ -247,6 +262,38 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       dashArray={[2, 4]}
     />)}
 
+
+    {metricPerformance["Metric Performance"] &&
+      <Line
+        key={metricRegion}
+        color={'black'}
+        source={bucket+'regionmaps/'+region_metric_geojson[metricRegion]}
+        blur={1.0}
+        ndp={false}
+        width={2.7}
+      />
+    }
+
+
+    {/*
+    <Line
+      color={'black'}
+      source={bucket + 'regionmaps/Desert_border.geojson'}
+      blur={1.0}
+      ndp={false}
+      width={3.7}
+    />
+
+
+    <Line
+      color={'black'}
+      source={bucket + 'regionmaps/MtWest_border.geojson'}
+      blur={0.3}
+      ndp={false}
+      width={2.7}
+    />
+    */}
+
     {/*
       source={bucket + 'basemaps/rivers/ne_10m_rivers_north_america.json'}
     */}
@@ -271,8 +318,8 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       source={bucket + 'basemaps/states/rivers.geojson'}
       ndp={false}
     />;
-    */}
 
+{/*
     {showRegionPlot && (
      <RegionPicker
        color={theme.colors.primary}
@@ -281,7 +328,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
        fontSize={'14px'}
        maxRadius={200}
      />)}
-
+    */}
     {/* projection = equirectangular */}
     <Raster
       setMapVal={setMapVal}
@@ -289,7 +336,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       colormap={colormap}
       clim={clim}
       display={display}
-      opacity={opacity}
+      // opacity={opacity}
       mode={'texture'}
       sources={mapSource}
       sourceDif={mapSourceDif}
@@ -303,6 +350,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       regionOptions={{ setData: setRegionData }}
       zoomArgs={zoomArgs}
     />
+
     {/*
     <RegionPlot
       band={band}
