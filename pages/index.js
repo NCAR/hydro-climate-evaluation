@@ -81,7 +81,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [reload, setReload] = useState(true);
   const [debug, setDebug] = useState(false);
   // const [opacity, setOpacity] = useState(1.0);
-  const [metricPerformance, setMetricPerformance] = //useState(true);
+  const [metricPerformance, setMetricPerformance] =
           useState({ "Metric Performance": false });
   // const [metricRegion, setMetricRegion] = useState(1);
   const [metricRegion, setMetricRegion] = useState('desertsouthwest');
@@ -198,7 +198,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
 
   const region_metric_geojson = {
       'desertsouthwest': 'Desert_border.geojson',
-      'gulfcoast': 'Desert_border.geojson',
+      'gulfcoast': 'South_border.geojson',
       'mountainwest': 'MtWest_border.geojson',
       'northernplains': 'NPlains_border.geojson',
       'pacificsouthwest': 'PacificNW_border.geojson',
