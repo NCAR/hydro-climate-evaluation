@@ -84,8 +84,9 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   // console.log("INDEX SET DISPLAY =", setDisplay);
   const [reload, setReload] = useState(true);
   const [debug, setDebug] = useState(false);
-  const [opacity, setOpacity] = useState(1);
-  const [month, setMonth] = useState(1);
+  const [metricPerformance, setMetricPerformance] =
+          useState({ "Metric Performance": false });
+  const [metricRegion, setMetricRegion] = useState('desertsouthwest');
   const [time, setTime] = useState(1);
   // --- precipitation defaults
   const [band, setBand] = useState('djft');
@@ -150,8 +151,8 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
 
   const [mapVal, setMapVal] = useState(null);
 
-  const getters = { display, reload, debug, opacity, clim,
-                    month, band, colormapName, colormap,
+  const getters = { display, reload, debug, metricPerformance, clim,
+                    metricRegion, band, colormapName, colormap,
                     downscaling, model, metric,
                     yearRange, mapSource, chartSource,
                     downscalingDif, modelDif, yearRangeDif, obs, obsDif,
@@ -164,9 +165,9 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     setDisplay,
     setReload,
     setDebug,
-    setOpacity,
+    setMetricPerformance,
     setClim,
-    setMonth,
+    setMetricRegion,
     setTime,
     setBand,
     setColormapName,
@@ -298,7 +299,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       colormap={colormap}
       clim={clim}
       display={display}
-      opacity={opacity}
+      // opacity={opacity}
       mode={'texture'}
       sources={mapSource}
       sourceDif={mapSourceDif}
