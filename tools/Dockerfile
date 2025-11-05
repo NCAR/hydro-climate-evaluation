@@ -1,3 +1,7 @@
+##################################
+# Note, this file is out-of-date #
+##################################
+
 ARG NODE_VERSION=21
 
 FROM node:${NODE_VERSION}-alpine
