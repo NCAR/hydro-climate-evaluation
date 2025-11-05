@@ -144,8 +144,8 @@ $ conda activate maps
 
 
 ### Datasets
-Create datasets using repo
-- [Zarr datasets](https://github.com/scrasmussen/icar-zarr-data) to map
+Create datasets using [Zarr datasets](https://github.com/scrasmussen/icar-zarr-data)
+repository to change NetCDF files to Zarr files that can be mapped.
 
 Or download datasets from <https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/>.
 Note, the size of these files range from 50MB to 1.7GB.
