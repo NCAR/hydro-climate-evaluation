@@ -162,10 +162,11 @@ $ for f in *.tar.gz; do tar zxf "$f"; done
 ```
 
 
-## Types of Builds
+
+# Hosting
 The `Production` and `Development` builds are for a hosted website while the `Local` builds a local web server.
 For setting up the URL redirect to point to the hosted website the user will need to talk to their Sys Admins.
-
+## Types of Build
 ### Production Build
 The production build is more reliable and faster, but changes will only show up after a user rebuilds.
 This is for hosting at [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydro-climate-eval)
