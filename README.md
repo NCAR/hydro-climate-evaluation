@@ -140,8 +140,6 @@ $ conda env update -f conda-environment.yml
   Future Use After Setup
 $ conda activate maps
 ```
-- NodeJS to host site
-
 
 ### Datasets
 Create datasets using [Zarr datasets](https://github.com/scrasmussen/icar-zarr-data)
