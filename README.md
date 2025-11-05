@@ -120,23 +120,93 @@ Observational dataset used to compute the difference against.
 
 
 # Build
-### Prerequisites
+
+## Obtain Code
+Note, this repository uses [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
+```
+$ git clone --recurse-submodules git@github.com:NCAR/hydro-climate-evaluation.git
+$ cd hydro-climate-evaluation
+```
+
+## Prerequisites
+### Environment
+The simplest way is to use a [Conda Environment](https://docs.conda.io/projects/conda/en/stable/user-guide/getting-started.html#creating-environments) to install the NodeJS prerequisite.
+```
+  First Setup of Conda Environment
+$ conda env create -f conda-environment.yml
+  or
+$ conda activate maps
+$ conda env update -f conda-environment.yml
+
+  Future Use After Setup
+$ conda activate maps
+```
 - NodeJS to host site
+
+
+### Datasets
+Create datasets using repo
 - [Zarr datasets](https://github.com/scrasmussen/icar-zarr-data) to map
 
+Or download datasets from <https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/>.
+Note, the size of these files range from 50MB to 1.7GB.
+```
+$ mkdir -p data/refactor
+$ cd data/refactor
+$ wget https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/basemaps.tar.gz
+$ wget https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/climateSignal.tar.gz
+$ wget https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/map.tar.gz
+$ wget https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/obs.tar.gz
+$ wget https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/refactor_conus.tar.gz IS THIS NEEDED???
+$ wget https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/regionmaps.tar.gz
+$ for f in *.tar.gz; do tar zxf "$f"; done
+```
+
+
 ### Local Build
+This is for building locally, the data will be read from
+<https://hydro.rap.ucar.edu/hydro-climate-eval/data/> unless the user changes
+the value of the `bucket` variable in files of the `initialConditions`
+directory. The variable `bucket` would need to be changed to
+`http://localhost:8080/hydro-climate-eval/data/refactor/`.
+
 ```
 $ npm install .
-$ npm local
-$ npm run
+$ npm run build
+$ npm run local
+
+Or use Makefile
+$ make install
+$ make build
+$ make local
 ```
 
 ### Production Build
-For hosting at [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydro-climate-eval)
+The production build is more reliable and faster, but changes will only show up after a user rebuilds.
+This is for hosting at [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydro-climate-eval)
 ```
 $ npm install .
+$ npm run build
+$ npm run start
+
+Or use Makefile
+$ make install
+$ make build
+$ make run
+```
+
+### Development Build
+The development build will host the site and in will compile as the user loads the site. This is nice for development.
+
+```
+$ npm install .
+$ npm run build
 $ npm run dev
-$ npm start
+
+Or use Makefile
+$ make install
+$ make build
+$ make dev
 ```
 
 ### View Local Map

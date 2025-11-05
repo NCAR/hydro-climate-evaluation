@@ -1,0 +1,5 @@
+name: maps
+channels:
+  - conda-forge
+dependencies:
+  - nodejs=22.6.0
