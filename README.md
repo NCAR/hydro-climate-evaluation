@@ -59,9 +59,9 @@ See this detailed [downscaling methods matrix document](https://raw.githubuserco
 
 | **Name**        | **Units** | **Description**                                                    |
 |-----------------|-----------|--------------------------------------------------------------------|
-| `ann_t`         | °C        |                                                                    |
-| `ann_p`         | mm        |                                                                    |
-| `ann_snow`      | mm        |                                                                    |
+| `ann_t`         | °C        | Annual mean of temperature                                         |
+| `ann_p`         | mm        | Annual mean of precipitation                                       |
+| `ann_snow`      | mm        | Annual mean of snow                                                |
 | `djf_p`         | mm        | Dec/Jan/Feb seasonal mean of precipitation                         |
 | `djf_t`         | °C        | Dec/Jan/Feb seasonal mean of temperature                           |
 | `drought_1yr`   | Months    | Number of months where 1-year SPI falls below -1.5                 |
