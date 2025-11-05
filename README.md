@@ -123,8 +123,8 @@ Observational dataset used to compute the difference against.
 To build the website the user will need to
   1. [Obtain Code](#obtain-code)
   2. [Setup Environment](#environment)
-  3. [Obtaining Datasets](#datasets)
-  4. [Hosting Site](#hosting)
+  3. [Obtain Datasets](#datasets)
+  4. [Host Site](#hosting)
 
 ## Obtain Code
 Note, this repository uses [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
