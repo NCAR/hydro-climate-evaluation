@@ -80,8 +80,9 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   // console.log("INDEX SET DISPLAY =", setDisplay);
   const [reload, setReload] = useState(true);
   const [debug, setDebug] = useState(false);
-  const [opacity, setOpacity] = useState(1);
-  const [month, setMonth] = useState(1);
+  const [metricPerformance, setMetricPerformance] =
+          useState({ "Metric Performance": false });
+  const [metricRegion, setMetricRegion] = useState('desertsouthwest');
   const [time, setTime] = useState(1);
   // --- precipitation defaults
   const [band, setBand] = useState('djft');
@@ -111,7 +112,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [modelDif, setModelDif] = useState('canesm2');
   const [yearRangeDif, setYearRangeDif] = useState('1850_2005');
   const [region, setRegion] = useState('global');
-console.log("region =", region, "setRegion =", setRegion);
+// console.log("region =", region, "setRegion =", setRegion);
   const [obs, setObs] = useState('cru');
   const [obsDif, setObsDif] = useState('global');
 
@@ -136,7 +137,7 @@ console.log("region =", region, "setRegion =", setRegion);
 
   const [computeChoice, setComputeChoice] = useState({
     'Ave.': true,
-    ...(settings.dif ? { 'Climate Signal': false } : {}),
+    ...(settings.dif ? { 'Dif.': false } : {}),
     ...(settings.climateSignal ? { 'Climate Signal': false } : {}),
   });
 
@@ -146,8 +147,8 @@ console.log("region =", region, "setRegion =", setRegion);
 
   const [mapVal, setMapVal] = useState(null);
 
-  const getters = { display, reload, debug, opacity, clim,
-                    month, band, colormapName, colormap,
+  const getters = { display, reload, debug, metricPerformance, clim,
+                    metricRegion, band, colormapName, colormap,
                     downscaling, model, metric,
                     yearRange, mapSource, chartSource,
                     downscalingDif, modelDif, yearRangeDif, obs, obsDif,
@@ -160,9 +161,9 @@ console.log("region =", region, "setRegion =", setRegion);
     setDisplay,
     setReload,
     setDebug,
-    setOpacity,
+    setMetricPerformance,
     setClim,
-    setMonth,
+    setMetricRegion,
     setTime,
     setBand,
     setColormapName,
@@ -195,8 +196,6 @@ console.log("region =", region, "setRegion =", setRegion);
   };
 
   const fillValue = 3.4028234663852886e38; // black on land, red nans
-
-
 
   return (
   <ErrorBoundary>
@@ -292,7 +291,7 @@ console.log("region =", region, "setRegion =", setRegion);
       colormap={colormap}
       clim={clim}
       display={display}
-      opacity={opacity}
+      // opacity={opacity}
       mode={'texture'}
       sources={mapSource}
       sourceDif={mapSourceDif}
@@ -306,6 +305,7 @@ console.log("region =", region, "setRegion =", setRegion);
       regionOptions={{ setData: setRegionData }}
       zoomArgs={zoomArgs}
     />
+
     {/*
     <RegionPlot
       band={band}

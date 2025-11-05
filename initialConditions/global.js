@@ -3,7 +3,7 @@ export const settings = {
   lon: -37,
   zoom: 1.5,
   climateSignal: false,
-  dif: false,
+  dif: true,
   observation: true,
   bucket: 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/global/',
 
