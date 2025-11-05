@@ -28,7 +28,7 @@ if (!fs.existsSync(path.join(ROOT, '.next'))) {
   }
 }
 
-const app = next({ dev: false, dir: ROOT });
+const app = next({ dev: true, dir: ROOT });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
