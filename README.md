@@ -120,7 +120,6 @@ Observational dataset used to compute the difference against.
 
 
 # Build
-
 ## Obtain Code
 Note, this repository uses [Git Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 ```
@@ -163,24 +162,7 @@ $ for f in *.tar.gz; do tar zxf "$f"; done
 ```
 
 
-### Local Build
-This is for building locally, the data will be read from
-<https://hydro.rap.ucar.edu/hydro-climate-eval/data/> unless the user changes
-the value of the `bucket` variable in files of the `initialConditions`
-directory. The variable `bucket` would need to be changed to
-`http://localhost:8080/hydro-climate-eval/data/refactor/`.
-
-```
-$ npm install .
-$ npm run build
-$ npm run local
-
-Or use Makefile
-$ make install
-$ make build
-$ make local
-```
-
+## Types of Builds
 ### Production Build
 The production build is more reliable and faster, but changes will only show up after a user rebuilds.
 This is for hosting at [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydro-climate-eval)
@@ -196,7 +178,8 @@ $ make run
 ```
 
 ### Development Build
-The development build will host the site and in will compile as the user loads the site. This is nice for development.
+The development build will host the site at [hydro.rap.ucar.edu/hydro-climate-eval](https://hydro.rap.ucar.edu/hydro-climate-eval)
+but compiles on-the-fly as the user loads the site. This is nice for development but leads to slow page-loads and random reloads.
 
 ```
 $ npm install .
@@ -208,13 +191,23 @@ $ make install
 $ make build
 $ make dev
 ```
+### Local Build
+This is for building locally, the data will be read from
+<https://hydro.rap.ucar.edu/hydro-climate-eval/data/> unless the user changes
+the value of the `bucket` variable in the files of the `initialConditions`
+directory. The variable `bucket` would need to be changed to
+`http://localhost:8080/hydro-climate-eval/data/refactor/`.
 
-### View Local Map
-Go to [localhost:3000](http://localhost:3000) in a browser to preview website.
+```
+$ npm install .
+$ npm run build
+$ npm run local
 
-<img width="400" alt="image" src="https://github.com/NCAR/hydro-climate-evaluation/assets/5750642/5ab5462d-206c-4bb5-9a67-2ac45606ad22">
-
-
+Or use Makefile
+$ make install
+$ make build
+$ make local
+```
 
 # License
 [License](https://github.com/NCAR/hydro-climate-evaluation/blob/main/LICENSE.md)
