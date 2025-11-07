@@ -46,18 +46,18 @@ useEffect(() => {
   metrics_settings.combinations_downscaling.forEach((method, i) => {
       const model = metrics_settings.combinations_model[i];
       for (const p of data) {
-        if (method.includes("gard") && p.includes("rcp")) {
-          continue; // skip this iteration
-        }
-        if (method.includes("maca") && model.includes("access1_3") && p.includes("rcp")) {
-          continue; // skip this iteration
-        }
-        if (method.includes("nasa_nex") && model.includes("access1_3") && p.includes("rcp")) {
-          continue; // skip this iteration
-        }
-        if (method.includes("nasa_nex") && model.includes("ccsm4") && p.includes("rcp")) {
-          continue; // skip this iteration
-        }
+        // if (method.includes("maca") && model.includes("access1_3") && p.includes("rcp")) {
+        //   console.log("HACK: removed maca + access1_3 manually from metrics_settings");
+        //   continue; // skip this iteration
+        // }
+        // if (method.includes("nasa_nex") && model.includes("access1_3") && p.includes("rcp")) {
+        //   console.log("HACK: removed nasa_nex + access1_3 manually metrics_settings");
+        //   continue; // skip this iteration
+        // }
+        // if (method.includes("nasa_nex") && model.includes("ccsm4") && p.includes("rcp")) {
+        //   console.log("HACK: removed nasa_nex + ccsm4 manually metrics_settings");
+        //   continue; // skip this iteration
+        // }
 
 
 

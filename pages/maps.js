@@ -1,14 +1,18 @@
 // pages/test.js (or any client component)
 import { useEffect, useState } from "react";
 import { settings } from '../initialConditions/conus';
-import { metrics_settings } from '../metrics/desertsouthwest_metrics';
+// import { metrics_settings } from '../metrics/desertsouthwest_metrics';
 
 export default function Test() {
   const [rows, setRows] = useState([]);
 
   // your inputs
   // const data = ["hist.1981_2004", "rcp45.2076_2099", "rcp85.2076_2099", "foobar"];
-  const data = ["hist.1981_2004", "rcp45.2076_2099", "rcp85.2076_2099"];
+  const data = ["hist.1981_2004",
+                "rcp45.2036_2059", "rcp85.2036_2059",
+                "rcp45.2056_2079", "rcp85.2056_2079",
+                "rcp45.2076_2099", "rcp85.2076_2099",
+               ];
   const bucket = "https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/";
   const bucket_ndp = bucket+"map/";// + "maca/mri_cgcm3/" ensure trailing slash
   const bucket_metric = bucket+"climateSignal/";
