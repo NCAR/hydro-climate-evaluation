@@ -2,6 +2,7 @@ import { useRef, useLayoutEffect, useState, Fragment } from 'react';
 import { Box, Flex } from 'theme-ui';
 import { useCallback, useEffect } from 'react';
 import { useMapbox } from '../maps/src/mapbox';
+import { Line } from '../maps';
 import { Button, Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components';
 import { Right, Reset } from '@carbonplan/icons';
 import Colorbar from './colorbar';
@@ -56,7 +57,7 @@ const sx = {
 const dif_t = true;
 
 const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
-  const { display, reload, debug, opacity, clim, month,
+  const { display, reload, debug, metricPerformance, clim, metricRegion,
           band, colormapName, colormap,
           downscaling, model, metric, yearRange, mapSource, chartSource,
           downscalingDif, modelDif, yearRangeDif, obs, obsDif,
@@ -70,9 +71,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setDisplay,
     setReload,
     setDebug,
-    setOpacity,
+    setMetricPerformance,
     setClim,
-    setMonth,
+    setMetricRegion,
     setMetric,
     setBand,
     setColormapName,
@@ -116,7 +117,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
 
   // TODO: HANDLE ALL THE REGIONS
-  const [metricRegion, setMetricRegion] = useState('desertsouthwest');
+  // const [metricRegion, setMetricRegion] = useState('desertsouthwest');
 
   const [baseDir, setBaseDir] = useState('map/');
 
@@ -820,8 +821,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     [aveChoice, setAveChoice] = useState({ 'Modeling': true });
   }
 
-  const [metricPerformance, setMetricPerformance] = //useState(true);
-          useState({ "Metric Performance": false });
+  // const [metricPerformance, setMetricPerformance] = //useState(true);
+  //         useState({ "Metric Performance": false });
   const [methodAndModel, setMethodAndModel] = //useState(false);
           useState({ "Method & Model": true });
 
@@ -1540,6 +1541,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
       // Ave. or Dif. maps
       if (!newValues['Climate Signal']) {
+        setDisplay(true);
+          console.log("FOO: ",{ "Metric Performance": false });
+	  // make sure metric geojson lines are off
+          setMetricPerformance({ "Metric Performance": false });
+	  setMethodAndModel({"Method & Model": true});
+
         // handleFilterAndSetClimColormapName(newValues);
         // above func handled below
         let yearRange_key = yearRange;
