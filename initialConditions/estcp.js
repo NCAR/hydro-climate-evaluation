@@ -1,8 +1,8 @@
 export const settings = {
   lat: 38,
   lon: -97,
-  zoom: 4,
-  climateSignal: true,
+  zoom: 2.25,
+  climateSignal: false,
   dif: true,
   observation: true,
   bucket: 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/',
