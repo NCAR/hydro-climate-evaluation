@@ -1,8 +1,7 @@
-import { settings } from '../initialConditions/global-test';
+import { settings } from '../initialConditions/estcp';
 import { useState } from 'react';
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect } from 'react';
 import { Box, useThemeUI } from 'theme-ui';
-import { Marker } from 'mapbox-gl';
 import { Dimmer, Column, Row } from '@carbonplan/components';
 import { Map, Raster, Fill, Line, RegionPicker, useControls } from '../maps';
 import Meta from '../components/meta';
@@ -14,8 +13,6 @@ import { Line as LineCJS } from 'react-chartjs-2';
 import Charts from '../components/charts';
 import ErrorBoundary from '../components/ErrorBoundary';
 import MarkSites from '../components/MarkSites';
-import mapboxgl from 'mapbox-gl';
-import { useMapbox } from '../maps/src/mapbox';
 // import MetricControls from '../components/metric-controls'
 // import { NetCDFReader } from "netcdfjs";
 
@@ -84,8 +81,10 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   // console.log("INDEX SET DISPLAY =", setDisplay);
   const [reload, setReload] = useState(true);
   const [debug, setDebug] = useState(false);
+  // const [opacity, setOpacity] = useState(1.0);
   const [metricPerformance, setMetricPerformance] =
           useState({ "Metric Performance": false });
+  // const [metricRegion, setMetricRegion] = useState(1);
   const [metricRegion, setMetricRegion] = useState('desertsouthwest');
   const [time, setTime] = useState(1);
   // --- precipitation defaults
@@ -98,7 +97,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [showRegionPlot, setShowRegionPlot] = useState(false);
   const [regionData, setRegionData] = useState({ loading: true });
   // set variables to access datasets
-  const [downscaling, setDownscaling] = useState('cmip5');
+  const [downscaling, setDownscaling] = useState('icar');
   const [model, setModel] = useState('access1_3');
   const [metric, setMetric] = useState('djf_t');
   const [rcp, setRCP] = useState('4.5');
@@ -107,18 +106,17 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     {'Low': true,
      'High': false});
 
-  const  [ensemble, setEnsemble] = useState('r1i1p1');
+  const  [ensemble, setEnsemble] = useState('');
   // const [yearRange, setYearRange] = useState('1980_2010')
-  const [yearRange, setYearRange] = useState('1850_2005');
+  const [yearRange, setYearRange] = useState('1981_2004', '2070_2100');
   // diff dataset variables for model to compare against
   const [scaleDif, setScaleDif] = useState(1.0);
-  const [downscalingDif, setDownscalingDif] = useState('cmip5');
+  const [downscalingDif, setDownscalingDif] = useState('nasa_nex');
   const [modelDif, setModelDif] = useState('canesm2');
-  const [yearRangeDif, setYearRangeDif] = useState('1850_2005');
-  const [region, setRegion] = useState('global');
-// console.log("region =", region, "setRegion =", setRegion);
-  const [obs, setObs] = useState('cru');
-  const [obsDif, setObsDif] = useState('global');
+  const [yearRangeDif, setYearRangeDif] = useState('1981_2004');
+  const [region, setRegion] = useState(null);
+  const [obs, setObs] = useState('livneh');
+  const [obsDif, setObsDif] = useState('livneh');
 
   const [showStates, setStates] = useState(true);
   const [showRivers, setRivers] = useState(false);
@@ -128,20 +126,18 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   // paths to model dataset
   // const [mapSource, setMapSource] =
   //         useState([bucket+'map/icar/noresm1_m/1981_2004/'+fname])
-  // FIX THIS
   const [mapSource, setMapSource] =
-          useState([bucket+'map/cmip5/canesm2/hist.1850_2005/r1i1p1/'+fname]);
+          useState([bucket+'map/icar/access1_3/hist.1981_2004/'+fname]);
   const [chartSource, setChartSource] =
-          useState(bucket+'chart/cmip5/noresm1_m/'+band);
+          useState(bucket+'chart/icar/noresm1_m/'+band);
   const [mapSourceDif, setMapSourceDif] =
-          useState([bucket+'map/cmip5/canesm2/hist.1850_2005/r1i1p1/'+fname]);
-          // useState(bucket+'obs/'+obsDif+'/hist.1981_2004/'+fname);
+          useState(bucket+'obs/'+obsDif+'/hist.1981_2004/'+fname);
   const [chartSourceDif, setChartSourceDif] =
           useState(bucket+'chart/icar/cesm/'+band);
 
   const [computeChoice, setComputeChoice] = useState({
     'Ave.': true,
-    ...(settings.dif ? { 'Dif.': false } : {}),
+    'Dif.': false,
     ...(settings.climateSignal ? { 'Climate Signal': false } : {}),
   });
 
@@ -201,9 +197,19 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
 
   const fillValue = 3.4028234663852886e38; // black on land, red nans
 
-  // const onClick = useCallback((e) => {
-  //   console.log("Button clicked!");
-  // }, []);
+  const region_metric_geojson = {
+      'desertsouthwest': 'Desert_border.geojson',
+      'gulfcoast': 'South_border.geojson',
+      'mountainwest': 'MtWest_border.geojson',
+      'northernplains': 'NPlains_border.geojson',
+      'pacificsouthwest': 'PacificNW_border.geojson',
+      'greatlakes': 'GreatLakes_border.geojson',
+      'midatlantic': 'MidAtlantic_border.geojson',
+      'northatlantic': 'NorthAtlantic_border.geojson',
+      'pacificnorthwest': 'PacificSW_border.geojson',
+  }
+
+
 
   return (
   <ErrorBoundary>
@@ -257,6 +263,38 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       dashArray={[2, 4]}
     />)}
 
+
+    {metricPerformance["Metric Performance"] &&
+      <Line
+        key={metricRegion}
+        color={'black'}
+        source={bucket+'regionmaps/'+region_metric_geojson[metricRegion]}
+        blur={1.0}
+        ndp={false}
+        width={2.7}
+      />
+    }
+
+
+    {/*
+    <Line
+      color={'black'}
+      source={bucket + 'regionmaps/Desert_border.geojson'}
+      blur={1.0}
+      ndp={false}
+      width={3.7}
+    />
+
+
+    <Line
+      color={'black'}
+      source={bucket + 'regionmaps/MtWest_border.geojson'}
+      blur={0.3}
+      ndp={false}
+      width={2.7}
+    />
+    */}
+
     {/*
       source={bucket + 'basemaps/rivers/ne_10m_rivers_north_america.json'}
     */}
@@ -281,8 +319,8 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       source={bucket + 'basemaps/states/rivers.geojson'}
       ndp={false}
     />;
-    */}
 
+{/*
     {showRegionPlot && (
      <RegionPicker
        color={theme.colors.primary}
@@ -291,7 +329,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
        fontSize={'14px'}
        maxRadius={200}
      />)}
-
+    */}
     {/* projection = equirectangular */}
     <Raster
       setMapVal={setMapVal}
@@ -314,8 +352,6 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       zoomArgs={zoomArgs}
     />
 
-
-
     <MarkSites />
 
     {/*
@@ -327,8 +363,6 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       setShowRegionPlot={setShowRegionPlot}
     />
     */}
-
-
 
     <ParameterControls
       getters={getters}
