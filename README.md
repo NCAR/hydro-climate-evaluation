@@ -153,7 +153,7 @@ $ conda activate maps
 ```
 
 ### Datasets
-Create datasets using [Zarr datasets](https://github.com/scrasmussen/icar-zarr-data)
+Create datasets using the [Zarr datasets](https://github.com/NCAR/zarr-data-maps)
 repository to change NetCDF files to Zarr files that can be mapped.
 
 Or download datasets from <https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/>.
