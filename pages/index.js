@@ -197,15 +197,15 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const fillValue = 3.4028234663852886e38; // black on land, red nans
 
   const region_metric_geojson = {
-      'desertsouthwest': 'Desert_border.geojson',
-      'gulfcoast': 'South_border.geojson',
-      'mountainwest': 'MtWest_border.geojson',
-      'northernplains': 'NPlains_border.geojson',
-      'pacificsouthwest': 'PacificNW_border.geojson',
-      'greatlakes': 'GreatLakes_border.geojson',
-      'midatlantic': 'MidAtlantic_border.geojson',
-      'northatlantic': 'NorthAtlantic_border.geojson',
-      'pacificnorthwest': 'PacificSW_border.geojson',
+      'desertsouthwest': 'desert_southwest.geojson',
+      'gulfcoast': 'gulf_coast.geojson',
+      'mountainwest': 'mountain_west.geojson',
+      'northernplains': 'northern_plains.geojson',
+      'pacificsouthwest': 'pacific_southwest.geojson',
+      'greatlakes': 'great_lakes.geojson',
+      'midatlantic': 'mid_atlantic.geojson',
+      'northatlantic': 'north_atlantic.geojson',
+      'pacificnorthwest': 'pacific_northwest.geojson',
   }
 
 
