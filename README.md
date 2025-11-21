@@ -62,51 +62,45 @@ See this detailed [downscaling methods matrix document](https://raw.githubuserco
 
 ### Metrics
 
-| **Short Name**  | ** Long Name **            | **Units** | **Description**                                                       |
-|-----------------|----------------------------|-----------|-----------------------------------------------------------------------|
-| `ann_p`         | Annual Precipiation        | mm        | Mean of yearly annual total precipitation                             |
-| `ann_t`         | Annual Temperature         | °C        | Mean of yearly annual mean temperature                                |
-| `ann_p_iav`     | Std. Dev. Annual Precip.   | °C        | Standard deviation of yearly annual total precipitation               |
-| `ann_t_iav`     | Std. Dev. Annual Temp.     | °C        | Standard deviation of yearly annual mean temperature                  |
-| `ann_snow`      | Annual Snow Accumulation   | mm        | Mean of yearly annual total snow accumulation                         |
-|                 |                            |           | (Pr when daily mean T < 1°C)                                          |
-| `ann_snow_iav`  | Std. Dev. Ann. Snow Accum. | mm        | Standard deviation of yearly annual total snow accumulation           |
-|                 |                            |           | (Pr when daily mean T < 1°C)                                          |
-| `djf_p`         | Seasonal Precipitation     | mm        | Mean of yearly seasonal Dec/Jan/Feb total precipitation               |
-| `djf_t`         | Seasonal Temperature       | °C        | Mean of yearly seasonal Dec/Jan/Feb mean temperature                  |
-| `djf_p_iav`     | Std. Dev. Seasonal Precip. | °C        | Standard deviation of Dec/Jan/Feb seasonal total precipitation        |
-| `djf_t_iav`     | Std. Dev. Seasonal Temp.   | °C        | Standard deviation of Dec/Jan/Feb seasonal mean temperature           |
-| `freezethaw`    | Freeze-Thaw Cycles         | Days      | Mean of annual total freeze-thaw cycles                               |
-|                 |                            |           | (days with Tmin < 0 and Tmax > 0)                                     |
-| `jja_p`         | Seasonal Precipitation     | mm        | Mean of yearly seasonal Jun/Jul/Aug total precipitation               |
-| `jja_t`         | Seasonal Temperature       | °C        | Mean of yearly seasonal Jun/Jul/Aug mean temperature                  |
-| `jja_p_iav`     | Std. Dev. Seasonal Precip. | °C        | Standard deviation of Jun/Jul/Aug seasonal total precipitation        |
-| `jja_t_iav`     | Std. Dev. Seasonal Temp.   | °C        | Standard deviation of Jun/Jul/Aug seasonal mean temperature           |
-| `mam_p`         | Seasonal Precipitation     | mm        | Mean of yearly seasonal Mar/Apr/May total precipitation               |
-| `mam_t`         | Seasonal Temperature       | °C        | Mean of yearly seasonal Mar/Apr/May mean temperature                  |
-| `mam_p_iav`     | Std. Dev. Seasonal Precip. | °C        | Standard deviation of Mar/Apr/May seasonal total precipitation        |
-| `mam_t_iav`     | Std. Dev. Seasonal Temp.   | °C        | Standard deviation of Mar/Apr/May seasonal mean temperature           |
-| `n34pr`         | Nino3.4 Precipitation      | mm        | Temporal correlation between yearly DJF Nino 3.4 Index and DJF prec.  |
-| `n34t`          | Nino3.4 Temperature        | °C        | Temporal correlation between yearly DJF Nino 3.4 Index and DJF temp.  |
-| `pr90`          | Precip. 90th Percentile    | mm        | 90th percentile daily precipitation accumulation                      |
-| `pr99`          | Precip. 99th Percentile    | mm        | 99th percentile daily precipitation accumulation                      |
-| `pr_gev-#yr`    | Precip. GEV #Yr            |           | Return level of annual precip. maximum for {20, 50, 100} year return  |
-|                 |                            |           | period, estimated from GEV function fit to annual precip. maxima      |
-| `ptrend`        | Precipitation Trend        | mm        | Linear trend of annual mean precipitation by least squares regression |
-| `son_p`         | Seasonal Precipitation     | mm        | Mean of yearly seasonal Sep/Oct/Nov total precipitation               |
-| `son_t`         | Seasonal Temperature       | °C        | Mean of yearly seasonal Sep/Oct/Nov mean temperature                  |
-| `son_p_iav`     | Std. Dev. Seasonal Precip. | °C        | Standard deviation of Sep/Oct/Nov seasonal total precipitation        |
-| `son_t_iav`     | Std. Dev. Seasonal Temp.   | °C        | Standard deviation of Sep/Oct/Nov seasonal mean temperature           |
-| `SPI#year`      | Standardized Prec. Index   |           | Total count of months with SPI < -1.5 computed from smoothed          |
-|                 |                            |           | precipitation using {1, 2, 5} year window                             |
-| `t90`           | Temp. 90th Percentile      | °C        | 90th percentile daily temperature extremes                            |
-| `t99`           | Temp. 99th Percentile      | °C        | 99th percentile daily temperature extremes                            |
-| `tpcorr`        | Temp. and Precip.          |           | Temporal correlation of annual mean temperature and                   |
-|                 | Temporal Correlation       |           | annual total precipitation                                            |
-| `ttrend`        | Temperature Trend          | °C        | Linear trend of annual mean temperature by least squares regression   |
-| `wet_day_frac`  | Wet Day Fraction           |           | Wet day fraction (Fraction of days with Pr > 0)                       |
-| `wt_day_to_day` |                            |           | Weather typing spacial correlation                                    |
-| `wt_clim`       |                            |           | Weather typing climatologies                                          |
+| **Short Name**  | ** Long Name **                                    | **Units** | **Description**                                                                                                                                   |
+|-----------------|----------------------------------------------------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| `ann_p`         | Annual Precipiation                                | mm        | Mean of yearly annual total precipitation                                                                                                         |
+| `ann_t`         | Annual Temperature                                 | °C        | Mean of yearly annual mean temperature                                                                                                            |
+| `ann_p_iav`     | Standard Deviation Annual Precipitation            | °C        | Standard deviation of yearly annual total precipitation                                                                                           |
+| `ann_t_iav`     | Standard Deviation Annual Temperature              | °C        | Standard deviation of yearly annual mean temperature                                                                                              |
+| `ann_snow`      | Annual Snow Accumulation                           | mm        | Mean of yearly annual total snow accumulation (Pr when daily mean T < 1°C)                                                                        |
+| `ann_snow_iav`  | Standard Deviation Annual Snow Accummulation       | mm        | Standard deviation of yearly annual total snow accumulation (Pr when daily mean T < 1°C)                                                          |
+| `djf_p`         | Seasonal Precipitation                             | mm        | Mean of yearly seasonal Dec/Jan/Feb total precipitation                                                                                           |
+| `djf_t`         | Seasonal Temperature                               | °C        | Mean of yearly seasonal Dec/Jan/Feb mean temperature                                                                                              |
+| `djf_p_iav`     | Standard Deviation Seasonal Precipitation          | °C        | Standard deviation of Dec/Jan/Feb seasonal total precipitation                                                                                    |
+| `djf_t_iav`     | Standard Deviation Seasonal Temperature            | °C        | Standard deviation of Dec/Jan/Feb seasonal mean temperature                                                                                       |
+| `freezethaw`    | Freeze-Thaw Cycles                                 | Days      | Mean of annual total freeze-thaw cycles (days with Tmin < 0 and Tmax > 0)                                                                         |
+| `jja_p`         | Seasonal Precipitation                             | mm        | Mean of yearly seasonal Jun/Jul/Aug total precipitation                                                                                           |
+| `jja_t`         | Seasonal Temperature                               | °C        | Mean of yearly seasonal Jun/Jul/Aug mean temperature                                                                                              |
+| `jja_p_iav`     | Standard Deviation Seasonal Precipitation          | °C        | Standard deviation of Jun/Jul/Aug seasonal total precipitation                                                                                    |
+| `jja_t_iav`     | Standard Deviation Seasonal Temperature            | °C        | Standard deviation of Jun/Jul/Aug seasonal mean temperature                                                                                       |
+| `mam_p`         | Seasonal Precipitation                             | mm        | Mean of yearly seasonal Mar/Apr/May total precipitation                                                                                           |
+| `mam_t`         | Seasonal Temperature                               | °C        | Mean of yearly seasonal Mar/Apr/May mean temperature                                                                                              |
+| `mam_p_iav`     | Standard Deviation Seasonal Precipitation          | °C        | Standard deviation of Mar/Apr/May seasonal total precipitation                                                                                    |
+| `mam_t_iav`     | Standard Deviation Seasonal Temperature            | °C        | Standard deviation of Mar/Apr/May seasonal mean temperature                                                                                       |
+| `n34pr`         | Nino3.4 Precipitation                              | mm        | Temporal correlation between yearly DJF Nino 3.4 Index and DJF precipitation                                                                              |
+| `n34t`          | Nino3.4 Temperature                                | °C        | Temporal correlation between yearly DJF Nino 3.4 Index and DJF temperature                                                                        |
+| `pr90`          | Precipitation 90th Percentile                      | mm        | 90th percentile daily precipitation accumulation                                                                                                  |
+| `pr99`          | Precipitation 99th Percentile                      | mm        | 99th percentile daily precipitation accumulation                                                                                                  |
+| `pr_gev-#yr`    | Precipitation GEV #Yr                              |           | Return level of annual precipitation maximum for {20, 50, 100} year return period, estimated from GEV function fit to annual precipitation maxima |
+| `ptrend`        | Precipitation Trend                                | mm        | Linear trend of annual mean precipitation by least squares regression                                                                             |
+| `son_p`         | Seasonal Precipitation                             | mm        | Mean of yearly seasonal Sep/Oct/Nov total precipitation                                                                                           |
+| `son_t`         | Seasonal Temperature                               | °C        | Mean of yearly seasonal Sep/Oct/Nov mean temperature                                                                                              |
+| `son_p_iav`     | Standard Deviation Seasonal Precipitation          | °C        | Standard deviation of Sep/Oct/Nov seasonal total precipitation                                                                                    |
+| `son_t_iav`     | Standard Deviation Seasonal Temperature            | °C        | Standard deviation of Sep/Oct/Nov seasonal mean temperature                                                                                       |
+| `SPI#year`      | Standardized Precipitation Index                   |           | Total count of months with SPI < -1.5 computed from smoothed precipitation using {1, 2, 5} year window                                            |
+| `t90`           | Temperature 90th Percentile                        | °C        | 90th percentile daily temperature extremes                                                                                                        |
+| `t99`           | Temperature 99th Percentile                        | °C        | 99th percentile daily temperature extremes                                                                                                        |
+| `tpcorr`        | Temperature and Precipitation Temporal Correlation |           | Temporal correlation of annual mean temperature and annual total precipitation                                                                    |
+| `ttrend`        | Temperature Trend                                  | °C        | Linear trend of annual mean temperature by least squares regression                                                                               |
+| `wet_day_frac`  | Wet Day Fraction                                   |           | Wet day fraction (Fraction of days with Pr > 0)                                                                                                   |
+| `wt_day_to_day` |                                                    |           | Weather typing spacial correlation                                                                                                                |
+| `wt_clim`       |                                                    |           | Weather typing climatologies                                                                                                                      |
 
 
 ### Dif. Obs. Data
