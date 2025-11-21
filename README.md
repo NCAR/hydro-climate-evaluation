@@ -62,7 +62,7 @@ See this detailed [downscaling methods matrix document](https://raw.githubuserco
 
 ### Metrics
 
-| **Short Name**  | ** Long Name **                                    | **Units** | **Description**                                                                                                                                   |
+| **Short Name**  | **Long Name**                                      | **Units** | **Description**                                                                                                                                   |
 |-----------------|----------------------------------------------------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------------|
 | `ann_p`         | Annual Precipiation                                | mm        | Mean of yearly annual total precipitation                                                                                                         |
 | `ann_t`         | Annual Temperature                                 | °C        | Mean of yearly annual mean temperature                                                                                                            |
