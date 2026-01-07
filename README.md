@@ -34,8 +34,8 @@ These sites are interactive web maps of hydro-climate data. The sites are based 
 
 | **Name**  | **Description**                              |
 |-----------|----------------------------------------------|
-| 1981-2004 | Time range past yearly data averaged over    |
-| 2006-2099 | Time range future yearly data averaged over  |
+| 1981-2016 | Time range past yearly data averaged over    |
+| 2016-2099 | Time range future yearly data averaged over  |
 
 ### Downscaling Methods
 See this detailed [downscaling methods matrix document](https://raw.githubusercontent.com/NCAR/hydro-climate-evaluation/refs/heads/main/docs/downscalingMethodsMatrixPublic.36x24.pdf) for more information on some of the datasets mapped.
@@ -44,8 +44,8 @@ See this detailed [downscaling methods matrix document](https://raw.githubuserco
 | **Name** | **URL**                                                                                               |
 |----------|-------------------------------------------------------------------------------------------------------|
 | ICAR     | [Intermediate Complexity Atmospheric Research Model](https://github.com/NCAR/icar)                    |
-| GARD_R2  | [GARD](https://github.com/NCAR/GARD) analog regression on precipitation and 500mb horizontal wind     |
-| GARD_R3  | [GARD](https://github.com/NCAR/GARD) analog regression on 500mb water vapor and 500mb horizontal wind |
+| GARD_puv  | [GARD](https://github.com/NCAR/GARD) analog regression on precipitation and 500mb horizontal wind     |
+| GARD_quv  | [GARD](https://github.com/NCAR/GARD) analog regression on 500mb water vapor and 500mb horizontal wind |
 | LOCA_8th | [LOcalized Constructed Analog (LOCA)](https://github.com/NCAR/LOCA_Downscaling_Analysis)              |
 | MACA     | [Multivariate Adaptive Constructed Analogs](https://climate.northwestknowledge.net/MACA/index.php)    |
 | NASA-NEX | [NCCS NASA](https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6)   |
