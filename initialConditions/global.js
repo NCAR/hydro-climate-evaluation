@@ -102,7 +102,7 @@ export const settings = {
     },
 
   obs_eras_test: {1850_2100: '1850_2100'},
-  obs_eras: '1850_2100',
+  obs_eras: '1850_2005',
 
   past_eras: {
       '1850_2005': '1850_2005'
