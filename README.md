@@ -3,12 +3,12 @@
 ## Sites
 
 - [Hydro Climate Evaluation](https://hydro.rap.ucar.edu/hydro-climate-eval)
-- [ESTCP ESM Modeling](https://hydro.rap.ucar.edu/hydro-climate-eval/estcp)
+- [ESTCP Downscaling Evaluation](https://hydro.rap.ucar.edu/hydro-climate-eval/estcp)
 - [ESM Modeling](https://hydro.rap.ucar.edu/hydro-climate-eval/global)
 
 ### Status
 ![Hydro Climate Evaluation](https://img.shields.io/website?url=https%3A%2F%2Fhydro.rap.ucar.edu%2Fhydro-climate-eval&label=Hydro%20Climate%20Evaluation)
-![ESTCP ESM Modeling](https://img.shields.io/website?url=https%3A%2F%2Fhydro.rap.ucar.edu%2Fhydro-climate-eval%2Festcp&label=ESTCP%20ESM%20Modeling)
+![ESTCP Downscaling Evaluation](https://img.shields.io/website?url=https%3A%2F%2Fhydro.rap.ucar.edu%2Fhydro-climate-eval%2Festcp&label=ESTCP%20Downscaling%20Evaluation)
 ![ESM Modeling](https://img.shields.io/website?url=https%3A%2F%2Fhydro.rap.ucar.edu%2Fhydro-climate-eval%2Fglobal&label=ESM%20Modeling)
 
 ## Description
