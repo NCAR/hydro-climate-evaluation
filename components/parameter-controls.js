@@ -502,7 +502,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }, [map])
     return(
       <Box sx={{
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          backgroundColor: 'rgba(0, 0, 0, 0.9)',
           padding: '10px',
           borderRadius: '5px',
           width: '110px',
@@ -2218,7 +2218,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       {computeChoice['Dif.'] && (
         <Box
           sx={{
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
             padding: '10px',
             borderRadius: '5px',
           }}
@@ -2229,7 +2229,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
       <Box
         sx={{
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          backgroundColor: 'rgba(0, 0, 0, 0.9)',
           padding: '10px',
           borderRadius: '5px',
           width: 'fit-content',
@@ -2258,7 +2258,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       onScroll={(e) => (lastTop.current = e.currentTarget.scrollTop)}
       sx={{ position: 'absolute', top: 20, left: 20, zIndex: 1000,
             maxHeight: '95vh', overflowY: 'auto',
-            backgroundColor: 'rgba(0,0,0,0.7)', p: '10px', borderRadius: '5px',
+            backgroundColor: 'rgba(0,0,0,0.9)', p: '10px', borderRadius: '5px',
             overflowAnchor: 'none' }}    >
       <ComputeChoiceFilter />
     </Box>
