@@ -21,7 +21,7 @@ const BoxplotNote = ({ station_name }) => (
 );
 
 
-export default function TcmTest() {
+export function TcmBoxPlot() {
   const n = Math.max(
     station.length,
     gridMET.length,
@@ -91,3 +91,4 @@ export default function TcmTest() {
 
   );
 }
+export default TcmBoxPlot;
