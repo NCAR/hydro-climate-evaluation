@@ -183,7 +183,8 @@ const Colorbar = ({
     if (filterValues['Ave.']) {
       // prevent these precip values from dropping below 0
       if (band === 'djfp' || band === 'jjap' ||
-          band === 'mamp' || band === 'sonp' ) {
+          band === 'mamp' || band === 'sonp' ||
+          band === 'pr90' || band === 'pr99') {
       if (horizontal) {
         if (id === 'min')
           setClim((prev) => [Math.min(init[0] + dx * scale, init[1]), prev[1]])
