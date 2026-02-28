@@ -19,7 +19,7 @@ export function WashingtonStationsPlot({ lats, lons, stationNames, shortNames,
         "Lon: %{lon:.3f}<extra></extra>",
       marker: {
         size: 12,
-        color: "red",
+        color: "mediumblue",
         opacity: 0.9,
       },
     },
@@ -34,12 +34,12 @@ export function WashingtonStationsPlot({ lats, lons, stationNames, shortNames,
     map: {
       style: "white-bg",
       center: { lat: 47.15, lon: -122.483 }, // TCM lat/lon
-      zoom: 5.8,
+      zoom: 5.9,
       layers: [
         {
           below: "traces",
           sourcetype: "raster",
-          sourceattribution: "USGS The National Map",
+          // sourceattribution: "USGS The National Map",
           source: [
             "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}"
           ]
