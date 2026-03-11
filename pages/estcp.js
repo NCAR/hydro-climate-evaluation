@@ -138,7 +138,6 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [computeChoice, setComputeChoice] = useState({
     'Ave.': true,
     'Dif.': false,
-    ...(settings.agreement ? { 'Agreement': false } : {}),
     ...(settings.climateSignal ? { 'Climate Signal': false } : {}),
   });
 

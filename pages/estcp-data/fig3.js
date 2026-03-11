@@ -1,4 +1,4 @@
-import { MultiMaps } from "./MultiMaps";
+import { MultiMaps } from "../../components/estcp-data/MultiMaps";
 
 import fig3aa from "../../data_json/fig3/fig3aa_star_points.json";
 import fig3ab from "../../data_json/fig3/fig3ab_loca_points.json";

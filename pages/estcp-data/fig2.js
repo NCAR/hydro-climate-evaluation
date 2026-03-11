@@ -1,5 +1,4 @@
-// import ThreeMaps from './plot-three-maps'
-import { MultiMaps } from "./MultiMaps";
+import { MultiMaps } from "../../components/estcp-data/MultiMaps";
 
 import fig2aa from "../../data_json/fig2/fig2aa_gridmet_djf_points.json"
 import fig2ab from "../../data_json/fig2/fig2ab_nclimgrid_djf_points.json"
