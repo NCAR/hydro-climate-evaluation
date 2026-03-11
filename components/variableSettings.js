@@ -127,18 +127,22 @@ export const Clim_Ranges = Object.freeze({
   eli_p: { max: 1, min: -1 },
   dif_eli_t: { max: 1, min: -1 },
   dif_eli_p: { max: 1, min: -1 },
+
+  // Sam's variables
+  '5yr_pr': { max: 1, min: -1 },
+
 });
 
 
 
-const precip_colormap = 'blueprecip';
+// const precip_colormap = 'blueprecip';
+const precip_colormap = 'BrBG';
 const temp_colormap = 'BuYlRd';
-const dif_temp_colormap = 'difbluered';
-const dif_precip_colormap = 'difbrowngreen';
+const dif_temp_colormap = 'seismic';
+const dif_precip_colormap = 'seismic';
 export const Default_Colormaps = Object.freeze({
   // temperature variables
   tavg: temp_colormap,
-  n34t: temp_colormap,
   ttrend: temp_colormap,
   t90: temp_colormap,
   t99: temp_colormap,
@@ -150,7 +154,6 @@ export const Default_Colormaps = Object.freeze({
 
   // precip variables
   prec: 'browngreen',
-  n34pr: 'browngreen',
   ptrend: 'browngreen',
   pr90: precip_colormap,
   pr99: precip_colormap,
@@ -176,7 +179,6 @@ export const Default_Colormaps = Object.freeze({
 
   // temperature variables
   dif_tavg: dif_temp_colormap,
-  dif_n34t: dif_temp_colormap,
   dif_ttrend: dif_temp_colormap,
   dif_t90: dif_temp_colormap,
   dif_t99: dif_temp_colormap,
@@ -188,7 +190,6 @@ export const Default_Colormaps = Object.freeze({
 
   // precip variables
   dif_prec: dif_precip_colormap,
-  dif_n34pr: dif_precip_colormap,
   dif_ptrend: dif_precip_colormap,
   dif_pr90: dif_precip_colormap,
   dif_pr99: dif_precip_colormap,
@@ -207,6 +208,9 @@ export const Default_Colormaps = Object.freeze({
   dif_drought_2yr: dif_precip_colormap,
   dif_drought_5yr: dif_precip_colormap,
 
+  wt_clim: precip_colormap,
+  wt_day_to_day: precip_colormap,
+
   // new cmip variables
   eli_t: temp_colormap,
   eli_p: precip_colormap,
@@ -214,12 +218,16 @@ export const Default_Colormaps = Object.freeze({
   dif_eli_p: dif_precip_colormap,
 
   // new variables
-  tpcorr: precip_colormap,
-  wt_clim: precip_colormap,
-  wt_day_to_day: precip_colormap,
-  dif_tpcorr: dif_precip_colormap,
   dif_wt_clim: dif_precip_colormap,
   dif_wt_day_to_day: dif_precip_colormap,
+
+  // correlation
+  n34t: 'seismic',
+  dif_n34t: 'seismic',
+  n34pr: 'seismic',
+  dif_n34pr: 'seismic',
+  tpcorr: 'seismic',
+  dif_tpcorr: 'seismic',
 
 });
 
