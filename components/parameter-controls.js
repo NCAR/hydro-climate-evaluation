@@ -112,9 +112,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   const [units, setUnits] = useState('°C');
 
-  const [computeMetricScore, computeMetricScoreToggle] = useState(true);
-
-
 
   // TODO: HANDLE ALL THE REGIONS
   // const [metricRegion, setMetricRegion] = useState('desertsouthwest');
@@ -445,13 +442,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         setValues={setMetrics}
         setValues={handleClimateMetricsChange}
       />
-      <Filter values={metrics1} setValues={setMetrics1} multiSelect={true} />
-      <Filter values={metrics2} setValues={setMetrics2} multiSelect={true} />
-      <Filter values={metrics3} setValues={setMetrics3} multiSelect={true} />
-      <Filter values={metrics4} setValues={setMetrics4} multiSelect={true} />
-      <Filter values={metrics5} setValues={setMetrics5} multiSelect={true} />
-      <Filter values={metrics6} setValues={setMetrics6} multiSelect={true} />
-      <Filter values={metrics7} setValues={setMetrics7} multiSelect={true} />
+      <div  style={{ width: '100%', maxWidth: '320px' }}>
+      <Filter values={metricsAll} setValues={setMetricsAll} multiSelect={true} />
+      </div>
       </>
     );
    };
@@ -779,30 +772,14 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   });
 
-  const maxStdDevNumMetrics = 8;
-  const maxNumMetrics = 16;
-
-  // DEAD CODE?o
-  const [allMetrics, setAllMetrics] =
-    useState({
-      tavg: false,
-      n34t: false,
-      ttrend: false,
-      t90: false,
-      t99: false,
-      djf_t: false,
-      mam_t: false,
-      jja_t: false,
-      son_t: false,
-      prec: false,
-      n34pr: false,
-      ptrend: false,
-      pr90: false,
-      pr99: false,
-      djf_p: false,
-      mam_p: false,
-      jja_p: false,
-      son_p: false,});
+  const makeMetricsState = () =>
+        Object.fromEntries(
+          (region_metric_settings[metricRegion].metrics).map((metric) => [
+            metric,
+            true, // default metrics setting
+          ])
+        );
+  const [metricsAll, setMetricsAll] = useState(() => makeMetricsState());
 
 
   const [numMetrics, setNumMetrics] = useState(0);
@@ -837,43 +814,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   const [metrics, setMetrics] = useState({ all: true, clear: false});
 
-  const [metrics1, setMetrics1] = useState({ n34t: true,
-                                             n34pr: true,
-                                             ttrend: true,
-                                             ptrend: true,});
-  const [metrics2, setMetrics2] = useState({ t90: true,
-                                             t99: true,
-                                             pr90: true,
-                                             pr99: true,});
-  const [metrics3, setMetrics3] = useState({ djf_t: true,
-                                             mam_t: true,
-                                             jja_t: true,
-                                             son_t: true,});
-  const [metrics4, setMetrics4] = useState({ djf_p: true,
-                                             mam_p: true,
-                                             jja_p: true,
-                                             son_p: true,});
-  const [metrics5, setMetrics5] = useState({ ann_snow: true,
-                                             ann_t: true,
-                                             ann_p: true,
-                                             tpcorr: true,});
-  const [metrics6, setMetrics6] = useState({ drought_1yr: true,
-                                             drought_2yr: true,
-                                             drought_5yr: true,});
-  const [metrics7, setMetrics7] = useState({ wt_day_to_day: true,
-                                             wt_clim: true,
-                                             freezethaw: true,});
-
-
   const countNumMetrics = () => {
     let count = 0;
-    for (const key in metrics1) { metrics1[key] === true && count++; }
-    for (const key in metrics2) { metrics2[key] === true && count++; }
-    for (const key in metrics3) { metrics3[key] === true && count++; }
-    for (const key in metrics4) { metrics4[key] === true && count++; }
-    for (const key in metrics5) { metrics5[key] === true && count++; }
-    for (const key in metrics6) { metrics6[key] === true && count++; }
-    for (const key in metrics7) { metrics7[key] === true && count++; }
+    for (const key in metricsAll) {
+      if (metricsAll[key] === true) count++;
+    }
     return count;
   };
 
@@ -934,137 +879,27 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         return a.map((e,i) => e + b[i]);
   };
 
-  const [n34t_score, set_n34t_score] = useState(metric_scores["n34t"]);
-  const [ttrend_score, set_ttrend_score] = useState(metric_scores["ttrend"]);
-  const [t90_score, set_t90_score] = useState(metric_scores["t90"]);
-  const [t99_score, set_t99_score] = useState(metric_scores["t99"]);
-  const [freezethaw_score, set_freezethaw_score] =
-        useState(metric_scores["freezethaw"]);
-  const [djf_t_score, set_djf_t_score] = useState(metric_scores["djf_t"]);
-  const [mam_t_score, set_mam_t_score] = useState(metric_scores["mam_t"]);
-  const [jja_t_score, set_jja_t_score] = useState(metric_scores["jja_t"]);
-  const [son_t_score, set_son_t_score] = useState(metric_scores["son_t"]);
-  const [ann_t_score, set_ann_t_score] = useState(metric_scores["ann_t"]);
-  const [tpcorr_score, set_tpcorr_score] = useState(metric_scores["tpcorr"]);
-  const [n34pr_score, set_n34pr_score] = useState(metric_scores["n34pr"]);
-  const [ptrend_score, set_ptrend_score] = useState(metric_scores["ptrend"]);
-  const [pr90_score, set_pr90_score] = useState(metric_scores["pr90"]);
-  const [pr99_score, set_pr99_score] = useState(metric_scores["pr99"]);
-  const [drought_1yr_score, set_drought_1yr_score] =
-        useState(metric_scores["drought_1yr"]);
-  const [drought_2yr_score, set_drought_2yr_score] =
-        useState(metric_scores["drought_2yr"]);
-  const [drought_5yr_score, set_drought_5yr_score] =
-        useState(metric_scores["drought_5yr"]);
-  const [djf_p_score, set_djf_p_score] = useState(metric_scores["djf_p"]);
-  const [mam_p_score, set_mam_p_score] = useState(metric_scores["mam_p"]);
-  const [jja_p_score, set_jja_p_score] = useState(metric_scores["jja_p"]);
-  const [son_p_score, set_son_p_score] = useState(metric_scores["son_p"]);
-  const [ann_p_score, set_ann_p_score] = useState(metric_scores["ann_p"]);
-  const [ann_snow_score, set_ann_snow_score] =
-        useState(metric_scores["ann_snow"]);
-  const [wt_day_to_day_score, set_wt_day_to_day_score] =
-        useState(metric_scores["wt_day_to_day"]);
-  const [wt_clim_score, set_wt_clim_score] =
-        useState(metric_scores["wt_clim"]);
-
   useEffect(() => {
-    // let currentScore = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    //                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     let currentScore = Array(metrics_settings.num_datasets).fill(0);
 
-    console.log("HACK: metric hack until datsets fixed");
-    metrics_settings.combinations.forEach((val, i) => {
-        if (val === "MACA with ACCESS1-3" ||
-            val === "NASA-NEX with ACCESS1-3" ||
-            val === "NASA-NEX with CCSM4"
-           ) {
-          currentScore[i] += 999;
-        }
-    });
+    // metrics_settings.combinations.forEach((val, i) => {
+    //     if (val === "MACA with ACCESS1-3" ||
+    //         val === "NASA-NEX with ACCESS1-3" ||
+    //         val === "NASA-NEX with CCSM4"
+    //        ) {
+    //       currentScore[i] += 999;
+    //     }
+    // });
 
-    // console.log("FOO metrics5 =", metrics5);
-    if (metrics1['n34t']) {
-      currentScore = addScores(currentScore, n34t_score);
-    }
-    if (metrics1['n34pr']) {
-      currentScore = addScores(currentScore, n34pr_score);
-    }
-    if (metrics1['ttrend']) {
-      currentScore = addScores(currentScore, ttrend_score);
-    }
-    if (metrics1['ptrend']) {
-      currentScore = addScores(currentScore, ptrend_score);
-    }
-    if (metrics2['t90']) {
-      currentScore = addScores(currentScore, t90_score);
-    }
-    if (metrics2['t99']) {
-      currentScore = addScores(currentScore, t99_score);
-    }
-    if (metrics2['pr90']) {
-      currentScore = addScores(currentScore, pr90_score);
-    }
-    if (metrics2['pr99']) {
-      currentScore = addScores(currentScore, pr99_score);
-    }
-    if (metrics3['djf_t']) {
-      currentScore = addScores(currentScore, djf_t_score);
-    }
-    if (metrics3['mam_t']) {
-      currentScore = addScores(currentScore, mam_t_score);
-    }
-    if (metrics3['jja_t']) {
-      currentScore = addScores(currentScore, jja_t_score);
-    }
-    if (metrics3['son_t']) {
-      currentScore = addScores(currentScore, son_t_score);
-    }
-    if (metrics4['djf_p']) {
-      currentScore = addScores(currentScore, djf_p_score);
-    }
-    if (metrics4['mam_p']) {
-      currentScore = addScores(currentScore, mam_p_score);
-    }
-    if (metrics4['jja_p']) {
-      currentScore = addScores(currentScore, jja_p_score);
-    }
-    if (metrics4['son_p']) {
-      currentScore = addScores(currentScore, son_p_score);
-    }
-    if (metrics5['ann_snow']) {
-      currentScore = addScores(currentScore, ann_snow_score);
-    }
-    if (metrics5['ann_t']) {
-      currentScore = addScores(currentScore, ann_t_score);
-    }
-    if (metrics5['ann_p']) {
-      currentScore = addScores(currentScore, ann_p_score);
-    }
-    if (metrics5['tpcorr']) {
-      currentScore = addScores(currentScore, tpcorr_score);
-    }
-    if (metrics6['drought_1yr']) {
-      currentScore = addScores(currentScore, drought_1yr_score);
-    }
-    if (metrics6['drought_2yr']) {
-      currentScore = addScores(currentScore, drought_2yr_score);
-    }
-    if (metrics6['drought_5yr']) {
-      currentScore = addScores(currentScore, drought_5yr_score);
-    }
-    if (metrics7['wt_day_to_day']) {
-      currentScore = addScores(currentScore, wt_day_to_day_score);
-    }
-    if (metrics7['wt_clim']) {
-      currentScore = addScores(currentScore, wt_clim_score);
-    }
-    if (metrics7['freezethaw']) {
-      currentScore = addScores(currentScore, freezethaw_score);
+    // calculate scores
+    for (const key in metricsAll) {
+      if (metricsAll[key] === true && metric_scores[key] !== undefined) {
+        if (debug) console.log(key,' addscores')
+        currentScore = addScores(currentScore, metric_scores[key]);
+      }
     }
 
-
-    console.log("FOO numetrics =", numMetrics);
+    if (debug) console.log("numMetrics =", numMetrics);
     if (numMetrics === 0) {
       setTopCombination("Select Metrics");
       setTopDownscaling("None");
@@ -1081,12 +916,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       const scoreFunc = Math.min;
       const scoreNull = 9999;
 
-      // console.log("METRIC METHOD=", metricMethod)
-      // console.log("scorefunc=", scoreFunc)
       for (let n = 0; n < numClimateSignalSets; n++) {
         let i = currentScore.indexOf(scoreFunc(...currentScore));
-        console.log(scheme, " FOO SCORE =", currentScore, "and i", i);
-        // console.log(n+1, "best combination =", combinations[i]);
+        if (debug) {
+          console.log("score =", currentScore[i], "for ", combinations[i]);
+        }
         combo.push(combinations[i]);
         downscaling.push(combinations_downscaling[i]);
         model.push(combinations_model[i]);
@@ -1098,11 +932,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   }, [numMetrics,
       scheme, metric_scores, metricRegion,
-      setMetrics1, setMetrics2, setMetrics3, setMetrics4,
-      setMetrics5, setMetrics6, setMetrics7,
+      setMetricsAll,
       numClimateSignalSets,
-      computeMetricScore,
      ]);
+  // add region??
 
 
   useEffect(() => {
@@ -1211,10 +1044,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   }, [computeClimateSignal, metricPerformance]);
 
+  // if these variables change, stop displaying the map until user
+  // presses compute again
   useEffect(() => {
     setComputeClimateSignal({'COMPUTE': false});
-  }, [metrics, metrics1, metrics2, metrics3,
-      metrics4, metrics6, metrics7,
+  }, [metrics, metricsAll,
       scheme, metricRegion, rcpValues, numClimateSignalSets,
       yearRange,
      // MORE TO THIS?
@@ -1249,53 +1083,19 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   }, [showRegionPlot, shouldUpdateMapSource]);
 
+
+  // If not all metrics are selected, make sure all is false
   useEffect(() => {
     const numSelected = countNumMetrics();
     setNumMetrics(numSelected);
 
-    if (Object.values(metrics1).includes(false) ||
-        Object.values(metrics2).includes(false) ||
-        Object.values(metrics3).includes(false) ||
-        Object.values(metrics4).includes(false) ||
-        Object.values(metrics5).includes(false) ||
-        Object.values(metrics6).includes(false) ||
-        Object.values(metrics7).includes(false)) {
+    if (Object.values(metricsAll).includes(false)) {
       setMetrics({all: false, clear: false});
-    }
-    if (!Object.values(metrics1).includes(false) &&
-        !Object.values(metrics2).includes(false) &&
-        !Object.values(metrics3).includes(false) &&
-        !Object.values(metrics4).includes(false) &&
-        !Object.values(metrics5).includes(false) &&
-        !Object.values(metrics6).includes(false) &&
-        !Object.values(metrics7).includes(false)) {
+    } else {
       setMetrics({all: true, clear: false});
     }
+  }, [metricsAll, scheme, metricRegion, rcpValues]);
 
-
-  }, [metrics1, metrics2, metrics3, metrics4,
-      metrics5, metrics6, metrics7,
-      scheme, metricRegion, rcpValues // more to this?
-      ]);
-
-
-  // const handleMetrics = useCallback((e) => {
-  //   const choice = e;
-  //   const keys = JSON.stringify(Object.keys(e));
-  //   if (keys === '["n34t","n34pr","ttrend","ptrend"]') {
-  //     setMetrics1(e);
-  //   } else if (keys === '["t90","t99","pr90","pr99"]') {
-  //     setMetrics2(e);
-  //   } else if (keys === '["djf_t","mam_t","jja_t","son_t"]') {
-  //     setMetrics3(e);
-  //   } else if (keys === '["prec","n34pr","ptrend"]') {
-  //     setMetrics4(e);
-  //   } else if (keys === '["pr90","pr99","djf_p"]') {
-  //     // setMetrics5(e);
-  //   } else if (keys === '["mam_p","jja_p","son_p"]') {
-  //     // setMetrics6(e);
-  //   }
-  // });
 
   const handleClimateMetricsChange = useCallback((e) => {
     const all = e.all;
@@ -1303,24 +1103,18 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
     if (all) {
       setMetrics({all: true, clear: false});
-      setMetrics1({n34t: true, n34pr: true, ttrend: true, ptrend: true,});
-      setMetrics2({t90: true, t99: true, pr90: true, pr99: true,});
-      setMetrics3({djf_t: true, mam_t: true, jja_t: true, son_t: true,});
-      setMetrics4({djf_p: true, mam_p: true, jja_p: true, son_p: true,});
-      setMetrics5({ ann_snow: true, ann_t: true, ann_p: true, tpcorr: true,});
-      setMetrics6({ drought_1yr: true, drought_2yr: true, drought_5yr: true,});
-      setMetrics7({ wt_day_to_day: true, wt_clim: true, freezethaw: true,});
+      setMetricsAll(
+        Object.fromEntries(
+          Object.keys(metricsAll).map((key) => [key, true])
+        )
+      );
     } else if (clear) {
       setMetrics({all: false, clear: false});
-      setMetrics1({n34t: false, n34pr: false, ttrend: false, ptrend: false,});
-      setMetrics2({t90: false, t99: false, pr90: false, pr99: false,});
-      setMetrics3({djf_t: false, mam_t: false, jja_t: false, son_t: false,});
-      setMetrics4({djf_p: false, mam_p: false, jja_p: false, son_p: false,});
-      setMetrics5({ ann_snow: false, ann_t: false, ann_p: false,
-                    tpcorr: false,});
-      setMetrics6({ drought_1yr: false, drought_2yr: false,
-                    drought_5yr: false,});
-      setMetrics7({ wt_day_to_day: false, wt_clim: false, freezethaw: false,});
+      setMetricsAll(
+        Object.fromEntries(
+          Object.keys(metricsAll).map((key) => [key, false])
+        )
+      );
     }
   });
 
@@ -1672,8 +1466,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         max={10} // or combinations.length later
         step={1}
         onChange={handleNumClimateSignalSets}
-        sx={{mb:4}}
+        sx={{mb:2}}
       />
+      <BestPerformingBox topCombination={topCombination}/>
       </>
     );
   };
@@ -1682,7 +1477,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     return(
       <>
       <Box>COMPUTE CLIMATE SIGNAL</Box>
-      <BestPerformingBox topCombination={topCombination}/>
       <Filter
        values={computeClimateSignal}
        setValues={handleClimateSignal}
@@ -1723,11 +1517,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     if (topCombination === "Select Metrics") {
       return <Box>{topCombination}</Box>;
     }
-
     const items = Array.isArray(topCombination) ? topCombination : [];
 
     return (
-      <Box as="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
+      <Box as="ul" sx={{ listStyle: 'none', p: 0, m: 0, mb: 4 }}>
         {items.map((item, idx) => (
           <Box
             as="li"
@@ -1741,6 +1534,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       </Box>
     );
   };
+
 
   const YearRangeBox = ({downscaling_l, past = true, future = true,
                          dif=false}) => {
@@ -1757,13 +1551,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     // if (downscaling_l == 'gard_r2' ||
     //     downscaling_l == 'gard_r3') {
     //   future = false;
-    // }  ! ARTLESS
+    // }  ! FOOBAR
     const options = {
       ...(past ? settings.past_eras : {}),
       ...(future ? settings.future_eras : {}),
     };
 
-    // const value = Object.values(options)[0];  // dead code
     return(
       <>
       <Box sx={{ ...sx.label, mt: [3] }}>Year Range</Box>
@@ -1995,38 +1788,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   };
 
-  // const [metricRegion, setMetricRegion] = useState('desertsouthwest');
-  useEffect(() => {
-    set_n34t_score(metric_scores["n34t"]);
-    set_ttrend_score(metric_scores["ttrend"]);
-    set_t90_score(metric_scores["t90"]);
-    set_t99_score(metric_scores["t99"]);
-    set_freezethaw_score(metric_scores["freezethaw"]);
-    set_djf_t_score(metric_scores["djf_t"]);
-    set_mam_t_score(metric_scores["mam_t"]);
-    set_jja_t_score(metric_scores["jja_t"]);
-    set_son_t_score(metric_scores["son_t"]);
-    set_ann_t_score(metric_scores["ann_t"]);
-    set_tpcorr_score(metric_scores["tpcorr"]);
-    set_n34pr_score(metric_scores["n34pr"]);
-    set_ptrend_score(metric_scores["ptrend"]);
-    set_pr90_score(metric_scores["pr90"]);
-    set_pr99_score(metric_scores["pr99"]);
-    set_drought_1yr_score(metric_scores["drought_1yr"]);
-    set_drought_2yr_score(metric_scores["drought_2yr"]);
-    set_drought_5yr_score(metric_scores["drought_5yr"]);
-    set_djf_p_score(metric_scores["djf_p"]);
-    set_mam_p_score(metric_scores["mam_p"]);
-    set_jja_p_score(metric_scores["jja_p"]);
-    set_son_p_score(metric_scores["son_p"]);
-    set_ann_p_score(metric_scores["ann_p"]);
-    set_ann_snow_score(metric_scores["ann_snow"]);
-    set_wt_day_to_day_score(metric_scores["wt_day_to_day"]);
-    set_wt_clim_score(metric_scores["wt_clim"]);
-    computeMetricScoreToggle(false);
-  }, [metric_scores, scheme, region]);
-
-
   useEffect(() => {
     setMetricsSettings(region_metric_settings[metricRegion]);
   }, [metricRegion]);
@@ -2036,7 +1797,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     console.log("COMPUTE SOURCE =", mapSource);
   }, [mapSource]);
 
-  // call setMetricScores when variables change
+  // call setMetricScores when scheme or region changes
   useEffect(() => {
     const metrics_settings_l = region_metric_settings[metricRegion];
     setMetricScores(metrics_settings_l['scores'][scheme]);
