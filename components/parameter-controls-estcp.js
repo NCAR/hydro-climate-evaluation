@@ -957,185 +957,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const combinations_downscaling = metrics_settings['combinations_downscaling'];
   const combinations_model = metrics_settings['combinations_model'];
 
-  // TODO SCORES METRIC
-  // --- SCORES ---
-  const [metric_scores, setMetricScores] =
-        useState(metrics_settings['scores']['combstd']);
-  function addScores(a,b){
-        return a.map((e,i) => e + b[i]);
-  };
-
-  const [n34t_score, set_n34t_score] = useState(metric_scores["n34t"]);
-  const [ttrend_score, set_ttrend_score] = useState(metric_scores["ttrend"]);
-  const [t90_score, set_t90_score] = useState(metric_scores["t90"]);
-  const [t99_score, set_t99_score] = useState(metric_scores["t99"]);
-  const [freezethaw_score, set_freezethaw_score] =
-        useState(metric_scores["freezethaw"]);
-  const [djf_t_score, set_djf_t_score] = useState(metric_scores["djf_t"]);
-  const [mam_t_score, set_mam_t_score] = useState(metric_scores["mam_t"]);
-  const [jja_t_score, set_jja_t_score] = useState(metric_scores["jja_t"]);
-  const [son_t_score, set_son_t_score] = useState(metric_scores["son_t"]);
-  const [ann_t_score, set_ann_t_score] = useState(metric_scores["ann_t"]);
-  const [tpcorr_score, set_tpcorr_score] = useState(metric_scores["tpcorr"]);
-  const [n34pr_score, set_n34pr_score] = useState(metric_scores["n34pr"]);
-  const [ptrend_score, set_ptrend_score] = useState(metric_scores["ptrend"]);
-  const [pr90_score, set_pr90_score] = useState(metric_scores["pr90"]);
-  const [pr99_score, set_pr99_score] = useState(metric_scores["pr99"]);
-  const [drought_1yr_score, set_drought_1yr_score] =
-        useState(metric_scores["drought_1yr"]);
-  const [drought_2yr_score, set_drought_2yr_score] =
-        useState(metric_scores["drought_2yr"]);
-  const [drought_5yr_score, set_drought_5yr_score] =
-        useState(metric_scores["drought_5yr"]);
-  const [djf_p_score, set_djf_p_score] = useState(metric_scores["djf_p"]);
-  const [mam_p_score, set_mam_p_score] = useState(metric_scores["mam_p"]);
-  const [jja_p_score, set_jja_p_score] = useState(metric_scores["jja_p"]);
-  const [son_p_score, set_son_p_score] = useState(metric_scores["son_p"]);
-  const [ann_p_score, set_ann_p_score] = useState(metric_scores["ann_p"]);
-  const [ann_snow_score, set_ann_snow_score] =
-        useState(metric_scores["ann_snow"]);
-  const [wt_day_to_day_score, set_wt_day_to_day_score] =
-        useState(metric_scores["wt_day_to_day"]);
-  const [wt_clim_score, set_wt_clim_score] =
-        useState(metric_scores["wt_clim"]);
-
-  useEffect(() => {
-    // let currentScore = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    //                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let currentScore = Array(metrics_settings.num_datasets).fill(0);
-
-    console.log("HACK: metric hack until datsets fixed");
-    metrics_settings.combinations.forEach((val, i) => {
-        if (val === "MACA with ACCESS1-3" ||
-            val === "NASA-NEX with ACCESS1-3" ||
-            val === "NASA-NEX with CCSM4"
-           ) {
-          currentScore[i] += 999;
-        }
-    });
-
-    // console.log("FOO metrics5 =", metrics5);
-    if (metrics1['n34t']) {
-      currentScore = addScores(currentScore, n34t_score);
-    }
-    if (metrics1['n34pr']) {
-      currentScore = addScores(currentScore, n34pr_score);
-    }
-    if (metrics1['ttrend']) {
-      currentScore = addScores(currentScore, ttrend_score);
-    }
-    if (metrics1['ptrend']) {
-      currentScore = addScores(currentScore, ptrend_score);
-    }
-    if (metrics2['t90']) {
-      currentScore = addScores(currentScore, t90_score);
-    }
-    if (metrics2['t99']) {
-      currentScore = addScores(currentScore, t99_score);
-    }
-    if (metrics2['pr90']) {
-      currentScore = addScores(currentScore, pr90_score);
-    }
-    if (metrics2['pr99']) {
-      currentScore = addScores(currentScore, pr99_score);
-    }
-    if (metrics3['djf_t']) {
-      currentScore = addScores(currentScore, djf_t_score);
-    }
-    if (metrics3['mam_t']) {
-      currentScore = addScores(currentScore, mam_t_score);
-    }
-    if (metrics3['jja_t']) {
-      currentScore = addScores(currentScore, jja_t_score);
-    }
-    if (metrics3['son_t']) {
-      currentScore = addScores(currentScore, son_t_score);
-    }
-    if (metrics4['djf_p']) {
-      currentScore = addScores(currentScore, djf_p_score);
-    }
-    if (metrics4['mam_p']) {
-      currentScore = addScores(currentScore, mam_p_score);
-    }
-    if (metrics4['jja_p']) {
-      currentScore = addScores(currentScore, jja_p_score);
-    }
-    if (metrics4['son_p']) {
-      currentScore = addScores(currentScore, son_p_score);
-    }
-    if (metrics5['ann_snow']) {
-      currentScore = addScores(currentScore, ann_snow_score);
-    }
-    if (metrics5['ann_t']) {
-      currentScore = addScores(currentScore, ann_t_score);
-    }
-    if (metrics5['ann_p']) {
-      currentScore = addScores(currentScore, ann_p_score);
-    }
-    if (metrics5['tpcorr']) {
-      currentScore = addScores(currentScore, tpcorr_score);
-    }
-    if (metrics6['drought_1yr']) {
-      currentScore = addScores(currentScore, drought_1yr_score);
-    }
-    if (metrics6['drought_2yr']) {
-      currentScore = addScores(currentScore, drought_2yr_score);
-    }
-    if (metrics6['drought_5yr']) {
-      currentScore = addScores(currentScore, drought_5yr_score);
-    }
-    if (metrics7['wt_day_to_day']) {
-      currentScore = addScores(currentScore, wt_day_to_day_score);
-    }
-    if (metrics7['wt_clim']) {
-      currentScore = addScores(currentScore, wt_clim_score);
-    }
-    if (metrics7['freezethaw']) {
-      currentScore = addScores(currentScore, freezethaw_score);
-    }
-
-
-    console.log("FOO numetrics =", numMetrics);
-    if (numMetrics === 0) {
-      setTopCombination("Select Metrics");
-      setTopDownscaling("None");
-      setTopModel("None");
-      setTopCombination2("None");
-      setTopDownscaling2("None");
-      setTopModel2("None");
-    } else {
-
-      let combo = [];
-      let downscaling = [];
-      let model = [];
-
-      const scoreFunc = Math.min;
-      const scoreNull = 9999;
-
-      // console.log("METRIC METHOD=", metricMethod)
-      // console.log("scorefunc=", scoreFunc)
-      for (let n = 0; n < numClimateSignalSets; n++) {
-        let i = currentScore.indexOf(scoreFunc(...currentScore));
-        console.log(scheme, " FOO SCORE =", currentScore, "and i", i);
-        // console.log(n+1, "best combination =", combinations[i]);
-        combo.push(combinations[i]);
-        downscaling.push(combinations_downscaling[i]);
-        model.push(combinations_model[i]);
-        currentScore[i] = scoreNull; // only use combination once
-      }
-      setTopCombination(combo);
-      setTopDownscaling(downscaling);
-      setTopModel(model);
-    }
-  }, [numMetrics,
-      scheme, metric_scores, metricRegion,
-      setMetrics1, setMetrics2, setMetrics3, setMetrics4,
-      setMetrics5, setMetrics6, setMetrics7,
-      numClimateSignalSets,
-      computeMetricScore,
-     ]);
-
-
   useEffect(() => {
     if (difObsOrDataChoice1['Model']) {
       setUrl(baseDir, downscaling, model, yearRange, ensemble);
@@ -1429,6 +1250,25 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         color="black"
       >
         HELP
+      </Button>
+      </Box>
+    );
+  };
+
+  // Per Sundog page "Mandate: Accessibility Statement link in all
+  // Website/App Footers". Also recommend that staff follow WCAG 2.2 Level
+  // AA standards
+  const Accessibility = () => {
+    return (
+      <Box style={{ marginTop: '8px' }}>
+      <Button
+        href={'https://www.ucar.edu/web-accessibility'}
+        target="_blank"
+        rel="noopener noreferrer"
+        prefix={<Right />}
+        color="black"
+      >
+        Accessibility
       </Button>
       </Box>
     );
@@ -2103,38 +1943,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   };
 
-  // const [metricRegion, setMetricRegion] = useState('desertsouthwest');
-  useEffect(() => {
-    set_n34t_score(metric_scores["n34t"]);
-    set_ttrend_score(metric_scores["ttrend"]);
-    set_t90_score(metric_scores["t90"]);
-    set_t99_score(metric_scores["t99"]);
-    set_freezethaw_score(metric_scores["freezethaw"]);
-    set_djf_t_score(metric_scores["djf_t"]);
-    set_mam_t_score(metric_scores["mam_t"]);
-    set_jja_t_score(metric_scores["jja_t"]);
-    set_son_t_score(metric_scores["son_t"]);
-    set_ann_t_score(metric_scores["ann_t"]);
-    set_tpcorr_score(metric_scores["tpcorr"]);
-    set_n34pr_score(metric_scores["n34pr"]);
-    set_ptrend_score(metric_scores["ptrend"]);
-    set_pr90_score(metric_scores["pr90"]);
-    set_pr99_score(metric_scores["pr99"]);
-    set_drought_1yr_score(metric_scores["drought_1yr"]);
-    set_drought_2yr_score(metric_scores["drought_2yr"]);
-    set_drought_5yr_score(metric_scores["drought_5yr"]);
-    set_djf_p_score(metric_scores["djf_p"]);
-    set_mam_p_score(metric_scores["mam_p"]);
-    set_jja_p_score(metric_scores["jja_p"]);
-    set_son_p_score(metric_scores["son_p"]);
-    set_ann_p_score(metric_scores["ann_p"]);
-    set_ann_snow_score(metric_scores["ann_snow"]);
-    set_wt_day_to_day_score(metric_scores["wt_day_to_day"]);
-    set_wt_clim_score(metric_scores["wt_clim"]);
-    computeMetricScoreToggle(false);
-  }, [metric_scores, scheme, region]);
-
-
   useEffect(() => {
     setMetricsSettings(region_metric_settings[metricRegion]);
   }, [metricRegion]);
@@ -2143,13 +1951,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   useEffect(() => {
     console.log("COMPUTE SOURCE =", mapSource);
   }, [mapSource]);
-
-  // call setMetricScores when variables change
-  useEffect(() => {
-    const metrics_settings_l = region_metric_settings[metricRegion];
-    setMetricScores(metrics_settings_l['scores'][scheme]);
-  }, [scheme, metricRegion]);
-
 
   const handleMetricRegionChange = useCallback((e) => {
     const metricRegion = e.target.value;
@@ -2392,6 +2193,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       <SideBySideTag />
       <ResetZoomButton />
       <README />
+      <Accessibility />
     </Box>
     );
   };

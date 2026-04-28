@@ -1197,6 +1197,25 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
+  // Per Sundog page "Mandate: Accessibility Statement link in all
+  // Website/App Footers". Also recommend that staff follow WCAG 2.2 Level
+  // AA standards
+  const Accessibility = () => {
+    return (
+      <Box style={{ marginTop: '8px' }}>
+      <Button
+        href={'https://www.ucar.edu/web-accessibility'}
+        target="_blank"
+        rel="noopener noreferrer"
+        prefix={<Right />}
+        color="black"
+      >
+        Accessibility
+      </Button>
+      </Box>
+    );
+  };
+
   const DifferenceLegend = () => {
     let a_label, b_label
     if (difObsOrDataChoice1['Model']) {
@@ -2045,6 +2064,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       <SideBySideTag />
       <ResetZoomButton />
       <README />
+      <Accessibility />
     </Box>
     );
   };
