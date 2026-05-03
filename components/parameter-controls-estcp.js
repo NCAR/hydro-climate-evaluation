@@ -14,35 +14,8 @@ import { Scale_Values, Clim_Ranges} from './variableSettings';
 import { Default_Colormaps, readmeUrl } from './variableSettings';
 import { getData } from './getData';
 
-import {metrics_settings as desertsouthwest_metrics} from
-  '../metrics/desertsouthwest_metrics.js';
-import {metrics_settings as gulfcoast_metrics} from
-  '../metrics/gulfcoast_metrics.js';
-import {metrics_settings as mountainwest_metrics} from
-  '../metrics/mountainwest_metrics.js';
-import {metrics_settings as northernplains_metrics} from
-  '../metrics/northernplains_metrics.js';
-import {metrics_settings as pacificsouthwest_metrics} from
-  '../metrics/pacificsouthwest_metrics.js';
-import {metrics_settings as greatlakes_metrics} from
-  '../metrics/greatlakes_metrics.js';
-import {metrics_settings as midatlantic_metrics} from
-  '../metrics/midatlantic_metrics.js';
-import {metrics_settings as northatlantic_metrics} from
-  '../metrics/northatlantic_metrics.js';
-import {metrics_settings as pacificnorthwest_metrics} from
-  '../metrics/pacificnorthwest_metrics.js';
-const region_metric_settings = {
-  'desertsouthwest': desertsouthwest_metrics,
-  'gulfcoast': gulfcoast_metrics,
-  'mountainwest': mountainwest_metrics,
-  'northernplains': northernplains_metrics,
-  'pacificsouthwest': pacificsouthwest_metrics,
-  'greatlakes': greatlakes_metrics,
-  'midatlantic': midatlantic_metrics,
-  'northatlantic': northatlantic_metrics,
-  'pacificnorthwest': pacificnorthwest_metrics,
-}
+import { agreement_variables } from './estcp-data/agreement_variables.js';
+import { cmipOptions } from "./test.js";
 
 const sx = {
   label: {
@@ -65,7 +38,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           chartHeight, computeChoice,
           showClimateChange, showRegionPlot, bucketRes,
           showStates, showRivers, showHuc2, sideBySide, mapVal, ensemble,
-          region
+          region, cmip
         } = getters;
   const {
     setDisplay,
@@ -102,19 +75,15 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setSideBySide,
     setEnsemble,
     setRegion,
+    setCmip,
   } = setters;
 
-
-  const [metrics_settings, setMetricsSettings] =
-        useState(desertsouthwest_metrics);
 
   const [chartToggle, setChartToggle] = useState(false);
 
   const [units, setUnits] = useState('°C');
 
   const [computeMetricScore, computeMetricScoreToggle] = useState(true);
-
-
 
   // TODO: HANDLE ALL THE REGIONS
   // const [metricRegion, setMetricRegion] = useState('desertsouthwest');
@@ -150,10 +119,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
   function setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, yearRange_l) {
+    // bucket/agreement/map/+ cmip/ + downscaling/ + model/ +  year/ + var/
+    // var are pr, tasman, tasmax variables
     const url = `${bucket}${baseDir_l}${cmip_l}/${downscaling_l}/${model_l}/${yearRange_l}/${fname}`;
-    console.log("FOOBAR URL =", url)
+    console.log("AGREEMENT URL =", url)
     setMapSource([url]);
-    console.log("FOOBAR SETURL")
+    // setMapSourceDif([url]);
+    // console.log("FOOBAR SETURL")
   };
 
 
@@ -424,10 +396,50 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       description =
             ['Weight',
              'Climate'];
+    } else if (metric === 'mean_tasmax') {
+      label = 'mean_tasmax';
+      description =
+            ['mean daily',
+             'max temperature'];
+    } else if (metric === 'mean_jja_tasmax') {
+      label = 'mean_jja_tasmax';
+      description =
+            ['mean JJA',
+             'max temperature'];
+    } else if (metric === 'q95_tasmax') {
+      label = 'q95_tasmax';
+      description =
+            ['q95',
+             'max temperature'];
+    } else if (metric === 'std_pr') {
+      label = 'std_pr';
+      description =
+            ['Std.',
+             'Precipitation'];
+    } else if (metric === 'q95_pr') {
+      label = 'q95_pr';
+      description =
+            ['q95',
+             'precipitation'];
+    } else if (metric === 'sum_pr') {
+      label = 'sum_pr';
+      description =
+            ['Sum',
+             'precipitation'];
+    } else if (metric === 'mean_jja_pr') {
+      label = 'mean_jja_pr';
+      description =
+            ['Mean JJA',
+             'Precipitation'];
+    } else if (metric === 'mean_pr') {
+      label = 'mean_pr';
+      description =
+            ['Mean',
+             'Precipitation'];
     } else {
        label = 'label undefined';
        description = ['description undefined','',''];
-     }
+    }
 
     return(
       <Box sx={{ ...sx.label, mt: [4] }}>
@@ -443,6 +455,86 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
+  const CmipBox = () => {
+    return(
+      <>
+      <Box sx={{ ...sx.label, mt: [4] }}>CMIP</Box>
+      <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={setCmip}
+        sx={{ mt: [1] }}
+        value={cmip}
+      >
+        {Object.entries(settings.cmip).map(([key, label]) => (
+          <option key={key} value={key}>
+          {label}
+          </option>
+        ))}
+      </Select>
+
+      </>
+    )
+  };
+
+  const [scenerio, setScenerio] = useState('');
+  const ScenerioBox = () => {
+    let scenerio_d = {'':'-'}
+    if (cmip == 'cmip6') {
+      scenerio_d = cmipOptions[cmip][downscaling][model].map((key) => [
+        key, key.toUpperCase()]);
+    }
+
+    return(
+      <>
+      <Box sx={{ ...sx.label, mt: [4] }}>Scenerio</Box>
+      <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={setScenerio}
+        sx={{ mt: [1] }}
+        value={scenerio}
+      >
+        {Object.entries(scenerio_d).map(([key, label]) => (
+          <option key={key} value={key}>
+          {label}
+          </option>
+        ))}
+      </Select>
+
+      </>
+    )
+  };
+
+  const [signal, setSignal] = useState('pr');
+  const SignalBox = () => {
+    let signal_d = {'empty':'-'}
+    if (cmip == 'cmip6') {
+      signal_d = cmipOptions[cmip][downscaling][model][scenerio]['variables']
+    } else {
+      signal_d = cmipOptions[cmip][downscaling][model]['variables']
+    }
+
+    return(
+      <>
+      <Box sx={{ ...sx.label, mt: [4] }}>Signal</Box>
+      <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={setSignal}
+        sx={{ mt: [1] }}
+        value={signal}
+      >
+        {Object.entries(signal_d).map(([key, label]) => (
+          <option key={key} value={key}>
+          {label}
+          </option>
+        ))}
+      </Select>
+
+      </>
+    )
+  };
 
   const MetricsBox = () => {
     return(
@@ -756,49 +848,43 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setUnits('correlation');
     } else if (metric == 'mean_pr') {
       setBand('am_p');
-      setUnits('FOO');
+      console.log('set units')
+      setUnits('mm');
     } else if (metric == 'mean_jja_pr') {
       setBand('jjap');
-      setUnits('FOO');
+      setUnits('mm');
     } else if (metric == 'sum_pr') {
       setBand('sump');
-      setUnits('FOO');
+      setUnits('mm');
     } else if (metric == 'q95_pr') {
       setBand('q95p');
-      setUnits('FOO');
+      setUnits('mm');
     } else if (metric == 'std_pr') {
       setBand('stdp');
-      setUnits('FOO');
+      setUnits('mm');
     } else if (metric == '2yr_pr') {
       setBand('2yrp');
-      setUnits('FOO');
+      setUnits('mm');
     } else if (metric == '5yr_pr') {
       setBand('5yrp');
-      setUnits('FOO');
+      setUnits('mm');
     } else if (metric == 'gcm') {
       setBand('gcm_');
-      setUnits('FOO');
+      setUnits('');
+    } else if (metric == 'mean_tasmin') {
+      setBand('am_i');
+      setUnits('°C');
+    } else if (metric == 'mean_djf_tasmin') {
+      setBand('djfi');
+      setUnits('°C');
+    } else if (metric == 'q95_tasmin') {
+      setBand('q95i');
+      setUnits('°C');
     }
     else {
       setUnits('fill in missing units for '+metric);
     }
 
-    // else if (metric === '') {
-    //   setBand('');
-    //   setUnits('');
-    // }
-
-
-    // else if (metric === 'drought_5yr') {
-    //   setBand('d5yr');
-    //   setUnits('num. months SPI < -1');
-    // } else if (metric === 'drought_5yr') {
-    //   setBand('d5yr');
-    //   setUnits('num. months SPI < -1');
-    // } else if (metric === 'drought_5yr') {
-    //   setBand('d5yr');
-    //   setUnits('num. months SPI < -1');
-    // }  // Add     'tpcorr',      'wt_day_to_day',      'wt_clim',
 
     if (computeChoice['Dif.'] || computeChoice['Climate Signal']) {
       setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
@@ -846,6 +932,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   let aveChoice = null;
   let setAveChoice = null;
+  // if (computeChoice['Agreement']) { artless
+  //       [aveChoice, setAveChoice] = useState({ 'Modeling': true });
+  // } else
   if (settings.observation) {
     [aveChoice, setAveChoice] = useState({ 'Modeling': true, 'Observation': false, });
   } else {
@@ -951,11 +1040,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     prism: 'PRISM',
   }
 
-
-  // 13 = combinations
-  const combinations = metrics_settings['combinations'];
-  const combinations_downscaling = metrics_settings['combinations_downscaling'];
-  const combinations_model = metrics_settings['combinations_model'];
 
   useEffect(() => {
     if (difObsOrDataChoice1['Model']) {
@@ -1480,7 +1564,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       const cmip_l = 'cmip5';
       const downscaling_l = 'icar';
       const model_l = 'miroc5';
-      const yearRange = 'hist.historical';
+      const yearRange = 'tasmin';
       const ensemble = '';
 
       // setDownscaling(downscaling_l);
@@ -1492,7 +1576,38 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       console.log("PRE FOOBAR PRE")
       setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, yearRange);
       // setMetric('5yr_pr');
+      // setUnits('5yrp');
+      // setClimateModel(model_l);
+      // setMetric('mean_jja_tasmax');
+      // setBand('jjax');
+      // setUnits('BAR');
 
+      // FOOBAR canned choices for variables
+      setMetric('mean_djf_tasmin');
+      setBand('djfi');
+      setUnits('BAR');
+
+
+
+      // 'mean_pr':'am_p',
+      // 'mean_jja_pr':'jjap',
+      // 'sum_pr':'sump',
+      // 'q95_pr':'q95p',
+      // 'std_pr':'stdp',
+      // '2yr_pr':'2yrp',
+      // '5yr_pr':'5yrp',
+      // 'gcm':'gcm_',
+      // # max
+      // 'mean_tasmax':'amtx',
+      // 'mean_jja_tasmax':'jjax',
+      // 'q95_tasmax':'q95x',
+      // 'sum_tasmax': 'sumx',
+      // 'std_tasmax': 'stdx',
+
+
+
+
+      console.log("foobar ADAM PROJECT");
       // message("FOOBAR URL =", url)
       // setMapSource([url]);
       console.log('foobar after set agre url')
@@ -1527,20 +1642,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         />
         </Box>
         <DifferenceBox />
-        </>
-      );
-    }
-    else if (computeChoice['Climate Signal']) {
-      return (
-        <>
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Filter
-          values={computeChoice}
-          setValues={handleComputeChoiceChange}
-          multiSelect={false}
-        />
-        </Box>
-        <ClimateSignalBox numMetrics={numMetrics} />
         </>
       );
     }
@@ -1592,27 +1693,20 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
-  const ClimateSignalComputeButton = () => {
-    return(
-      <>
-      <Box>COMPUTE CLIMATE SIGNAL</Box>
-      <BestPerformingBox topCombination={topCombination}/>
-      <Filter
-       values={computeClimateSignal}
-       setValues={handleClimateSignal}
-       multiSelect={false}
-      />
-      </>
-    );
-  };
-
-  const VariableChoiceBox = ({showPlotLabel=false, climateSignal=false}) => {
-    const metrics = [...settings.variables,
+  const VariableChoiceBox = ({showPlotLabel=false, climateSignal=false,
+                             agreement=false}) => {
+    let metrics = [...settings.variables,
                      ...(climateSignal ? [] : settings.variables_trend)
                     ];
+    console.log("BAD ADAM metrics=", metrics)
+    if (agreement){
+      let metrics = agreement_variables[cmip][downscaling][model][scenerio][signal]['variables'];
+      console.log("FOOBAR: agreement vars =", metrics);
+    }
 
     return(
       <>
+
       { showPlotLabel && <Box sx={{ ...sx.label, mt: [4] }}>Plot Metric</Box> }
       { !showPlotLabel && <Box sx={{ ...sx.label, mt: [4] }}>Metrics</Box> }
 
@@ -1721,7 +1815,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
-  const MapChoicesBox = ({dif=false, climateSignal=false}) => {
+  const MapChoicesBox = ({dif=false, climateSignal=false, agreement=false}) => {
     var downscalingChange;
     var downscalingVar;
     var modelChange;
@@ -1758,6 +1852,23 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       // console.log("downscaling", downscaling)
     }
 
+    if (computeChoice['Agreement']) {
+      console.log("FOOBAR=", cmipOptions[cmip]);
+      // handle downscaling
+      downscaling_d = Object.fromEntries(
+        Object.keys(cmipOptions[cmip] || {}).map((key) => [key, key])
+      );
+
+      // handle model
+      model_d = Object.fromEntries(
+        Object.keys(cmipOptions[cmip][downscaling] || {}).map((key) => [key, key])
+      );
+      if (!(model in model_d)) {
+        setModel(Object.keys(model_d)[0]);
+      }
+    }
+
+
     return(
       <>
       {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
@@ -1765,6 +1876,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       {computeChoice['Ave.'] &&
        <YearRangeBox downscaling_l={downscalingVar} />}
 
+      {computeChoice['Agreement'] &&
+       <CmipBox />
+      }
 
       <Box sx={{ ...sx.label, mt: [4] }}>{settings.downscaling_title}</Box>
       <Select
@@ -1798,7 +1912,18 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
       {settings.ensemble !== null && <EnsembleBox />}
 
-      <VariableChoiceBox climateSignal={computeChoice['Climate Signal']} />
+      {computeChoice['Agreement'] &&
+       <>
+       <ScenerioBox />
+       <SignalBox />
+       </>
+      }
+
+
+      <VariableChoiceBox
+        climateSignal={computeChoice['Climate Signal']}
+        agreement={agreement}
+      />
       {/*(!computeChoice['Climate Signal'] && showMetricLabel)
        && setMetricLabel()*/}
       {(!computeChoice['Climate Signal'])
@@ -1840,37 +1965,20 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   };
 
+     // values={{'Modeling':true}}
   // TODO: Add Sam's Configurations
+  const [agreementChoice, setAgreementChoice] = useState({ 'Modeling': true});
   const AgreementBox = () => {
-    if (aveChoice['Modeling']) {
-      return (
-        <>
-        <Filter
-          values={aveChoice}
-          setValues={handleAveChange}
-          sx={{mt:3}}
-        />
-        <MapChoicesBox />
-        <RcpBox />
-        </>
-      );
-    } else if (aveChoice['Observation']) {
-      return (
-        <>
-        <Filter
-          values={aveChoice}
-          setValues={handleAveChange}
-          sx={{mt:3}}
-        />
-        <YearRangeBox downscaling_l={downscaling} future={false} />
-        <ObsChoicesBox
-           onChange={handleObsChange}
-           value={obs}
-           label={settings.obs_lev1_title}
-        />
-        </>
-      );
-    }
+      /* <Filter
+        values={{ 'Modeling': true}}
+        setValues={setAgreementChoice}
+        sx={{mt:3}}
+      /> */
+    return (
+      <>
+      <MapChoicesBox agreement={true} />
+      </>
+    );
   };
 
 
@@ -1943,10 +2051,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   };
 
-  useEffect(() => {
-    setMetricsSettings(region_metric_settings[metricRegion]);
-  }, [metricRegion]);
-
 
   useEffect(() => {
     console.log("COMPUTE SOURCE =", mapSource);
@@ -1978,33 +2082,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       </>
     );
   }
-
-  const ClimateSignalBox = ({numMetrics}) => {
-    if (metricPerformance["Metric Performance"]) {
-      return(
-        <>
-          <ClimateSignalChoiceBox />
-          <MetricRegionChoiceBox />
-          <ClimateSignalBoxMetrics />
-          {setMetricLabel()}
-        </>
-      );
-    } else { // method and model
-      return(
-        <>
-          <ClimateSignalChoiceBox />
-          <MapChoicesBox climateSignal={true}/>
-          <Box sx={{mt:4}}>RCP SCENARIO</Box>
-          <Filter
-           values={rcpValues}
-           setValues={handleRCPValues}
-           multiSelect={false}
-          />
-          {setMetricLabel()}
-        </>
-      );
-    }
-  };
 
   /* TODO */
   /* add arguments to mapchoicesbox */
@@ -2063,49 +2140,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setScheme(scheme);
     // setObsUrl(obs, yearRange, dif_false, region);
   });
-
-  const SchemeBox = () => {
-    return(
-      <>
-      <Box sx={{ ...sx.label, mt: [4] }}>Normalization Scheme</Box>
-      <Select
-        sxSelect={{ bg: 'transparent' }}
-        size='xs'
-        onChange={handleSchemeChange}
-        sx={{ mt: [1] }}
-        value={scheme}
-      >
-      {Object.entries(metrics_settings.schemes).map(([key, label]) => (
-          <option key={key} value={key}>
-          {label}
-          </option>
-      ))}
-      </Select>
-      </>
-    );
-  };
-
-  const ClimateSignalBoxMetrics = ({numMetrics}) => {
-    return(
-      <>
-      <SchemeBox />
-      <MetricsBox />
-
-      <Box sx={{mt:4}}>FUTURE RCP SCENARIO</Box>
-      <Filter
-        values={rcpValues}
-        setValues={handleRCPValues}
-        multiSelect={false}
-        sx={{mb:4, ml:3}}
-      />
-
-      <NumClimateSignalDatasetsButton />
-      <ClimateSignalComputeButton />
-      <VariableChoiceBox showPlotLabel={true} />
-      </>
-
-    );
-  }; {/* end of ClimateSignalBox */}
 
 
 {/*------------------------------------------------------------------*/}
