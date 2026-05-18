@@ -118,10 +118,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   };
 
-  function setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, yearRange_l) {
+  function setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, signal_l) {
     // bucket/agreement/map/+ cmip/ + downscaling/ + model/ +  year/ + var/
     // var are pr, tasman, tasmax variables
-    const url = `${bucket}${baseDir_l}${cmip_l}/${downscaling_l}/${model_l}/${yearRange_l}/${fname}`;
+
+
+    const url = `${bucket}${baseDir_l}${cmip_l}/${downscaling_l}/${model_l}/${signal_l}/${fname}`;
     console.log("AGREEMENT URL =", url)
     setMapSource([url]);
     // setMapSourceDif([url]);
@@ -479,11 +481,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   const [scenerio, setScenerio] = useState('');
   const ScenerioBox = () => {
-    let scenerio_d = {'':'-'}
-    if (cmip == 'cmip6') {
-      scenerio_d = cmipOptions[cmip][downscaling][model].map((key) => [
-        key, key.toUpperCase()]);
-    }
+    let scenerio_d = Object.keys(agreement_variables[cmip][downscaling][model])
 
     return(
       <>
@@ -497,7 +495,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       >
         {Object.entries(scenerio_d).map(([key, label]) => (
           <option key={key} value={key}>
-          {label}
+          {label.toUpperCase()}
           </option>
         ))}
       </Select>
@@ -508,12 +506,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   const [signal, setSignal] = useState('pr');
   const SignalBox = () => {
-    let signal_d = {'empty':'-'}
-    if (cmip == 'cmip6') {
-      signal_d = cmipOptions[cmip][downscaling][model][scenerio]['variables']
-    } else {
-      signal_d = cmipOptions[cmip][downscaling][model]['variables']
-    }
+    let signal_d = Object.keys(agreement_variables[cmip][downscaling][model][scenerio])
 
     return(
       <>
@@ -531,7 +524,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           </option>
         ))}
       </Select>
-
       </>
     )
   };
@@ -653,6 +645,71 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     const dif = true
     setYearRangeDif(yearRangeDif);
     setUrl(baseDir, downscalingDif, modelDif, yearRangeDif, ensemble, dif);
+  });
+
+  // const handleCmipChange = useCallback((e) => {
+  //   let cmip = e.target.value;
+  //   setCmip(cmip);
+  //   if (agreement_variables[cmip][downscaling] doesn't exist')
+  //     downscaling = agreement_variables[cmip][0];
+  //     setDownscaling(downscaling);
+  //   if (agreement_variables[cmip][downscaling][model] doesn't exist')
+  //     model = agreement_variables[cmip][downscaling][0];
+  //     setModel(model)
+  //   if (agreement_variables[cmip][downscaling][model][scenerio] doesn't exist')
+  //     scencerio = agreement_variables[cmip][downscaling][model][0];
+  //     setscenerio(scenerio)
+  //   if (agreement_variables[cmip][downscaling][model][scenerio][signal] doesn't exist')
+  //     signal = agreement_variables[cmip][downscaling][model][scenerio][0];
+  //     setSignal(signal)
+
+  //   setAgreementUrl(baseDir, cmip, downscaling, model, signal);
+  // });
+  const handleCmipChange = useCallback((e) => {
+    const newCmip = e.target.value;
+
+    let newDownscaling = downscaling;
+    let newModel = model;
+    let newScenerio = scenerio;
+    let newSignal = signal;
+
+    const cmipNode = agreement_variables?.[newCmip] || {};
+
+    if (!(newDownscaling in cmipNode)) {
+      newDownscaling = Object.keys(cmipNode)[0] || "";
+    }
+
+    const downscalingNode = cmipNode?.[newDownscaling] || {};
+
+    if (!(newModel in downscalingNode)) {
+      newModel = Object.keys(downscalingNode)[0] || "";
+    }
+
+    const modelNode = downscalingNode?.[newModel] || {};
+
+    if (!(newScenerio in modelNode)) {
+      newScenerio = Object.keys(modelNode)[0] || "";
+    }
+
+    const scenerioNode = modelNode?.[newScenerio] || {};
+
+    if (!(newSignal in scenerioNode)) {
+      newSignal = Object.keys(scenerioNode)[0] || "";
+    }
+
+    setCmip(newCmip);
+    setDownscaling(newDownscaling);
+    setModel(newModel);
+    setScenerio(newScenerio);
+    setSignal(newSignal);
+
+    setAgreementUrl(
+      baseDir,
+      newCmip,
+      newDownscaling,
+      newModel,
+      newSignal
+    );
   });
 
   const handleDownscalingChange = useCallback((e) => {
@@ -883,6 +940,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
     else {
       setUnits('fill in missing units for '+metric);
+      console.log("foo Error, missing metric in handleMetricsChange")
+      console.error("foo Error, missing metric in handleMetricsChange")
     }
 
 
@@ -1564,53 +1623,16 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       const cmip_l = 'cmip5';
       const downscaling_l = 'icar';
       const model_l = 'miroc5';
-      const yearRange = 'tasmin';
+      const signal = 'pr';
       const ensemble = '';
+      setCmip(cmip_l);
+      setDownscaling(downscaling_l);
+      setModel(model_l);
+      setSignal(signal);
 
-      // setDownscaling(downscaling_l);
-      // setModel(model_l)
-
-      // // cmip5/bcca/miroc5/historical/
-      // console.log("-------url?=", baseDir_l, downscaling_l, model_l,
-      //             yearRange_key, ensemble, yearRange_key);
       console.log("PRE FOOBAR PRE")
-      setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, yearRange);
-      // setMetric('5yr_pr');
-      // setUnits('5yrp');
-      // setClimateModel(model_l);
-      // setMetric('mean_jja_tasmax');
-      // setBand('jjax');
-      // setUnits('BAR');
-
-      // FOOBAR canned choices for variables
-      setMetric('mean_djf_tasmin');
-      setBand('djfi');
-      setUnits('BAR');
-
-
-
-      // 'mean_pr':'am_p',
-      // 'mean_jja_pr':'jjap',
-      // 'sum_pr':'sump',
-      // 'q95_pr':'q95p',
-      // 'std_pr':'stdp',
-      // '2yr_pr':'2yrp',
-      // '5yr_pr':'5yrp',
-      // 'gcm':'gcm_',
-      // # max
-      // 'mean_tasmax':'amtx',
-      // 'mean_jja_tasmax':'jjax',
-      // 'q95_tasmax':'q95x',
-      // 'sum_tasmax': 'sumx',
-      // 'std_tasmax': 'stdx',
-
-
-
-
-      console.log("foobar ADAM PROJECT");
-      // message("FOOBAR URL =", url)
-      // setMapSource([url]);
-      console.log('foobar after set agre url')
+      setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, signal);
+      handleMetricsChange({ target: { value: "2yr_pr" } });
     }
 
     };
@@ -1698,10 +1720,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     let metrics = [...settings.variables,
                      ...(climateSignal ? [] : settings.variables_trend)
                     ];
-    console.log("BAD ADAM metrics=", metrics)
     if (agreement){
-      let metrics = agreement_variables[cmip][downscaling][model][scenerio][signal]['variables'];
-      console.log("FOOBAR: agreement vars =", metrics);
+      metrics = agreement_variables[cmip][downscaling][model][scenerio][signal]['variables'];
     }
 
     return(
@@ -1853,15 +1873,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
 
     if (computeChoice['Agreement']) {
-      console.log("FOOBAR=", cmipOptions[cmip]);
-      // handle downscaling
       downscaling_d = Object.fromEntries(
-        Object.keys(cmipOptions[cmip] || {}).map((key) => [key, key])
+        Object.keys(agreement_variables[cmip] || {}).map((key) => [key, key])
       );
 
       // handle model
       model_d = Object.fromEntries(
-        Object.keys(cmipOptions[cmip][downscaling] || {}).map((key) => [key, key])
+        Object.keys(agreement_variables[cmip][downscaling] || {}).map((key) => [key, key])
       );
       if (!(model in model_d)) {
         setModel(Object.keys(model_d)[0]);

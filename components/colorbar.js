@@ -149,7 +149,9 @@ const Colorbar = ({
   let scale
   let fixedVal
 
-  if (filterValues['Ave.']) {
+  console.log("FOOBAR filterValues=", filterValues)
+
+  if (filterValues['Ave.'] || filterValues['Agreement']) {
     scale = setClimStep
     fixedVal = 0
   } else { {/* Dif. */}
@@ -159,7 +161,8 @@ const Colorbar = ({
 
   if (band === 'ptre' || band === 'ttre' ||
       band === 'n34p' || band === 'n34t' ||
-      band === 'tpco'
+      band === 'tpco' ||
+      band === 'stdp'
      ) {
     scale = 0.1;
     fixedVal = 1;

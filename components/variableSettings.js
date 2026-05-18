@@ -44,6 +44,8 @@ export const Scale_Values = Object.freeze({
   // this does nothing, change in colorbar.js
   tpcorr: 0.1,
 
+  // agreement
+  std_pr: 0.1,
 
   // new cmip variables
   eli_t: 0.1,
@@ -113,6 +115,11 @@ export const Clim_Ranges = Object.freeze({
   dif_wt_clim: { max: 10, min: -10},
   dif_wt_day_to_day: { max: 10, min: -10},
 
+  // agreement vars
+  sum_pr: {max: 2000, min:0},
+  std_pr: {max: 1, min:-1},
+
+
 
   // drought
   drought_1yr: { max: 12, min: 0 },
@@ -129,8 +136,22 @@ export const Clim_Ranges = Object.freeze({
   dif_eli_p: { max: 1, min: -1 },
 
   // Sam's variables
-  '5yr_pr': { max: 1, min: -1 },
-
+  '2yr_pr': { max: 10, min: -10 },
+  '5yr_pr': { max: 20, min: -20 },
+  mean_jja_pr: { max: 1, min: -1 },
+  mean_pr: { max: 1, min: -1 },
+  q95_pr: { max: 2, min: -2 },
+  std_pr: { max: 1, min: -1 },
+  sum_pr: { max: 1000, min: -1000 },
+  mean_jja_tasmax: { max: 6, min: 0 },
+  mean_tasmax: { max: 6, min: 0 },
+  q95_tasmax: { max: 6, min: 0 },
+  mean_djf_tasmin: { max: 4, min: 0 },
+  mean_tasmin: { max: 4, min: 0 },
+  max_tasmin: { max: 4, min: 0 },
+  q95_tasmin: { max: 4, min: 0 },
+  std_tasmin: { max: 2, min: -2 },
+  '2yr_tasmin': { max: 2, min: -2 },
 });
 
 
@@ -162,6 +183,27 @@ export const Default_Colormaps = Object.freeze({
   jja_p: precip_colormap,
   son_p: precip_colormap,
   ann_p: precip_colormap,
+
+  // precip agreement
+  '2yr_pr': precip_colormap,
+  '5yr_pr': precip_colormap,
+  mean_jja_pr: precip_colormap,
+  mean_pr: precip_colormap,
+  sum_pr: precip_colormap,
+  std_pr: dif_precip_colormap,
+  q95_pr: dif_precip_colormap,
+  mean_jja_tasmax: precip_colormap,
+  mean_tasmax: precip_colormap,
+  q95_tasmax: dif_precip_colormap,
+  sum_tasmax: precip_colormap,
+  std_tasmax: dif_precip_colormap,
+
+  mean_djf_tasmin: precip_colormap,
+  mean_tasmin: precip_colormap,
+  max_tasmin: precip_colormap,
+  q95_tasmin: precip_colormap,
+  std_tasmin: precip_colormap,
+  '2yr_tasmin': precip_colormap,
 
   // snow
   ann_snow: precip_colormap,
