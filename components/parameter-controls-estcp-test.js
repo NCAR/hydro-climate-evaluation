@@ -720,7 +720,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     let safe_model = checkDownscalingModel(downscaling);
     let safe_ensemble = checkModelEnsemble(safe_model, downscaling);
     setModel(safe_model);
-    setUrl(baseDir, downscaling, safe_model, yearRange, safe_ensemble);
+    if (computeChoice['Agreement']) {
+      setAgreementUrl('agreement/map/', cmip, downscaling,
+                      safe_model.replace('_', '-'), signal);
+    } else {
+      setUrl(baseDir, downscaling, safe_model, yearRange, safe_ensemble);
+    }
   });
 
   const handleDownscalingDifChange = useCallback((e) => {
@@ -790,6 +795,17 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           setModelDif(mod);
         }
       }
+    } else if (computeChoice['Agreement']) {
+      const modList = Object.keys(agreement_variables[cmip][downscaling] || {});
+      console.log('foobar modlist=', modList)
+      if (!modList.includes(mod)) {
+        mod = modList[0];
+        if (!dif) {
+          setModel(mod);
+        } else {
+          setModelDif(mod);
+        }
+      }
     } else {
       const modList = Object.keys(settings.model[downscaling] || {});
       if (!modList.includes(mod)) {
@@ -809,7 +825,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     const model = e.target.value;
     const ens = checkModelEnsemble(model, downscaling);
     setModel(model);
-    setUrl(baseDir, downscaling, model, yearRange, ens);
+    if (computeChoice['Agreement']) {
+      setAgreementUrl('agreement/map/', cmip, downscaling,
+                      model.replace('_', '-'), signal);
+    } else {
+      setUrl(baseDir, downscaling, model, yearRange, ens);
+    }
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
     // getData({chartSource}, setChartData);
