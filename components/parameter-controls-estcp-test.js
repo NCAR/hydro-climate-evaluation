@@ -118,13 +118,14 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   };
 
-  function setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, signal_l) {
+  function setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, scenerio_l, signal_l) {
     // bucket/agreement/map/+ cmip/ + downscaling/ + model/ +  year/ + var/
     // var are pr, tasman, tasmax variables
 
 
-    const url = `${bucket}${baseDir_l}${cmip_l}/${downscaling_l}/${model_l}/${signal_l}/${fname}`;
-    console.log("foobar var AGREEMENT URL =", url)
+    const url = `${bucket}${baseDir_l}${cmip_l}/${downscaling_l}/${model_l}/${scenerio_l}/${signal_l}/${fname}`;
+    console.log("artless scenerio =", scenerio_l )
+    console.log("artless var AGREEMENT URL =", url)
     setMapSource([url]);
     // setMapSourceDif([url]);
     // console.log("FOOBAR SETURL")
@@ -457,18 +458,36 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
+  const handleCmipAgreementChange = useCallback((e) => {
+    let cmip = e.target.value;
+    console.log("ARTLESS cmip handle change = ", cmip)
+    console.log("ARTLESS CHANGE SCENERIO it is now", scenerio)
+    // TODO: check that downscaling and model exist
+    // TODO: handle ssp Scenerio,
+    // TODO: pr doesn't exist
+    setAgreementUrl('agreement/map/', cmip, downscaling, 'canesm5', 'ssp370', signal);
+    // setAgreementUrl('agreement/map/', cmip, downscaling, model, scenerio, signal);
+    setCmip(cmip);
+  });
+
   const CmipBox = () => {
+    const debug_cmip = {
+      cmip5: "CMIP5"
+    }
+    // {Object.entries(settings.cmip).map(([key, label]) => (
+    // replaced with
+    // {Object.entries(debug_cmip).map(([key, label]) => (
     return(
       <>
       <Box sx={{ ...sx.label, mt: [4] }}>CMIP</Box>
       <Select
         sxSelect={{ bg: 'transparent' }}
         size='xs'
-        onChange={setCmip}
+        onChange={handleCmipAgreementChange}
         sx={{ mt: [1] }}
         value={cmip}
       >
-        {Object.entries(settings.cmip).map(([key, label]) => (
+        {Object.entries(debug_cmip).map(([key, label]) => (
           <option key={key} value={key}>
           {label}
           </option>
@@ -521,7 +540,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     console.log("foobar ARTLESS signal", signal)
     handleMetricsChange({ target: { value: metric } });
     setSignal(signal);
-    setAgreementUrl('agreement/map/', cmip, downscaling, model, signal);
+    setAgreementUrl('agreement/map/', cmip, downscaling, model, scenerio, signal);
     // make sure metric exists in map
  });
   const SignalBox = () => {
@@ -710,6 +729,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       newCmip,
       newDownscaling,
       newModel,
+      scenerio,
       newSignal
     );
   });
@@ -722,7 +742,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setModel(safe_model);
     if (computeChoice['Agreement']) {
       setAgreementUrl('agreement/map/', cmip, downscaling,
-                      safe_model.replace('_', '-'), signal);
+                      safe_model.replace('_', '-'), scenerio, signal);
     } else {
       setUrl(baseDir, downscaling, safe_model, yearRange, safe_ensemble);
     }
@@ -827,7 +847,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setModel(model);
     if (computeChoice['Agreement']) {
       setAgreementUrl('agreement/map/', cmip, downscaling,
-                      model.replace('_', '-'), signal);
+                      model.replace('_', '-'), scenerio, signal);
     } else {
       setUrl(baseDir, downscaling, model, yearRange, ens);
     }
@@ -1139,18 +1159,28 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     ccsm4: 'CCSM4',
     cesm: 'CESM',
     gfdl: 'GFDL',
+    gfdl_cm3: "GFDL-CM3",
     miroc5: 'MIROC5',
+    mri_cgcm3: "MRI-CGCM3",
     noresm: 'NorESM',
     noresm1_m: 'NorESM-M',
   };
 
+
   const downscalingPP = {
+    bcca: "BCCA",
+    bcsd: "BCSD",
+    gard: "GARD",
+    gcm: "GCM",
     icar: 'ICAR',
     gard_r2: 'GARD_r2',
     gard_r3: 'GARD_r3',
+    loca: "LOCA",
     loca_8th: 'LOCA_8th',
     maca: 'MACA',
-    nasa_nex: 'NASA-NEX'
+    nacordex: "NA-CORDEX",
+    nasa_nex: 'NASA-NEX',
+    nexgddp: "NEX-GDDP"
   };
 
   const obsPP = {
@@ -1695,7 +1725,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setSignal(signal);
 
       console.log("PRE FOOBAR PRE")
-      setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, signal);
+      setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, scenerio, signal);
       handleMetricsChange({ target: { value: "2yr_pr" } });
     }
 
@@ -1954,6 +1984,14 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       if (!(model in model_d)) {
         setModel(Object.keys(model_d)[0]);
       }
+
+      // get pretty-printed version names
+      downscaling_d = Object.fromEntries(
+        Object.keys(downscaling_d).map((key) => [key, downscalingPP[key]])
+      );
+      model_d = Object.fromEntries(
+        Object.keys(model_d).map((key) => [key, modelPP[key]])
+      );
     }
 
 
