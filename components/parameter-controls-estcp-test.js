@@ -15,7 +15,6 @@ import { Default_Colormaps, readmeUrl } from './variableSettings';
 import { getData } from './getData';
 
 import { agreement_variables } from './estcp-data/agreement_variables.js';
-import { cmipOptions } from "./test.js";
 
 const sx = {
   label: {
@@ -414,6 +413,31 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       description =
             ['q95',
              'max temperature'];
+    } else if (metric === 'mean_tasmin') {
+      label = 'mean_tasmin';
+      description =
+            ['mean daily',
+             'min temperature'];
+    } else if (metric === 'mean_djf_tasmin') {
+      label = 'mean_jja_tasmin';
+      description =
+            ['mean DJF',
+             'min temperature'];
+    } else if (metric === 'q95_tasmin') {
+      label = 'q95_tasmin';
+      description =
+            ['q95',
+             'min temperature'];
+    } else if (metric === '2yr_pr') {
+      label = '2yr_pr';
+      description =
+            ['2 Year Precip',
+             'Signal'];
+    } else if (metric === '5yr_pr') {
+      label = '5yr_pr';
+      description =
+            ['5 Year Precip',
+             'Signal'];
     } else if (metric === 'std_pr') {
       label = 'std_pr';
       description =
@@ -544,6 +568,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     // make sure metric exists in map
  });
   const SignalBox = () => {
+    console.log("foobar SIGNALBOX")
     let signal_d = Object.keys(agreement_variables[cmip][downscaling][model][scenerio])
     console.log("foobar var signal_d", signal_d)
 
@@ -742,7 +767,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setModel(safe_model);
     if (computeChoice['Agreement']) {
       setAgreementUrl('agreement/map/', cmip, downscaling,
-                      safe_model.replace('_', '-'), scenerio, signal);
+                      safe_model.replaceAll('_', '-'), scenerio, signal);
     } else {
       setUrl(baseDir, downscaling, safe_model, yearRange, safe_ensemble);
     }
@@ -847,7 +872,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setModel(model);
     if (computeChoice['Agreement']) {
       setAgreementUrl('agreement/map/', cmip, downscaling,
-                      model.replace('_', '-'), scenerio, signal);
+                      model.replaceAll('_', '-'), scenerio, signal);
     } else {
       setUrl(baseDir, downscaling, model, yearRange, ens);
     }
@@ -1158,8 +1183,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     canesm2: 'CanESM2',
     ccsm4: 'CCSM4',
     cesm: 'CESM',
+    cnrm_cm5: 'CNRM-CM5',
     gfdl: 'GFDL',
     gfdl_cm3: "GFDL-CM3",
+    ipsl_cm5a_mr: 'IPSL-CM5A-MR',
     miroc5: 'MIROC5',
     mri_cgcm3: "MRI-CGCM3",
     noresm: 'NorESM',
@@ -1815,6 +1842,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
                      ...(climateSignal ? [] : settings.variables_trend)
                     ];
     if (agreement){
+      console.log("foobar here")
       console.log("foobar variablechoicebox av[cmip][downscaling][model][scenerio]=",
             agreement_variables[cmip][downscaling][model][scenerio]);
       console.log("foobar var does it have signal = ", signal)
@@ -1976,6 +2004,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       downscaling_d = Object.fromEntries(
         Object.keys(agreement_variables[cmip] || {}).map((key) => [key, key])
       );
+
+      console.log("HACK: deleting GCM from downscaling list, fix");
+      delete downscaling_d.gcm;
 
       // handle model
       model_d = Object.fromEntries(
