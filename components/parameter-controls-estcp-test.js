@@ -15,6 +15,7 @@ import { Default_Colormaps, readmeUrl } from './variableSettings';
 import { getData } from './getData';
 
 import { agreement_variables } from './estcp-data/agreement_variables.js';
+import { cmipOptions } from "./test.js";
 
 const sx = {
   label: {
@@ -27,6 +28,27 @@ const sx = {
 };
 
 const dif_t = true;
+
+const signalToNoiseMetrics_d = {
+  'pr':'Precip',
+  'tasmax': 'Tas Max'
+}
+
+const signalToNoiseModel_d = {
+  'access-cm2': 'ACCESS-CM2',
+  'canesm2': 'CanESM2',
+  'canesm5': 'CanESM5',
+  'cnrm-cm5': 'CNRM-CM5',
+  'ec-earth3': 'EC-Earth3',
+  'gfdl-cm3': 'GFDL-CM3',
+  'ipsl-cm5a-mr': 'IPSL-CM5A-MR',
+  'miroc5': 'MIROC5',
+  'miroc6': 'MIROC6',
+  'mri-cgcm3': 'MRI-CGCM3',
+  'mri-esm2-0': 'MRI-ESM2-0',
+  'noresm1-m': 'NorESM1-M',
+  'noresm2-mm': 'NorESM2-MM',
+}
 
 const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const { display, reload, debug, metricPerformance, clim, metricRegion,
@@ -117,14 +139,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   };
 
-  function setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, scenerio_l, signal_l) {
+  function setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, signal_l) {
     // bucket/agreement/map/+ cmip/ + downscaling/ + model/ +  year/ + var/
     // var are pr, tasman, tasmax variables
 
 
-    const url = `${bucket}${baseDir_l}${cmip_l}/${downscaling_l}/${model_l}/${scenerio_l}/${signal_l}/${fname}`;
-    console.log("artless scenerio =", scenerio_l )
-    console.log("artless var AGREEMENT URL =", url)
+    const url = `${bucket}${baseDir_l}${cmip_l}/${downscaling_l}/${model_l}/${signal_l}/${fname}`;
+    console.log("AGREEMENT URL =", url)
     setMapSource([url]);
     // setMapSourceDif([url]);
     // console.log("FOOBAR SETURL")
@@ -413,31 +434,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       description =
             ['q95',
              'max temperature'];
-    } else if (metric === 'mean_tasmin') {
-      label = 'mean_tasmin';
-      description =
-            ['mean daily',
-             'min temperature'];
-    } else if (metric === 'mean_djf_tasmin') {
-      label = 'mean_jja_tasmin';
-      description =
-            ['mean DJF',
-             'min temperature'];
-    } else if (metric === 'q95_tasmin') {
-      label = 'q95_tasmin';
-      description =
-            ['q95',
-             'min temperature'];
-    } else if (metric === '2yr_pr') {
-      label = '2yr_pr';
-      description =
-            ['2 Year Precip',
-             'Signal'];
-    } else if (metric === '5yr_pr') {
-      label = '5yr_pr';
-      description =
-            ['5 Year Precip',
-             'Signal'];
     } else if (metric === 'std_pr') {
       label = 'std_pr';
       description =
@@ -482,36 +478,18 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
-  const handleCmipAgreementChange = useCallback((e) => {
-    let cmip = e.target.value;
-    console.log("ARTLESS cmip handle change = ", cmip)
-    console.log("ARTLESS CHANGE SCENERIO it is now", scenerio)
-    // TODO: check that downscaling and model exist
-    // TODO: handle ssp Scenerio,
-    // TODO: pr doesn't exist
-    setAgreementUrl('agreement/map/', cmip, downscaling, 'canesm5', 'ssp370', signal);
-    // setAgreementUrl('agreement/map/', cmip, downscaling, model, scenerio, signal);
-    setCmip(cmip);
-  });
-
   const CmipBox = () => {
-    const debug_cmip = {
-      cmip5: "CMIP5"
-    }
-    // {Object.entries(settings.cmip).map(([key, label]) => (
-    // replaced with
-    // {Object.entries(debug_cmip).map(([key, label]) => (
     return(
       <>
       <Box sx={{ ...sx.label, mt: [4] }}>CMIP</Box>
       <Select
         sxSelect={{ bg: 'transparent' }}
         size='xs'
-        onChange={handleCmipAgreementChange}
+        onChange={setCmip}
         sx={{ mt: [1] }}
         value={cmip}
       >
-        {Object.entries(debug_cmip).map(([key, label]) => (
+        {Object.entries(settings.cmip).map(([key, label]) => (
           <option key={key} value={key}>
           {label}
           </option>
@@ -525,10 +503,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const [scenerio, setScenerio] = useState('');
   const ScenerioBox = () => {
     let scenerio_d = Object.keys(agreement_variables[cmip][downscaling][model])
-
-    console.log("FOOBAR: agreement_variables", agreement_variables[cmip][downscaling][model])
-    console.log("FOOBAR: c d m=", cmip, downscaling, model)
-    console.log("FOOBAR: scenerio_d=", scenerio_d)
 
     return(
       <>
@@ -552,38 +526,21 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
   const [signal, setSignal] = useState('pr');
-  const handleSignalChange = useCallback((e) => {
-    let signal = e.target.value;
-    // console.log("foobar var -------------------------------------------")
-    // console.log("foobar var sig ", signal)
-    // console.log("foobar var e.target.value", e.target.value)
-    console.log("foobar ARTLESS?")
-    console.log("foobar artless agreement", agreement_variables[cmip][downscaling][model][scenerio][signal]['variables'][0]);
-    let metric = agreement_variables[cmip][downscaling][model][scenerio][signal]['variables'][0];
-    console.log("foobar ARTLESS metric", metric)
-    console.log("foobar ARTLESS signal", signal)
-    handleMetricsChange({ target: { value: metric } });
-    setSignal(signal);
-    setAgreementUrl('agreement/map/', cmip, downscaling, model, scenerio, signal);
-    // make sure metric exists in map
- });
   const SignalBox = () => {
-    console.log("foobar SIGNALBOX")
     let signal_d = Object.keys(agreement_variables[cmip][downscaling][model][scenerio])
-    console.log("foobar var signal_d", signal_d)
 
     return(
       <>
       <Box sx={{ ...sx.label, mt: [4] }}>Signal</Box>
       <Select
-      sxSelect={{ bg: 'transparent' }}
+        sxSelect={{ bg: 'transparent' }}
         size='xs'
-        onChange={handleSignalChange}
+        onChange={setSignal}
         sx={{ mt: [1] }}
         value={signal}
       >
         {Object.entries(signal_d).map(([key, label]) => (
-          <option key={key} value={label}>
+          <option key={key} value={key}>
           {label}
           </option>
         ))}
@@ -711,6 +668,24 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setUrl(baseDir, downscalingDif, modelDif, yearRangeDif, ensemble, dif);
   });
 
+  // const handleCmipChange = useCallback((e) => {
+  //   let cmip = e.target.value;
+  //   setCmip(cmip);
+  //   if (agreement_variables[cmip][downscaling] doesn't exist')
+  //     downscaling = agreement_variables[cmip][0];
+  //     setDownscaling(downscaling);
+  //   if (agreement_variables[cmip][downscaling][model] doesn't exist')
+  //     model = agreement_variables[cmip][downscaling][0];
+  //     setModel(model)
+  //   if (agreement_variables[cmip][downscaling][model][scenerio] doesn't exist')
+  //     scencerio = agreement_variables[cmip][downscaling][model][0];
+  //     setscenerio(scenerio)
+  //   if (agreement_variables[cmip][downscaling][model][scenerio][signal] doesn't exist')
+  //     signal = agreement_variables[cmip][downscaling][model][scenerio][0];
+  //     setSignal(signal)
+
+  //   setAgreementUrl(baseDir, cmip, downscaling, model, signal);
+  // });
   const handleCmipChange = useCallback((e) => {
     const newCmip = e.target.value;
 
@@ -754,7 +729,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       newCmip,
       newDownscaling,
       newModel,
-      scenerio,
       newSignal
     );
   });
@@ -765,12 +739,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     let safe_model = checkDownscalingModel(downscaling);
     let safe_ensemble = checkModelEnsemble(safe_model, downscaling);
     setModel(safe_model);
-    if (computeChoice['Agreement']) {
-      setAgreementUrl('agreement/map/', cmip, downscaling,
-                      safe_model.replaceAll('_', '-'), scenerio, signal);
-    } else {
-      setUrl(baseDir, downscaling, safe_model, yearRange, safe_ensemble);
-    }
+    setUrl(baseDir, downscaling, safe_model, yearRange, safe_ensemble);
   });
 
   const handleDownscalingDifChange = useCallback((e) => {
@@ -840,17 +809,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           setModelDif(mod);
         }
       }
-    } else if (computeChoice['Agreement']) {
-      const modList = Object.keys(agreement_variables[cmip][downscaling] || {});
-      console.log('foobar modlist=', modList)
-      if (!modList.includes(mod)) {
-        mod = modList[0];
-        if (!dif) {
-          setModel(mod);
-        } else {
-          setModelDif(mod);
-        }
-      }
     } else {
       const modList = Object.keys(settings.model[downscaling] || {});
       if (!modList.includes(mod)) {
@@ -866,16 +824,34 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   }
 
 
+  const signalToNoiseModelChange = useCallback((e) => {
+    const model = e.target.value;
+    setModel(model);
+    let metric_l = metric
+    // if (!(metric_l in signalToNoiseMetrics_d)) {
+    //   metric_l = Object.keys(signalToNoiseModel_d)[0]
+    //   setMetric(metric_l)
+    // }
+
+    const url = bucket+'signalToNoise/'+baseDir+model+'/'+metric_l + '/' + fname
+    console.log('ART: ', url)
+    console.log('ART metric_l: ', metric_l)
+    setMapSource([url]);
+
+    // setUrl(baseDir, downscaling, model, yearRange, ens);
+
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
+    // getData({chartSource}, setChartData);
+  });
+
+
+
   const handleModelChange = useCallback((e) => {
     const model = e.target.value;
     const ens = checkModelEnsemble(model, downscaling);
     setModel(model);
-    if (computeChoice['Agreement']) {
-      setAgreementUrl('agreement/map/', cmip, downscaling,
-                      model.replaceAll('_', '-'), scenerio, signal);
-    } else {
-      setUrl(baseDir, downscaling, model, yearRange, ens);
-    }
+    setUrl(baseDir, downscaling, model, yearRange, ens);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
     // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
     // getData({chartSource}, setChartData);
@@ -1005,48 +981,17 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     } else if (metric == 'q95_tasmin') {
       setBand('q95i');
       setUnits('°C');
-    }
-    else if (metric == 'mean_jja_tasmax') {
-      setBand('jjax');
+    } else if (metric == 'pr') {
+      const url = bucket+'signalToNoise/'+baseDir+model+'/'+metric + '/' + fname
+      setMapSource([url]);
+      setBand('snr_');
+      setUnits('°C');
+    } else if (metric == 'tasmax') {
+      const url = bucket+'signalToNoise/'+baseDir+model+'/'+metric + '/' + fname
+      setMapSource([url]);
+      setBand('snr_');
       setUnits('°C');
     }
-    else if (metric == 'mean_tasmax') {
-      setBand('amtx');
-      setUnits('°C');
-    }
-    else if (metric == 'q95_tasmax') {
-      setBand('q95x');
-      setUnits('?');
-    }
-    else if (metric == 'sum_tasmax') {
-      setBand('sumx');
-      setUnits('?');
-    }
-    else if (metric == 'std_tasmax') {
-      setBand('stdx');
-      setUnits('?');
-    }
-    else if (metric == 'mean_tasmin') {
-      setBand('am_i');
-      setUnits('?');
-    }
-    else if (metric == 'max_tasmin') {
-      setBand('maxi');
-      setUnits('?');
-    }
-    else if (metric == 'q95_tasmin') {
-      setBand('q95i');
-      setUnits('?');
-    }
-    else if (metric == 'std_tasmin') {
-      setBand('stdi');
-      setUnits('?');
-    }
-    else if (metric == '2yr_tasmin') {
-      setBand('2yri');
-      setUnits('?');
-    }
-    // when adding variable add here and variableSettings.js
     else {
       setUnits('fill in missing units for '+metric);
       console.log("foo Error, missing metric in handleMetricsChange")
@@ -1058,7 +1003,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
       setColormapName(Default_Colormaps['dif_'+metric]);
       setScaleDif(Scale_Values['dif_'+metric]);
-    } else if (computeChoice['Ave.'] || computeChoice['Agreement']) {
+    } else if (computeChoice['Ave.']) {
       setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
       setColormapName(Default_Colormaps[metric]);
     }
@@ -1100,7 +1045,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   let aveChoice = null;
   let setAveChoice = null;
-  // if (computeChoice['Agreement']) { artless
+  // if (computeChoice['Signal-to-Noise']) { artless
   //       [aveChoice, setAveChoice] = useState({ 'Modeling': true });
   // } else
   if (settings.observation) {
@@ -1183,31 +1128,19 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     canesm2: 'CanESM2',
     ccsm4: 'CCSM4',
     cesm: 'CESM',
-    cnrm_cm5: 'CNRM-CM5',
     gfdl: 'GFDL',
-    gfdl_cm3: "GFDL-CM3",
-    ipsl_cm5a_mr: 'IPSL-CM5A-MR',
     miroc5: 'MIROC5',
-    mri_cgcm3: "MRI-CGCM3",
     noresm: 'NorESM',
     noresm1_m: 'NorESM-M',
   };
 
-
   const downscalingPP = {
-    bcca: "BCCA",
-    bcsd: "BCSD",
-    gard: "GARD",
-    gcm: "GCM",
     icar: 'ICAR',
     gard_r2: 'GARD_r2',
     gard_r3: 'GARD_r3',
-    loca: "LOCA",
     loca_8th: 'LOCA_8th',
     maca: 'MACA',
-    nacordex: "NA-CORDEX",
-    nasa_nex: 'NASA-NEX',
-    nexgddp: "NEX-GDDP"
+    nasa_nex: 'NASA-NEX'
   };
 
   const obsPP = {
@@ -1669,7 +1602,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       let baseDir_l;
       if (newValues['Climate Signal']) {
         baseDir_l = 'climateSignal/';
-      } else if (newValues['Agreement']){
+      } else if (newValues['Signal-to-Noise']){
         baseDir_l = 'agreement/map/';
       }
       else {
@@ -1739,7 +1672,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         // setComputeClimateSignal({'COMPUTE': true});
       }
 
-    if (newValues['Agreement']) {
+    if (newValues['Signal-to-Noise']) {
       console.log('foobar agreement', newValues);
       const cmip_l = 'cmip5';
       const downscaling_l = 'icar';
@@ -1752,7 +1685,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setSignal(signal);
 
       console.log("PRE FOOBAR PRE")
-      setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, scenerio, signal);
+      setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, signal);
       handleMetricsChange({ target: { value: "2yr_pr" } });
     }
 
@@ -1788,7 +1721,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         </>
       );
     }
-    else if (computeChoice['Agreement']) {
+    else if (computeChoice['Signal-to-Noise']) {
       return (
         <>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -1798,7 +1731,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           multiSelect={false}
         />
         </Box>
-        <AgreementBox />
+        <SignalToNoiseBox />
         </>
       );
     }
@@ -1837,19 +1770,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
   const VariableChoiceBox = ({showPlotLabel=false, climateSignal=false,
-                             agreement=false}) => {
+                             signalToNoise=false}) => {
     let metrics = [...settings.variables,
                      ...(climateSignal ? [] : settings.variables_trend)
                     ];
-    if (agreement){
-      console.log("foobar here")
-      console.log("foobar variablechoicebox av[cmip][downscaling][model][scenerio]=",
-            agreement_variables[cmip][downscaling][model][scenerio]);
-      console.log("foobar var does it have signal = ", signal)
-      console.log("foobar variablechoicebox av[cmip][downscaling][model][scenerio][signal]'variables=",
-            agreement_variables[cmip][downscaling][model][scenerio][signal]['variables']);
-      // print("foobar variablechoicebox av[cmip][downscaling][model][scenerio][signal]=")
-      metrics = agreement_variables[cmip][downscaling][model][scenerio][signal]['variables'];
+    if (signalToNoise){
+      metrics = ['pr','tasmax']
     }
 
     return(
@@ -1963,7 +1889,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
-  const MapChoicesBox = ({dif=false, climateSignal=false, agreement=false}) => {
+  const MapChoicesBox = ({dif=false, climateSignal=false, signalToNoise=false}) => {
     var downscalingChange;
     var downscalingVar;
     var modelChange;
@@ -2000,29 +1926,46 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       // console.log("downscaling", downscaling)
     }
 
-    if (computeChoice['Agreement']) {
-      downscaling_d = Object.fromEntries(
-        Object.keys(agreement_variables[cmip] || {}).map((key) => [key, key])
-      );
-
-      console.log("HACK: deleting GCM from downscaling list, fix");
-      delete downscaling_d.gcm;
-
+    if (computeChoice['Signal-to-Noise']) {
       // handle model
-      model_d = Object.fromEntries(
-        Object.keys(agreement_variables[cmip][downscaling] || {}).map((key) => [key, key])
-      );
+      model_d = signalToNoiseModel_d
+
+      setDownscaling('')
+
       if (!(model in model_d)) {
         setModel(Object.keys(model_d)[0]);
       }
 
-      // get pretty-printed version names
-      downscaling_d = Object.fromEntries(
-        Object.keys(downscaling_d).map((key) => [key, downscalingPP[key]])
-      );
-      model_d = Object.fromEntries(
-        Object.keys(model_d).map((key) => [key, modelPP[key]])
-      );
+      console.log("ART: ",signalToNoiseMetrics_d)
+      if (!(metric in signalToNoiseMetrics_d)) {
+        handleMetricsChange({ target: { value: "pr" } });
+      }
+      return(
+          <>
+          <Box sx={{ ...sx.label, mt: [4] }}>Climate Model</Box>
+          <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={signalToNoiseModelChange}
+        sx={{ mt: [1] }}
+        value={modelVar}
+          >
+          {Object.entries(model_d).map(([key, label]) => (
+              <option key={key} value={key}>
+              {label}
+            </option>
+          ))}
+        </Select>
+
+        <VariableChoiceBox
+        climateSignal={computeChoice['Climate Signal']}
+        signalToNoise={signalToNoise}
+          />
+          {(!computeChoice['Climate Signal'])
+           && setMetricLabel()}
+
+        </>
+      )
     }
 
 
@@ -2032,10 +1975,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
       {computeChoice['Ave.'] &&
        <YearRangeBox downscaling_l={downscalingVar} />}
-
-      {computeChoice['Agreement'] &&
-       <CmipBox />
-      }
 
       <Box sx={{ ...sx.label, mt: [4] }}>{settings.downscaling_title}</Box>
       <Select
@@ -2069,17 +2008,17 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
       {settings.ensemble !== null && <EnsembleBox />}
 
-      {computeChoice['Agreement'] &&
+      {/*{computeChoice['Signal-to-Noise'] &&
        <>
        <ScenerioBox />
        <SignalBox />
        </>
-      }
+      }*/}
 
 
       <VariableChoiceBox
         climateSignal={computeChoice['Climate Signal']}
-        agreement={agreement}
+        signalToNoise={signalToNoise}
       />
       {/*(!computeChoice['Climate Signal'] && showMetricLabel)
        && setMetricLabel()*/}
@@ -2125,7 +2064,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
      // values={{'Modeling':true}}
   // TODO: Add Sam's Configurations
   const [agreementChoice, setAgreementChoice] = useState({ 'Modeling': true});
-  const AgreementBox = () => {
+  const SignalToNoiseBox = () => {
       /* <Filter
         values={{ 'Modeling': true}}
         setValues={setAgreementChoice}
@@ -2133,7 +2072,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       /> */
     return (
       <>
-      <MapChoicesBox agreement={true} />
+      <MapChoicesBox signalToNoise={true} />
       </>
     );
   };
