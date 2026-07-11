@@ -7,12 +7,13 @@ import { Map, Raster, Fill, Line, RegionPicker, useControls } from '../maps';
 import Meta from '../components/meta';
 import { useThemedColormap } from '../colormaps/src';
 import RegionPlot from '../components/region-plot';
-import ParameterControls from '../components/parameter-controls';
+import ParameterControls from '../components/parameter-controls-estcp-test';
+// import ParameterControls from '../components/parameter-controls-estcp';
 import {options, linedata, linedata_stub} from '../components/plot-line';
 import { Line as LineCJS } from 'react-chartjs-2';
 import Charts from '../components/charts';
 import ErrorBoundary from '../components/ErrorBoundary';
-import MarkSites from '../components/MarkSites.test';
+import MarkSites from '../components/MarkSites';
 // import MetricControls from '../components/metric-controls'
 // import { NetCDFReader } from "netcdfjs";
 
@@ -98,6 +99,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [regionData, setRegionData] = useState({ loading: true });
   // set variables to access datasets
   const [downscaling, setDownscaling] = useState('icar');
+  const [cmip, setCmip] = useState('cmip5');
   const [model, setModel] = useState('access1_3');
   const [metric, setMetric] = useState('djf_t');
   const [rcp, setRCP] = useState('4.5');
@@ -138,6 +140,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [computeChoice, setComputeChoice] = useState({
     'Ave.': true,
     'Dif.': false,
+    ...(settings.signalToNoise ? { 'Signal-to-Noise': false } : {}),
     ...(settings.climateSignal ? { 'Climate Signal': false } : {}),
   });
 
@@ -156,7 +159,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
                     bucket, chartHeight, computeChoice,
                     showClimateChange, showRegionPlot, bucketRes,
                     showStates, showRivers, showHuc2, sideBySide, mapVal,
-                    ensemble, region};
+                    ensemble, region, cmip};
   const setters = {
     setDisplay,
     setReload,
@@ -192,7 +195,8 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     setHuc2,
     setSideBySide,
     setEnsemble,
-    setRegion
+    setRegion,
+    setCmip
   };
 
   const fillValue = 3.4028234663852886e38; // black on land, red nans
@@ -218,7 +222,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       card={bucket+'favicon.ico'}
       description={"Climate Evaluation of Downscaling and Climate Model data.\
                     Based on Carbonplan's Maps"}
-      title={'Hydro-Climate Evaluation'}
+      title={'Hydro-Climate Evaluation: Interactive map of downscaling and climate model data'}
     />
     <Row columns={[4]}>
     <Column start={[1]} width={[1]}>
@@ -227,7 +231,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
                backgroundColor: '#bbdaa4', zIndex: 0}}>
     {/* zoom to this location when page first loads */}
     <Map zoom={zoom} center={{lon:center.lng, lat:center.lat}} debug={debug}>
-    <Fill
+     <Fill
       color={'#4a80f5'}
       source={bucket + 'basemaps/ocean'}
       variable={'ocean'}
