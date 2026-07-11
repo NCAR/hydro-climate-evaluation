@@ -834,8 +834,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     // }
 
     const url = bucket+'signalToNoise/'+baseDir+model+'/'+metric_l + '/' + fname
-    console.log('ART: ', url)
-    console.log('ART metric_l: ', metric_l)
     setMapSource([url]);
 
     // setUrl(baseDir, downscaling, model, yearRange, ens);
@@ -1610,6 +1608,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       }
 
       // setBaseDir(baseDir_l);
+      if (!newValues['Signal-to-Noise']) {
+        if (metric in signalToNoiseMetrics_d) {
+          handleMetricsChange({ target: { value: settings.variables[0] } });
+        }
+      }
+
 
       // Ave. or Dif. maps
       if (!newValues['Climate Signal']) {
@@ -1618,6 +1622,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 	  // make sure metric geojson lines are off
           setMetricPerformance({ "Metric Performance": false });
 	  setMethodAndModel({"Method & Model": true});
+
 
         // handleFilterAndSetClimColormapName(newValues);
         // above func handled below
@@ -1930,13 +1935,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       // handle model
       model_d = signalToNoiseModel_d
 
-      setDownscaling('')
+      // setDownscaling('')
 
       if (!(model in model_d)) {
         setModel(Object.keys(model_d)[0]);
       }
 
-      console.log("ART: ",signalToNoiseMetrics_d)
       if (!(metric in signalToNoiseMetrics_d)) {
         handleMetricsChange({ target: { value: "pr" } });
       }
@@ -1967,6 +1971,18 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         </>
       )
     }
+
+
+    if (!(model in model_d)) {
+      setModel(Object.keys(model_d)[0]);
+    }
+    if (!(downscaling in downscaling_d)) {
+      setDownscaling(Object.keys(downscaling_d)[0]);
+    }
+    if (metric in signalToNoiseMetrics_d) {
+      handleMetricsChange({ target: { value: settings.variables[0] } });
+    }
+
 
 
     return(

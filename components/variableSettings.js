@@ -7,6 +7,9 @@ export const Scale_Values = Object.freeze({
   dift: tempDif,
   difp: precipDif,
 
+  pr: precipDif,
+  tasmax: tempDif,
+
   // temperature variables
   dif_tavg: tempDif,
   dif_n34t: tempDif,
@@ -30,6 +33,11 @@ export const Scale_Values = Object.freeze({
   dif_jja_p: precipDif,
   dif_son_p: precipDif,
   dif_ann_p: precipDif,
+
+
+  dif_pr: precipDif,
+  dif_tasmax: tempDif,
+
 
   // drought
   dif_drought_1yr: 0.1,
@@ -76,6 +84,12 @@ export const Clim_Ranges = Object.freeze({
   dif_jja_t: { max: 4, min: -4 },
   dif_son_t: { max: 4, min: -4 },
   dif_ann_t: { max: 4, min: -4 },
+
+  // signal to noise
+  pr: { max: 4, min: -4 },
+  tasmax: { max: 4, min: -4 },
+  dif_pr: { max: 4, min: -4 },
+  dif_tasmax: { max: 4, min: -4 },
 
 
   // precip variables
@@ -172,6 +186,10 @@ export const Default_Colormaps = Object.freeze({
   jja_t: temp_colormap,
   son_t: temp_colormap,
   ann_t: temp_colormap,
+
+  pr: precip_colormap,
+  tasmax: temp_colormap,
+
 
   // precip variables
   prec: 'browngreen',
