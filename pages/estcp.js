@@ -7,7 +7,7 @@ import { Map, Raster, Fill, Line, RegionPicker, useControls } from '../maps';
 import Meta from '../components/meta';
 import { useThemedColormap } from '../colormaps/src';
 import RegionPlot from '../components/region-plot';
-import ParameterControls from '../components/parameter-controls-estcp-test';
+import ParameterControls from '../components/parameter-controls-estcp';
 // import ParameterControls from '../components/parameter-controls-estcp';
 import {options, linedata, linedata_stub} from '../components/plot-line';
 import { Line as LineCJS } from 'react-chartjs-2';
@@ -140,7 +140,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [computeChoice, setComputeChoice] = useState({
     'Ave.': true,
     'Dif.': false,
-    ...(settings.agreement ? { 'Agreement': false } : {}),
+    ...(settings.signalToNoise ? { 'Signal-to-Noise': false } : {}),
     ...(settings.climateSignal ? { 'Climate Signal': false } : {}),
   });
 

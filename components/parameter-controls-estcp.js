@@ -29,6 +29,27 @@ const sx = {
 
 const dif_t = true;
 
+const signalToNoiseMetrics_d = {
+  'pr':'Precip',
+  'tasmax': 'Tas Max'
+}
+
+const signalToNoiseModel_d = {
+  'access-cm2': 'ACCESS-CM2',
+  'canesm2': 'CanESM2',
+  'canesm5': 'CanESM5',
+  'cnrm-cm5': 'CNRM-CM5',
+  'ec-earth3': 'EC-Earth3',
+  'gfdl-cm3': 'GFDL-CM3',
+  'ipsl-cm5a-mr': 'IPSL-CM5A-MR',
+  'miroc5': 'MIROC5',
+  'miroc6': 'MIROC6',
+  'mri-cgcm3': 'MRI-CGCM3',
+  'mri-esm2-0': 'MRI-ESM2-0',
+  'noresm1-m': 'NorESM1-M',
+  'noresm2-mm': 'NorESM2-MM',
+}
+
 const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const { display, reload, debug, metricPerformance, clim, metricRegion,
           band, colormapName, colormap,
@@ -438,9 +459,22 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       description =
             ['Mean',
              'Precipitation'];
+    } else if (metric === 'pr') {
+      label = 'pr';
+      description =
+            ['Signal-to-Noise',
+             'June, July, August,',
+             'Daily Precipitation'];
+    } else if (metric === 'tasmax') {
+      label = 'tasmax';
+      description =
+            ['Signal-to-Noise',
+             'June, July, August',
+             'daily max temp'];
     } else {
        label = 'label undefined';
        description = ['description undefined','',''];
+       console.log("Add label for metric=", metric)
     }
 
     return(
@@ -803,6 +837,27 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   }
 
 
+  const signalToNoiseModelChange = useCallback((e) => {
+    const model = e.target.value;
+    setModel(model);
+    let metric_l = metric
+    // if (!(metric_l in signalToNoiseMetrics_d)) {
+    //   metric_l = Object.keys(signalToNoiseModel_d)[0]
+    //   setMetric(metric_l)
+    // }
+
+    const url = bucket+'signalToNoise/'+baseDir+model+'/'+metric_l + '/' + fname
+    setMapSource([url]);
+
+    // setUrl(baseDir, downscaling, model, yearRange, ens);
+
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+yearRange+'/'+band);
+    // setChartSource(bucket+'/chart/'+downscaling+'/'+model+'/'+band);
+    // getData({chartSource}, setChartData);
+  });
+
+
+
   const handleModelChange = useCallback((e) => {
     const model = e.target.value;
     const ens = checkModelEnsemble(model, downscaling);
@@ -937,6 +992,16 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     } else if (metric == 'q95_tasmin') {
       setBand('q95i');
       setUnits('°C');
+    } else if (metric == 'pr') {
+      const url = bucket+'signalToNoise/'+baseDir+model+'/'+metric + '/' + fname
+      setMapSource([url]);
+      setBand('snr_');
+      setUnits('°C');
+    } else if (metric == 'tasmax') {
+      const url = bucket+'signalToNoise/'+baseDir+model+'/'+metric + '/' + fname
+      setMapSource([url]);
+      setBand('snr_');
+      setUnits('°C');
     }
     else {
       setUnits('fill in missing units for '+metric);
@@ -991,7 +1056,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   let aveChoice = null;
   let setAveChoice = null;
-  // if (computeChoice['Agreement']) { artless
+  // if (computeChoice['Signal-to-Noise']) { artless
   //       [aveChoice, setAveChoice] = useState({ 'Modeling': true });
   // } else
   if (settings.observation) {
@@ -1548,7 +1613,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       let baseDir_l;
       if (newValues['Climate Signal']) {
         baseDir_l = 'climateSignal/';
-      } else if (newValues['Agreement']){
+      } else if (newValues['Signal-to-Noise']){
         baseDir_l = 'agreement/map/';
       }
       else {
@@ -1556,6 +1621,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       }
 
       // setBaseDir(baseDir_l);
+      if (!newValues['Signal-to-Noise']) {
+        if (metric in signalToNoiseMetrics_d) {
+          handleMetricsChange({ target: { value: settings.variables[0] } });
+        }
+      }
+
 
       // Ave. or Dif. maps
       if (!newValues['Climate Signal']) {
@@ -1564,6 +1635,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 	  // make sure metric geojson lines are off
           setMetricPerformance({ "Metric Performance": false });
 	  setMethodAndModel({"Method & Model": true});
+
 
         // handleFilterAndSetClimColormapName(newValues);
         // above func handled below
@@ -1618,7 +1690,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         // setComputeClimateSignal({'COMPUTE': true});
       }
 
-    if (newValues['Agreement']) {
+    if (newValues['Signal-to-Noise']) {
       console.log('foobar agreement', newValues);
       const cmip_l = 'cmip5';
       const downscaling_l = 'icar';
@@ -1667,7 +1739,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         </>
       );
     }
-    else if (computeChoice['Agreement']) {
+    else if (computeChoice['Signal-to-Noise']) {
       return (
         <>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -1677,7 +1749,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           multiSelect={false}
         />
         </Box>
-        <AgreementBox />
+        <SignalToNoiseBox />
         </>
       );
     }
@@ -1716,12 +1788,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
   const VariableChoiceBox = ({showPlotLabel=false, climateSignal=false,
-                             agreement=false}) => {
+                             signalToNoise=false}) => {
     let metrics = [...settings.variables,
                      ...(climateSignal ? [] : settings.variables_trend)
                     ];
-    if (agreement){
-      metrics = agreement_variables[cmip][downscaling][model][scenerio][signal]['variables'];
+    if (signalToNoise){
+      metrics = ['pr','tasmax']
     }
 
     return(
@@ -1835,7 +1907,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
-  const MapChoicesBox = ({dif=false, climateSignal=false, agreement=false}) => {
+  const MapChoicesBox = ({dif=false, climateSignal=false, signalToNoise=false}) => {
     var downscalingChange;
     var downscalingVar;
     var modelChange;
@@ -1872,19 +1944,58 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       // console.log("downscaling", downscaling)
     }
 
-    if (computeChoice['Agreement']) {
-      downscaling_d = Object.fromEntries(
-        Object.keys(agreement_variables[cmip] || {}).map((key) => [key, key])
-      );
-
+    if (computeChoice['Signal-to-Noise']) {
       // handle model
-      model_d = Object.fromEntries(
-        Object.keys(agreement_variables[cmip][downscaling] || {}).map((key) => [key, key])
-      );
+      model_d = signalToNoiseModel_d
+
+      // setDownscaling('')
+
       if (!(model in model_d)) {
         setModel(Object.keys(model_d)[0]);
       }
+
+      if (!(metric in signalToNoiseMetrics_d)) {
+        handleMetricsChange({ target: { value: "pr" } });
+      }
+      return(
+          <>
+          <Box sx={{ ...sx.label, mt: [4] }}>Climate Model</Box>
+          <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={signalToNoiseModelChange}
+        sx={{ mt: [1] }}
+        value={modelVar}
+          >
+          {Object.entries(model_d).map(([key, label]) => (
+              <option key={key} value={key}>
+              {label}
+            </option>
+          ))}
+        </Select>
+
+        <VariableChoiceBox
+        climateSignal={computeChoice['Climate Signal']}
+        signalToNoise={signalToNoise}
+          />
+          {(!computeChoice['Climate Signal'])
+           && setMetricLabel()}
+
+        </>
+      )
     }
+
+
+    if (!(model in model_d)) {
+      setModel(Object.keys(model_d)[0]);
+    }
+    if (!(downscaling in downscaling_d)) {
+      setDownscaling(Object.keys(downscaling_d)[0]);
+    }
+    if (metric in signalToNoiseMetrics_d) {
+      handleMetricsChange({ target: { value: settings.variables[0] } });
+    }
+
 
 
     return(
@@ -1893,10 +2004,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
       {computeChoice['Ave.'] &&
        <YearRangeBox downscaling_l={downscalingVar} />}
-
-      {computeChoice['Agreement'] &&
-       <CmipBox />
-      }
 
       <Box sx={{ ...sx.label, mt: [4] }}>{settings.downscaling_title}</Box>
       <Select
@@ -1930,17 +2037,17 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
       {settings.ensemble !== null && <EnsembleBox />}
 
-      {computeChoice['Agreement'] &&
+      {/*{computeChoice['Signal-to-Noise'] &&
        <>
        <ScenerioBox />
        <SignalBox />
        </>
-      }
+      }*/}
 
 
       <VariableChoiceBox
         climateSignal={computeChoice['Climate Signal']}
-        agreement={agreement}
+        signalToNoise={signalToNoise}
       />
       {/*(!computeChoice['Climate Signal'] && showMetricLabel)
        && setMetricLabel()*/}
@@ -1986,7 +2093,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
      // values={{'Modeling':true}}
   // TODO: Add Sam's Configurations
   const [agreementChoice, setAgreementChoice] = useState({ 'Modeling': true});
-  const AgreementBox = () => {
+  const SignalToNoiseBox = () => {
       /* <Filter
         values={{ 'Modeling': true}}
         setValues={setAgreementChoice}
@@ -1994,7 +2101,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       /> */
     return (
       <>
-      <MapChoicesBox agreement={true} />
+      <MapChoicesBox signalToNoise={true} />
       </>
     );
   };
