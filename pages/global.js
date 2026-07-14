@@ -204,7 +204,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       card={bucket+'favicon.ico'}
       description={"Climate Evaluation of Downscaling and Climate Model data.\
                     Based on Carbonplan's Maps"}
-      title={'Hydro-Climate Evaluation'}
+      title={'Hydro-Climate Evaluation: Interactive map of downscaling and climate model data'}
     />
     <Row columns={[4]}>
     <Column start={[1]} width={[1]}>
