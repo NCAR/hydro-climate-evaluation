@@ -1,4 +1,4 @@
-import { settings } from '../initialConditions/estcp-test';
+import { settings } from '../initialConditions/estcp';
 import { useState } from 'react';
 import { useRef, useEffect } from 'react';
 import { Box, useThemeUI } from 'theme-ui';
