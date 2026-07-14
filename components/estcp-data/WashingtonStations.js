@@ -65,7 +65,8 @@ export function WashingtonStationsPlot({ lats, lons, stationNames, shortNames,
 }
 
 
-import { settings } from "../../initialConditions/estcp-test";
+import { settings } from "../../initialConditions/estcp";
+// import { settings } from "../../initialConditions/estcp-test";
 // import { WashingtonStationsPlot } from "./WashingtonStations";
 
 export default function WashingtonStations(height) {
