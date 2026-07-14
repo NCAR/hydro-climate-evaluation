@@ -1609,6 +1609,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const ComputeChoiceFilter = () => {
     const handleComputeChoiceChange = (newValues) => {
       setComputeChoice(newValues);
+      let nextMetric = metric;
       // handle baseDir
       let baseDir_l;
       if (newValues['Climate Signal']) {
@@ -1623,7 +1624,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       // setBaseDir(baseDir_l);
       if (!newValues['Signal-to-Noise']) {
         if (metric in signalToNoiseMetrics_d) {
-          handleMetricsChange({ target: { value: settings.variables[0] } });
+          nextMetric = settings.variables[0];
+          handleMetricsChange({ target: { value: nextMetric } });
         }
       }
 
@@ -1644,15 +1646,15 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         const model = checkDownscalingModel(downscaling);
 
         if (newValues['Ave.']) {
-          setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
-          setColormapName(Default_Colormaps[metric]);
+          setClim([Clim_Ranges[nextMetric].min, Clim_Ranges[nextMetric].max]);
+          setColormapName(Default_Colormaps[nextMetric]);
         }
         if (newValues['Dif.']) {
           yearRange_key = Object.keys(settings.past_eras)[0];
           setYearRange(yearRange_key);
-          setScaleDif(Scale_Values['dif_'+metric]);
-          setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
-          setColormapName(Default_Colormaps['dif_'+metric]);
+          setScaleDif(Scale_Values['dif_'+nextMetric]);
+          setClim([Clim_Ranges['dif_'+nextMetric].min, Clim_Ranges['dif_'+nextMetric].max]);
+          setColormapName(Default_Colormaps['dif_'+nextMetric]);
         }
         setUrl(baseDir_l, downscaling, model, yearRange_key, ensemble)
       }
@@ -1679,11 +1681,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         setUrl(baseDir_l, downscaling_l, model_l, yearRange_key, ensemble, )
 
         // setYearRange(Object.keys(settings.future_eras)[0]);
-        setScaleDif(Scale_Values['dif_'+metric]);
-        setClim([Clim_Ranges['dif_'+metric].min,
-                 Clim_Ranges['dif_'+metric].max]);
-        setColormapName(Default_Colormaps['dif_'+metric]);
-        if ((metric === 'ptrend' || metric === 'ttrend')) {
+        setScaleDif(Scale_Values['dif_'+nextMetric]);
+        setClim([Clim_Ranges['dif_'+nextMetric].min,
+                 Clim_Ranges['dif_'+nextMetric].max]);
+        setColormapName(Default_Colormaps['dif_'+nextMetric]);
+        if ((nextMetric === 'ptrend' || nextMetric === 'ttrend')) {
           handleMetricsChange({ target: { value: settings.variables[0] } });
         }
         // setShouldUpdateMapSource(true);
