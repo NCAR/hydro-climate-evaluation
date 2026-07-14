@@ -7,7 +7,7 @@ import { Map, Raster, Fill, Line, RegionPicker, useControls } from '../maps';
 import Meta from '../components/meta';
 import { useThemedColormap } from '../colormaps/src';
 import RegionPlot from '../components/region-plot';
-import ParameterControls from '../components/parameter-controls-estcp-test';
+import ParameterControls from '../components/parameter-controls-estcp';
 // import ParameterControls from '../components/parameter-controls-estcp';
 import {options, linedata, linedata_stub} from '../components/plot-line';
 import { Line as LineCJS } from 'react-chartjs-2';
