@@ -28,8 +28,6 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "http-proxy-middleware": "^3.0.5",
-    "maplibre-gl": "^5.16.0",
-    "maps-maplibre": "file:./maps_maplibre",
     "next": ">=15.5.18",
     "node-fetch": "2.*",
     "plotly.js-dist-min": "^3.3.1",
