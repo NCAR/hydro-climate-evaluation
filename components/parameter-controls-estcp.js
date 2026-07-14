@@ -15,7 +15,6 @@ import { Default_Colormaps, readmeUrl } from './variableSettings';
 import { getData } from './getData';
 
 import { agreement_variables } from './estcp-data/agreement_variables.js';
-import { cmipOptions } from "./test.js";
 
 const sx = {
   label: {
@@ -34,20 +33,23 @@ const signalToNoiseMetrics_d = {
   'tasmax': 'Tas Max'
 }
 
+ // gcm = "CanESM2", "GFDL-CM3", "MIROC5", "MRI-CGCM3", "NorESM1-M", "AllGCMs" ;
+// allgcms  canesm2  gfdl-cm3  miroc5  mri-cgcm3  noresm1-m
 const signalToNoiseModel_d = {
-  'access-cm2': 'ACCESS-CM2',
+  // 'access-cm2': 'ACCESS-CM2',
+  'allgcms': 'All GCMs',
   'canesm2': 'CanESM2',
-  'canesm5': 'CanESM5',
-  'cnrm-cm5': 'CNRM-CM5',
-  'ec-earth3': 'EC-Earth3',
+  // 'canesm5': 'CanESM5',
+  // 'cnrm-cm5': 'CNRM-CM5',
+  // 'ec-earth3': 'EC-Earth3',
   'gfdl-cm3': 'GFDL-CM3',
-  'ipsl-cm5a-mr': 'IPSL-CM5A-MR',
+  // 'ipsl-cm5a-mr': 'IPSL-CM5A-MR',
   'miroc5': 'MIROC5',
-  'miroc6': 'MIROC6',
+  // 'miroc6': 'MIROC6',
   'mri-cgcm3': 'MRI-CGCM3',
-  'mri-esm2-0': 'MRI-ESM2-0',
+  // 'mri-esm2-0': 'MRI-ESM2-0',
   'noresm1-m': 'NorESM1-M',
-  'noresm2-mm': 'NorESM2-MM',
+  // 'noresm2-mm': 'NorESM2-MM',
 }
 
 const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
@@ -658,6 +660,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
     } else if (computeChoice['Ave.']) {
       setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
+    } else {
+      setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
     }
   };
 
@@ -1014,7 +1018,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
       setColormapName(Default_Colormaps['dif_'+metric]);
       setScaleDif(Scale_Values['dif_'+metric]);
-    } else if (computeChoice['Ave.']) {
+    } else if (computeChoice['Ave.'] || computeChoice['Signal-to-Noise']) {
       setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
       setColormapName(Default_Colormaps[metric]);
     }

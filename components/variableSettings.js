@@ -9,6 +9,8 @@ export const Scale_Values = Object.freeze({
 
   pr: precipDif,
   tasmax: tempDif,
+  dif_pr: precipDif,
+  dif_tasmax: tempDif,
 
   // temperature variables
   dif_tavg: tempDif,
@@ -86,10 +88,10 @@ export const Clim_Ranges = Object.freeze({
   dif_ann_t: { max: 4, min: -4 },
 
   // signal to noise
-  pr: { max: 4, min: -4 },
-  tasmax: { max: 4, min: -4 },
+  pr: { max: 4, min: 0 },
+  tasmax: { max: 6, min: 0 },
   dif_pr: { max: 4, min: -4 },
-  dif_tasmax: { max: 4, min: -4 },
+  dif_tasmax: { max: 6, min: -6 },
 
 
   // precip variables
@@ -187,8 +189,11 @@ export const Default_Colormaps = Object.freeze({
   son_t: temp_colormap,
   ann_t: temp_colormap,
 
-  pr: precip_colormap,
-  tasmax: temp_colormap,
+  // signal-to-noise red -> blue
+  // pr: 'redblue',
+  // tasmax: 'redblue',
+  pr: 'difredblue',
+  tasmax: 'difredblue',
 
 
   // precip variables

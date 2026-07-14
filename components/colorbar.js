@@ -149,8 +149,6 @@ const Colorbar = ({
   let scale
   let fixedVal
 
-  console.log("FOOBAR filterValues=", filterValues)
-
   if (filterValues['Ave.'] || filterValues['Agreement']) {
     scale = setClimStep
     fixedVal = 0
@@ -183,11 +181,13 @@ const Colorbar = ({
       return;
     }
 
-    if (filterValues['Ave.']) {
+    if (filterValues['Ave.'] || filterValues['Signal-to-Noise']) {
       // prevent these precip values from dropping below 0
       if (band === 'djfp' || band === 'jjap' ||
           band === 'mamp' || band === 'sonp' ||
-          band === 'pr90' || band === 'pr99') {
+          band === 'pr90' || band === 'pr99' ||
+          band === 'snr_'
+         ) {
       if (horizontal) {
         if (id === 'min')
           setClim((prev) => [Math.min(init[0] + dx * scale, init[1]), prev[1]])
