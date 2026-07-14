@@ -1,6 +1,6 @@
 // import ButtonMarker from '../components/ButtonMarker.test';
 import ButtonMarker from '../components/ButtonMarker.station';
-import { settings } from "../initialConditions/estcp-test";
+import { settings } from "../initialConditions/estcp";
 
 import tasminPoints from "../data_json/tasminAvg_seas_points.json";
 
