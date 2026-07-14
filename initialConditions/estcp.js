@@ -2,6 +2,8 @@ export const settings = {
   lat: 38,
   lon: -97,
   zoom: 2.25,
+  signalToNoise: true,
+  agreement: true,
   climateSignal: false,
   dif: true,
   observation: true,
@@ -36,6 +38,29 @@ export const settings = {
       'wt_clim',
       'wt_day_to_day',
   ],
+  agreement_variables: [
+      'mean_tasmax',
+      'mean_jja_tasmax',
+      'q95_tasmax',
+      'std_pr',
+      'q95_pr',
+      'sum_pr',
+      'mean_jja_pr',
+      'mean_pr',
+  ],
+
+  agreement_variables_test: [
+      'mean_pr',
+      'mean_jja_pr',
+      'sum_pr',
+      'q95_pr',
+      'std_pr',
+      '2yr_pr',
+      '5yr_pr',
+      'gcm',
+  ],
+
+
 
   obs_lev1_title: "Dataset",
   obs_lev1: {
@@ -132,7 +157,10 @@ export const settings = {
                noresm1_m: "NorESM1-M"}
   },
 
-
+  cmip: {
+    cmip5: 'CMIP5',
+    cmip6: 'CMIP6',
+  },
 
   metricRegions: {
     desertsouthwest: 'Desert Southwest',
@@ -154,5 +182,66 @@ export const settings = {
 
 
   show_ensemble: false,
-  ensemble: null
+  ensemble: null,
+
+  stationData: {
+    sites: {
+      TCM: {
+          lon: -122.483, lat: 47.15,
+          shortName: 'TCM',
+          name: 'McChord Air Force Base Airfield',
+          data: '',
+      },
+      GRF: {
+          lon: -122.583, lat: 47.083,
+          shortName: 'GRF',
+          name: 'Gray Army Air Field',
+          data: '',
+      },
+      TIW:  {
+          lon:  -122.576, lat: 47.267,
+          shortName: 'TIW',
+          name: 'Tacoma Narrows Airport',
+          data: '',
+      },
+      OLM: {
+          lon:  -122.905 , lat: 46.974,
+          shortName: 'OLM',
+          name: 'Olympia Station',
+          data: '',
+      },
+      SEA: {
+          lon: -122.314, lat: 47.45,
+          shortName: 'SEA',
+          name: 'Seattle-Tacoma Airport',
+          data: '',
+      },
+    }
+  },
+
+
+  siteData: {
+    sites: {
+      fortLiberty: {
+          lon: -78.9991667, lat: 35.1391667,
+          name: 'Fort Liberty, NC',
+          data: "../data_json/tasminAvg_seas_points.json"
+      },
+      jblm:  {
+          lon: -122.564444, lat: 47.105833,
+          name: 'Joint Base Lewis–McChord, WA',
+          data: "../data_json/tasminAvg_seas_points.json"
+      },
+      jbphh: {
+          lon: -157.943889, lat: 21.349167,
+          name: 'Joint Base Pearl Harbor-Hickham, HI',
+          data: "../data_json/tasminAvg_seas_points.json"
+      },
+      fort_wainwright: {
+          lon: -147.642778, lat: 64.827778,
+          name: 'Fort Wainwright, AK',
+          data: "../data_json/tasminAvg_seas_points.json"
+      },
+    }
+  },
 };

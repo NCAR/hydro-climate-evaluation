@@ -62,11 +62,11 @@ export const settings = {
 
   downscaling_title: "Downscaling Method",
   downscaling_past: {
-      'icar':'ICAR',
-      'icarwest':'ICAR West',
+      'icar':'ICARv1',
+      'icarwest':'ICARv2',
       'gard_r2':'GARD_r2',
       'gard_r3':'GARD_r3',
-      'loca_8th':'LOCA_8th',
+      'loca_8th':'LOCA',
       'maca':'MACA',
       'nasa_nex':'NASA-NEX',
   },
@@ -75,11 +75,11 @@ export const settings = {
 
 
   downscaling_future: {
-      'icar':'ICAR',
-      'icarwest':'ICAR West',
+      'icar':'ICARv1',
+      'icarwest':'ICARv2',
       'gard_r2':'GARD_r2',
       'gard_r3':'GARD_r3',
-      'loca_8th':'LOCA_8th',
+      'loca_8th':'LOCA',
       'maca':'MACA',
       'nasa_nex':'NASA-NEX',
   },
@@ -97,11 +97,11 @@ export const settings = {
   },
 
   downscaling_climateSignal: {
-      icar: 'ICAR',
-      icarwest: 'ICAR West',
+      icar: 'ICARv1',
+      icarwest: 'ICARv2',
       gard_r2: 'GARD_R2',
       gard_r3: 'GARD_R3',
-      loca_8th: 'LOCA_8th',
+      loca_8th: 'LOCA',
       maca: 'MACA',
       nasa_nex: 'NASA_NEX',
   },
