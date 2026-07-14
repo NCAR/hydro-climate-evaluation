@@ -1,4 +1,4 @@
-function months(options) {
+export function months(options) {
     const count = options.count || 12;
     const monthNames = [
         "January", "February", "March", "April", "May", "June",
