@@ -1000,12 +1000,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       const url = bucket+'signalToNoise/'+baseDir+model+'/'+metric + '/' + fname
       setMapSource([url]);
       setBand('snr_');
-      setUnits('°C');
+      setUnits('mean signal / stdev');
     } else if (metric == 'tasmax') {
       const url = bucket+'signalToNoise/'+baseDir+model+'/'+metric + '/' + fname
       setMapSource([url]);
       setBand('snr_');
-      setUnits('°C');
+      setUnits('mean signal / stdev');
     }
     else {
       setUnits('fill in missing units for '+metric);
@@ -1987,6 +1987,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           {(!computeChoice['Climate Signal'])
            && setMetricLabel()}
 
+        <SignalToNoiseDownscalingMethodsBox />
+
         </>
       )
     }
@@ -2095,6 +2097,42 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       );
     }
   };
+
+
+  const SignalToNoiseDownscalingMethodsBox = () => {
+    let description = [''];
+    if (model === 'miroc5') {
+      description = ['BCCA, BCSD, GARD, ICAR',
+                     'LOCA, MACA, NEXGDDP', ];
+    } else if (model === 'canesm2') {
+      description = ['BCCA, BCSD, GARD, ICAR',
+                     'LOCA, MACA, NEXGDDP', ];
+    } else if (model === 'allgcms') {
+      description = ['BCCA, BCSD, GARD, ICAR',
+                     'LOCA, MACA, NEXGDDP', ];
+    } else if (model === 'gfdl-cm3') {
+      description = ['BCSD, GARD, ICAR',
+                     'LOCA, NEXGDDP', ];
+    } else if (model === 'mri-cgcm3') {
+      description = ['BCCA, BCSD, GARD, ICAR',
+                     'LOCA, MACA, NEXGDDP', ];
+    } else if (model === 'noresm1-m') {
+      description = ['BCCA, BCSD, GARD, ICAR',
+                     'LOCA, MACA, NEXGDDP', ];
+    }
+
+    // const description = ['model =' , "ok?"];
+    return(
+      <>
+      <Box sx={{ ...sx.label, mt: [4] }}>
+        <u>Downscaling Methods Used</u>: <br/>
+        {description.map((line, index) => (
+           <Fragment key={index}> {line} <br /> </Fragment>))
+        }
+      </Box>
+      </>
+    );
+  }
 
      // values={{'Modeling':true}}
   // TODO: Add Sam's Configurations
