@@ -77,6 +77,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setModel,
     setYearRange,
     setMapSource,
+    setAgreementSource,
     setChartSource,
     setDownscalingDif,
     setModelDif,
@@ -159,6 +160,16 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     const url = `${bucket}${baseDir}${downscaling}/${model}/${time}/${ensemble}/${fname}`;
     console.log("COMPUTE should be adding url = ",url);
     setMapSource((prevSources) => [...prevSources, url]);
+  };
+
+  function setSignalToNoiseUrl(model_l, metric_l) {
+    const url = `${bucket}signalToNoise/map/${model_l}/${metric_l}/${fname}`;
+    setMapSource([url]);
+  };
+
+  function setAgreementOverlayUrl(metric_l) {
+    const url = `${bucket}agreement/map/allgcms/${metric_l}/${fname}`;
+    setAgreementSource([url]);
   };
 
 
@@ -850,8 +861,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     //   setMetric(metric_l)
     // }
 
-    const url = bucket+'signalToNoise/'+baseDir+model+'/'+metric_l + '/' + fname
-    setMapSource([url]);
+    setSignalToNoiseUrl(model, metric_l);
 
     // setUrl(baseDir, downscaling, model, yearRange, ens);
 
@@ -872,7 +882,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     // getData({chartSource}, setChartData);
   });
 
-  const handleMetricsChange = useCallback((e) => {
+  const handleMetricsChange = useCallback((e, model_l = model) => {
     const metric = e.target.value;
     setMetric(metric);
     console.log("metric e =", e.target.value);
@@ -997,13 +1007,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setBand('q95i');
       setUnits('°C');
     } else if (metric == 'pr') {
-      const url = bucket+'signalToNoise/'+baseDir+model+'/'+metric + '/' + fname
-      setMapSource([url]);
+      setSignalToNoiseUrl(model_l, metric);
+      setAgreementOverlayUrl(metric);
       setBand('snr_');
       setUnits('mean signal / stdev');
     } else if (metric == 'tasmax') {
-      const url = bucket+'signalToNoise/'+baseDir+model+'/'+metric + '/' + fname
-      setMapSource([url]);
+      setSignalToNoiseUrl(model_l, metric);
+      setAgreementOverlayUrl(metric);
       setBand('snr_');
       setUnits('mean signal / stdev');
     }
@@ -1636,7 +1646,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
 
       // Ave. or Dif. maps
-      if (!newValues['Climate Signal']) {
+      if (!newValues['Climate Signal'] && !newValues['Signal-to-Noise']) {
         setDisplay(true);
           console.log("FOO: ",{ "Metric Performance": false });
 	  // make sure metric geojson lines are off
@@ -1699,19 +1709,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
     if (newValues['Signal-to-Noise']) {
       console.log('foobar agreement', newValues);
-      const cmip_l = '';
-      const downscaling_l = '';
       const model_l = 'miroc5';
       const signal = 'pr';
-      const ensemble = '';
-      setCmip(cmip_l);
-      setDownscaling(downscaling_l);
       setModel(model_l);
       setSignal(signal);
 
-      console.log("PRE FOOBAR PRE", baseDir_l, cmip_l, downscaling_l, model_l, signal);
-      setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, signal);
-      handleMetricsChange({ target: { value: "2yr_pr" } });
+      handleMetricsChange({ target: { value: signal } }, model_l);
     }
 
     };
@@ -1957,13 +1960,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
       // setDownscaling('')
 
-      if (!(model in model_d)) {
-        setModel(Object.keys(model_d)[0]);
-      }
-
-      if (!(metric in signalToNoiseMetrics_d)) {
-        handleMetricsChange({ target: { value: "pr" } });
-      }
       return(
           <>
           <Box sx={{ ...sx.label, mt: [4] }}>Climate Model</Box>

@@ -21,6 +21,14 @@ import MarkSites from '../components/MarkSites';
 const TESTING = false;
 // location of the map and pbf shape files
 const bucket = settings.bucket;
+const agreementFragmentShader = `
+  if (climate < 0.5 || climate == fillValue) {
+    discard;
+  }
+  vec4 c = texture2D(colormap, vec2(1.0, 1.0));
+  gl_FragColor = vec4(c.x, c.y, c.z, opacity);
+  gl_FragColor.rgb *= gl_FragColor.a;
+`;
 // const bucket = 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/';
 // original hosting site
 // const bucket = 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/';
@@ -132,7 +140,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [mapSource, setMapSource] =
           useState([bucket+'map/icar/access1_3/hist.1981_2004/'+fname]);
   const [agreementSource, setAgreementSource] =
-          useState([bucket+'map/agreement/map/allgcms/pr/'+fname]);
+          useState([bucket+'agreement/map/allgcms/pr/'+fname]);
   const [agreementBand, setAgreementBand] = useState('dagr');
 
   const [chartSource, setChartSource] =
@@ -180,6 +188,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     setMetric,
     setYearRange,
     setMapSource,
+    setAgreementSource,
     setChartSource,
     setDownscalingDif,
     setModelDif,
@@ -217,6 +226,10 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       'northatlantic': 'NorthAtlantic_border.geojson',
       'pacificnorthwest': 'PacificSW_border.geojson',
   }
+
+  const differenceSource = Array.isArray(mapSourceDif)
+    ? mapSourceDif[0]
+    : mapSourceDif;
 
 
 
@@ -341,17 +354,16 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     */}
     {/* projection = equirectangular */}
 
-   {/*
     <Raster
       setMapVal={setMapVal}
-      key={`${JSON.stringify(mapSource)}-${mapSourceDif[0]}-${reload}-${sideBySide}-${JSON.stringify(computeChoice)}`}
+      key={`${JSON.stringify(mapSource)}-${differenceSource}-${reload}-${sideBySide}-${JSON.stringify(computeChoice)}`}
       colormap={colormap}
       clim={clim}
       display={display}
       // opacity={opacity}
       mode={'texture'}
       sources={mapSource}
-      sourceDif={mapSourceDif}
+      sourceDif={computeChoice['Dif.'] ? differenceSource : mapSource[0]}
       fillValue={fillValue}
       variable={'climate'}
       selector={{ band }}
@@ -362,24 +374,24 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       regionOptions={{ setData: setRegionData }}
       zoomArgs={zoomArgs}
     />
-    */}
 
 
 
     { computeChoice['Signal-to-Noise'] &&
       <Raster
       setMapVal={setMapVal}
-      key={`${JSON.stringify(mapSource)}-${mapSourceDif[0]}-${reload}-${sideBySide}-${JSON.stringify(computeChoice)}`}
+      key={`${JSON.stringify(agreementSource)}-${reload}-${sideBySide}`}
       colormap={grey_colormap}
-      clim={clim}
+      clim={[0, 1]}
       display={display}
-      // opacity={opacity}
+      opacity={0.8}
       mode={'texture'}
       sources={agreementSource}
-      sourceDif={mapSourceDif}
+      sourceDif={agreementSource[0]}
       fillValue={fillValue}
       variable={'climate'}
-      selector={{ agreementBand }}
+      selector={{ band: agreementBand }}
+      frag={agreementFragmentShader}
       filterValue={computeChoice}
       setDisplay={setDisplay}
       regionOptions={{ setData: setRegionData }}
