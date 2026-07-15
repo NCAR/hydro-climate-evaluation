@@ -140,7 +140,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [mapSource, setMapSource] =
           useState([bucket+'map/icar/access1_3/hist.1981_2004/'+fname]);
   const [agreementSource, setAgreementSource] =
-          useState([bucket+'agreement/map/allgcms/pr/'+fname]);
+          useState([bucket+'agreement/map/miroc5/pr/'+fname]);
   const [agreementBand, setAgreementBand] = useState('dagr');
 
   const [chartSource, setChartSource] =

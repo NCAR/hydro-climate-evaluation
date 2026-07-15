@@ -167,8 +167,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setMapSource([url]);
   };
 
-  function setAgreementOverlayUrl(metric_l) {
-    const url = `${bucket}agreement/map/allgcms/${metric_l}/${fname}`;
+  function setAgreementOverlayUrl(model_l, metric_l) {
+    const url = `${bucket}agreement/map/${model_l}/${metric_l}/${fname}`;
     setAgreementSource([url]);
   };
 
@@ -862,6 +862,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     // }
 
     setSignalToNoiseUrl(model, metric_l);
+    setAgreementOverlayUrl(model, metric_l);
 
     // setUrl(baseDir, downscaling, model, yearRange, ens);
 
@@ -1008,12 +1009,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setUnits('°C');
     } else if (metric == 'pr') {
       setSignalToNoiseUrl(model_l, metric);
-      setAgreementOverlayUrl(metric);
+      setAgreementOverlayUrl(model_l, metric);
       setBand('snr_');
       setUnits('mean signal / stdev');
     } else if (metric == 'tasmax') {
       setSignalToNoiseUrl(model_l, metric);
-      setAgreementOverlayUrl(metric);
+      setAgreementOverlayUrl(model_l, metric);
       setBand('snr_');
       setUnits('mean signal / stdev');
     }
