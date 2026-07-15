@@ -1619,7 +1619,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       if (newValues['Climate Signal']) {
         baseDir_l = 'climateSignal/';
       } else if (newValues['Signal-to-Noise']){
-        baseDir_l = 'agreement/map/';
+        // baseDir_l = 'agreement/map/';
+        baseDir_l = 'signalToNoise/map/';
       }
       else {
         baseDir_l = 'map/';
@@ -1698,8 +1699,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
     if (newValues['Signal-to-Noise']) {
       console.log('foobar agreement', newValues);
-      const cmip_l = 'cmip5';
-      const downscaling_l = 'icar';
+      const cmip_l = '';
+      const downscaling_l = '';
       const model_l = 'miroc5';
       const signal = 'pr';
       const ensemble = '';
@@ -1708,7 +1709,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setModel(model_l);
       setSignal(signal);
 
-      console.log("PRE FOOBAR PRE")
+      console.log("PRE FOOBAR PRE", baseDir_l, cmip_l, downscaling_l, model_l, signal);
       setAgreementUrl(baseDir_l, cmip_l, downscaling_l, model_l, signal);
       handleMetricsChange({ target: { value: "2yr_pr" } });
     }
@@ -1988,7 +1989,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
            && setMetricLabel()}
 
         <SignalToNoiseDownscalingMethodsBox />
-
+        <AgreementBox />
         </>
       )
     }
@@ -2098,6 +2099,18 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   };
 
+
+  const AgreementBox = () => {
+    return(
+      <>
+      <Box sx={{ ...sx.label, mt: [4] }}>
+        <u>Agreement</u>: <br/>
+        Disagreement in  <br/>
+        downscaling signal greyed
+      </Box>
+      </>
+    );
+  }
 
   const SignalToNoiseDownscalingMethodsBox = () => {
     let description = [''];
