@@ -94,6 +94,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [clim, setClim] = useState([-10, 15]);
 
   const colormap = useThemedColormap(colormapName);
+  const grey_colormap = useThemedColormap('greys');
   const [showClimateChange, setShowClimateChange] = useState(false);
   const [showRegionPlot, setShowRegionPlot] = useState(false);
   const [regionData, setRegionData] = useState({ loading: true });
@@ -130,6 +131,10 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   //         useState([bucket+'map/icar/noresm1_m/1981_2004/'+fname])
   const [mapSource, setMapSource] =
           useState([bucket+'map/icar/access1_3/hist.1981_2004/'+fname]);
+  const [agreementSource, setAgreementSource] =
+          useState([bucket+'map/agreement/map/allgcms/pr/'+fname]);
+  const [agreementBand, setAgreementBand] = useState('dagr');
+
   const [chartSource, setChartSource] =
           useState(bucket+'chart/icar/noresm1_m/'+band);
   const [mapSourceDif, setMapSourceDif] =
@@ -335,6 +340,8 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
      />)}
     */}
     {/* projection = equirectangular */}
+
+   {/*
     <Raster
       setMapVal={setMapVal}
       key={`${JSON.stringify(mapSource)}-${mapSourceDif[0]}-${reload}-${sideBySide}-${JSON.stringify(computeChoice)}`}
@@ -355,6 +362,31 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       regionOptions={{ setData: setRegionData }}
       zoomArgs={zoomArgs}
     />
+    */}
+
+
+
+    { computeChoice['Signal-to-Noise'] &&
+      <Raster
+      setMapVal={setMapVal}
+      key={`${JSON.stringify(mapSource)}-${mapSourceDif[0]}-${reload}-${sideBySide}-${JSON.stringify(computeChoice)}`}
+      colormap={grey_colormap}
+      clim={clim}
+      display={display}
+      // opacity={opacity}
+      mode={'texture'}
+      sources={agreementSource}
+      sourceDif={mapSourceDif}
+      fillValue={fillValue}
+      variable={'climate'}
+      selector={{ agreementBand }}
+      filterValue={computeChoice}
+      setDisplay={setDisplay}
+      regionOptions={{ setData: setRegionData }}
+      zoomArgs={zoomArgs}
+      />
+    }
+
 
     <MarkSites />
 
