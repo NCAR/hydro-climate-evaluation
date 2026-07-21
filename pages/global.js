@@ -1,4 +1,4 @@
-import { settings } from '../initialConditions/global';
+import { settings } from '../initialConditions/global-test';
 import { useState } from 'react';
 import { useRef, useEffect } from 'react';
 import { Box, useThemeUI } from 'theme-ui';
@@ -7,7 +7,7 @@ import { Map, Raster, Fill, Line, RegionPicker, useControls } from '../maps';
 import Meta from '../components/meta';
 import { useThemedColormap } from '../colormaps/src';
 import RegionPlot from '../components/region-plot';
-import ParameterControls from '../components/parameter-controls';
+import ParameterControls from '../components/parameter-controls-global';
 import {options, linedata, linedata_stub} from '../components/plot-line';
 import { Line as LineCJS } from 'react-chartjs-2';
 import Charts from '../components/charts';

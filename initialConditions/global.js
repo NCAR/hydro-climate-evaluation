@@ -104,10 +104,29 @@ export const settings = {
   obs_eras_test: {1850_2100: '1850_2100'},
   obs_eras: '1850_2005',
 
+  past_eras_orig: {
+      '1850_2005': '1850-2005'
+  },
   past_eras: {
-      '1850_2005': '1850_2005'
+    '1850_2005': '1850-2005',
+  },
+  past_eras_cmip5: {
+    '1850_2005': '1850-2005',
+  },
+  past_eras_cmip6: {
+    '1850_2005': '1850-2014'
   },
   future_eras: {
+    '':''
+  },
+  future_eras_cmip5: {
+    'rcp45':'RCP45',
+    'rcp85':'RCP85',
+  },
+  future_eras_cmip6: {
+    'ssp245':'SSP245',
+    'ssp370':'SSP370',
+    'ssp585':'SSP585',
   },
 
   downscaling_title: "CMIP",
