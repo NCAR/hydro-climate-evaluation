@@ -225,6 +225,31 @@ export default function Reports() {
         >
           CMIP6 Ensemble
         </a>
+
+        {/* Future Scenarios Button */}
+        <a
+          href="https://hydro.rap.ucar.edu/hydro-climate-eval/global-missing"
+          target="_blank"
+          rel="noreferrer"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            padding: "12px 24px",
+            borderRadius: 8,
+            fontSize: 18,
+            fontWeight: 600,
+            textDecoration: "none",
+            background: "#3b82f6",
+            color: "#fff",
+            transition: "background 0.2s ease",
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.background = "#2563eb")}
+          onMouseOut={(e) => (e.currentTarget.style.background = "#3b82f6")}
+        >
+          Missing Future Scenarios
+        </a>
       </div>
 
       </div>
