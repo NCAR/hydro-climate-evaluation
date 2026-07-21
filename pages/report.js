@@ -198,7 +198,7 @@ export default function Reports() {
           onMouseOver={(e) => (e.currentTarget.style.background = "#16a34a")}
           onMouseOut={(e) => (e.currentTarget.style.background = "#22c55e")}
         >
-          CMIP5 Ensemble
+          CMIP5 Historical Ensemble
         </a>
 
         {/* CMIP6 Button */}
@@ -223,7 +223,7 @@ export default function Reports() {
           onMouseOver={(e) => (e.currentTarget.style.background = "#2563eb")}
           onMouseOut={(e) => (e.currentTarget.style.background = "#3b82f6")}
         >
-          CMIP6 Ensemble
+          CMIP6 Historical Ensemble
         </a>
 
         {/* Future Scenarios Button */}
