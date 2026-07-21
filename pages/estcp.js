@@ -157,6 +157,8 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     ...(settings.climateSignal ? { 'Climate Signal': false } : {}),
   });
 
+  const [agreementToggle, setAgreementToggle] = useState(true)
+
   // control the height of the charts, initially hidden
   const [chartHeight, setChartHeight] = useState('0%');
   const [chartData, setChartData] = useState(Array(12).fill(0));
@@ -172,7 +174,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
                     bucket, chartHeight, computeChoice,
                     showClimateChange, showRegionPlot, bucketRes,
                     showStates, showRivers, showHuc2, sideBySide, mapVal,
-                    ensemble, region, cmip};
+                    ensemble, region, cmip, agreementToggle};
   const setters = {
     setDisplay,
     setReload,
@@ -210,7 +212,8 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     setSideBySide,
     setEnsemble,
     setRegion,
-    setCmip
+    setCmip,
+    setAgreementToggle,
   };
 
   const fillValue = 3.4028234663852886e38; // black on land, red nans
@@ -383,8 +386,8 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       key={`${JSON.stringify(agreementSource)}-${reload}-${sideBySide}`}
       colormap={grey_colormap}
       clim={[0, 1]}
-      display={display}
-      opacity={0.8}
+      display={agreementToggle}
+      opacity={0.5}
       mode={'texture'}
       sources={agreementSource}
       sourceDif={agreementSource[0]}

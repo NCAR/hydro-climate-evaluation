@@ -61,7 +61,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           chartHeight, computeChoice,
           showClimateChange, showRegionPlot, bucketRes,
           showStates, showRivers, showHuc2, sideBySide, mapVal, ensemble,
-          region, cmip
+          region, cmip, agreementToggle,
         } = getters;
   const {
     setDisplay,
@@ -100,6 +100,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setEnsemble,
     setRegion,
     setCmip,
+    setAgreementToggle,
   } = setters;
 
 
@@ -1648,7 +1649,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
       // Ave. or Dif. maps
       if (!newValues['Climate Signal'] && !newValues['Signal-to-Noise']) {
-        setDisplay(true);
+        // setDisplay(true);
           console.log("FOO: ",{ "Metric Performance": false });
 	  // make sure metric geojson lines are off
           setMetricPerformance({ "Metric Performance": false });
@@ -1963,6 +1964,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
       return(
           <>
+          <AgreementBox />
           <Box sx={{ ...sx.label, mt: [4] }}>Climate Model</Box>
           <Select
         sxSelect={{ bg: 'transparent' }}
@@ -1986,7 +1988,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
            && setMetricLabel()}
 
         <SignalToNoiseDownscalingMethodsBox />
-        <AgreementBox />
         </>
       )
     }
@@ -2100,10 +2101,20 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const AgreementBox = () => {
     return(
       <>
-      <Box sx={{ ...sx.label, mt: [4] }}>
-        <u>Agreement</u>: <br/>
-        Disagreement in  <br/>
-        downscaling signal greyed
+      <Box sx={{ ...sx.label, mt: [3] }}>
+        <Box as='u' sx={{ fontSize: '17px' }}>
+        Agreement
+        </Box>{' '}
+        <Toggle value={agreementToggle} onClick={() => setAgreementToggle(!agreementToggle)}
+        sx={{
+          transform: 'scale(0.75)',
+          transformOrigin: 'left bottom',
+        }}
+      />
+        <br/>
+        Disagreement in <br/>
+        downscaling signal <br/>
+        shaded grey
       </Box>
       </>
     );
