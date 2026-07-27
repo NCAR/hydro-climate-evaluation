@@ -1,8 +1,7 @@
 import { useRef, useLayoutEffect, useState, Fragment } from 'react';
 import { Box, Flex } from 'theme-ui';
 import { useCallback, useEffect } from 'react';
-import { useMapbox } from '../maps/src/mapbox';
-import { Line } from '../maps';
+import { Line, useMapbox } from '../maps';
 import { Button, Filter, Table, Tag, Slider, Badge, Toggle, Select, Link } from '@carbonplan/components';
 import { Right, Reset } from '@carbonplan/icons';
 import Colorbar from './colorbar';

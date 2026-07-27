@@ -1,5 +1,5 @@
 import { Box, IconButton } from 'theme-ui'
-import { useRecenterRegion } from '@carbonplan/maps'
+import { useRecenterRegion } from '../maps'
 import { XCircle } from '@carbonplan/icons'
 
 const AverageDisplay = ({ band, data: { value } }) => {

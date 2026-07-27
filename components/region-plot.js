@@ -1,5 +1,5 @@
 import { Box, IconButton } from 'theme-ui'
-import { useRecenterRegion } from '@carbonplan/maps'
+import { useRecenterRegion } from '../maps'
 import { Search, XCircle } from '@carbonplan/icons'
 import { Line } from 'react-chartjs-2';
 

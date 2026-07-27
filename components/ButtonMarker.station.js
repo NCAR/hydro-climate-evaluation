@@ -1,7 +1,7 @@
 // ButtonMarker.jsx
 import { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
-import { useMapbox } from '../maps/src/mapbox';
+import { useMapbox } from '../maps';
 import CirclePicker from '../maps/src/region/region-picker/circle-picker'
 // import Fig5 from "../pages/estcp-data/fig5";
 import WashingtonStations from "./estcp-data/WashingtonStations";

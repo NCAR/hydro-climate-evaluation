@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
-import { useMapbox } from "../maps/src/mapbox";
+import { useMapbox } from "../maps";
 
 function pointsToGrid(points, { wrapLon = true } = {}) {
     const pts = wrapLon

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Dimmer, Meta, Column, Row } from '@carbonplan/components'
-import { InitializeStore } from '@carbonplan/maps'
 import { Box, useThemeUI } from 'theme-ui'
 import {options, linedata, linedata_stub} from '../components/plot-line';
 
