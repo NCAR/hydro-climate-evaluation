@@ -220,6 +220,11 @@ the value of the `bucket` variable in the files of the `initialConditions`
 directory. The variable `bucket` would need to be changed to
 `http://localhost:8080/hydro-climate-eval/data/refactor/`.
 
+To use dev builds go to `maps/` and `colormaps/` and
+`cp package.full.json package.json` in each.
+Do this step before installing the npm packages.
+
+
 ```
 $ npm install .
 $ npm run build
