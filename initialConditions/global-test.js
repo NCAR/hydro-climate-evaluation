@@ -163,75 +163,75 @@ export const settings = {
 
     show_ensemble: true,
     ensemble: {
-     cmip5: {access1_0: [r1i1p1], access1_3: [r1i1p1], bcc_csm1_1: [r1i1p1],
-      bcc_csm1_1_m: [r1i1p1], bnu_esm: [r1i1p1], cancm4: [r10i1p1, r1i1p1, r2i1p1,
-        r3i1p1, r4i1p1, r5i1p1, r6i1p1, r7i1p1, r8i1p1, r9i1p1], canesm2: [r1i1p1,
-        r2i1p1, r3i1p1, r4i1p1, r5i1p1], ccsm4: [r1i1p1, r2i1p1, r3i1p1, r4i1p1, r5i1p1,
-        r6i1p1], cesm1_bgc: [r1i1p1], cesm1_cam5: [r1i1p1, r2i1p1, r3i1p1], cesm1_cam5_1_fv2: [
-        r1i1p1], cesm1_waccm: [r2i1p1, r3i1p1, r4i1p1], cmcc_cesm: [r1i1p1], cmcc_cm: [
-        r1i1p1], cmcc_cms: [r1i1p1], cnrm_cm5: [r10i1p1, r1i1p1, r2i1p1, r4i1p1, r6i1p1],
-      csiro_mk3_6_0: [r10i1p1, r1i1p1, r2i1p1, r3i1p1, r4i1p1, r5i1p1, r6i1p1, r7i1p1,
-        r8i1p1, r9i1p1], csiro_mk3l_1_2: [r1i2p1, r2i2p1, r3i2p1], ec_earth: [r12i1p1,
-        r13i1p1, r1i1p1, r2i1p1, r6i1p1, r7i1p1, r8i1p1, r9i1p1], fgoals_g2: [r1i1p1],
-      fio_esm: [r1i1p1, r2i1p1, r3i1p1], gfdl_cm2p1: [r10i1p1, r1i1p1, r2i1p1, r3i1p1,
-        r4i1p1, r5i1p1, r6i1p1, r7i1p1, r8i1p1, r9i1p1], gfdl_cm3: [r1i1p1, r3i1p1,
-        r5i1p1], gfdl_esm2g: [r1i1p1], gfdl_esm2m: [r1i1p1], giss_e2_h: [r1i1p1, r1i1p2,
-        r1i1p3, r2i1p1, r2i1p3], giss_e2_h_cc: [r1i1p1], giss_e2_r: [r1i1p1, r1i1p2,
-        r1i1p3, r2i1p1, r2i1p3], giss_e2_r_cc: [r1i1p1], hadcm3: [r10i1p1, r1i1p1,
-        r2i1p1, r3i1p1, r4i1p1, r5i1p1, r6i1p1, r7i1p1, r8i1p1, r9i1p1], hadgem2_ao: [
-        r1i1p1], hadgem2_cc: [r1i1p1, r2i1p1, r3i1p1], hadgem2_es: [r1i1p1, r2i1p1,
-        r3i1p1, r4i1p1], inmcm4: [r1i1p1], ipsl_cm5a_lr: [r1i1p1, r2i1p1, r3i1p1,
-        r4i1p1], ipsl_cm5a_mr: [r1i1p1], ipsl_cm5b_lr: [r1i1p1], miroc4h: [r1i1p1,
-        r2i1p1, r3i1p1], miroc5: [r1i1p1, r2i1p1, r3i1p1, r4i1p1, r5i1p1], miroc_esm: [
-        r1i1p1], miroc_esm_chem: [r1i1p1, r2i1p1, r3i1p1, r4i1p1, r5i1p1, r6i1p1,
-        r7i1p1, r8i1p1, r9i1p1], mpi_esm_lr: [r1i1p1, r2i1p1, r3i1p1], mpi_esm_mr: [
-        r1i1p1, r2i1p1, r3i1p1], mri_cgcm3: [r1i1p1], mri_esm1: [r1i1p1], noresm1_m: [
-        r1i1p1], noresm1_me: [r1i1p1]},
-     cmip6: {access_cm2: [r10i1p1f1, r1i1p1f1,
-        r2i1p1f1, r3i1p1f1, r4i1p1f1, r5i1p1f1, r6i1p1f1, r7i1p1f1, r8i1p1f1, r9i1p1f1],
-      awi_cm_1_1_mr: [r1i1p1f1, r2i1p1f1, r3i1p1f1, r4i1p1f1, r5i1p1f1], awi_esm_1_recom: [
-        r1i1p1f1], bcc_csm2_mr: [r1i1p1f1], bcc_esm1: [r1i1p1f1, r2i1p1f1, r3i1p1f1],
-      cams_csm1_0: [r1i1p1f1, r2i1p1f1], canesm5_1: [r10i1p1f1, r10i1p2f1, r1i1p1f1,
-        r1i1p2f1, r2i1p1f1, r2i1p2f1, r3i1p1f1, r3i1p2f1, r4i1p1f1, r4i1p2f1, r5i1p1f1,
-        r5i1p2f1, r6i1p1f1, r6i1p2f1, r7i1p1f1, r7i1p2f1, r8i1p1f1, r8i1p2f1, r9i1p1f1,
-        r9i1p2f1], canesm5_canoe: [r1i1p2f1, r2i1p2f1, r3i1p2f1], cas_esm2_0: [r1i1p1f1,
-        r3i1p1f1], cesm2: [r10i1p1f1, r11i1p1f1, r1i1p1f1, r2i1p1f1, r3i1p1f1, r4i1p1f1,
-        r5i1p1f1, r6i1p1f1], cesm2_waccm: [r1i1p1f1, r2i1p1f1, r3i1p1f1, r4i1p1f1,
-        r5i1p1f1], ciesm: [r1i1p1f1], cmcc_cm2_sr5: [r1i1p1f1], cmcc_esm2: [r1i1p1f1],
-      cnrm_cm6_1: [r10i1p1f2, r1i1p1f2, r2i1p1f2, r3i1p1f2, r4i1p1f2, r5i1p1f2, r6i1p1f2,
-        r7i1p1f2, r8i1p1f2, r9i1p1f2], cnrm_cm6_1_hr: [r1i1p1f2], cnrm_esm2_1: [r10i1p1f2,
-        r14i1p1f2, r15i1p1f2, r1i1p1f2, r2i1p1f2, r3i1p1f2, r4i1p1f2, r5i1p1f2, r6i1p1f2,
-        r7i1p1f2, r8i1p1f2, r9i1p1f2], e3sm_1_0: [r10i2p2f1, r11i2p2f1, r13i2p2f1,
-        r14i2p2f1, r15i2p2f1, r16i2p2f1, r17i2p2f1, r18i2p2f1, r1i1p1f1, r1i2p2f1,
-        r20i2p2f1, r2i1p1f1, r3i1p1f1, r3i2p2f1, r4i1p1f1, r4i2p2f1, r5i1p1f1, r7i2p2f1,
-        r8i2p2f1], e3sm_1_1: [r10i1p1f1, r1i1p1f1, r2i1p1f1, r3i1p1f1, r4i1p1f1, r5i1p1f1,
-        r6i1p1f1, r7i1p1f1, r8i1p1f1, r9i1p1f1], e3sm_1_1_eca: [r1i1p1f1], e3sm_2_0: [
-        r1i1p1f1], ec_earth3_aerchem: [r1i1p1f1, r3i1p1f1, r4i1p1f1], ec_earth3_cc: [
-        r10i1p1f1, r11i1p1f1, r12i1p1f1, r13i1p1f1, r1i1p1f1, r4i1p1f1, r6i1p1f1,
-        r7i1p1f1, r8i1p1f1, r9i1p1f1], ec_earth3_hr: [r1i1p1f1], ec_earth3_veg: [
-        r10i1p1f1, r12i1p1f1, r14i1p1f1, r2i1p1f1, r3i1p1f1, r4i1p1f1, r6i1p1f1],
-      ec_earth3_veg_lr: [r1i1p1f1, r2i1p1f1, r3i1p1f1], fgoals_f3_l: [r1i1p1f1], fgoals_g3: [
-        r1i1p1f1, r2i1p1f1, r3i1p1f1, r4i1p1f1, r5i1p1f1], fio_esm_2_0: [r1i1p1f1,
-        r2i1p1f1, r3i1p1f1], gfdl_cm4: [r1i1p1f1], gfdl_esm4: [r1i1p1f1, r2i1p1f1,
-        r3i1p1f1], giss_e2_1_g_cc: [r102i1p1f1], giss_e2_1_h: [r1i1p1f2, r1i1p3f1,
-        r2i1p1f2, r2i1p3f1, r3i1p1f2, r3i1p3f1, r4i1p1f2, r4i1p3f1, r5i1p1f2, r5i1p3f1],
-      giss_e2_2_g: [r1i1p3f1, r2i1p3f1, r3i1p3f1, r4i1p3f1, r5i1p3f1], hadgem3_gc31_ll: [
-        r1i1p1f3, r2i1p1f3, r3i1p1f3, r4i1p1f3], hadgem3_gc31_mm: [r1i1p1f3, r2i1p1f3,
-        r3i1p1f3, r4i1p1f3], iitm_esm: [r1i1p1f1], inm_cm4_8: [r1i1p1f1], inm_cm5_0: [
-        r1i1p1f1, r2i1p1f1, r3i1p1f1, r4i1p1f1, r5i1p1f1], ipsl_cm5a2_inca: [r1i1p1f1],
-      ipsl_cm6a_lr: [r10i1p1f1, r11i1p1f1, r14i1p1f1, r1i1p1f1, r22i1p1f1, r25i1p1f1,
-        r2i1p1f1, r33i1p1f1, r3i1p1f1, r4i1p1f1, r5i1p1f1, r6i1p1f1, r7i1p1f1, r8i1p1f1,
-        r9i1p1f1], kace_1_0_g: [r1i1p1f1, r2i1p1f1, r3i1p1f1], kiost_esm: [r1i1p1f1],
-      mcm_ua_1_0: [r1i1p1f2], miroc_es2l: [r10i1p1f2, r1i1p1f2, r2i1p1f2, r3i1p1f2,
-        r4i1p1f2, r5i1p1f2, r6i1p1f2, r7i1p1f2, r8i1p1f2, r9i1p1f2], mpi_esm1_2_hr: [
-        r1i1p1f1, r2i1p1f1], mri_esm2_0: [r1i1p1f1, r1i2p1f1, r1i3p1f1, r2i1p1f1,
-        r2i3p1f1, r3i1p1f1, r3i3p1f1, r4i1p1f1, r4i3p1f1, r5i1p1f1, r5i3p1f1], nesm3: [
-        r1i1p1f1, r2i1p1f1], noresm2_lm: [r10i1p1f2, r11i1p1f1, r1i1p1f1, r1i1p1f2,
-        r1i1p4f1, r2i1p1f1, r2i1p1f2, r3i1p1f1, r3i1p1f2, r4i1p1f2, r5i1p1f2, r6i1p1f2,
-        r7i1p1f2, r8i1p1f2, r9i1p1f2], noresm2_mm: [r1i1p1f1, r2i1p1f1], taiesm1: [
-        r1i1p1f1], ukesm1_0_ll: [r10i1p1f2, r11i1p1f2, r12i1p1f2, r13i1p1f2, r16i1p1f2,
-        r17i1p1f2, r18i1p1f2, r19i1p1f2, r1i1p1f2, r2i1p1f2, r3i1p1f2, r4i1p1f2, r5i1p1f2,
-        r6i1p1f2, r7i1p1f2, r8i1p1f2, r9i1p1f2]
+     cmip5: {access1_0: ["r1i1p1"], access1_3: ["r1i1p1"], bcc_csm1_1: ["r1i1p1"],
+      bcc_csm1_1_m: ["r1i1p1"], bnu_esm: ["r1i1p1"], cancm4: ["r10i1p1", "r1i1p1", "r2i1p1",
+        "r3i1p1", "r4i1p1", "r5i1p1", "r6i1p1", "r7i1p1", "r8i1p1", "r9i1p1"], canesm2: ["r1i1p1",
+        "r2i1p1", "r3i1p1", "r4i1p1", "r5i1p1"], ccsm4: ["r1i1p1", "r2i1p1", "r3i1p1", "r4i1p1", "r5i1p1",
+        "r6i1p1"], cesm1_bgc: ["r1i1p1"], cesm1_cam5: ["r1i1p1", "r2i1p1", "r3i1p1"], cesm1_cam5_1_fv2: [
+        "r1i1p1"], cesm1_waccm: ["r2i1p1", "r3i1p1", "r4i1p1"], cmcc_cesm: ["r1i1p1"], cmcc_cm: [
+        "r1i1p1"], cmcc_cms: ["r1i1p1"], cnrm_cm5: ["r10i1p1", "r1i1p1", "r2i1p1", "r4i1p1", "r6i1p1"],
+      csiro_mk3_6_0: ["r10i1p1", "r1i1p1", "r2i1p1", "r3i1p1", "r4i1p1", "r5i1p1", "r6i1p1", "r7i1p1",
+        "r8i1p1", "r9i1p1"], csiro_mk3l_1_2: ["r1i2p1", "r2i2p1", "r3i2p1"], ec_earth: ["r12i1p1",
+        "r13i1p1", "r1i1p1", "r2i1p1", "r6i1p1", "r7i1p1", "r8i1p1", "r9i1p1"], fgoals_g2: ["r1i1p1"],
+      fio_esm: ["r1i1p1", "r2i1p1", "r3i1p1"], gfdl_cm2p1: ["r10i1p1", "r1i1p1", "r2i1p1", "r3i1p1",
+        "r4i1p1", "r5i1p1", "r6i1p1", "r7i1p1", "r8i1p1", "r9i1p1"], gfdl_cm3: ["r1i1p1", "r3i1p1",
+        "r5i1p1"], gfdl_esm2g: ["r1i1p1"], gfdl_esm2m: ["r1i1p1"], giss_e2_h: ["r1i1p1", "r1i1p2",
+        "r1i1p3", "r2i1p1", "r2i1p3"], giss_e2_h_cc: ["r1i1p1"], giss_e2_r: ["r1i1p1", "r1i1p2",
+        "r1i1p3", "r2i1p1", "r2i1p3"], giss_e2_r_cc: ["r1i1p1"], hadcm3: ["r10i1p1", "r1i1p1",
+        "r2i1p1", "r3i1p1", "r4i1p1", "r5i1p1", "r6i1p1", "r7i1p1", "r8i1p1", "r9i1p1"], hadgem2_ao: [
+        "r1i1p1"], hadgem2_cc: ["r1i1p1", "r2i1p1", "r3i1p1"], hadgem2_es: ["r1i1p1", "r2i1p1",
+        "r3i1p1", "r4i1p1"], inmcm4: ["r1i1p1"], ipsl_cm5a_lr: ["r1i1p1", "r2i1p1", "r3i1p1",
+        "r4i1p1"], ipsl_cm5a_mr: ["r1i1p1"], ipsl_cm5b_lr: ["r1i1p1"], miroc4h: ["r1i1p1",
+        "r2i1p1", "r3i1p1"], miroc5: ["r1i1p1", "r2i1p1", "r3i1p1", "r4i1p1", "r5i1p1"], miroc_esm: [
+        "r1i1p1"], miroc_esm_chem: ["r1i1p1", "r2i1p1", "r3i1p1", "r4i1p1", "r5i1p1", "r6i1p1",
+        "r7i1p1", "r8i1p1", "r9i1p1"], mpi_esm_lr: ["r1i1p1", "r2i1p1", "r3i1p1"], mpi_esm_mr: [
+        "r1i1p1", "r2i1p1", "r3i1p1"], mri_cgcm3: ["r1i1p1"], mri_esm1: ["r1i1p1"], noresm1_m: [
+        "r1i1p1"], noresm1_me: ["r1i1p1"]},
+     cmip6: {access_cm2: ["r10i1p1f1", "r1i1p1f1",
+        "r2i1p1f1", "r3i1p1f1", "r4i1p1f1", "r5i1p1f1", "r6i1p1f1", "r7i1p1f1", "r8i1p1f1", "r9i1p1f1"],
+      awi_cm_1_1_mr: ["r1i1p1f1", "r2i1p1f1", "r3i1p1f1", "r4i1p1f1", "r5i1p1f1"], awi_esm_1_recom: [
+        "r1i1p1f1"], bcc_csm2_mr: ["r1i1p1f1"], bcc_esm1: ["r1i1p1f1", "r2i1p1f1", "r3i1p1f1"],
+      cams_csm1_0: ["r1i1p1f1", "r2i1p1f1"], canesm5_1: ["r10i1p1f1", "r10i1p2f1", "r1i1p1f1",
+        "r1i1p2f1", "r2i1p1f1", "r2i1p2f1", "r3i1p1f1", "r3i1p2f1", "r4i1p1f1", "r4i1p2f1", "r5i1p1f1",
+        "r5i1p2f1", "r6i1p1f1", "r6i1p2f1", "r7i1p1f1", "r7i1p2f1", "r8i1p1f1", "r8i1p2f1", "r9i1p1f1",
+        "r9i1p2f1"], canesm5_canoe: ["r1i1p2f1", "r2i1p2f1", "r3i1p2f1"], cas_esm2_0: ["r1i1p1f1",
+        "r3i1p1f1"], cesm2: ["r10i1p1f1", "r11i1p1f1", "r1i1p1f1", "r2i1p1f1", "r3i1p1f1", "r4i1p1f1",
+        "r5i1p1f1", "r6i1p1f1"], cesm2_waccm: ["r1i1p1f1", "r2i1p1f1", "r3i1p1f1", "r4i1p1f1",
+        "r5i1p1f1"], ciesm: ["r1i1p1f1"], cmcc_cm2_sr5: ["r1i1p1f1"], cmcc_esm2: ["r1i1p1f1"],
+      cnrm_cm6_1: ["r10i1p1f2", "r1i1p1f2", "r2i1p1f2", "r3i1p1f2", "r4i1p1f2", "r5i1p1f2", "r6i1p1f2",
+        "r7i1p1f2", "r8i1p1f2", "r9i1p1f2"], cnrm_cm6_1_hr: ["r1i1p1f2"], cnrm_esm2_1: ["r10i1p1f2",
+        "r14i1p1f2", "r15i1p1f2", "r1i1p1f2", "r2i1p1f2", "r3i1p1f2", "r4i1p1f2", "r5i1p1f2", "r6i1p1f2",
+        "r7i1p1f2", "r8i1p1f2", "r9i1p1f2"], e3sm_1_0: ["r10i2p2f1", "r11i2p2f1", "r13i2p2f1",
+        "r14i2p2f1", "r15i2p2f1", "r16i2p2f1", "r17i2p2f1", "r18i2p2f1", "r1i1p1f1", "r1i2p2f1",
+        "r20i2p2f1", "r2i1p1f1", "r3i1p1f1", "r3i2p2f1", "r4i1p1f1", "r4i2p2f1", "r5i1p1f1", "r7i2p2f1",
+        "r8i2p2f1"], e3sm_1_1: ["r10i1p1f1", "r1i1p1f1", "r2i1p1f1", "r3i1p1f1", "r4i1p1f1", "r5i1p1f1",
+        "r6i1p1f1", "r7i1p1f1", "r8i1p1f1", "r9i1p1f1"], e3sm_1_1_eca: ["r1i1p1f1"], e3sm_2_0: [
+        "r1i1p1f1"], ec_earth3_aerchem: ["r1i1p1f1", "r3i1p1f1", "r4i1p1f1"], ec_earth3_cc: [
+        "r10i1p1f1", "r11i1p1f1", "r12i1p1f1", "r13i1p1f1", "r1i1p1f1", "r4i1p1f1", "r6i1p1f1",
+        "r7i1p1f1", "r8i1p1f1", "r9i1p1f1"], ec_earth3_hr: ["r1i1p1f1"], ec_earth3_veg: [
+        "r10i1p1f1", "r12i1p1f1", "r14i1p1f1", "r2i1p1f1", "r3i1p1f1", "r4i1p1f1", "r6i1p1f1"],
+      ec_earth3_veg_lr: ["r1i1p1f1", "r2i1p1f1", "r3i1p1f1"], fgoals_f3_l: ["r1i1p1f1"], fgoals_g3: [
+        "r1i1p1f1", "r2i1p1f1", "r3i1p1f1", "r4i1p1f1", "r5i1p1f1"], fio_esm_2_0: ["r1i1p1f1",
+        "r2i1p1f1", "r3i1p1f1"], gfdl_cm4: ["r1i1p1f1"], gfdl_esm4: ["r1i1p1f1", "r2i1p1f1",
+        "r3i1p1f1"], giss_e2_1_g_cc: ["r102i1p1f1"], giss_e2_1_h: ["r1i1p1f2", "r1i1p3f1",
+        "r2i1p1f2", "r2i1p3f1", "r3i1p1f2", "r3i1p3f1", "r4i1p1f2", "r4i1p3f1", "r5i1p1f2", "r5i1p3f1"],
+      giss_e2_2_g: ["r1i1p3f1", "r2i1p3f1", "r3i1p3f1", "r4i1p3f1", "r5i1p3f1"], hadgem3_gc31_ll: [
+        "r1i1p1f3", "r2i1p1f3", "r3i1p1f3", "r4i1p1f3"], hadgem3_gc31_mm: ["r1i1p1f3", "r2i1p1f3",
+        "r3i1p1f3", "r4i1p1f3"], iitm_esm: ["r1i1p1f1"], inm_cm4_8: ["r1i1p1f1"], inm_cm5_0: [
+        "r1i1p1f1", "r2i1p1f1", "r3i1p1f1", "r4i1p1f1", "r5i1p1f1"], ipsl_cm5a2_inca: ["r1i1p1f1"],
+      ipsl_cm6a_lr: ["r10i1p1f1", "r11i1p1f1", "r14i1p1f1", "r1i1p1f1", "r22i1p1f1", "r25i1p1f1",
+        "r2i1p1f1", "r33i1p1f1", "r3i1p1f1", "r4i1p1f1", "r5i1p1f1", "r6i1p1f1", "r7i1p1f1", "r8i1p1f1",
+        "r9i1p1f1"], kace_1_0_g: ["r1i1p1f1", "r2i1p1f1", "r3i1p1f1"], kiost_esm: ["r1i1p1f1"],
+      mcm_ua_1_0: ["r1i1p1f2"], miroc_es2l: ["r10i1p1f2", "r1i1p1f2", "r2i1p1f2", "r3i1p1f2",
+        "r4i1p1f2", "r5i1p1f2", "r6i1p1f2", "r7i1p1f2", "r8i1p1f2", "r9i1p1f2"], mpi_esm1_2_hr: [
+        "r1i1p1f1", "r2i1p1f1"], mri_esm2_0: ["r1i1p1f1", "r1i2p1f1", "r1i3p1f1", "r2i1p1f1",
+        "r2i3p1f1", "r3i1p1f1", "r3i3p1f1", "r4i1p1f1", "r4i3p1f1", "r5i1p1f1", "r5i3p1f1"], nesm3: [
+        "r1i1p1f1", "r2i1p1f1"], noresm2_lm: ["r10i1p1f2", "r11i1p1f1", "r1i1p1f1", "r1i1p1f2",
+        "r1i1p4f1", "r2i1p1f1", "r2i1p1f2", "r3i1p1f1", "r3i1p1f2", "r4i1p1f2", "r5i1p1f2", "r6i1p1f2",
+        "r7i1p1f2", "r8i1p1f2", "r9i1p1f2"], noresm2_mm: ["r1i1p1f1", "r2i1p1f1"], taiesm1: [
+        "r1i1p1f1"], ukesm1_0_ll: ["r10i1p1f2", "r11i1p1f2", "r12i1p1f2", "r13i1p1f2", "r16i1p1f2",
+        "r17i1p1f2", "r18i1p1f2", "r19i1p1f2", "r1i1p1f2", "r2i1p1f2", "r3i1p1f2", "r4i1p1f2", "r5i1p1f2",
+        "r6i1p1f2", "r7i1p1f2", "r8i1p1f2", "r9i1p1f2"]
      }
    }
 };

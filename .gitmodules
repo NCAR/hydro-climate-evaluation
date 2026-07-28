@@ -1,7 +1,8 @@
 [submodule "maps"]
 	path = maps
 	url = git@github.com:NCAR/carbonplan-maps.git
-        branch = icar-maps
+        branch = maps-pre-3.6.0
 [submodule "colormaps"]
 	path = colormaps
 	url = git@github.com:NCAR/carbonplan-colormaps.git
+	branch = maps-pre-3.6.0
