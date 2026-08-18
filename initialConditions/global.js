@@ -111,22 +111,21 @@ export const settings = {
     '1850_2005': '1850-2005',
   },
   past_eras_cmip5: {
-    '1850_2005': '1850-2005',
+    '1850_2005': 'Historical (1850-2005)',
   },
   past_eras_cmip6: {
-    '1850_2005': '1850-2014'
+    '1850_2005': 'Historical (1850-2014)'
   },
   future_eras: {
     '':''
   },
   future_eras_cmip5: {
-    'rcp45':'RCP45',
-    'rcp85':'RCP85',
+    'rcp45':'RCP4.5',
+    'rcp85':'RCP8.5',
   },
   future_eras_cmip6: {
-    'ssp245':'SSP245',
-    'ssp370':'SSP370',
-    'ssp585':'SSP585',
+    'ssp245':'SSP2-4.5',
+    'ssp370':'SSP3-7.0',
   },
 
   downscaling_title: "CMIP",

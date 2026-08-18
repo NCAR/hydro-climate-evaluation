@@ -610,19 +610,22 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setUrl(baseDir, downscalingDif, modelDif, yearRangeDif, ensemble, dif);
   });
 
+  const getEraOptions = (cmip, past = true, future = true) => ({
+    ...(past ? settings[`past_eras_${cmip}`] ?? {} : {}),
+    ...(future ? settings[`future_eras_${cmip}`] ?? {} : {}),
+  });
+
+  const getSafeYearRange = (cmip, currentYearRange) => {
+    const options = Object.keys(getEraOptions(cmip));
+    return options.includes(currentYearRange)
+      ? currentYearRange
+      : options[0] ?? '';
+  };
+
   const handleDownscalingChange = useCallback((e) => {
     const downscaling = e.target.value;
     setDownscaling(downscaling);
-    const eraOptions = downscaling === 'cmip5'
-      ? { ...settings.past_eras_cmip5, ...settings.future_eras_cmip5 }
-      : { ...settings.past_eras_cmip6, ...settings.future_eras_cmip6 };
-    const safeYearRange = Object.keys(eraOptions).includes(yearRange)
-      ? yearRange
-      : Object.keys(
-          downscaling === 'cmip5'
-            ? settings.future_eras_cmip5
-            : settings.future_eras_cmip6
-        )[0];
+    const safeYearRange = getSafeYearRange(downscaling, yearRange);
     const safe_model = checkDownscalingModel(downscaling);
     setYearRange(safeYearRange);
     setModel(safe_model);
@@ -631,10 +634,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const handleDownscalingDifChange = useCallback((e) => {
     const downscalingDif = e.target.value;
     setDownscalingDif(downscalingDif);
+    const safeYearRangeDif = getSafeYearRange(downscalingDif, yearRangeDif);
     let safe_modelDif = checkDownscalingModel(downscalingDif, true);
     let safe_ensembleDif = checkModelEnsemble(safe_modelDif, downscalingDif);
+    setYearRangeDif(safeYearRangeDif);
     setModelDif(safe_modelDif);
-    setUrl(baseDir, downscalingDif, safe_modelDif, yearRangeDif,
+    setUrl(baseDir, downscalingDif, safe_modelDif, safeYearRangeDif,
            safe_ensembleDif, dif_t);
   });
 
@@ -644,9 +649,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       return ens;
     }
 
-    const ensList = settings.ensemble[downscaling][model];
+    const ensList = settings.ensemble?.[downscaling]?.[model] ?? [];
     if (!ensList.includes(ens)) {
-      ens = ensList[0];
+      ens = ensList[0] ?? ens;
       setEnsemble(ens);
     }
     return ens;
@@ -680,7 +685,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
   function checkDownscalingModel(downscaling, dif=false) {
-    let mod = model
+    let mod = dif ? modelDif : model
     if (!mod) {
       return mod;
     }
@@ -1643,19 +1648,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     const cmip = downscaling_l;
     console.log("this cmip =", cmip);
 
-    let options = {'':''}
-    if (cmip == 'cmip5') {
-      options = {
-        ...(past ? settings.past_eras_cmip5 : {}),
-        ...(future ? settings.future_eras_cmip5 : {}),
-      };
-    } else if (cmip == 'cmip6') {
-      options = {
-        ...(past ? settings.past_eras_cmip6 : {}),
-        ...(future ? settings.future_eras_cmip6 : {}),
-      };
-
-    }
+    const options = getEraOptions(cmip, past, future);
 
     return(
       <>
