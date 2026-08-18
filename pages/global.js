@@ -103,7 +103,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     {'Low': true,
      'High': false});
 
-  const  [ensemble, setEnsemble] = useState('r1i1p1');
+  const [ensemble, setEnsemble] = useState('r1i1p1');
   // const [yearRange, setYearRange] = useState('1980_2010')
   const [yearRange, setYearRange] = useState('1850_2005');
   // diff dataset variables for model to compare against
@@ -111,6 +111,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [downscalingDif, setDownscalingDif] = useState('cmip5');
   const [modelDif, setModelDif] = useState('canesm2');
   const [yearRangeDif, setYearRangeDif] = useState('1850_2005');
+  const [ensembleDif, setEnsembleDif] = useState('r1i1p1');
   const [region, setRegion] = useState('global');
 // console.log("region =", region, "setRegion =", setRegion);
   const [obs, setObs] = useState('cru');
@@ -156,7 +157,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
                     bucket, chartHeight, computeChoice,
                     showClimateChange, showRegionPlot, bucketRes,
                     showStates, showRivers, showHuc2, sideBySide, mapVal,
-                    ensemble, region};
+                    ensemble, ensembleDif, region};
   const setters = {
     setDisplay,
     setReload,
@@ -192,6 +193,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
     setHuc2,
     setSideBySide,
     setEnsemble,
+    setEnsembleDif,
     setRegion
   };
 

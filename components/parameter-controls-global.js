@@ -64,7 +64,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           chartHeight, computeChoice,
           showClimateChange, showRegionPlot, bucketRes,
           showStates, showRivers, showHuc2, sideBySide, mapVal, ensemble,
-          region
+          ensembleDif, region
         } = getters;
   const {
     setDisplay,
@@ -100,6 +100,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setHuc2,
     setSideBySide,
     setEnsemble,
+    setEnsembleDif,
     setRegion,
   } = setters;
 
@@ -128,6 +129,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   // set to combstd
   const [scheme, setScheme] =  useState('combstd');
   const [availableEnsembles, setAvailableEnsembles] = useState([]);
+  const [availableEnsemblesDif, setAvailableEnsemblesDif] = useState([]);
 
   useEffect(() => {
     console.log("BAR: ------------------------------------");
@@ -295,6 +297,58 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       cancelled = true;
     };
   }, [downscaling, model, yearRange]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function updateAvailableEnsemblesDif() {
+      setAvailableEnsemblesDif([]);
+      const candidates = settings.ensemble?.[downscalingDif]?.[modelDif] ?? [];
+      const checks = await Promise.all(
+        candidates.map(async (ens) => ({
+          ens,
+          exists: await ensembleExists(
+            downscalingDif,
+            modelDif,
+            yearRangeDif,
+            ens
+          ),
+        }))
+      );
+
+      if (cancelled) return;
+
+      const available = checks
+        .filter(({ exists }) => exists)
+        .map(({ ens }) => ens);
+
+      setAvailableEnsemblesDif(available);
+
+      if (available.length > 0) {
+        const safeEnsemble = available.includes(ensembleDif)
+          ? ensembleDif
+          : available[0];
+
+        if (safeEnsemble !== ensembleDif) {
+          setEnsembleDif(safeEnsemble);
+        }
+        setUrl(
+          baseDir,
+          downscalingDif,
+          modelDif,
+          yearRangeDif,
+          safeEnsemble,
+          dif_true
+        );
+      }
+    }
+
+    updateAvailableEnsemblesDif();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [downscalingDif, modelDif, yearRangeDif]);
 
   const [rcpValues, setRCPValues] = useState({'4.5': true,
                                               '8.5': false});
@@ -593,10 +647,22 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
 
-  const handleEnsembleChange = useCallback((e) => {
-    let ensemble = e.target.value;
-    setEnsemble(ensemble);
-    setUrl(baseDir, downscaling, model, yearRange, ensemble);
+  const handleEnsembleChange = useCallback((e, dif = false) => {
+    const selectedEnsemble = e.target.value;
+    if (dif) {
+      setEnsembleDif(selectedEnsemble);
+      setUrl(
+        baseDir,
+        downscalingDif,
+        modelDif,
+        yearRangeDif,
+        selectedEnsemble,
+        dif_true
+      );
+    } else {
+      setEnsemble(selectedEnsemble);
+      setUrl(baseDir, downscaling, model, yearRange, selectedEnsemble);
+    }
   });
 
   const handleYearChange = useCallback((e) => {
@@ -604,10 +670,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   });
 
   const handleYearDifChange = useCallback((e) => {
-    let yearRangeDif = e.target.value;
-    const dif = true
-    setYearRangeDif(yearRangeDif);
-    setUrl(baseDir, downscalingDif, modelDif, yearRangeDif, ensemble, dif);
+    setYearRangeDif(e.target.value);
   });
 
   const getEraOptions = (cmip, past = true, future = true) => ({
@@ -636,26 +699,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setDownscalingDif(downscalingDif);
     const safeYearRangeDif = getSafeYearRange(downscalingDif, yearRangeDif);
     let safe_modelDif = checkDownscalingModel(downscalingDif, true);
-    let safe_ensembleDif = checkModelEnsemble(safe_modelDif, downscalingDif);
     setYearRangeDif(safeYearRangeDif);
     setModelDif(safe_modelDif);
-    setUrl(baseDir, downscalingDif, safe_modelDif, safeYearRangeDif,
-           safe_ensembleDif, dif_t);
   });
-
-  function checkModelEnsemble(model, downscaling) {
-    let ens = ensemble;
-    if (!ens) {
-      return ens;
-    }
-
-    const ensList = settings.ensemble?.[downscaling]?.[model] ?? [];
-    if (!ensList.includes(ens)) {
-      ens = ensList[0] ?? ens;
-      setEnsemble(ens);
-    }
-    return ens;
-  }
 
   function checkDownscaling(computeChoice) {
     let ds = downscaling
@@ -1025,7 +1071,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   // difference options
   useEffect(() => {
     if (difObsOrDataChoice2['Model']) {
-      setUrl(baseDir, downscalingDif, modelDif, yearRangeDif, ensemble, dif_true);
+      setUrl(baseDir, downscalingDif, modelDif, yearRangeDif, ensembleDif, dif_true);
     } else {
       const yearRangeDif = Object.keys(settings.past_eras)[0];
       setYearRangeDif(yearRangeDif);
@@ -1057,7 +1103,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       // setMapSourceDif(url);
 
     }
-    setUrl(baseDir, downscalingDif, modelDif, yearRangeDif, ensemble, dif_t, choice);
+    setUrl(baseDir, downscalingDif, modelDif, yearRangeDif, ensembleDif, dif_t, choice);
   });
 
 
@@ -1194,10 +1240,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
 
   const handleModelDifChange = useCallback((e) => {
-    const modelDif = e.target.value;
-    const dif = true
-    setModelDif(modelDif);
-    setUrl(baseDir, downscalingDif, modelDif, yearRangeDif, ensemble, dif);
+    setModelDif(e.target.value);
   });
 
 
@@ -1671,20 +1714,23 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
-  const EnsembleBox = () => {
+  const EnsembleBox = ({ dif = false }) => {
+    const options = dif ? availableEnsemblesDif : availableEnsembles;
+    const value = dif ? ensembleDif : ensemble;
+
     return(
       <>
       <Box sx={{ ...sx.label, mt: [3] }}>Ensemble</Box>
       <Select
           sxSelect={{ bg: 'transparent' }}
           size='xs'
-          onChange={handleEnsembleChange}
+          onChange={(e) => handleEnsembleChange(e, dif)}
           sx={{ mt: [1] }}
-          value={availableEnsembles.includes(ensemble) ? ensemble : ''}
-          disabled={availableEnsembles.length === 0}
+          value={options.includes(value) ? value : ''}
+          disabled={options.length === 0}
        >
 
-       {availableEnsembles.map(ens => (
+       {options.map(ens => (
           <option key={ens} value={ens}>
           {ens}
         </option>
@@ -1722,10 +1768,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         ? settings.downscaling_past
         : settings.downscaling_future;
 
-      model_d = settings.model[downscaling];
+      model_d = settings.model[downscalingVar];
     } else {
       downscaling_d = settings.downscaling_climateSignal;
-      model_d = settings.model_climateSignal[downscaling];
+      model_d = settings.model_climateSignal[downscalingVar];
       // console.log("DD=",downscaling_d);
       // console.log("MD=",model_d);
       // console.log("downscaling", downscaling)
@@ -1770,7 +1816,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         ))}
       </Select>
 
-      {settings.ensemble !== null && <EnsembleBox />}
+      {settings.ensemble !== null && <EnsembleBox dif={dif} />}
 
       <VariableChoiceBox climateSignal={computeChoice['Climate Signal']} />
       {/*(!computeChoice['Climate Signal'] && showMetricLabel)
