@@ -117,6 +117,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   // const [metricRegion, setMetricRegion] = useState('desertsouthwest');
 
   const [baseDir, setBaseDir] = useState('map/');
+  const [aveChoice, setAveChoice] = useState(() =>
+    settings.observation
+      ? { 'Modeling': true, 'Observation': false }
+      : { 'Modeling': true }
+  );
 
 
   const schemeLabels = {
@@ -162,14 +167,14 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     let time = getYearRangeString(yearRange);
     if (settings.obs_eras !== undefined) {
       time = 'hist.'+settings.obs_eras;
-      setYearRange(time);
     }
 
+    const obsBase = `${bucket.replace(/\/+$/, '')}/obs`;
     let url;
     if (region_l == null) {
-      url= `${bucket}/obs/${obs}/${time}/${fname}`;
+      url= `${obsBase}/${obs}/${time}/${fname}`;
     } else {
-      url= `${bucket}/obs/${region_l}/${obs}/${time}/${fname}`;
+      url= `${obsBase}/${region_l}/${obs}/${time}/${fname}`;
     }
 
     if (dif) {
@@ -254,6 +259,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
   useEffect(() => {
+    if (!aveChoice['Modeling']) {
+      setAvailableEnsembles([]);
+      return;
+    }
+
     let cancelled = false;
 
     async function updateAvailableEnsembles() {
@@ -296,7 +306,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     return () => {
       cancelled = true;
     };
-  }, [downscaling, model, yearRange]);
+  }, [downscaling, model, yearRange, aveChoice]);
 
   useEffect(() => {
     let cancelled = false;
@@ -909,14 +919,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const [topCombination2, setTopCombination2] = useState("None");
   const [topDownscaling2, setTopDownscaling2] = useState("None");
   const [topModel2, setTopModel2] = useState("None");
-
-  let aveChoice = null;
-  let setAveChoice = null;
-  if (settings.observation) {
-    [aveChoice, setAveChoice] = useState({ 'Modeling': true, 'Observation': false, });
-  } else {
-    [aveChoice, setAveChoice] = useState({ 'Modeling': true });
-  }
 
   // const [metricPerformance, setMetricPerformance] = //useState(true);
   //         useState({ "Metric Performance": false });
