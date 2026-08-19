@@ -12,6 +12,7 @@ import {options, linedata, linedata_stub} from '../components/plot-line';
 import { Line as LineCJS } from 'react-chartjs-2';
 import Charts from '../components/charts';
 import ErrorBoundary from '../components/ErrorBoundary';
+import ClickableNcaRegions from '../components/ClickableNcaRegions';
 // import MetricControls from '../components/metric-controls'
 // import { NetCDFReader } from "netcdfjs";
 
@@ -307,6 +308,8 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
       regionOptions={{ setData: setRegionData }}
       zoomArgs={zoomArgs}
     />
+
+    <ClickableNcaRegions />
 
     {/*
     <RegionPlot
