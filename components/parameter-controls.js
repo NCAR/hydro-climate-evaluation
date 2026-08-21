@@ -53,6 +53,54 @@ const sx = {
   },
 };
 
+const cmip6MetricSettings = {
+  'pr_gev-20yr': {
+    band: 'g_20', units: 'mm', description: ['Precipitation GEV', '20-year return level'],
+  },
+  'pr_gev-50yr': {
+    band: 'g_50', units: 'mm', description: ['Precipitation GEV', '50-year return level'],
+  },
+  'pr_gev-100yr': {
+    band: 'g100', units: 'mm', description: ['Precipitation GEV', '100-year return level'],
+  },
+  'djf_t_iav': {
+    band: 'djti', units: '°C', description: ['DJF temperature', 'interannual variability'],
+  },
+  'mam_t_iav': {
+    band: 'mati', units: '°C', description: ['MAM temperature', 'interannual variability'],
+  },
+  'jja_t_iav': {
+    band: 'jjti', units: '°C', description: ['JJA temperature', 'interannual variability'],
+  },
+  'son_t_iav': {
+    band: 'soti', units: '°C', description: ['SON temperature', 'interannual variability'],
+  },
+  'ann_t_iav': {
+    band: 'anti', units: '°C', description: ['Annual temperature', 'interannual variability'],
+  },
+  'djf_p_iav': {
+    band: 'djpi', units: 'mm', description: ['DJF precipitation', 'interannual variability'],
+  },
+  'mam_p_iav': {
+    band: 'mapi', units: 'mm', description: ['MAM precipitation', 'interannual variability'],
+  },
+  'jja_p_iav': {
+    band: 'jjpi', units: 'mm', description: ['JJA precipitation', 'interannual variability'],
+  },
+  'son_p_iav': {
+    band: 'sopi', units: 'mm', description: ['SON precipitation', 'interannual variability'],
+  },
+  'ann_p_iav': {
+    band: 'anpi', units: 'mm', description: ['Annual precipitation', 'interannual variability'],
+  },
+  'ann_snow_iav': {
+    band: 'ansi', units: 'mm', description: ['Annual snow accumulation', 'interannual variability'],
+  },
+  'wet_day_frac': {
+    band: 'wdfr', units: 'fraction', description: ['Wet-day fraction', 'days with precipitation'],
+  },
+};
+
 const dif_t = true;
 
 const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
@@ -118,6 +166,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const [baseDir, setBaseDir] = useState('map/');
   const [cmip, setCmip] = useState('cmip5');
   const [scenario, setScenario] = useState('rcp45');
+  const [cmipDif, setCmipDif] = useState('cmip5');
+  const [scenarioDif, setScenarioDif] = useState('rcp45');
 
 
   const schemeLabels = {
@@ -138,8 +188,16 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
 
   function setUrl(baseDir, downscaling, model, yearRange, ensemble, dif=false,
-                  scenarioValue=null, cmipValue=cmip) {
-    const time = getYearRangeString(yearRange, scenarioValue, cmipValue);
+                  scenarioValue=null, cmipValue=null) {
+    const selectedCmip = cmipValue ?? (dif ? cmipDif : cmip);
+    const configuredScenario = dif ? scenarioDif : scenario;
+    const selectedScenario = scenarioValue
+      ?? (isConfiguredEra(yearRange, selectedCmip) ? configuredScenario : null);
+    const time = getYearRangeString(
+      yearRange,
+      selectedScenario,
+      selectedCmip
+    );
     const ensemblePath = ensemble ? `${ensemble}/` : '';
     const url = `${bucket}${baseDir}${downscaling}/${model}/${time}/${ensemblePath}${fname}`;
     if (dif) {
@@ -275,6 +333,93 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     return Object.keys(settings.past_eras).includes(yearRangeValue);
   };
 
+  const getScenarioForYear = (
+    nextYearRange,
+    previousYearRange,
+    cmipValue,
+    currentScenario
+  ) => {
+    if (cmipValue !== 'cmip6') {
+      return currentScenario;
+    }
+    if (isPastEra(nextYearRange, cmipValue)) {
+      return 'ssp370';
+    }
+    if (isPastEra(previousYearRange, cmipValue)) {
+      return Object.keys(settings.scenarios?.cmip6 ?? {})[0]
+        ?? currentScenario;
+    }
+    return currentScenario;
+  };
+
+  const getDefaultCmipSelection = (cmipValue) => {
+    const yearRangeValue = Object.keys(settings.eras?.[cmipValue] ?? {})[0]
+      ?? Object.keys(settings.past_eras)[0];
+    const scenarioValue = cmipValue === 'cmip6' && isPastEra(
+      yearRangeValue,
+      cmipValue
+    )
+      ? 'ssp370'
+      : Object.keys(settings.scenarios?.[cmipValue] ?? {})[0];
+    const downscalingGroups = isPastEra(yearRangeValue, cmipValue)
+      ? settings.downscaling_past
+      : settings.downscaling_future;
+    const downscalingValue = Object.keys(
+      downscalingGroups?.[cmipValue] ?? {}
+    )[0];
+    const modelValue = Object.keys(
+      settings.model?.[downscalingValue] ?? {}
+    )[0];
+
+    return {
+      yearRange: yearRangeValue,
+      scenario: scenarioValue,
+      downscaling: downscalingValue,
+      model: modelValue,
+    };
+  };
+
+  const getCmipVariables = (cmipValue) => {
+    if (Array.isArray(settings.variables)) {
+      return settings.variables;
+    }
+    return settings.variables?.[cmipValue] ?? [];
+  };
+
+  const getVariableOptions = ({
+    cmipA=cmip,
+    cmipB=cmipDif,
+    observation=false,
+    climateSignal=false,
+    computeChoiceValue=computeChoice,
+    datasetAChoice=difObsOrDataChoice1,
+    datasetBChoice=difObsOrDataChoice2,
+  }={}) => {
+    let variables;
+
+    if (climateSignal || computeChoiceValue['Climate Signal']) {
+      variables = getCmipVariables('cmip5');
+    } else if (observation) {
+      variables = getCmipVariables('cmip5');
+    } else if (computeChoiceValue['Dif.']) {
+      const variablesA = datasetAChoice['Model']
+        ? getCmipVariables(cmipA)
+        : getCmipVariables('cmip5');
+      const variablesB = datasetBChoice['Model']
+        ? getCmipVariables(cmipB)
+        : getCmipVariables('cmip5');
+      const variablesBSet = new Set(variablesB);
+      variables = variablesA.filter((variable) => variablesBSet.has(variable));
+    } else {
+      variables = getCmipVariables(cmipA);
+    }
+
+    return [...new Set([
+      ...variables,
+      ...(climateSignal ? [] : settings.variables_trend),
+    ])];
+  };
+
   const [rcpValues, setRCPValues] = useState({'4.5': true,
                                               '8.5': false});
 
@@ -291,7 +436,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     let link = 'https://github.com/NCAR/hydro-climate-evaluation?readme-ov-file#metrics';
     let label = 'n34pr';
     let description  = ['further description'];
-    if (metric === 'n34pr') {
+    if (cmip6MetricSettings[metric]) {
+      label = metric;
+      description = cmip6MetricSettings[metric].description;
+    } else if (metric === 'n34pr') {
       label = 'n34pr';
       description =
             ['Niño3.4 precipitation',
@@ -580,15 +728,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   const handleYearChange = useCallback((e) => {
     const nextYearRange = e.target.value;
-    let nextScenario = scenario;
-    if (cmip === 'cmip6') {
-      if (isPastEra(nextYearRange)) {
-        nextScenario = 'ssp370';
-      } else if (isPastEra(yearRange)) {
-        nextScenario = Object.keys(settings.scenarios?.cmip6 ?? {})[0]
-          ?? scenario;
-      }
-    }
+    const nextScenario = getScenarioForYear(
+      nextYearRange,
+      yearRange,
+      cmip,
+      scenario
+    );
 
     setYearRange(nextYearRange);
     setScenario(nextScenario);
@@ -604,49 +749,64 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   });
 
   const handleYearDifChange = useCallback((e) => {
-    let yearRangeDif = e.target.value;
-    const dif = true
-    setYearRangeDif(yearRangeDif);
-    setUrl(baseDir, downscalingDif, modelDif, yearRangeDif, ensemble, dif);
+    const nextYearRange = e.target.value;
+    const nextScenario = getScenarioForYear(
+      nextYearRange,
+      yearRangeDif,
+      cmipDif,
+      scenarioDif
+    );
+
+    setYearRangeDif(nextYearRange);
+    setScenarioDif(nextScenario);
+    setUrl(
+      baseDir,
+      downscalingDif,
+      modelDif,
+      nextYearRange,
+      ensemble,
+      dif_true,
+      nextScenario
+    );
   });
 
-  const handleCmipChange = useCallback((e) => {
+  const handleCmipChange = useCallback((e, dif=false) => {
     const nextCmip = e.target.value;
-    const nextYearRange = Object.keys(settings.eras?.[nextCmip] ?? {})[0]
-      ?? Object.keys(settings.past_eras)[0];
-    const nextScenario = nextCmip === 'cmip6' && isPastEra(
-      nextYearRange,
-      nextCmip
-    )
-      ? 'ssp370'
-      : Object.keys(settings.scenarios?.[nextCmip] ?? {})[0];
-    const downscalingGroups = isPastEra(nextYearRange, nextCmip)
-      ? settings.downscaling_past
-      : settings.downscaling_future;
-    const nextDownscaling = Object.keys(
-      downscalingGroups?.[nextCmip] ?? {}
-    )[0];
-    const nextModel = Object.keys(
-      settings.model?.[nextDownscaling] ?? {}
-    )[0];
+    const next = getDefaultCmipSelection(nextCmip);
+    const variableOptions = getVariableOptions({
+      cmipA: dif ? cmip : nextCmip,
+      cmipB: dif ? nextCmip : cmipDif,
+    });
 
-    setCmip(nextCmip);
-    setYearRange(nextYearRange);
-    setScenario(nextScenario);
+    if (dif) {
+      setCmipDif(nextCmip);
+      setYearRangeDif(next.yearRange);
+      setScenarioDif(next.scenario);
+      setDownscalingDif(next.downscaling);
+      setModelDif(next.model);
+    } else {
+      setCmip(nextCmip);
+      setYearRange(next.yearRange);
+      setScenario(next.scenario);
+      setDownscaling(next.downscaling);
+      setModel(next.model);
+    }
 
-    if (nextDownscaling && nextModel) {
-      setDownscaling(nextDownscaling);
-      setModel(nextModel);
+    if (next.downscaling && next.model) {
       setUrl(
         baseDir,
-        nextDownscaling,
-        nextModel,
-        nextYearRange,
+        next.downscaling,
+        next.model,
+        next.yearRange,
         ensemble,
-        false,
-        nextScenario,
+        dif,
+        next.scenario,
         nextCmip
       );
+    }
+
+    if (!variableOptions.includes(metric) && variableOptions.length > 0) {
+      handleMetricsChange({ target: { value: variableOptions[0] } });
     }
   });
 
@@ -712,7 +872,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
   function checkDownscalingModel(downscaling, dif=false) {
-    let mod = model
+    let mod = dif ? modelDif : model
     if (!mod) {
       return mod;
     }
@@ -757,7 +917,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setMetric(metric);
     console.log("metric e =", e.target.value);
 
-    if (metric === 'n34pr') {
+    if (cmip6MetricSettings[metric]) {
+      setBand(cmip6MetricSettings[metric].band);
+      setUnits(cmip6MetricSettings[metric].units);
+    } else if (metric === 'n34pr') {
       setBand('n34p');
       setUnits('correlation');
     } else if (metric === 'n34t') {
@@ -914,6 +1077,26 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           useState({ "Model": true, "Observation": false });
           // useState({ "Model": false, "Observation": true });
 
+  const handleDatasetATypeChange = useCallback((nextChoice) => {
+    const variableOptions = getVariableOptions({
+      datasetAChoice: nextChoice,
+    });
+    if (!variableOptions.includes(metric) && variableOptions.length > 0) {
+      handleMetricsChange({ target: { value: variableOptions[0] } });
+    }
+    setObsOrDataChoice1(nextChoice);
+  });
+
+  const handleDatasetBTypeChange = useCallback((nextChoice) => {
+    const variableOptions = getVariableOptions({
+      datasetBChoice: nextChoice,
+    });
+    if (!variableOptions.includes(metric) && variableOptions.length > 0) {
+      handleMetricsChange({ target: { value: variableOptions[0] } });
+    }
+    setObsOrDataChoice2(nextChoice);
+  });
+
 
   const [metrics, setMetrics] = useState({ all: true, clear: false});
 
@@ -1043,7 +1226,25 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   useEffect(() => {
     if (difObsOrDataChoice1['Model']) {
-      setUrl(baseDir, downscaling, model, yearRange, ensemble);
+      if (isConfiguredEra(yearRange, cmip)) {
+        setUrl(baseDir, downscaling, model, yearRange, ensemble);
+      } else {
+        const next = getDefaultCmipSelection(cmip);
+        setYearRange(next.yearRange);
+        setScenario(next.scenario);
+        setDownscaling(next.downscaling);
+        setModel(next.model);
+        setUrl(
+          baseDir,
+          next.downscaling,
+          next.model,
+          next.yearRange,
+          ensemble,
+          false,
+          next.scenario,
+          cmip
+        );
+      }
     } else {
       const yearRange = Object.keys(settings.past_eras)[0];
       setYearRange(yearRange);
@@ -1054,11 +1255,36 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   // difference options
   useEffect(() => {
     if (difObsOrDataChoice2['Model']) {
-      setUrl(baseDir, downscalingDif, modelDif, yearRangeDif, ensemble, dif_true);
+      if (isConfiguredEra(yearRangeDif, cmipDif)) {
+        setUrl(
+          baseDir,
+          downscalingDif,
+          modelDif,
+          yearRangeDif,
+          ensemble,
+          dif_true
+        );
+      } else {
+        const next = getDefaultCmipSelection(cmipDif);
+        setYearRangeDif(next.yearRange);
+        setScenarioDif(next.scenario);
+        setDownscalingDif(next.downscaling);
+        setModelDif(next.model);
+        setUrl(
+          baseDir,
+          next.downscaling,
+          next.model,
+          next.yearRange,
+          ensemble,
+          dif_true,
+          next.scenario,
+          cmipDif
+        );
+      }
     } else {
       const yearRangeDif = Object.keys(settings.past_eras)[0];
       setYearRangeDif(yearRangeDif);
-      setObsUrl(obs, yearRangeDif, dif_true);
+      setObsUrl(obsDif, yearRangeDif, dif_true);
     }
   }, [difObsOrDataChoice2]);
 
@@ -1089,16 +1315,20 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setUrl(baseDir, downscalingDif, modelDif, yearRangeDif, ensemble, dif_t, choice);
   });
 
-  const handleScenarioChange = useCallback((e) => {
+  const handleScenarioChange = useCallback((e, dif=false) => {
     const nextScenario = e.target.value;
-    setScenario(nextScenario);
+    if (dif) {
+      setScenarioDif(nextScenario);
+    } else {
+      setScenario(nextScenario);
+    }
     setUrl(
       baseDir,
-      downscaling,
-      model,
-      yearRange,
+      dif ? downscalingDif : downscaling,
+      dif ? modelDif : model,
+      dif ? yearRangeDif : yearRange,
       ensemble,
-      false,
+      dif,
       nextScenario
     );
   });
@@ -1451,7 +1681,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       ))}
       </Select>
       {settings.obs_lev2 && <ObsChoiceRegionBox/>}
-      <VariableChoiceBox />
+      <VariableChoiceBox observation />
       {setMetricLabel()}
       </>
     );
@@ -1459,6 +1689,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   const ComputeChoiceFilter = () => {
     const handleComputeChoiceChange = (newValues) => {
+      const variableOptions = getVariableOptions({
+        computeChoiceValue: newValues,
+      });
+      if (!variableOptions.includes(metric) && variableOptions.length > 0) {
+        handleMetricsChange({ target: { value: variableOptions[0] } });
+      }
       setComputeChoice(newValues);
       // handle baseDir
       let baseDir_l;
@@ -1524,7 +1760,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
                  Clim_Ranges['dif_'+metric].max]);
         setColormapName(Default_Colormaps['dif_'+metric]);
         if ((metric === 'ptrend' || metric === 'ttrend')) {
-          handleMetricsChange({ target: { value: settings.variables[0] } });
+          handleMetricsChange({ target: { value: getCmipVariables('cmip5')[0] } });
         }
         // setShouldUpdateMapSource(true);
         // setComputeClimateSignal({'COMPUTE': true});
@@ -1622,10 +1858,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
-  const VariableChoiceBox = ({showPlotLabel=false, climateSignal=false}) => {
-    const metrics = [...settings.variables,
-                     ...(climateSignal ? [] : settings.variables_trend)
-                    ];
+  const VariableChoiceBox = ({showPlotLabel=false, climateSignal=false,
+                              observation=false}) => {
+    const metrics = getVariableOptions({ observation, climateSignal });
 
     return(
       <>
@@ -1671,16 +1906,18 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
-  const CmipBox = () => {
+  const CmipBox = ({dif=false}) => {
+    const value = dif ? cmipDif : cmip;
+
     return (
       <>
         <Box sx={{ ...sx.label, mt: [3] }}>CMIP</Box>
         <Select
           sxSelect={{ bg: 'transparent' }}
           size='xs'
-          onChange={handleCmipChange}
+          onChange={(e) => handleCmipChange(e, dif)}
           sx={{ mt: [1] }}
-          value={cmip}
+          value={value}
         >
           <option value='cmip5'>CMIP5</option>
           <option value='cmip6'>CMIP6</option>
@@ -1692,13 +1929,15 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   const YearRangeBox = ({downscaling_l, past = true, future = true,
                          dif=false, cmipSpecific=false}) => {
-    let handle, val;
+    let handle, val, cmipValue;
     if (dif === true)  {
       handle = handleYearDifChange;
       val =  yearRangeDif;
+      cmipValue = cmipDif;
     } else {
       handle = handleYearChange;
       val =  yearRange;
+      cmipValue = cmip;
     }
 
     // this hack was breaking the options after hitting COMPUTE
@@ -1711,7 +1950,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       ...(future ? settings.future_eras : {}),
     };
     const options = cmipSpecific
-      ? settings.eras?.[cmip] ?? standardOptions
+      ? settings.eras?.[cmipValue] ?? standardOptions
       : standardOptions;
 
     return(
@@ -1763,6 +2002,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     var modelChange;
     var modelVar;
     var yearRange_l;
+    var cmip_l;
     let showMetricLabel;
     if (!dif) {
       downscalingChange = handleDownscalingChange;
@@ -1770,21 +2010,23 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       modelChange = handleModelChange;
       modelVar = model;
       yearRange_l = yearRange
+      cmip_l = cmip;
     } else {
       downscalingChange = handleDownscalingDifChange;
       downscalingVar = downscalingDif;
       modelChange = handleModelDifChange;
       modelVar = modelDif;
       yearRange_l = yearRangeDif
+      cmip_l = cmipDif;
     }
-    showMetricLabel = isPastEra(yearRange_l)
+    showMetricLabel = isPastEra(yearRange_l, cmip_l)
 
     let downscaling_d, model_d
     if (climateSignal == false) {
-      const downscalingGroups = isPastEra(yearRange_l)
+      const downscalingGroups = isPastEra(yearRange_l, cmip_l)
         ? settings.downscaling_past
         : settings.downscaling_future;
-      downscaling_d = downscalingGroups?.[cmip] ?? {};
+      downscaling_d = downscalingGroups?.[cmip_l] ?? {};
 
       model_d = settings.model[downscalingVar] ?? {};
     } else {
@@ -1799,11 +2041,15 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       <>
       {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
 
-      {computeChoice['Ave.'] && (
+      {!climateSignal && (
         <>
-          <CmipBox />
-          <YearRangeBox downscaling_l={downscalingVar} cmipSpecific />
-          <ScenarioBox />
+          <CmipBox dif={dif} />
+          <YearRangeBox
+            downscaling_l={downscalingVar}
+            dif={dif}
+            cmipSpecific
+          />
+          <ScenarioBox dif={dif} />
         </>
       )}
 
@@ -1949,12 +2195,17 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     }
   };
 
-  const ScenarioBox = () => {
-    if (!isConfiguredEra(yearRange) || isPastEra(yearRange)) {
+  const ScenarioBox = ({dif=false}) => {
+    const cmipValue = dif ? cmipDif : cmip;
+    const yearRangeValue = dif ? yearRangeDif : yearRange;
+    const scenarioValue = dif ? scenarioDif : scenario;
+
+    if (!isConfiguredEra(yearRangeValue, cmipValue)
+        || isPastEra(yearRangeValue, cmipValue)) {
       return null;
     }
 
-    const options = settings.scenarios?.[cmip] ?? {};
+    const options = settings.scenarios?.[cmipValue] ?? {};
     if (Object.keys(options).length === 0) {
       return null;
     }
@@ -1962,14 +2213,14 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     return (
       <>
         <Box sx={{ ...sx.label, mt: [4] }}>
-          {cmip === 'cmip6' ? 'SSP Scenario' : 'RCP Scenario'}
+          {cmipValue === 'cmip6' ? 'SSP Scenario' : 'RCP Scenario'}
         </Box>
         <Select
           sxSelect={{ bg: 'transparent' }}
           size='xs'
-          onChange={handleScenarioChange}
+          onChange={(e) => handleScenarioChange(e, dif)}
           sx={{ mt: [1] }}
-          value={scenario}
+          value={scenarioValue}
         >
           {Object.entries(options).map(([key, label]) => (
             <option key={key} value={key}>
@@ -2054,30 +2305,25 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   /* TODO */
   /* add arguments to mapchoicesbox */
   const DifferenceBox = ({numMetrics}) => {
-    let futureChoice1 = true;
-    let futureChoice2 = true;
-
-    if (difObsOrDataChoice1['Observation']) {
-      futureChoice1 = false;
-    }
-    if (difObsOrDataChoice2['Observation']) {
-      futureChoice2 = false;
-    }
-
     if (differenceChoice["Dataset A"]) {
       return(
         <Box sx={{ mt: 0 }}>
           <DifferenceChoiceBox
              obsOrDataChoice={difObsOrDataChoice1}
-             setObsOrDataChoice={setObsOrDataChoice1} />
-          <YearRangeBox value={yearRange} downscaling_l={downscaling}
-                        future={futureChoice1}
-           />
-
+             setObsOrDataChoice={handleDatasetATypeChange} />
           {difObsOrDataChoice1['Model'] ?
-                      <><MapChoicesBox /> <RcpBox /></>
+                      <MapChoicesBox />
                       :
-                      <ObsChoicesBox onChange={handleObsChange} value={obs} />
+                      <>
+                        <YearRangeBox
+                          downscaling_l={downscaling}
+                          future={false}
+                        />
+                        <ObsChoicesBox
+                          onChange={handleObsChange}
+                          value={obs}
+                        />
+                      </>
           }
         </Box>
       );
@@ -2086,15 +2332,21 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         <Box sx={{ mt: 0 }}>
           <DifferenceChoiceBox
              obsOrDataChoice={difObsOrDataChoice2}
-             setObsOrDataChoice={setObsOrDataChoice2} />
-          <YearRangeBox value={yearRangeDif} downscaling_l={downscalingDif}
-                        future={futureChoice2} dif={dif_t}
-          />
+             setObsOrDataChoice={handleDatasetBTypeChange} />
           {difObsOrDataChoice2['Model'] ?
-                      <><MapChoicesBox dif={true} />  <RcpBox dif={true} /></>
+                      <MapChoicesBox dif={true} />
                       :
-                      <ObsChoicesBox onChange={handleObsDifChange}
-                                     value={obsDif} />
+                      <>
+                        <YearRangeBox
+                          downscaling_l={downscalingDif}
+                          future={false}
+                          dif={dif_t}
+                        />
+                        <ObsChoicesBox
+                          onChange={handleObsDifChange}
+                          value={obsDif}
+                        />
+                      </>
           }
         </Box>
       );
