@@ -151,7 +151,7 @@ const Colorbar = ({
 
   if (filterValues['Ave.'] || filterValues['Agreement']) {
     scale = setClimStep
-    fixedVal = 0
+    fixedVal = setClimStep < 1 ? 1 : 0
   } else { {/* Dif. */}
     scale = scaleDif
     fixedVal = 1

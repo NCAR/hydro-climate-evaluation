@@ -9,7 +9,7 @@ import Colorbar from './colorbar';
 import { colormaps } from '../colormaps/src';
 import { openGroup } from "zarr";
 // local imports
-import { Scale_Values, Clim_Ranges} from './variableSettings';
+import { Scale_Values, getClimRange } from './variableSettings';
 import { Default_Colormaps, readmeUrl } from './variableSettings';
 import { getData } from './getData';
 
@@ -712,11 +712,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
   const resetColorbar = () => {
-    if (computeChoice['Dif.'] || computeChoice['Climate Signal']) {
-      setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
-    } else if (computeChoice['Ave.']) {
-      setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
-    }
+    const range = getActiveClimRange();
+    setClim([range.min, range.max]);
   };
 
 
@@ -1029,11 +1026,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     // }  // Add     'tpcorr',      'wt_day_to_day',      'wt_clim',
 
     if (computeChoice['Dif.'] || computeChoice['Climate Signal']) {
-      setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
       setColormapName(Default_Colormaps['dif_'+metric]);
       setScaleDif(Scale_Values['dif_'+metric]);
     } else if (computeChoice['Ave.']) {
-      setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
       setColormapName(Default_Colormaps[metric]);
     }
   });
@@ -1076,6 +1071,50 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const [difObsOrDataChoice2, setObsOrDataChoice2] =
           useState({ "Model": true, "Observation": false });
           // useState({ "Model": false, "Observation": true });
+
+  const getActiveClimRange = ({
+    metricValue=metric,
+    computeChoiceValue=computeChoice,
+    cmipA=cmip,
+    cmipB=cmipDif,
+    datasetAChoice=difObsOrDataChoice1,
+    datasetBChoice=difObsOrDataChoice2,
+    averageChoice=aveChoice,
+  }={}) => {
+    const difference = Boolean(
+      computeChoiceValue['Dif.'] || computeChoiceValue['Climate Signal']
+    );
+    const isCmip6Difference = Boolean(
+      computeChoiceValue['Dif.'] &&
+      datasetAChoice['Model'] &&
+      datasetBChoice['Model'] &&
+      cmipA === 'cmip6' &&
+      cmipB === 'cmip6'
+    );
+    const rangeCmip = difference
+      ? (isCmip6Difference ? 'cmip6' : 'cmip5')
+      : (averageChoice?.['Observation'] ? 'cmip5' : cmipA);
+    const rangeKey = `${difference ? 'dif_' : ''}${metricValue}`;
+    const range = getClimRange(rangeKey, rangeCmip);
+
+    if (!range) {
+      throw new Error(`Missing climate range for metric '${rangeKey}'.`);
+    }
+    return range;
+  };
+
+  useEffect(() => {
+    const range = getActiveClimRange();
+    setClim([range.min, range.max]);
+  }, [
+    metric,
+    cmip,
+    cmipDif,
+    computeChoice,
+    aveChoice,
+    difObsOrDataChoice1,
+    difObsOrDataChoice2,
+  ]);
 
   const handleDatasetATypeChange = useCallback((nextChoice) => {
     const variableOptions = getVariableOptions({
@@ -1588,6 +1627,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
 
   const LocalColorbar = () => {
+    const colorbarStep = Math.abs(clim[1] - clim[0]) <= 5 ? 0.1 : 1;
+
     return (
       <>
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -1596,6 +1637,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         label={units}
         clim={clim}
         setClim={setClim}
+        setClimStep={colorbarStep}
         filterValues={computeChoice}
         band={band}
         scaleDif={scaleDif}
@@ -1720,14 +1762,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         const model = checkDownscalingModel(downscaling);
 
         if (newValues['Ave.']) {
-          setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
           setColormapName(Default_Colormaps[metric]);
         }
         if (newValues['Dif.']) {
           yearRange_key = Object.keys(settings.past_eras)[0];
           setYearRange(yearRange_key);
           setScaleDif(Scale_Values['dif_'+metric]);
-          setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
           setColormapName(Default_Colormaps['dif_'+metric]);
         }
         setUrl(baseDir_l, downscaling, model, yearRange_key, ensemble)
@@ -1756,8 +1796,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
         // setYearRange(Object.keys(settings.future_eras)[0]);
         setScaleDif(Scale_Values['dif_'+metric]);
-        setClim([Clim_Ranges['dif_'+metric].min,
-                 Clim_Ranges['dif_'+metric].max]);
         setColormapName(Default_Colormaps['dif_'+metric]);
         if ((metric === 'ptrend' || metric === 'ttrend')) {
           handleMetricsChange({ target: { value: getCmipVariables('cmip5')[0] } });
