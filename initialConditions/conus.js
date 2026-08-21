@@ -5,8 +5,8 @@ export const settings = {
   climateSignal: true,
   dif: true,
   observation: true,
-  // bucket: 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/',
-  bucket: 'http://localhost:8080/hydro-climate-eval/data/refactor/',
+  bucket: 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/',
+  // bucket: 'http://localhost:8080/hydro-climate-eval/data/refactor/',
 
   variables: [
       'n34pr',
