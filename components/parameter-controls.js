@@ -116,6 +116,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   // const [metricRegion, setMetricRegion] = useState('desertsouthwest');
 
   const [baseDir, setBaseDir] = useState('map/');
+  const [cmip, setCmip] = useState('cmip5');
+  const [scenario, setScenario] = useState('rcp45');
 
 
   const schemeLabels = {
@@ -135,9 +137,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   }, [mapSource, mapSourceDif]);
 
 
-  function setUrl(baseDir, downscaling, model, yearRange, ensemble, dif=false, rcp=null) {
-    const time = getYearRangeString(yearRange, rcp);
-    const url = `${bucket}${baseDir}${downscaling}/${model}/${time}/${ensemble}/${fname}`;
+  function setUrl(baseDir, downscaling, model, yearRange, ensemble, dif=false,
+                  scenarioValue=null, cmipValue=cmip) {
+    const time = getYearRangeString(yearRange, scenarioValue, cmipValue);
+    const ensemblePath = ensemble ? `${ensemble}/` : '';
+    const url = `${bucket}${baseDir}${downscaling}/${model}/${time}/${ensemblePath}${fname}`;
     if (dif) {
       setMapSourceDif([url]);
     } else {
@@ -147,7 +151,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   function addUrlArrayMember(downscaling, model, yearRange, ensemble) {
     const time = getYearRangeString(yearRange);
-    const url = `${bucket}${baseDir}${downscaling}/${model}/${time}/${ensemble}/${fname}`;
+    const ensemblePath = ensemble ? `${ensemble}/` : '';
+    const url = `${bucket}${baseDir}${downscaling}/${model}/${time}/${ensemblePath}${fname}`;
     console.log("COMPUTE should be adding url = ",url);
     setMapSource((prevSources) => [...prevSources, url]);
   };
@@ -218,18 +223,57 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     return null;
   };
 
-  const getYearRangeString = (yearRange, rcp_in=null) => {
+  const getScenarioKey = (scenarioValue) => {
+    if (typeof scenarioValue === 'string') {
+      return scenarioValue;
+    }
+    if (scenarioValue && typeof scenarioValue === 'object') {
+      return getRCPKey(scenarioValue);
+    }
+    return null;
+  };
+
+  const isConfiguredEra = (yearRangeValue, cmipValue=cmip) =>
+    Object.prototype.hasOwnProperty.call(
+      settings.eras?.[cmipValue] ?? {},
+      yearRangeValue
+    );
+
+  const getYearRangeString = (yearRange, scenarioValue=null,
+                              cmipValue=cmip) => {
+    if (/^(hist|rcp|ssp)[^.]*\./.test(yearRange)) {
+      return yearRange;
+    }
+
+    if (isConfiguredEra(yearRange, cmipValue)) {
+      if (isPastEra(yearRange, cmipValue)) {
+        return cmipValue === 'cmip6'
+          ? `ssp370.${yearRange}`
+          : `hist.${yearRange}`;
+      }
+
+      const scenarioKey = getScenarioKey(scenarioValue) ?? scenario;
+      return `${scenarioKey}.${yearRange}`;
+    }
+
     // let yearRange_s = "hist." + yearRange;
     let yearRange_s = yearRange.startsWith("hist.")
         ? yearRange
         : "hist." + yearRange;
     if (Object.keys(settings.future_eras).includes(yearRange)) {
-      const rcpValues_l = rcp_in ?? rcpValues;
+      const rcpValues_l = scenarioValue ?? rcpValues;
       yearRange_s = getRCPKey(rcpValues_l) + "." + yearRange
     }
     // console.log("DEBUG: yearrang",yearRange_s);
     return yearRange_s;
   }
+
+  const isPastEra = (yearRangeValue, cmipValue=cmip) => {
+    if (cmipValue === 'cmip6') {
+      return yearRangeValue === '1981_2014';
+    }
+    return Object.keys(settings.past_eras).includes(yearRangeValue);
+  };
 
   const [rcpValues, setRCPValues] = useState({'4.5': true,
                                               '8.5': false});
@@ -535,9 +579,28 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   });
 
   const handleYearChange = useCallback((e) => {
-    let yearRange = e.target.value;
-    setYearRange(yearRange);
-    setUrl(baseDir, downscaling, model, yearRange, ensemble);
+    const nextYearRange = e.target.value;
+    let nextScenario = scenario;
+    if (cmip === 'cmip6') {
+      if (isPastEra(nextYearRange)) {
+        nextScenario = 'ssp370';
+      } else if (isPastEra(yearRange)) {
+        nextScenario = Object.keys(settings.scenarios?.cmip6 ?? {})[0]
+          ?? scenario;
+      }
+    }
+
+    setYearRange(nextYearRange);
+    setScenario(nextScenario);
+    setUrl(
+      baseDir,
+      downscaling,
+      model,
+      nextYearRange,
+      ensemble,
+      false,
+      nextScenario
+    );
   });
 
   const handleYearDifChange = useCallback((e) => {
@@ -545,6 +608,46 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     const dif = true
     setYearRangeDif(yearRangeDif);
     setUrl(baseDir, downscalingDif, modelDif, yearRangeDif, ensemble, dif);
+  });
+
+  const handleCmipChange = useCallback((e) => {
+    const nextCmip = e.target.value;
+    const nextYearRange = Object.keys(settings.eras?.[nextCmip] ?? {})[0]
+      ?? Object.keys(settings.past_eras)[0];
+    const nextScenario = nextCmip === 'cmip6' && isPastEra(
+      nextYearRange,
+      nextCmip
+    )
+      ? 'ssp370'
+      : Object.keys(settings.scenarios?.[nextCmip] ?? {})[0];
+    const downscalingGroups = isPastEra(nextYearRange, nextCmip)
+      ? settings.downscaling_past
+      : settings.downscaling_future;
+    const nextDownscaling = Object.keys(
+      downscalingGroups?.[nextCmip] ?? {}
+    )[0];
+    const nextModel = Object.keys(
+      settings.model?.[nextDownscaling] ?? {}
+    )[0];
+
+    setCmip(nextCmip);
+    setYearRange(nextYearRange);
+    setScenario(nextScenario);
+
+    if (nextDownscaling && nextModel) {
+      setDownscaling(nextDownscaling);
+      setModel(nextModel);
+      setUrl(
+        baseDir,
+        nextDownscaling,
+        nextModel,
+        nextYearRange,
+        ensemble,
+        false,
+        nextScenario,
+        nextCmip
+      );
+    }
   });
 
   const handleDownscalingChange = useCallback((e) => {
@@ -596,9 +699,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         console.log("dsList = ", dsList)
 
     } else {
-      const dsListb = Object.keys(settings.past_eras).includes(yearRange)
-        ? Object.keys(settings.downscaling_past || {})
-        : Object.keys(settings.downscaling_future|| {});
+      const downscalingGroups = isPastEra(yearRange)
+        ? settings.downscaling_past
+        : settings.downscaling_future;
+      const dsListb = Object.keys(downscalingGroups?.[cmip] ?? {});
       if (!dsListb.includes(ds)) {
         ds = dsListb[0];
         setDownscaling(ds);
@@ -983,6 +1087,20 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
     }
     setUrl(baseDir, downscalingDif, modelDif, yearRangeDif, ensemble, dif_t, choice);
+  });
+
+  const handleScenarioChange = useCallback((e) => {
+    const nextScenario = e.target.value;
+    setScenario(nextScenario);
+    setUrl(
+      baseDir,
+      downscaling,
+      model,
+      yearRange,
+      ensemble,
+      false,
+      nextScenario
+    );
   });
 
 
@@ -1553,9 +1671,27 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     );
   };
 
+  const CmipBox = () => {
+    return (
+      <>
+        <Box sx={{ ...sx.label, mt: [3] }}>CMIP</Box>
+        <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={handleCmipChange}
+          sx={{ mt: [1] }}
+          value={cmip}
+        >
+          <option value='cmip5'>CMIP5</option>
+          <option value='cmip6'>CMIP6</option>
+        </Select>
+      </>
+    );
+  };
+
 
   const YearRangeBox = ({downscaling_l, past = true, future = true,
-                         dif=false}) => {
+                         dif=false, cmipSpecific=false}) => {
     let handle, val;
     if (dif === true)  {
       handle = handleYearDifChange;
@@ -1570,10 +1706,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     //     downscaling_l == 'gard_r3') {
     //   future = false;
     // }  ! FOOBAR
-    const options = {
+    const standardOptions = {
       ...(past ? settings.past_eras : {}),
       ...(future ? settings.future_eras : {}),
     };
+    const options = cmipSpecific
+      ? settings.eras?.[cmip] ?? standardOptions
+      : standardOptions;
 
     return(
       <>
@@ -1638,15 +1777,16 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       modelVar = modelDif;
       yearRange_l = yearRangeDif
     }
-    showMetricLabel = Object.keys(settings.past_eras).includes(yearRange_l)
+    showMetricLabel = isPastEra(yearRange_l)
 
     let downscaling_d, model_d
     if (climateSignal == false) {
-      downscaling_d = Object.keys(settings.past_eras).includes(yearRange_l)
+      const downscalingGroups = isPastEra(yearRange_l)
         ? settings.downscaling_past
         : settings.downscaling_future;
+      downscaling_d = downscalingGroups?.[cmip] ?? {};
 
-      model_d = settings.model[downscaling];
+      model_d = settings.model[downscalingVar] ?? {};
     } else {
       downscaling_d = settings.downscaling_climateSignal;
       model_d = settings.model_climateSignal[downscaling];
@@ -1659,9 +1799,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       <>
       {/* <Box sx={{ position: 'absolute', top: 20, left: 20 }}>*/}
 
-      {computeChoice['Ave.'] &&
-       <YearRangeBox downscaling_l={downscalingVar} />}
-
+      {computeChoice['Ave.'] && (
+        <>
+          <CmipBox />
+          <YearRangeBox downscaling_l={downscalingVar} cmipSpecific />
+          <ScenarioBox />
+        </>
+      )}
 
       <Box sx={{ ...sx.label, mt: [4] }}>{settings.downscaling_title}</Box>
       <Select
@@ -1715,7 +1859,6 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           sx={{mt:3}}
         />
         <MapChoicesBox />
-        <RcpBox />
         </>
       );
     } else if (aveChoice['Observation']) {
@@ -1804,6 +1947,38 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     } else {
       return null;
     }
+  };
+
+  const ScenarioBox = () => {
+    if (!isConfiguredEra(yearRange) || isPastEra(yearRange)) {
+      return null;
+    }
+
+    const options = settings.scenarios?.[cmip] ?? {};
+    if (Object.keys(options).length === 0) {
+      return null;
+    }
+
+    return (
+      <>
+        <Box sx={{ ...sx.label, mt: [4] }}>
+          {cmip === 'cmip6' ? 'SSP Scenario' : 'RCP Scenario'}
+        </Box>
+        <Select
+          sxSelect={{ bg: 'transparent' }}
+          size='xs'
+          onChange={handleScenarioChange}
+          sx={{ mt: [1] }}
+          value={scenario}
+        >
+          {Object.entries(options).map(([key, label]) => (
+            <option key={key} value={key}>
+              {label}
+            </option>
+          ))}
+        </Select>
+      </>
+    );
   };
 
   useEffect(() => {

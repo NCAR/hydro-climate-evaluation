@@ -5,7 +5,8 @@ export const settings = {
   climateSignal: true,
   dif: true,
   observation: true,
-  bucket: 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/',
+  // bucket: 'https://hydro.rap.ucar.edu/hydro-climate-eval/data/refactor/',
+  bucket: 'http://localhost:8080/hydro-climate-eval/data/refactor/',
 
   variables: [
       'n34pr',
@@ -56,12 +57,38 @@ export const settings = {
       '2056_2079': '2056-2079',
       '2076_2099': '2076-2099'
   },
+  eras: {
+      cmip5: {
+          '1981_2004': '1981-2004',
+          '2036_2059': '2036-2059',
+          '2056_2079': '2056-2079',
+          '2076_2099': '2076-2099',
+      },
+      cmip6: {
+          '1981_2014': '1981-2014',
+          '2024_2059': '2024-2059',
+          '2064_2099': '2064-2099',
+      },
+  },
+
+  scenarios: {
+      cmip5: {
+          'rcp45': 'RCP-4.5',
+          'rcp85': 'RCP-8.5',
+      },
+      cmip6: {
+          'ssp245': 'SSP2-4.5',
+          'ssp370': 'SSP3-7.0',
+          'ssp585': 'SSP5-8.5',
+      }
+  },
 
   obs_lev2_title: null,
   obs_lev2: null,
 
   downscaling_title: "Downscaling Method",
   downscaling_past: {
+      cmip5: {
       'icar':'ICARv1',
       'icarwest':'ICARv2',
       'gard_r2':'GARD_r2',
@@ -69,12 +96,17 @@ export const settings = {
       'loca_8th':'LOCA',
       'maca':'MACA',
       'nasa_nex':'NASA-NEX',
+      },
+      cmip6: {
+      'loca2':'LOCA2',
+      'star_esdm':'NASA-NEX',
+      }
   },
   tmp_ds_past: {
 },
 
-
   downscaling_future: {
+      cmip5: {
       'icar':'ICARv1',
       'icarwest':'ICARv2',
       'gard_r2':'GARD_r2',
@@ -82,6 +114,11 @@ export const settings = {
       'loca_8th':'LOCA',
       'maca':'MACA',
       'nasa_nex':'NASA-NEX',
+      },
+      cmip6: {
+          'loca2':'LOCA2',
+          'star_esdm':'NASA-NEX',
+      }
   },
 
   model: {loca_8th: {access1_3: "ACCESS1-3", canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5",
@@ -93,7 +130,9 @@ export const settings = {
       mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"}, maca: {canesm2: "CanESM2",
       ccsm4: "CCSM4", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"},
       nasa_nex: {canesm2: "CanESM2", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3", noresm1_m: "NorESM1-M"},
-      icarwest: {canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3"}
+      icarwest: {canesm2: "CanESM2", ccsm4: "CCSM4", miroc5: "MIROC5", mri_cgcm3: "MRI-CGCM3"},
+      loca2: {access_cm2: "ACCESS-cm2", access_esm1_5: "ACCESS-ESM1-5"},
+      star_esdm: {access_cm2: "ACCESS-cm2"},
   },
 
   downscaling_climateSignal: {
