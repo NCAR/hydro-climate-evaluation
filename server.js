@@ -23,7 +23,7 @@ app.prepare().then(() => {
 	       serveIndex(path.join(__dirname, 'data'), {'icons': false, 'hidden': true }));
 
     // Serve the main Next.js site
-    server.all('*', (req, res) => {
+    server.all('/{*splat}', (req, res) => {
         return handle(req, res);
     });
 

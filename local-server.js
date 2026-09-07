@@ -28,7 +28,7 @@ if (!fs.existsSync(path.join(ROOT, '.next'))) {
   }
 }
 
-const app = next({ dev: true, dir: ROOT });
+const app = next({ dev: false, dir: ROOT });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
@@ -48,7 +48,7 @@ app.prepare().then(() => {
   );
 
   // Hand off everything else to Next.js
-  server.all('*', (req, res) => handle(req, res));
+  server.all('/{*splat}', (req, res) => handle(req, res));
 
   server.listen(PORT, () => {
     console.log(`> Local build ready at http://localhost:${PORT}/hydro-climate-eval`);
