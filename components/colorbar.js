@@ -181,7 +181,7 @@ const Colorbar = ({
       return;
     }
 
-    if (filterValues['Ave.'] || filterValues['Signal-to-Noise']) {
+    if (filterValues['Ave.'] || filterValues['Signal']) {
       // prevent these precip values from dropping below 0
       if (band === 'djfp' || band === 'jjap' ||
           band === 'mamp' || band === 'sonp' ||

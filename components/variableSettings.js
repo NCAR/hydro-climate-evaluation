@@ -263,11 +263,9 @@ export const Default_Colormaps = Object.freeze({
   son_t: temp_colormap,
   ann_t: temp_colormap,
 
-  // signal-to-noise red -> blue
-  // pr: 'redblue',
-  // tasmax: 'redblue',
-  pr: 'difredblue',
-  tasmax: 'difredblue',
+  // non-SNR signal palettes
+  pr: 'difbrowngreen',
+  tasmax: 'yellowred',
 
 
   // precip variables

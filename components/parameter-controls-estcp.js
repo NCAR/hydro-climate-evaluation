@@ -67,6 +67,14 @@ const signalToNoiseModel_d = {
   // 'noresm2-mm': 'NorESM2-MM',
 }
 
+const signalBandByOption = {
+  'signal-to-noise': 'snr_',
+  'original signal': 'gsig',
+  'min signal': 'smin',
+  'mean signal': 'smea',
+  'max signal': 'smax',
+}
+
 const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   const { display, reload, debug, metricPerformance, clim, metricRegion,
           band, colormapName, colormap,
@@ -120,6 +128,29 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
 
   const [chartToggle, setChartToggle] = useState(false);
+
+  const [selectedSignalOption, setSelectedSignalOption] =
+    useState('signal-to-noise');
+  const selectedSignalBand = signalBandByOption[selectedSignalOption];
+
+  const getSignalColorbarRange = (
+    metricValue,
+    option = selectedSignalOption
+  ) => {
+    if (option === 'signal-to-noise') {
+      return [Clim_Ranges[metricValue].min, Clim_Ranges[metricValue].max];
+    }
+    if (metricValue === 'pr') return [-2, 2];
+    if (metricValue === 'tasmax') return [0, 10];
+    return [Clim_Ranges[metricValue].min, Clim_Ranges[metricValue].max];
+  };
+
+  const getSignalColormapName = (
+    metricValue,
+    option = selectedSignalOption
+  ) => option === 'signal-to-noise'
+    ? 'difredblue'
+    : getColormapName(metricValue);
 
   const [units, setUnits] = useState('°C');
 
@@ -178,8 +209,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     setMapSource((prevSources) => [...prevSources, url]);
   };
 
-  function setSignalToNoiseUrl(model_l, metric_l) {
-    const url = `${bucket}signalToNoise/map/${model_l}/${metric_l}/${fname}`;
+  function setSignalMapUrl(model_l, metric_l, option = selectedSignalOption) {
+    const directory = option === 'signal-to-noise'
+      ? 'signalToNoise'
+      : 'signal';
+    const url = `${bucket}${directory}/map/${model_l}/${metric_l}/${fname}`;
     setMapSource([url]);
   };
 
@@ -491,14 +525,12 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     } else if (metric === 'pr') {
       label = 'pr';
       description =
-            ['Signal-to-Noise',
-             'June, July, August,',
+            ['June, July, August,',
              'Daily Precipitation'];
     } else if (metric === 'tasmax') {
       label = 'tasmax';
       description =
-            ['Signal-to-Noise',
-             'June, July, August',
+             ['June, July, August',
              'daily max temp'];
     } else {
        label = 'label undefined';
@@ -566,6 +598,26 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       </>
     )
   };
+
+  const SignalPaperBox = () => {
+    return (
+      <Box sx={{ ...sx.label, mt: [4] }}>
+      <u>Paper Referenced</u>: <br/>
+      <Button
+        href={'https://iopscience.iop.org/article/10.1088/1748-9326/adc74e/meta'}
+        target="_blank"
+        rel="noopener noreferrer"
+        prefix={<Right />}
+        color="white"
+        size="xs"
+      >
+        Link
+      </Button>
+      </Box>
+
+    );
+  }
+
 
   const [signal, setSignal] = useState('pr');
   const SignalBox = () => {
@@ -683,7 +735,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
   };
 
   const resetColorbar = () => {
-    if (computeChoice['Dif.'] || computeChoice['Climate Signal']) {
+    if (computeChoice['Signal']) {
+      setClim(getSignalColorbarRange(metric));
+    } else if (computeChoice['Dif.'] || computeChoice['Climate Signal']) {
       setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
     } else if (computeChoice['Ave.']) {
       setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
@@ -877,7 +931,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     //   setMetric(metric_l)
     // }
 
-    setSignalToNoiseUrl(model, metric_l);
+    setSignalMapUrl(model, metric_l);
     setAgreementOverlayUrl(model, metric_l);
 
     // setUrl(baseDir, downscaling, model, yearRange, ens);
@@ -1024,14 +1078,14 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setBand('q95i');
       setUnits('°C');
     } else if (metric == 'pr') {
-      setSignalToNoiseUrl(model_l, metric);
+      setSignalMapUrl(model_l, metric);
       setAgreementOverlayUrl(model_l, metric);
-      setBand('snr_');
+      setBand(selectedSignalBand);
       setUnits('mean signal / stdev');
     } else if (metric == 'tasmax') {
-      setSignalToNoiseUrl(model_l, metric);
+      setSignalMapUrl(model_l, metric);
       setAgreementOverlayUrl(model_l, metric);
-      setBand('snr_');
+      setBand(selectedSignalBand);
       setUnits('mean signal / stdev');
     }
     else {
@@ -1045,7 +1099,10 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
       setColormapName(getColormapName(metric, true));
       setScaleDif(Scale_Values['dif_'+metric]);
-    } else if (computeChoice['Ave.'] || computeChoice['Signal-to-Noise']) {
+    } else if (computeChoice['Signal']) {
+      setClim(getSignalColorbarRange(metric));
+      setColormapName(getSignalColormapName(metric));
+    } else if (computeChoice['Ave.']) {
       setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
       setColormapName(getColormapName(metric));
     }
@@ -1087,7 +1144,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
   let aveChoice = null;
   let setAveChoice = null;
-  // if (computeChoice['Signal-to-Noise']) { artless
+  // if (computeChoice['Signal']) { artless
   //       [aveChoice, setAveChoice] = useState({ 'Modeling': true });
   // } else
   if (settings.observation) {
@@ -1645,16 +1702,18 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       let baseDir_l;
       if (newValues['Climate Signal']) {
         baseDir_l = 'climateSignal/';
-      } else if (newValues['Signal-to-Noise']){
+      } else if (newValues['Signal']){
         // baseDir_l = 'agreement/map/';
-        baseDir_l = 'signalToNoise/map/';
+        baseDir_l = selectedSignalOption === 'signal-to-noise'
+          ? 'signalToNoise/map/'
+          : 'signal/map/';
       }
       else {
         baseDir_l = 'map/';
       }
 
       // setBaseDir(baseDir_l);
-      if (!newValues['Signal-to-Noise']) {
+      if (!newValues['Signal']) {
         if (metric in signalToNoiseMetrics_d) {
           nextMetric = settings.variables[0];
           handleMetricsChange({ target: { value: nextMetric } });
@@ -1663,7 +1722,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
 
       // Ave. or Dif. maps
-      if (!newValues['Climate Signal'] && !newValues['Signal-to-Noise']) {
+      if (!newValues['Climate Signal'] && !newValues['Signal']) {
         // setDisplay(true);
           console.log("FOO: ",{ "Metric Performance": false });
 	  // make sure metric geojson lines are off
@@ -1724,7 +1783,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         // setComputeClimateSignal({'COMPUTE': true});
       }
 
-    if (newValues['Signal-to-Noise']) {
+    if (newValues['Signal']) {
       console.log('foobar agreement', newValues);
       const model_l = 'miroc5';
       const signal = 'pr';
@@ -1732,6 +1791,8 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       setSignal(signal);
 
       handleMetricsChange({ target: { value: signal } }, model_l);
+      setClim(getSignalColorbarRange(signal));
+      setColormapName(getSignalColormapName(signal));
     }
 
     };
@@ -1766,7 +1827,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         </>
       );
     }
-    else if (computeChoice['Signal-to-Noise']) {
+    else if (computeChoice['Signal']) {
       return (
         <>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -1971,7 +2032,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       // console.log("downscaling", downscaling)
     }
 
-    if (computeChoice['Signal-to-Noise']) {
+    if (computeChoice['Signal']) {
       // handle model
       model_d = signalToNoiseModel_d
 
@@ -2059,7 +2120,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
       {settings.ensemble !== null && <EnsembleBox />}
 
-      {/*{computeChoice['Signal-to-Noise'] &&
+      {/*{computeChoice['Signal'] &&
        <>
        <ScenerioBox />
        <SignalBox />
@@ -2114,18 +2175,25 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
 
   const AgreementBox = () => {
+    const agreementEnabled = selectedSignalOption === 'signal-to-noise';
+
     return(
       <>
       <Box sx={{ ...sx.label, mt: [3] }}>
         <Box as='u' sx={{ fontSize: '17px' }}>
         Agreement
         </Box>{' '}
-        <Toggle value={agreementToggle} onClick={() => setAgreementToggle(!agreementToggle)}
-        sx={{
-          transform: 'scale(0.75)',
-          transformOrigin: 'left bottom',
-        }}
-      />
+        <Toggle
+          value={agreementEnabled && agreementToggle}
+          disabled={!agreementEnabled}
+          onClick={() => {
+            if (agreementEnabled) setAgreementToggle(!agreementToggle);
+          }}
+          sx={{
+            transform: 'scale(0.75)',
+            transformOrigin: 'left bottom',
+          }}
+        />
         <br/>
         Disagreement in <br/>
         downscaling signal <br/>
@@ -2173,6 +2241,34 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
      // values={{'Modeling':true}}
   // TODO: Add Sam's Configurations
   const [agreementChoice, setAgreementChoice] = useState({ 'Modeling': true});
+  const SignalDisplaySelect = () => {
+    const handleSignalDisplayChange = (event) => {
+      const selectedOption = event.target.value;
+      setSelectedSignalOption(selectedOption);
+      setAgreementToggle(selectedOption === 'signal-to-noise');
+      setBand(signalBandByOption[selectedOption] ?? 'snr_');
+      setSignalMapUrl(model, metric, selectedOption);
+      setClim(getSignalColorbarRange(metric, selectedOption));
+      setColormapName(getSignalColormapName(metric, selectedOption));
+    };
+
+    return (
+      <Select
+        sxSelect={{ bg: 'transparent' }}
+        size='xs'
+        onChange={handleSignalDisplayChange}
+        sx={{ mt: 3 }}
+        value={selectedSignalOption}
+      >
+        {Object.keys(signalBandByOption).map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </Select>
+    );
+  };
+
   const SignalToNoiseBox = () => {
       /* <Filter
         values={{ 'Modeling': true}}
@@ -2181,7 +2277,9 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
       /> */
     return (
       <>
+      <SignalDisplaySelect />
       <MapChoicesBox signalToNoise={true} />
+      <SignalPaperBox />
       </>
     );
   };

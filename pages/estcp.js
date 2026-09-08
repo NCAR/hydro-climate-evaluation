@@ -153,7 +153,7 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
   const [computeChoice, setComputeChoice] = useState({
     'Ave.': true,
     'Dif.': false,
-    ...(settings.signalToNoise ? { 'Signal-to-Noise': false } : {}),
+    ...(settings.signalToNoise ? { 'Signal': false } : {}),
     ...(settings.climateSignal ? { 'Climate Signal': false } : {}),
   });
 
@@ -380,10 +380,10 @@ const ClimateMapInstance = ({ zoomArgs, sideBySideArgs }) => {
 
 
 
-    { computeChoice['Signal-to-Noise'] &&
+    { computeChoice['Signal'] &&
       <Raster
       setMapVal={setMapVal}
-      key={`${JSON.stringify(agreementSource)}-${reload}-${sideBySide}`}
+      key={`${JSON.stringify(agreementSource)}-${JSON.stringify(mapSource)}-${reload}-${sideBySide}`}
       colormap={grey_colormap}
       clim={[0, 1]}
       display={agreementToggle}
