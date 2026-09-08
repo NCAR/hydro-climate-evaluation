@@ -27,6 +27,22 @@ const sx = {
 
 const dif_t = true;
 
+const getColormapName = (metric, difference = false) => {
+  const key = difference ? `dif_${metric}` : metric;
+  const colormapName =
+    Default_Colormaps[key] ??
+    Default_Colormaps[metric] ??
+    Default_Colormaps.dif;
+
+  if (!Default_Colormaps[key]) {
+    console.warn(
+      `Missing Default_Colormaps entry for "${key}"; using "${colormapName}".`
+    );
+  }
+
+  return colormapName;
+};
+
 const signalToNoiseMetrics_d = {
   'pr':'Precip',
   'tasmax': 'Tas Max'
@@ -1027,11 +1043,11 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
     if (computeChoice['Dif.'] || computeChoice['Climate Signal']) {
       setClim([Clim_Ranges['dif_'+metric].min, Clim_Ranges['dif_'+metric].max]);
-      setColormapName(Default_Colormaps['dif_'+metric]);
+      setColormapName(getColormapName(metric, true));
       setScaleDif(Scale_Values['dif_'+metric]);
     } else if (computeChoice['Ave.'] || computeChoice['Signal-to-Noise']) {
       setClim([Clim_Ranges[metric].min, Clim_Ranges[metric].max]);
-      setColormapName(Default_Colormaps[metric]);
+      setColormapName(getColormapName(metric));
     }
   });
 
@@ -1663,14 +1679,14 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
 
         if (newValues['Ave.']) {
           setClim([Clim_Ranges[nextMetric].min, Clim_Ranges[nextMetric].max]);
-          setColormapName(Default_Colormaps[nextMetric]);
+          setColormapName(getColormapName(nextMetric));
         }
         if (newValues['Dif.']) {
           yearRange_key = Object.keys(settings.past_eras)[0];
           setYearRange(yearRange_key);
           setScaleDif(Scale_Values['dif_'+nextMetric]);
           setClim([Clim_Ranges['dif_'+nextMetric].min, Clim_Ranges['dif_'+nextMetric].max]);
-          setColormapName(Default_Colormaps['dif_'+nextMetric]);
+          setColormapName(getColormapName(nextMetric, true));
         }
         setUrl(baseDir_l, downscaling, model, yearRange_key, ensemble)
       }
@@ -1700,7 +1716,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
         setScaleDif(Scale_Values['dif_'+nextMetric]);
         setClim([Clim_Ranges['dif_'+nextMetric].min,
                  Clim_Ranges['dif_'+nextMetric].max]);
-        setColormapName(Default_Colormaps['dif_'+nextMetric]);
+        setColormapName(getColormapName(nextMetric, true));
         if ((nextMetric === 'ptrend' || nextMetric === 'ttrend')) {
           handleMetricsChange({ target: { value: settings.variables[0] } });
         }

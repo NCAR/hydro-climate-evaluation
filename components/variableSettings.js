@@ -7,6 +7,9 @@ export const Scale_Values = Object.freeze({
   dift: tempDif,
   difp: precipDif,
 
+  gcm: 0.1,
+  dif_gcm: 0.1,
+
   pr: precipDif,
   tasmax: tempDif,
   dif_pr: precipDif,
@@ -111,6 +114,10 @@ export const Clim_Ranges = Object.freeze({
   tasmax: { max: 6, min: 0 },
   dif_pr: { max: 4, min: -4 },
   dif_tasmax: { max: 6, min: -6 },
+
+  // gcm
+  gcm: { max: 2, min: -2 },
+  dif_gcm: { max: 2, min: -2 },
 
 
   // precip variables
@@ -394,6 +401,10 @@ export const Default_Colormaps = Object.freeze({
   dif_n34pr: 'seismic',
   tpcorr: 'seismic',
   dif_tpcorr: 'seismic',
+
+  gcm: 'BrBG',
+  dif_gcm: 'seismic',
+
 
 });
 
