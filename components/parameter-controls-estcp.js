@@ -2253,11 +2253,13 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
     };
 
     return (
+      <>
+      <Box sx={{ ...sx.label, mt: [3] }}>Signal</Box>
       <Select
         sxSelect={{ bg: 'transparent' }}
         size='xs'
         onChange={handleSignalDisplayChange}
-        sx={{ mt: 3 }}
+        sx={{ mt: 0 }}
         value={selectedSignalOption}
       >
         {Object.keys(signalBandByOption).map((option) => (
@@ -2266,6 +2268,7 @@ const ParameterControls = ({ getters, setters, bucket, fname, settings }) => {
           </option>
         ))}
       </Select>
+      </>
     );
   };
 
